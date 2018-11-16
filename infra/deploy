@@ -1,0 +1,14 @@
+#!/bin/bash
+
+rm -rf deployments/$1 
+mkdir -p deployments/$1
+
+if ! terraform init -var-file="./config/common.tfvars" -var-file="./config/$1.tfvars"; then
+    echo "ERROR: terraform init failed on infra"
+    exit 1
+fi
+
+if ! terraform apply -var-file="./config/common.tfvars" -var-file="./config/$1.tfvars" -state=deployments/$1/terraform.tfstate -auto-approve; then
+    echo "ERROR: terraform apply failed on infra"
+    exit 1
+fi

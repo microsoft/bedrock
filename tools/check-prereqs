@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo "Checking tool prereqs:"
+
+if ! terraform version > /dev/null; then
+    echo "ERROR: terraform is not installed.  Please install the latest version from https://www.terraform.io/intro/getting-started/install.html and place it in your path."
+    exit 1
+else
+    echo "terraform [ok]"
+fi
+
+if ! kubectl version > /dev/null; then
+    echo "ERROR: kubectl is not installed.  Please install the latest version from https://kubernetes.io/docs/tasks/tools/install-kubectl/ and place it in your path."
+    exit 1
+else
+    echo "kubectl [ok]"
+fi
+
+if ! helm > /dev/null; then
+    echo "ERROR: helm not installed.  Please install the latest version from https://docs.helm.sh/using_helm/#installing-helm and place it in your path."
+    exit 1
+else
+    echo "helm [ok]"
+fi
+
+printf "\nWill deploy into the following Kubernetes cluster:\n"
+
+if ! kubectl cluster-info; then
+    echo "ERROR: kubectl cluster-info failed."
+    exit 1
+fi
+
+printf "\nReady for deploy? [yes]\n"

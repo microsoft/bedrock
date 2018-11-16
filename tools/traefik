@@ -1,0 +1,3 @@
+export TRAEFIK_POD=$(kubectl get pods -n kube-system -l "app=traefik" -o jsonpath="{.items[0].metadata.name}")
+`sleep 1 && open http://localhost:8080` &
+kubectl --namespace kube-system port-forward $TRAEFIK_POD 8080 

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd infra
+if ! ./deploy $1; then
+    echo "ERROR: deploying infra failed"
+    exit 1
+fi
+cd ..
