@@ -1,12 +1,12 @@
 # Omakase
 
-We are living in a period of a virtual cambrian explosion of cloud native platform projects that individually promise to greatly improve our lives as developers. At the same time, it is currently very difficult to start from stratch and stitch all of these projects together into a coherent whole.
+We are living in a virtual cambrian explosion of cloud native platforms that individually promise to greatly improve our lives as developers. At the same time, it is (currently) very difficult to start from stratch and stitch all of these projects together into a coherent whole.
 
-In Japanese, Omakase means "I'll leave it up to you" and is commonly used to trust a chef to design a dining experience for you that best utilizes their culinary skills and minimizing of stress on you so you to make this determination from looking at a large menu and triangulating what is best given the season.
+In Japanese, Omakase means "I'll leave it up to you" and is commonly used to entrust a chef to design a dining experience for you that best utilizes their culinary skills and minimizes the stress on you, the diner so that you can focus on relaxing with the folks you are dining with.
 
-In that vein, this project is our humble attempt to combine the collective wisdom of our cloud native community into a recipe for building best practice cloud native Kubernetes clusters based on the real world experience that we have of deploying cloud native applications at Microsoft with our largest customers. That said, we do not claim to have all the answers (and recognize that there many pieces missing) and would greatly appreciate your ideas and pull requests.
+In that vein, this project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications at Microsoft and with our largest customers. That said, we do not claim to have all the answers (and recognize that there many pieces missing) and would greatly appreciate your ideas (and pull requests!)
 
-## What's included in the box?
+## What's in the box?
 
 Omakase is a currently set of Terraform based devops scripts for automated deployment of the best production-ready cloud native platforms on a Kubernetes cluster including:
 
@@ -51,7 +51,7 @@ $ git clone https://github.com/Microsoft/omakase
 $ tools/check-prereqs
 ```
 
-5. Deploy with the dev sized environment! (This will take a while. I recommend making yourself a delicious cup of coffee as a reward.)
+5. Deploy the dev configuration. (This will take a while. I recommend making yourself a delicious cup of coffee as a reward.)
 
 ```
 $ ./deploy dev
@@ -65,17 +65,23 @@ $ tools/grafana
 
 Grafana is already connected to our cluster's Prometheus service and we've included a couple of dashboards so you can start monitoring the critical metrics in your Kubernetes cluster right away.
 
+![Grafana Image](./docs/images/grafana.png)
+
 ```
 $ tools/kibana
 ```
 
 Omakase has configured a full Fluentd, Elasticsearch, and Kibana logging stack ready for you to create your first index and start querying and visualizing text logs immediately.
 
+![Kibana Image](./docs/images/kibana.png)
+
 ```
 $ tools/traefik
 ```
 
 Traefik is configured as an ingress controller and it includes a management console for monitoring the health and performance of your externally exposed services.
+
+![Traefik Image](./docs/images/traefik.png)
 
 # Contributing
 
