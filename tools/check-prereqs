@@ -23,11 +23,11 @@ else
     echo "helm [ok]"
 fi
 
-printf "\nWill deploy into the following Kubernetes cluster:\n"
+printf "\nChecking current Kubernetes cluster:\n"
 
 if ! kubectl cluster-info; then
     echo "ERROR: kubectl cluster-info failed. Do you have a running current Kubernetes cluster?"
     exit 1
 fi
 
-printf "\nReady for deploy? [yes]\n"
+printf "\nReady for deploy!\n"
