@@ -16,7 +16,7 @@ module "grafana" {
   source = "git::https://github.com/timfpark/terraform-helm-grafana.git"
 
   admin_user     = "${var.grafana_admin_username}"
-  admin_password = "${var.grafana_admin_username}"
+  admin_password = "${var.grafana_admin_password}"
 
   prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
 

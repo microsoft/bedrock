@@ -51,9 +51,10 @@ $ git clone https://github.com/Microsoft/omakase
 $ tools/check-prereqs
 ```
 
-5. Deploy the dev configuration. (This will take a while. I recommend making yourself a delicious cup of coffee as a reward.)
+5. Choose a password for your grafana deployment and deploy the dev configuration. This will take a while. I recommend making yourself a delicious cup of coffee as a reward.
 
 ```
+$ export TF_VAR_grafana_admin_password="SECRET4ever"
 $ ./deploy dev
 ```
 
@@ -61,6 +62,8 @@ $ ./deploy dev
 
 ```
 $ tools/grafana
+
+NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
 ```
 
 Grafana is already connected to our cluster's Prometheus service and we've included a couple of dashboards so you can start monitoring the critical metrics in your Kubernetes cluster right away.
