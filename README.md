@@ -21,13 +21,17 @@ Monitoring
 
 Log Management
 
--   [Fluentd](https://www.fluentd.org/) log collection and forwarding
--   [Elasticsearch](https://www.elastic.co/) log aggregation
+-   [Fluentd](https://www.fluentd.org/) collection and forwarding
+-   [Elasticsearch](https://www.elastic.co/) aggregation
 -   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
 
-Ingress
+Traffic Ingress
 
--   [Traefik](https://traefik.io/) ingress controller
+-   [Traefik](https://traefik.io/) ingress controller automatically integrated with Jaeger.
+
+Distributed Tracing
+
+-   [Jaeger](https://www.jaegertracing.io/) end to end distributed tracing.
 
 ## Getting Started
 
@@ -37,7 +41,7 @@ Ingress
 -   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 -   [helm](https://helm.sh/)
 
-2. If you haven't, create a new Kubernetes cluster with RBAC enabled and ensure that it is the default context `kubectl` is using.
+2. If you haven't, create a new Kubernetes cluster with RBAC enabled and switch to it such that it is the default context `kubectl` is using.
 
 3. Clone this project locally:
 

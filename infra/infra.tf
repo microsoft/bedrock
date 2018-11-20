@@ -6,12 +6,6 @@ module "prometheus" {
   prometheus_server_storage_size        = "${var.prometheus_server_storage_size}"
 }
 
-module "kured" {
-  source = "git::https://github.com/timfpark/terraform-helm-kured.git"
-
-  prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
-}
-
 module "grafana" {
   source = "git::https://github.com/timfpark/terraform-helm-grafana.git"
 
@@ -23,17 +17,10 @@ module "grafana" {
   dashboard_yaml = "${file("config/common/grafana-dashboards.yaml")}"
 }
 
-module "traefik" {
-  source = "git::https://github.com/timfpark/terraform-helm-traefik.git"
+module "kured" {
+  source = "git::https://github.com/timfpark/terraform-helm-kured.git"
 
-  ingress_replica_count = "${var.ingress_replica_count}"
-
-  ssl_enabled        = "${var.traefik_ssl_enabled}"
-  ssl_enforced       = "${var.traefik_ssl_enforced}"
-  prometheus_enabled = "true"
-
-  ssl_cert_base64 = "${base64encode(file("config/common/tls/wildcard.domain.io.crt"))}"
-  ssl_key_base64  = "${base64encode(file("config/common/tls/wildcard.domain.io.key"))}"
+  prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
 }
 
 module "elasticsearch" {
@@ -54,4 +41,25 @@ module "kibana" {
   source = "git::https://github.com/timfpark/terraform-helm-kibana.git"
 
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
+}
+
+module "jaeger" {
+  source = "git::https://github.com/timfpark/terraform-helm-jaeger.git"
+
+  elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
+}
+
+module "traefik" {
+  source = "git::https://github.com/timfpark/terraform-helm-traefik.git"
+
+  ingress_replica_count = "${var.ingress_replica_count}"
+
+  ssl_enabled     = "${var.traefik_ssl_enabled}"
+  ssl_enforced    = "${var.traefik_ssl_enforced}"
+  ssl_cert_base64 = "${base64encode(file("config/common/tls/wildcard.domain.io.crt"))}"
+  ssl_key_base64  = "${base64encode(file("config/common/tls/wildcard.domain.io.key"))}"
+
+  prometheus_enabled    = "true"
+  tracing_enabled       = "true"
+  jaeger_agent_endpoint = "${module.jaeger.agent_endpoint}"
 }
