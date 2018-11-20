@@ -1,14 +1,14 @@
 # Omakase
 
-We are living in a virtual cambrian explosion of cloud native platforms that individually promise to greatly improve our lives as developers. At the same time, it is (currently) very difficult to start from stratch and stitch all of these projects together into a coherent whole.
+The cloud native ecosystem is in a virtual cambrian explosion of platforms and projects that individually promise to greatly improve our lives as developers. At the same time, even as an experienced developer, it is difficult to start from stratch and stitch all of these projects together into a coherent whole without having to do a substantial amount of research and work.
 
-In Japanese, Omakase means "I'll leave it up to you" and is commonly used to entrust a chef to design a dining experience for you that best utilizes their culinary skills and minimizes the stress on you, the diner so that you can focus on relaxing with the folks you are dining with.
+In Japanese, Omakase is a phrase that a diner uses with a chef means "I'll leave it up to your expertise" and is commonly used to entrust a chef to design a dining experience for you that best utilizes their culinary skills and minimizes the stress on you.
 
-In that vein, this project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications at Microsoft and with our largest customers. That said, we do not claim to have all the answers (and recognize that there many pieces missing) and would greatly appreciate your ideas (and pull requests!)
+In that vein, this project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications at Microsoft and with our largest customers. We do not claim to have all the answers (and recognize that there many pieces missing) and would greatly appreciate your ideas and pull requests!
 
 ## What's in the box?
 
-Omakase is a currently set of Terraform based devops scripts for automated deployment of the best production-ready cloud native platforms on a Kubernetes cluster including:
+Omakase is a set of Terraform based devops scripts for automated deployment of what we feel are the common elements of a production-ready cloud native Kubernetes cluster. It currently includes:
 
 Cluster Management
 
@@ -31,7 +31,7 @@ Traffic Ingress
 
 Distributed Tracing
 
--   [Jaeger](https://www.jaegertracing.io/) end to end distributed tracing.
+-   [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
 
 ## Getting Started
 
