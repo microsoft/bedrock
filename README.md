@@ -25,13 +25,13 @@ Log Management
 
 Traffic Ingress
 
--   [Traefik](https://traefik.io/) ingress controller automatically integrated with Jaeger.
+-   [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
 
 Distributed Tracing
 
 -   [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
 
-## Getting Started
+## Quick Start
 
 1. Install the following tool dependencies per their instructions below for your platform and ensure that they are in your path.
 
@@ -53,10 +53,11 @@ $ git clone https://github.com/Microsoft/bedrock
 $ tools/check-prereqs
 ```
 
-5. Choose a password for your grafana deployment and deploy the dev configuration. This will take a while. I recommend making yourself a delicious cup of coffee as a reward.
+5. Choose a password for your grafana deployment and deploy the dev configuration.
 
 ```
 $ export TF_VAR_grafana_admin_password="SECRET4ever"
+$ cd infra
 $ ./deploy dev
 ```
 
@@ -68,7 +69,7 @@ $ tools/grafana
 NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
 ```
 
-Grafana is already connected to our cluster's Prometheus service and we've included a couple of dashboards so you can start monitoring the critical metrics in your Kubernetes cluster right away.
+Grafana provides a visualization of the metrics being collected by our cluster's Prometheus service -- and we've included a couple of Kubernetes related dashboards out of the box.
 
 ![Grafana Image](./docs/images/grafana.png)
 
@@ -76,7 +77,7 @@ Grafana is already connected to our cluster's Prometheus service and we've inclu
 $ tools/kibana
 ```
 
-Fluentd, Elasticsearch, and Kibana are installed and integrated and ready for you to start querying and visualizing text logs immediately.
+Fluentd, Elasticsearch, and Kibana are installed and integrated with each other and your cluster -- ready for you to start querying and visualizing text logs immediately.
 
 ![Kibana Image](./docs/images/kibana.png)
 
@@ -92,7 +93,7 @@ Ingress traffic to the cluster is managed by Traefik, which includes a managemen
 $ tools/jaeger
 ```
 
-Jaeger provides distributed tracing of requests through your system so you can discover and optimize latency hotspots.
+Jaeger provides distributed tracing of requests through your system so you can discover and optimize performance hotspots.
 
 ![Jaeger Image](./docs/images/jaeger.png)
 
