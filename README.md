@@ -1,14 +1,12 @@
-# Omakase
+# bedrock
 
-The cloud native ecosystem is in a virtual cambrian explosion of platforms and projects that individually promise to greatly improve our lives as developers. At the same time, even as an experienced developer, it is difficult to start from stratch and stitch all of these projects together into a coherent whole without having to do a substantial amount of research and work.
+The cloud native ecosystem is in a virtual cambrian explosion of platforms and projects that individually promise to greatly improve our lives as developers. At the same time, even as an experienced developer in this space, it is difficult to start from stratch and stitch all of these projects together into a coherent whole without having to do a substantial amount of research and work.
 
-In Japanese, Omakase is a phrase that a diner uses with a chef means "I'll leave it up to your expertise" and is commonly used to entrust a chef to design a dining experience for you that best utilizes their culinary skills and minimizes the stress on you.
-
-In that vein, this project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications at Microsoft and with our largest customers. We do not claim to have all the answers (and recognize that there many pieces missing) and would greatly appreciate your ideas and pull requests!
+This project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications with our largest customers.
 
 ## What's in the box?
 
-Omakase is a set of Terraform based devops scripts for automated deployment of what we feel are the common elements of a production-ready cloud native Kubernetes cluster. It currently includes:
+Bedrock is a set of Terraform based devops scripts for automated deployment of the common elements of a production-ready cloud native Kubernetes cluster. It currently includes:
 
 Cluster Management
 
@@ -91,6 +89,8 @@ Traefik is configured as an ingress controller and it includes a management cons
 ![Traefik Image](./docs/images/traefik.png)
 
 # Contributing
+
+We do not claim to have all the answers (and recognize that there many pieces still missing) and would greatly appreciate your ideas and pull requests.
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
