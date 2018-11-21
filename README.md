@@ -44,7 +44,7 @@ Distributed Tracing
 3. Clone this project locally:
 
 ```
-$ git clone https://github.com/Microsoft/omakase
+$ git clone https://github.com/Microsoft/bedrock
 ```
 
 4. Check that everything is setup correctly:
