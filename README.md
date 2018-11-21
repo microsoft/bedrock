@@ -76,7 +76,7 @@ Grafana is already connected to our cluster's Prometheus service and we've inclu
 $ tools/kibana
 ```
 
-Omakase has configured a full Fluentd, Elasticsearch, and Kibana logging stack ready for you to create your first index and start querying and visualizing text logs immediately.
+Fluentd, Elasticsearch, and Kibana are installed and integrated and ready for you to start querying and visualizing text logs immediately.
 
 ![Kibana Image](./docs/images/kibana.png)
 
@@ -84,9 +84,17 @@ Omakase has configured a full Fluentd, Elasticsearch, and Kibana logging stack r
 $ tools/traefik
 ```
 
-Traefik is configured as an ingress controller and it includes a management console for monitoring the health and performance of your externally exposed services.
+Ingress traffic to the cluster is managed by Traefik, which includes a management console for monitoring the health and performance of your externally exposed services.
 
 ![Traefik Image](./docs/images/traefik.png)
+
+```
+$ tools/jaeger
+```
+
+Jaeger provides distributed tracing of requests through your system so you can discover and optimize latency hotspots.
+
+![Jaeger Image](./docs/images/jaeger.png)
 
 # Contributing
 
