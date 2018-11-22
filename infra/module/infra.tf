@@ -14,7 +14,7 @@ module "grafana" {
 
   prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
 
-  dashboard_yaml = "${file("config/common/grafana-dashboards.yaml")}"
+  dashboard_yaml = "${file("../common/grafana-dashboards.yaml")}"
 }
 
 module "kured" {
@@ -56,8 +56,8 @@ module "traefik" {
 
   ssl_enabled     = "${var.traefik_ssl_enabled}"
   ssl_enforced    = "${var.traefik_ssl_enforced}"
-  ssl_cert_base64 = "${base64encode(file("config/common/tls/wildcard.domain.io.crt"))}"
-  ssl_key_base64  = "${base64encode(file("config/common/tls/wildcard.domain.io.key"))}"
+  ssl_cert_base64 = "${base64encode(file("../common/tls/wildcard.domain.io.crt"))}"
+  ssl_key_base64  = "${base64encode(file("../common/tls/wildcard.domain.io.key"))}"
 
   prometheus_enabled    = "true"
   tracing_enabled       = "true"

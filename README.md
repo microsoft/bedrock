@@ -56,9 +56,10 @@ $ tools/check-prereqs
 5. Choose a password for your grafana deployment and deploy the dev configuration.
 
 ```
-$ export TF_VAR_grafana_admin_password="SECRET4ever"
-$ cd infra
-$ ./deploy dev
+$ export TF_VAR_grafana_admin_password="SECRETpass"
+$ cd infra/environments/dev
+$ ./init && ./apply
+$ cd ../../..
 ```
 
 6. Take it for a test spin!
