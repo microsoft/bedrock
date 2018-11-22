@@ -38,6 +38,7 @@ Distributed Tracing
 -   [terraform](https://www.terraform.io/intro/getting-started/install.html)
 -   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 -   [helm](https://helm.sh/)
+-   [docker](https://docs.docker.com/docker-for-mac/install/)
 
 2. If you haven't, create a new Kubernetes cluster with RBAC enabled and switch to it such that it is the default context `kubectl` is using.
 
