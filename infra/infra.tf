@@ -44,7 +44,7 @@ module "kibana" {
 }
 
 module "jaeger" {
-  source = "git::https://github.com/timfpark/terraform-helm-jaeger.git"
+  source = "git::https://github.com/timfpark/terraform-jaeger-operator.git"
 
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
 }
