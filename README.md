@@ -14,31 +14,33 @@ Cluster Management
 
 Monitoring
 
--   [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
--   [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
+- [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
+- [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
 
 Log Management
 
--   [Fluentd](https://www.fluentd.org/) collection and forwarding
--   [Elasticsearch](https://www.elastic.co/) aggregation
--   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
+- [Fluentd](https://www.fluentd.org/) collection and forwarding
+- [Elasticsearch](https://www.elastic.co/) aggregation
+- [Kibana](https://www.elastic.co/products/kibana) querying and visualization
 
 Traffic Ingress
 
--   [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
+- [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
 
 Distributed Tracing
 
--   [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
+- [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
 
 ## Quick Start
 
+### locally
+
 1. Install the following tool dependencies per their instructions below for your platform and ensure that they are in your path.
 
--   [terraform](https://www.terraform.io/intro/getting-started/install.html)
--   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
--   [helm](https://helm.sh/)
--   [docker](https://docs.docker.com/docker-for-mac/install/)
+- [terraform](https://www.terraform.io/intro/getting-started/install.html)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [helm](https://helm.sh/)
+- [docker](https://docs.docker.com/docker-for-mac/install/)
 
 2. If you haven't, create a new Kubernetes cluster with RBAC enabled and switch to it such that it is the default context `kubectl` is using.
 
@@ -58,6 +60,44 @@ $ tools/check-prereqs
 
 ```
 $ export TF_VAR_grafana_admin_password="SECRETpass"
+$ cd infra/environments/dev
+$ ./init && ./apply
+$ cd ../../..
+```
+
+6. Take it for a test spin!
+
+```
+$ tools/grafana
+
+NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
+```
+
+### quick start with docker
+
+1. Clone this project locally
+
+```
+$ git clone https://github.com/Microsoft/bedrock
+```
+
+2. build the docker image
+
+```
+$ docker build -t bedrock:latest .
+```
+
+3. Choose a password for your grafana deployment
+
+4. start the docker container with your grafana password as an ENV variable and the kube config as a volume mount
+
+```
+$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" microsoft/bedrock:latest /bin/bash
+```
+
+5. deploy the dev configuration.
+
+```
 $ cd infra/environments/dev
 $ ./init && ./apply
 $ cd ../../..
@@ -99,7 +139,7 @@ Jaeger provides distributed tracing of requests through your system so you can d
 
 ![Jaeger Image](./docs/images/jaeger.png)
 
-# Contributing
+## Contributing
 
 We do not claim to have all the answers (and recognize that there many pieces still missing) and would greatly appreciate your ideas and pull requests.
 
