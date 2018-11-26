@@ -1,3 +1,4 @@
 #!/bin/bash
 
+helm init
 terraform init -var-file="../common/common.tfvars"

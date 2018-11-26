@@ -6,7 +6,7 @@ This project is our humble attempt to combine the collective wisdom of our cloud
 
 ## What's in the box?
 
-Bedrock is a set of Terraform based devops scripts for automated deployment of the common elements of a production-ready cloud native Kubernetes cluster. It currently includes:
+Bedrock is a set of devops scripts for automated deployment of the common elements of a production-ready cloud native Kubernetes cluster. It includes:
 
 Cluster Management
 
@@ -14,33 +14,31 @@ Cluster Management
 
 Monitoring
 
-- [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
-- [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
+-   [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
+-   [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
 
 Log Management
 
-- [Fluentd](https://www.fluentd.org/) collection and forwarding
-- [Elasticsearch](https://www.elastic.co/) aggregation
-- [Kibana](https://www.elastic.co/products/kibana) querying and visualization
+-   [Fluentd](https://www.fluentd.org/) collection and forwarding
+-   [Elasticsearch](https://www.elastic.co/) aggregation
+-   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
 
 Traffic Ingress
 
-- [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
+-   [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
 
 Distributed Tracing
 
-- [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
+-   [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
 
 ## Quick Start
 
-### locally
+1. Install docker locally and confirm that it is in your path. We've encapsulated the rest of the dependencies in a Docker image, but you can also run these tools locally by installing the following set of tools locally as well:
 
-1. Install the following tool dependencies per their instructions below for your platform and ensure that they are in your path.
-
-- [terraform](https://www.terraform.io/intro/getting-started/install.html)
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [helm](https://helm.sh/)
-- [docker](https://docs.docker.com/docker-for-mac/install/)
+-   [docker](https://docs.docker.com/docker-for-mac/install/)
+-   [helm](https://helm.sh/)
+-   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+-   [terraform](https://www.terraform.io/intro/getting-started/install.html)
 
 2. If you haven't, create a new Kubernetes cluster with RBAC enabled and switch to it such that it is the default context `kubectl` is using.
 
@@ -50,63 +48,33 @@ Distributed Tracing
 $ git clone https://github.com/Microsoft/bedrock
 ```
 
-4. Check that everything is setup correctly:
-
-```
-$ tools/check-prereqs
-```
-
-5. Choose a password for your grafana deployment and deploy the dev configuration.
-
-```
-$ export TF_VAR_grafana_admin_password="SECRETpass"
-$ cd infra/environments/dev
-$ ./init && ./apply
-$ cd ../../..
-```
-
-6. Take it for a test spin!
-
-```
-$ tools/grafana
-
-NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
-```
-
-### quick start with docker
-
-1. Clone this project locally
-
-```
-$ git clone https://github.com/Microsoft/bedrock
-```
-
-2. build the docker image
+4. If you are using our docker image, build it locally:
 
 ```
 $ docker build -t bedrock:latest .
 ```
 
-3. Choose a password for your grafana deployment
-
-4. start the docker container with your grafana password as an ENV variable and the kube config as a volume mount
+5. If you are using our docker image, choose a password for your grafana deployment and then start the container with your grafana password as an ENV variable and the kube config as a volume mount (the typical path for your kube config is ~/.kube/config below):
 
 ```
-$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" microsoft/bedrock:latest /bin/bash
+$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" bedrock:latest /bin/bash
+
+bash-4.4#
 ```
 
-5. deploy the dev configuration.
+5. From within the bash shell in this Docker container (or locally), deploy the dev configuration:
 
 ```
-$ cd infra/environments/dev
-$ ./init && ./apply
-$ cd ../../..
+bash-4.4# cd infra/environments/dev
+bash-4.4# ./init
+bash-4.4# ./apply
+bash-4.4# cd ../../..
 ```
 
 6. Take it for a test spin!
 
 ```
-$ tools/grafana
+bash-4.4# tools/grafana
 
 NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
 ```
@@ -116,7 +84,7 @@ Grafana provides a visualization of the metrics being collected by our cluster's
 ![Grafana Image](./docs/images/grafana.png)
 
 ```
-$ tools/kibana
+bash-4.4# tools/kibana
 ```
 
 Fluentd, Elasticsearch, and Kibana are installed and integrated with each other and your cluster -- ready for you to start querying and visualizing text logs immediately.
@@ -124,7 +92,7 @@ Fluentd, Elasticsearch, and Kibana are installed and integrated with each other 
 ![Kibana Image](./docs/images/kibana.png)
 
 ```
-$ tools/traefik
+bash-4.4# tools/traefik
 ```
 
 Ingress traffic to the cluster is managed by Traefik, which includes a management console for monitoring the health and performance of your externally exposed services.
@@ -132,7 +100,7 @@ Ingress traffic to the cluster is managed by Traefik, which includes a managemen
 ![Traefik Image](./docs/images/traefik.png)
 
 ```
-$ tools/jaeger
+bash-4.4# tools/jaeger
 ```
 
 Jaeger provides distributed tracing of requests through your system so you can discover and optimize performance hotspots.
