@@ -33,6 +33,8 @@ Distributed Tracing
 
 ## Quick Start
 
+### Deploying Infrastructure
+
 1. Install docker locally and confirm that it is in your path. We've encapsulated the rest of the dependencies in a Docker image, but you can also run these tools locally by installing the following set of tools locally as well:
 
 -   [docker](https://docs.docker.com/docker-for-mac/install/)
@@ -99,7 +101,7 @@ Jaeger provides distributed tracing of requests through your system so you can d
 
 ![Jaeger Image](./docs/images/jaeger.png)
 
-## Using the Docker image
+#### Using the Docker image
 
 If you'd like to avoid installing the tool dependencies, you can use our Docker container with these dependencies already installed:
 
@@ -117,7 +119,46 @@ $ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_V
 bash-4.4#
 ```
 
-From here, rejoin the quick start steps above
+From here, rejoin the quick start steps above.
+
+### Deploying a Service
+
+We have also included terraform devops scripts for a [simple node.js service](https://github.com/timfpark/simple-service), giving you both a starting point for your own services, but also enabling you to see how all of the parts of the system fit together with a real service.
+
+Deploying it is as simple as:
+
+```
+$ cd services/environments/dev
+$ ./init && ./apply
+```
+
+You can then access the service externally by noting the public IP address of the Traefik service:
+
+```
+$ kubectl get services -n kube-system
+NAMESPACE       NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)                                     AGE
+...
+
+kube-system     traefik                         LoadBalancer   10.0.193.25    52.177.217.86   80:30291/TCP,443:30391/TCP,8080:30269/TCP   48m
+kube-system     traefik-dashboard               ClusterIP      10.0.156.199   <none>          80/TCP                                      48m
+...
+```
+
+and spoofing the `simple.bedrock.tools` domain name resolution in your /etc/hosts file:
+
+```
+$ vi /etc/hosts
+...
+52.177.217.86 simple.bedrock.tools
+...
+```
+
+You should then be able to reach the service via:
+
+```
+$ curl http://simple.bedrock.tools/
+Your lucky number is 58 (instance id 65300 at Wed Nov 28 2018 21:46:46 GMT+0000 (UTC))
+```
 
 ## Contributing
 
@@ -136,3 +177,7 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 For project related questions or comments, please contact (Tim Park)[https://github.com/timfpark].
+
+```
+
+```
