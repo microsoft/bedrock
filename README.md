@@ -48,21 +48,13 @@ Distributed Tracing
 $ git clone https://github.com/Microsoft/bedrock
 ```
 
-4. If you are using our docker image, build it locally:
+4. Choose a password for your grafana deployment and set an environmental variable with it.
 
 ```
-$ docker build -t bedrock:latest .
+$ export TF_VAR_grafana_admin_password="SECRETpass"
 ```
 
-5. If you are using our docker image, choose a password for your grafana deployment and then start the container with your grafana password as an ENV variable and the kube config as a volume mount (the typical path for your kube config is ~/.kube/config below):
-
-```
-$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" bedrock:latest /bin/bash
-
-bash-4.4#
-```
-
-5. From within the bash shell in this Docker container (or locally), deploy the dev configuration:
+5. Deploy the dev configuration:
 
 ```
 bash-4.4# cd infra/environments/dev
@@ -106,6 +98,26 @@ bash-4.4# tools/jaeger
 Jaeger provides distributed tracing of requests through your system so you can discover and optimize performance hotspots.
 
 ![Jaeger Image](./docs/images/jaeger.png)
+
+## Using the Docker image
+
+If you'd like to avoid installing the tool dependencies, you can use our Docker container with these dependencies already installed:
+
+1. Build the image locally:
+
+```
+$ docker build -t bedrock:latest .
+```
+
+2. Choose a password for your grafana deployment and then start the container with your grafana password as an environmental variable and the kube config as a volume mount (the typical path for your kube config is ~/.kube/config below):
+
+```
+$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" bedrock:latest /bin/bash
+
+bash-4.4#
+```
+
+From here, rejoin the quick start steps above
 
 ## Contributing
 
