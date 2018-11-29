@@ -33,7 +33,26 @@ Distributed Tracing
 
 ## Quick Start
 
-### Deploying Infrastructure
+### Deploy a Cluster
+
+If you already have a Kubernetes cluster running and its context is the default, you can skip ahead to the "Deploying Infrastructure" section.
+
+We've included scripts for building a Kubernetes cluster with ACS Engine on Azure, but would welcome pull requests for other cloud providers or platforms.
+
+To deploy a cluster,
+
+1. Ensure you have [acs-engine](https://github.com/Azure/acs-engine) installed and in your path.
+2. Edit cluster/environments/azure-acs-engine/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
+
+3. Deploy the cluster using:
+
+```
+$ cd cluster/environments/azure-acs-engine
+$ ./init
+$ ./apply
+```
+
+### Deploy Infrastructure
 
 1. Install docker locally and confirm that it is in your path. We've encapsulated the rest of the dependencies in a Docker image, but you can also run these tools locally by installing the following set of tools locally as well:
 
@@ -121,7 +140,7 @@ bash-4.4#
 
 From here, rejoin the quick start steps above.
 
-### Deploying a Service
+### Deploy a Service
 
 We have also included terraform devops scripts for a [simple node.js service](https://github.com/timfpark/simple-service), giving you both a starting point for your own services, but also enabling you to see how all of the parts of the system fit together with a real service.
 

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+rm -rf .terraform
+rm terraform.tfstate
+rm terraform.tfstate.backup
+
+rm -rf deployment
+mkdir deployment
+
+terraform init -var-file="../common/common.tfvars"
