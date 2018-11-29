@@ -1,8 +1,9 @@
 module "infra" {
-  source = "../common"
+  source = "../../stacks/cncf"
 
-  grafana_admin_username = "${var.grafana_admin_username}"
+  grafana_admin_username = "ops"
   grafana_admin_password = "${var.grafana_admin_password}"
+  grafana_dashboard_yaml = "${file("./grafana-dashboards.yaml")}"
 
   elasticsearch_master_storage_class = "default"
   elasticsearch_data_storage_class   = "default"
