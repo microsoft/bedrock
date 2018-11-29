@@ -1,5 +1,5 @@
 module "infra" {
-  source = "../../module"
+  source = "../common"
 
   elasticsearch_master_storage_class = "managed-premium"
   elasticsearch_data_storage_class   = "managed-premium"

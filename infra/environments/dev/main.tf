@@ -1,5 +1,5 @@
 module "infra" {
-  source = "../../module"
+  source = "../common"
 
   grafana_admin_username = "${var.grafana_admin_username}"
   grafana_admin_password = "${var.grafana_admin_password}"
@@ -14,5 +14,5 @@ module "infra" {
 
   traefik_ssl_enabled   = "false"
   traefik_ssl_enforced  = "false"
-  ingress_replica_count = "1"
+  ingress_replica_count = "3"
 }
