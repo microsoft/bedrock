@@ -41,13 +41,13 @@ We've included scripts for building a Kubernetes cluster with ACS Engine on Azur
 
 To deploy a cluster,
 
-1. Ensure you have [acs-engine](https://github.com/Azure/acs-engine) installed and in your path.
-2. Edit cluster/environments/azure-acs-engine/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
+1. Ensure you have the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
+2. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
 
 3. Deploy the cluster using:
 
 ```
-$ cd cluster/environments/azure-acs-engine
+$ cd cluster/environments/azure-aks
 $ ./init
 $ ./apply
 ```
@@ -147,6 +147,7 @@ We have also included terraform devops scripts for a [simple node.js service](ht
 Deploying it is as simple as:
 
 ```
+$ set TF_VAR_container_repo=docker.io/timfpark     <-- adjust this to a container repo endpoint you are logged into.
 $ cd services/environments/dev
 $ ./init && ./apply
 ```
