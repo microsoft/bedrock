@@ -1,5 +1,5 @@
 module "infra" {
-  source = "../../stacks/cncf"
+  source = "../../stacks/cloud-native"
 
   grafana_admin_username = "ops"
   grafana_admin_password = "${var.grafana_admin_password}"

@@ -32,7 +32,7 @@ module "elasticsearch" {
 }
 
 module "fluentd" {
-  source = "git::https://github.com/timfpark/terraform-helm-fluentd.git"
+  source = "../../modules/fluentd"
 
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
 }
@@ -49,6 +49,11 @@ module "jaeger" {
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
 }
 
+module "istio" {
+  source = "../../modules/istio"
+}
+
+/*
 module "traefik" {
   source = "git::https://github.com/timfpark/terraform-helm-traefik.git"
 
@@ -63,3 +68,5 @@ module "traefik" {
   tracing_enabled       = "true"
   jaeger_agent_endpoint = "${module.jaeger.agent_endpoint}"
 }
+*/
+
