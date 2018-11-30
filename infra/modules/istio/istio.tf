@@ -32,3 +32,9 @@ resource "helm_release" "istio" {
 
   depends_on = ["null_resource.download_istio"]
 }
+
+resource "null_resource" "install_default_gateway" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/gateway.yaml"
+  }
+}

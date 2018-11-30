@@ -23,9 +23,9 @@ Log Management
 -   [Elasticsearch](https://www.elastic.co/) aggregation
 -   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
 
-Traffic Ingress
+Ingress and Service Mesh
 
--   [Traefik](https://traefik.io/) ingress controller (including Jaeger integration)
+-   [Istio](https://istio.io/) ingress gateway and service mesh
 
 Distributed Tracing
 
@@ -37,7 +37,7 @@ Distributed Tracing
 
 If you already have a Kubernetes cluster running and its context is the default, you can skip ahead to the "Deploying Infrastructure" section.
 
-We've included scripts for building a Kubernetes cluster with ACS Engine on Azure, but would welcome pull requests for other cloud providers or platforms.
+We've included Terraform scripts for building a Kubernetes cluster with Azure AKS or ACS Engine, but would welcome pull requests for other cloud providers.
 
 To deploy a cluster,
 
@@ -147,7 +147,7 @@ We have also included terraform devops scripts for a [simple node.js service](ht
 Deploying it is as simple as:
 
 ```
-$ set TF_VAR_container_repo=docker.io/timfpark     <-- adjust this to a container repo endpoint you are logged into.
+$ set TF_VAR_container_repo=docker.io/timfpark  <-- adjust this to your container repo
 $ cd services/environments/dev
 $ ./init && ./apply
 ```
@@ -156,33 +156,22 @@ You can then access the service externally by noting the public IP address of th
 
 ```
 $ kubectl get services -n kube-system
-NAMESPACE       NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)                                     AGE
+NAME                     TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)...
 ...
-
-kube-system     traefik                         LoadBalancer   10.0.193.25    52.177.217.86   80:30291/TCP,443:30391/TCP,8080:30269/TCP   48m
-kube-system     traefik-dashboard               ClusterIP      10.0.156.199   <none>          80/TCP                                      48m
+istio-ingressgateway     LoadBalancer   10.0.184.127   40.123.43.171   80:31380/TCP,443:31390/TCP,31400:31400/TCP,15011:32347/TCP,8060:30113/TCP,853:31090/TCP,15030:32107/TCP,15031:30020/TCP   1h
 ...
 ```
 
-and spoofing the `simple.bedrock.tools` domain name resolution in your /etc/hosts file:
+and then using `curl` to inject the Host header for your request so Istio knows how to route it:
 
 ```
-$ vi /etc/hosts
-...
-52.177.217.86 simple.bedrock.tools
-...
-```
-
-You should then be able to reach the service via:
-
-```
-$ curl http://simple.bedrock.tools/
+$ curl -HHost:simple.bedrock.tools http://40.123.43.171:80
 Your lucky number is 58 (instance id 65300 at Wed Nov 28 2018 21:46:46 GMT+0000 (UTC))
 ```
 
 ## Contributing
 
-We do not claim to have all the answers (and recognize that there many pieces still missing) and would greatly appreciate your ideas and pull requests.
+We do not claim to have all the answers and would greatly appreciate your ideas and pull requests.
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
