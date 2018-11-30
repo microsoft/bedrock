@@ -11,9 +11,9 @@ module "azure_acs_engine" {
   location   = "eastus2"
   admin_user = "ops"
 
-  subnet_address_space = "10.200.0.0/16"
-  vnet_address_space   = "10.200.0.0/16"
-  first_master_ip      = "10.200.255.239"
+  subnet_address_space = "10.201.0.0/16"
+  vnet_address_space   = "10.201.0.0/16"
+  first_master_ip      = "10.201.255.239"
 
   client_id      = "${var.client_id}"
   client_secret  = "${var.client_secret}"
