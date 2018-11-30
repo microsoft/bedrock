@@ -9,7 +9,3 @@ variable "client_secret" {
 variable "ssh_public_key" {
   type = "string"
 }
-
-variable "container_repo" {
-  type = "string"
-}

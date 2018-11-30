@@ -1,5 +1,5 @@
 module "azure_acs_engine" {
-  source = "git::https://github.com/timfpark/terraform-azure-acs-engine.git"
+  source = "../../providers/azure-acs-engine"
 
   cluster_name   = "my-dev-cluster"
   agent_vm_count = "3"
