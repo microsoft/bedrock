@@ -1,1 +1,6 @@
 .terraform
+deployments
+terraform.tfstate
+terraform.tfstate.backup
+translations
+istio-1.0.4
