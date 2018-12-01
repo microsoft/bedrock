@@ -16,13 +16,33 @@ resource "helm_release" "istio" {
   }
 
   set {
-    name  = "grafana.enabled"
+    name  = "kiali.enabled"
     value = "true"
   }
 
   set {
-    name  = "kiali.enabled"
+    name  = "prometheus.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "servicegraph.prometheusAddr"
+    value = "http://${var.prometheus_service_endpoint}:9090"
+  }
+
+  set {
+    name  = "mtls.enabled"
     value = "true"
+  }
+
+  set {
+    name  = "kiali.dashboard.username"
+    value = "${var.kiala_admin_username}"
+  }
+
+  set {
+    name  = "kiali.dashboard.passphrase"
+    value = "${var.kiala_admin_password}"
   }
 
   set {
@@ -37,4 +57,6 @@ resource "null_resource" "install_default_gateway" {
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/gateway.yaml"
   }
+
+  depends_on = ["helm_release.istio"]
 }

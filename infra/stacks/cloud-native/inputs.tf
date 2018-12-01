@@ -1,3 +1,15 @@
+variable "elasticsearch_master_storage_class" {
+  type = "string"
+}
+
+variable "elasticsearch_data_storage_class" {
+  type = "string"
+}
+
+variable "elasticsearch_data_storage_size" {
+  type = "string"
+}
+
 variable "grafana_admin_username" {
   type = "string"
 }
@@ -7,6 +19,26 @@ variable "grafana_admin_password" {
 }
 
 variable "grafana_dashboard_yaml" {
+  type = "string"
+}
+
+variable "kiala_admin_username" {
+  type = "string"
+}
+
+variable "kiala_admin_password" {
+  type = "string"
+}
+
+variable "prometheus_alertmanager_storage_class" {
+  type = "string"
+}
+
+variable "prometheus_server_storage_class" {
+  type = "string"
+}
+
+variable "prometheus_server_storage_size" {
   type = "string"
 }
 
@@ -30,28 +62,4 @@ variable "ssl_cert_base64" {
 variable "ssl_key_base64" {
   type    = "string"
   default = ""
-}
-
-variable "prometheus_alertmanager_storage_class" {
-  type = "string"
-}
-
-variable "prometheus_server_storage_class" {
-  type = "string"
-}
-
-variable "prometheus_server_storage_size" {
-  type = "string"
-}
-
-variable "elasticsearch_master_storage_class" {
-  type = "string"
-}
-
-variable "elasticsearch_data_storage_class" {
-  type = "string"
-}
-
-variable "elasticsearch_data_storage_size" {
-  type = "string"
 }

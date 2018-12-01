@@ -7,6 +7,15 @@ variable "istio_version" {
   default = "1.0.4"
 }
 
+variable "kiala_admin_username" {
+  type    = "string"
+  default = "ops"
+}
+
+variable "kiala_admin_password" {
+  type = "string"
+}
+
 variable "name" {
   type    = "string"
   default = "istio"
@@ -15,4 +24,8 @@ variable "name" {
 variable "namespace" {
   type    = "string"
   default = "istio-system"
+}
+
+variable "prometheus_service_endpoint" {
+  type = "string"
 }

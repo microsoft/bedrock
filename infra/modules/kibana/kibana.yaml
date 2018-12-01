@@ -1,0 +1,3 @@
+files:
+  kibana.yml:
+    elasticsearch.url: http://elasticsearch-client.elasticsearch.svc.cluster.local:9200

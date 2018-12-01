@@ -1,5 +1,5 @@
 module "prometheus" {
-  source = "git::https://github.com/timfpark/terraform-helm-prometheus.git"
+  source = "../../modules/prometheus"
 
   prometheus_alertmanager_storage_class = "${var.prometheus_alertmanager_storage_class}"
   prometheus_server_storage_class       = "${var.prometheus_server_storage_class}"
@@ -7,7 +7,7 @@ module "prometheus" {
 }
 
 module "grafana" {
-  source = "git::https://github.com/timfpark/terraform-helm-grafana.git"
+  source = "../../modules/grafana"
 
   admin_user     = "${var.grafana_admin_username}"
   admin_password = "${var.grafana_admin_password}"
@@ -18,13 +18,13 @@ module "grafana" {
 }
 
 module "kured" {
-  source = "git::https://github.com/timfpark/terraform-helm-kured.git"
+  source = "../../modules/kured"
 
   prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
 }
 
 module "elasticsearch" {
-  source = "git::https://github.com/timfpark/terraform-helm-elasticsearch.git"
+  source = "../../modules/elasticsearch"
 
   elasticsearch_master_storage_class = "${var.elasticsearch_master_storage_class}"
   elasticsearch_data_storage_class   = "${var.elasticsearch_data_storage_class}"
@@ -38,35 +38,22 @@ module "fluentd" {
 }
 
 module "kibana" {
-  source = "git::https://github.com/timfpark/terraform-helm-kibana.git"
+  source = "../../modules/kibana"
 
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
 }
 
 module "jaeger" {
-  source = "git::https://github.com/timfpark/terraform-jaeger-operator.git"
+  source = "../../modules/jaeger"
 
   elasticsearch_client_endpoint = "${module.elasticsearch.elasticsearch_client_endpoint}"
 }
 
 module "istio" {
   source = "../../modules/istio"
+
+  kiala_admin_username = "${var.kiala_admin_username}"
+  kiala_admin_password = "${var.kiala_admin_password}"
+
+  prometheus_service_endpoint = "${module.prometheus.prometheus_service_endpoint}"
 }
-
-/*
-module "traefik" {
-  source = "git::https://github.com/timfpark/terraform-helm-traefik.git"
-
-  ingress_replica_count = "${var.ingress_replica_count}"
-
-  ssl_enabled     = "${var.traefik_ssl_enabled}"
-  ssl_enforced    = "${var.traefik_ssl_enforced}"
-  ssl_cert_base64 = "${var.ssl_cert_base64}"
-  ssl_key_base64  = "${var.ssl_key_base64}"
-
-  prometheus_enabled    = "true"
-  tracing_enabled       = "true"
-  jaeger_agent_endpoint = "${module.jaeger.agent_endpoint}"
-}
-*/
-

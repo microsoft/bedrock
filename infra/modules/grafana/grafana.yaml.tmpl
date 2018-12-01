@@ -1,0 +1,41 @@
+datasources: 
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://${prometheus_service_endpoint}
+      access: proxy
+      isDefault: true
+dashboardProviders: 
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/default
+dashboards:
+  default:
+    cluster-metrics:
+      gnetId: 6417
+      revision: 1
+      datasource: Prometheus
+    persistent-volumes:
+      gnetId: 6739
+      revision: 1
+      datasource: Prometheus
+${dashboard_yaml}
+persistence:
+  enabled: ${persistence_enabled}
+  storageClassName: '${storage_class}'
+  accessModes:
+    - ReadWriteOnce
+  size: ${storage_size}
+plugins:
+  - digrich-bubblechart-panel
+  - grafana-clock-panel
