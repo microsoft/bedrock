@@ -4,5 +4,6 @@ rm -rf .terraform
 rm terraform.tfstate
 rm terraform.tfstate.backup
 
+helm update
 helm init
 terraform init
