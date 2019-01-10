@@ -44,10 +44,15 @@ To deploy a cluster,
 1. Ensure you have the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
 2. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
 
-3. Deploy the cluster using:
+3. Create a service principal (optional - feel free to use an existing service principal) for your cluster using the Azure CLI: `az ad sp create-for-rbac` - note down the `appId` and `password`.
+
+4. Deploy the cluster using:
 
 ```
 $ cd cluster/environments/azure-aks
+$ export TF_VAR_client_id="" # the `appId` from `az ad sp create-for-rbac`, or some other existing appId
+$ export TF_VAR_client_secret="" # the `password` from `az ad sp create-for-rbac` or some other existing service principal's secret.
+$ export TF_VAR_ssh_public_key="" # the contents of your ssh public key.
 $ ./init
 $ ./apply
 ```
@@ -78,6 +83,7 @@ $ export TF_VAR_grafana_admin_password="SECRETpass"
 5. Deploy the dev configuration:
 
 ```
+bash-4.4# helm repo update
 bash-4.4# cd infra/environments/dev
 bash-4.4# ./init
 bash-4.4# ./apply
@@ -185,7 +191,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-For project related questions or comments, please contact (Tim Park)[https://github.com/timfpark].
+For project related questions or comments, please contact [Tim Park](https://github.com/timfpark).
 
 ```
 
