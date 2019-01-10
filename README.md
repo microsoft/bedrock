@@ -83,7 +83,7 @@ $ export TF_VAR_grafana_admin_password="SECRETpass"
 5. Deploy the dev configuration:
 
 ```
-bash-4.4# helm update
+bash-4.4# helm repo update
 bash-4.4# cd infra/environments/dev
 bash-4.4# ./init
 bash-4.4# ./apply
