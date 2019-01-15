@@ -1,21 +1,27 @@
+resource "random_integer" "ri" {
+  min = 10000
+  max = 99999
+}
 resource "azurerm_resource_group" "cluster" {
-  name     = "${var.cluster_name}-rg"
+  name     = "${var.cluster_name}-${random_integer.ri.result}-rg"
   location = "${var.location}"
 }
 
 resource "azurerm_virtual_network" "cluster" {
-  name                = "${var.cluster_name}-vnet"
+  name                = "${var.cluster_name}-${random_integer.ri.result}-vnet"
   address_space       = ["${var.vnet_address_space}"]
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.cluster.name}"
 }
 
 resource "azurerm_subnet" "cluster" {
-  name                 = "${var.cluster_name}-subnet"
+  name                 = "${var.cluster_name}-${random_integer.ri.result}-subnet"
   resource_group_name  = "${azurerm_resource_group.cluster.name}"
   address_prefix       = "${var.subnet_address_space}"
   virtual_network_name = "${azurerm_virtual_network.cluster.name}"
 }
+
+
 
 /*
 
@@ -69,7 +75,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
 resource "null_resource" "create_cluster" {
   provisioner "local-exec" {
-    command = "az aks create -g ${azurerm_resource_group.cluster.name} -n ${var.cluster_name} -l ${azurerm_resource_group.cluster.location} --kubernetes-version ${var.kubernetes_version} --node-count ${var.agent_vm_count} --node-vm-size ${var.agent_vm_size} --network-plugin azure --vnet-subnet-id ${azurerm_subnet.cluster.id}"
+    command = "az aks create -g ${azurerm_resource_group.cluster.name} -n ${var.cluster_name}-${random_integer.ri.result} -l ${azurerm_resource_group.cluster.location} --kubernetes-version ${var.kubernetes_version} --node-count ${var.agent_vm_count} --node-vm-size ${var.agent_vm_size} --network-plugin azure --vnet-subnet-id ${azurerm_subnet.cluster.id}"
   }
 
   depends_on = ["azurerm_subnet.cluster"]
@@ -77,7 +83,7 @@ resource "null_resource" "create_cluster" {
 
 resource "null_resource" "cluster_credentials" {
   provisioner "local-exec" {
-    command = "az aks get-credentials --resource-group ${azurerm_resource_group.cluster.name} --name ${var.cluster_name} --overwrite-existing"
+    command = "az aks get-credentials --resource-group ${azurerm_resource_group.cluster.name} --name ${var.cluster_name}-${random_integer.ri.result} --overwrite-existing"
   }
 
   //depends_on = ["azurerm_kubernetes_cluster.cluster"]

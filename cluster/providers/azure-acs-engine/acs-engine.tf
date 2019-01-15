@@ -1,17 +1,21 @@
+resource "random_integer" "ri" {
+  min = 10000
+  max = 99999
+}
 resource "azurerm_resource_group" "cluster" {
-  name     = "${var.cluster_name}-rg"
+  name     = "${var.cluster_name}-${random_integer.ri.result}-rg"
   location = "${var.location}"
 }
 
 resource "azurerm_virtual_network" "cluster" {
-  name                = "${var.cluster_name}-vnet"
+  name                = "${var.cluster_name}-${random_integer.ri.result}-vnet"
   address_space       = ["${var.vnet_address_space}"]
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.cluster.name}"
 }
 
 resource "azurerm_subnet" "cluster" {
-  name                 = "${var.cluster_name}-subnet"
+  name                 = "${var.cluster_name}-${random_integer.ri.result}-subnet"
   resource_group_name  = "${azurerm_resource_group.cluster.name}"
   address_prefix       = "${var.subnet_address_space}"
   virtual_network_name = "${azurerm_virtual_network.cluster.name}"
@@ -61,7 +65,7 @@ resource "null_resource" "generate_acs_engine_deployment" {
 # Locally run the Azure 2.0 CLI to create the resource deployment
 resource "null_resource" "cluster" {
   provisioner "local-exec" {
-    command = "az group deployment create --name ${var.cluster_name} --resource-group ${var.cluster_name}-rg --template-file ./deployment/acs-engine/azuredeploy.json --parameters @./deployment/acs-engine/azuredeploy.parameters.json"
+    command = "az group deployment create --name ${var.cluster_name}-${random_integer.ri.result} --resource-group ${azurerm_resource_group.cluster.name} --template-file ./deployment/acs-engine/azuredeploy.json --parameters @./deployment/acs-engine/azuredeploy.parameters.json"
   }
 
   depends_on = ["null_resource.generate_acs_engine_deployment"]
