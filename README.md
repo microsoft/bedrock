@@ -39,12 +39,13 @@ If you already have a Kubernetes cluster running and its context is the default,
 
 We've included Terraform scripts for building a Kubernetes cluster with Azure AKS or ACS Engine, but would welcome pull requests for other cloud providers.
 
-To deploy a cluster,
+To deploy a cluster:
 
-1. Ensure you have the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
-2. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
-
-3. Deploy the cluster using:
+1. Ensure you have the latest [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
+2. Ensure you have [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [helm](https://github.com/helm/helm/blob/master/docs/install.md) installed.
+3. Generate [ssh keys](https://confluence.atlassian.com/bitbucketserver054/creating-ssh-keys-939508421.html) to be deployed with your cluster.
+4. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
+5. Deploy the cluster using:
 
 ```
 $ cd cluster/environments/azure-aks
