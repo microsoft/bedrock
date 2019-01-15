@@ -83,11 +83,3 @@ resource "null_resource" "cluster_credentials" {
   //depends_on = ["azurerm_kubernetes_cluster.cluster"]
   depends_on = ["null_resource.create_cluster"]
 }
-
-resource "null_resource" "helm" {
-  provisioner "local-exec" {
-    command = "kubectl apply -f ${path.module}/tiller.yaml && helm init --service-account tiller --upgrade --wait"
-  }
-
-  depends_on = ["null_resource.cluster_credentials"]
-}
