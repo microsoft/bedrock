@@ -83,3 +83,11 @@ resource "null_resource" "cluster_credentials" {
   //depends_on = ["azurerm_kubernetes_cluster.cluster"]
   depends_on = ["null_resource.create_cluster"]
 }
+
+resource "null_resource" "deploy_flux" {
+  provisioner "local-exec" {
+    command = "./deploy-flux.sh -f ${var.flux_repo_url} -g ${var.gitops_url} -k ${var.gitops_ssh_key}"
+  }
+
+  depends_on = ["null_resource.cluster_credentials"]
+}

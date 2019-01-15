@@ -26,3 +26,19 @@ variable "client_secret" {
 variable "ssh_public_key" {
   type = "string"
 }
+
+variable "flux_repo_url" {
+  type = "string"
+}
+
+variable "gitops_url" {
+  type = "string"
+}
+
+# generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
+# add public key in gitops repo as deploy key with read/write access
+# use private key to cretae kubernetes secret object
+variable "gitops_ssh_key" {
+  type    = "string"
+  default = "./identity"
+}
