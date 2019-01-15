@@ -69,7 +69,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
 resource "null_resource" "create_cluster" {
   provisioner "local-exec" {
-    command = "az aks create -g ${azurerm_resource_group.cluster.name} -n ${var.cluster_name} -l ${azurerm_resource_group.cluster.location} --kubernetes-version ${var.kubernetes_version} --node-count ${var.agent_vm_count} --node-vm-size ${var.agent_vm_size} --network-plugin azure --vnet-subnet-id ${azurerm_subnet.cluster.id} --generate-ssh-keys"
+    command = "az aks create -g ${azurerm_resource_group.cluster.name} -n ${var.cluster_name} -l ${azurerm_resource_group.cluster.location} --kubernetes-version ${var.kubernetes_version} --node-count ${var.agent_vm_count} --node-vm-size ${var.agent_vm_size} --network-plugin azure --vnet-subnet-id ${azurerm_subnet.cluster.id}"
   }
 
   depends_on = ["azurerm_subnet.cluster"]
@@ -84,3 +84,10 @@ resource "null_resource" "cluster_credentials" {
   depends_on = ["null_resource.create_cluster"]
 }
 
+resource "null_resource" "helm" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/tiller.yaml && helm init --service-account tiller --upgrade --wait"
+  }
+
+  depends_on = ["null_resource.cluster_credentials"]
+}
