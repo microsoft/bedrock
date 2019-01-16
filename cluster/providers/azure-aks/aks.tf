@@ -64,6 +64,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       tenant_id         = "${var.aad_tenant_id}"
     }
   }*/
-
     }
 }
+    

@@ -16,4 +16,8 @@ module "azure_aks" {
   client_secret = "${var.client_secret}"
 
   ssh_public_key = "${var.ssh_public_key}"
+
+  flux_repo_url  = "${var.flux_repo_url}"
+  gitops_url     = "${var.gitops_url}"
+  gitops_ssh_key = "${var.gitops_ssh_key}"
 }
