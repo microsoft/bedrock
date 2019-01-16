@@ -53,3 +53,9 @@ variable "aad_tenant_id" {
 variable "client_id" {}
 
 variable "client_secret" {}
+
+variable "flux_repo_url" {}
+
+variable "gitops_url" {}
+
+variable "gitops_ssh_key" {}
