@@ -26,16 +26,17 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     network_plugin = "azure"
   }
 
-  /*
   role_based_access_control {
+    enabled = true
+  /*
     azure_active_directory {
       server_app_id     = "${var.aad_server_app_id}"
       server_app_secret = "${var.aad_server_app_secret}"
       client_app_id     = "${var.aad_client_app_id}"
       tenant_id         = "${var.aad_tenant_id}"
     }
-  }
   */
+  }
 
   service_principal {
     client_id     = "${var.client_id}"
