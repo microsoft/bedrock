@@ -50,6 +50,9 @@ To deploy a cluster:
 
 ```
 $ cd cluster/environments/azure-aks
+$ export TF_VAR_client_id="" # the `appId` from `az ad sp create-for-rbac`, or some other existing appId
+$ export TF_VAR_client_secret="" # the `password` from `az ad sp create-for-rbac` or some other existing service principal's secret.
+$ export TF_VAR_ssh_public_key="" # the contents of your ssh public key.
 $ ./init
 $ ./apply
 ```
@@ -80,6 +83,7 @@ $ export TF_VAR_grafana_admin_password="SECRETpass"
 5. Deploy the dev configuration:
 
 ```
+bash-4.4# helm repo update
 bash-4.4# cd infra/environments/dev
 bash-4.4# ./init
 bash-4.4# ./apply
