@@ -44,8 +44,9 @@ To deploy a cluster:
 1. Ensure you have the latest [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
 2. Ensure you have [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [helm](https://github.com/helm/helm/blob/master/docs/install.md) installed.
 3. Generate [ssh keys](https://confluence.atlassian.com/bitbucketserver054/creating-ssh-keys-939508421.html) to be deployed with your cluster.
-4. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
-5. Deploy the cluster using:
+4. Generate a [service principal](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest) and update cluster/environments/azure-aks/inputs.tf with the configurations
+5. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
+6. Deploy the cluster using:
 
 ```
 $ cd cluster/environments/azure-aks
