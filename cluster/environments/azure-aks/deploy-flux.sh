@@ -30,7 +30,7 @@ if ! mkdir $FLUX_MANIFESTS; then
     exit 1
 fi
 
-# call heml template with
+# call helm template with
 #   release name: flux
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
