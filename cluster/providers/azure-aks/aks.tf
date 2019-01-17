@@ -64,6 +64,24 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       tenant_id         = "${var.aad_tenant_id}"
     }
   }*/
-    }
+  }
 }
+
+  resource "null_resource" "cluster_credentials" {
+    provisioner "local-exec" {
+      command = "az aks get-credentials --resource-group ${azurerm_resource_group.cluster.name} --name ${var.cluster_name}-${random_integer.ri.result} --overwrite-existing"
+    }
+    depends_on = ["azurerm_kubernetes_cluster.cluster"]
+  }
+
+  resource "null_resource" "deploy_flux" {
+    provisioner "local-exec" {
+      command = "./deploy-flux.sh -f ${var.flux_repo_url} -g ${var.gitops_url} -k ${var.gitops_ssh_key}"
+    }
+
+    depends_on = ["null_resource.cluster_credentials"]
+  }
+
+
+
     
