@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts f:g:k: option 
+while getopts f:g:k:c option 
 do 
  case "${option}" in 
  f) FLUX_REPO_URL=${OPTARG};; 

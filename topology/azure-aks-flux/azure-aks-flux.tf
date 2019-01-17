@@ -48,7 +48,7 @@ resource "null_resource" "cluster_credentials" {
 
 resource "null_resource" "deploy_flux" {
   provisioner "local-exec" {
-    command = "${path.module}/deploy-flux.sh -f ${var.flux_repo_url} -g ${var.gitops_url} -k ${var.gitops_ssh_key}"
+    command = "KUBECONFIG=${var.output_directory}/kube_config ${path.module}/deploy-flux.sh -f ${var.flux_repo_url} -g ${var.gitops_url} -k ${var.gitops_ssh_key}"
   }
 
   depends_on = ["null_resource.cluster_credentials"]
