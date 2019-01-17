@@ -62,3 +62,7 @@ variable "agent_vm_size" {
     default = "Standard_DS3_v2"
 }
 
+variable "output_directory" {
+    type    = "string"
+    default = "./output"
+}

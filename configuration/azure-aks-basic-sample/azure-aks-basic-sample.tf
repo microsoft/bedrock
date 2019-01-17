@@ -4,15 +4,15 @@ module "provider" {
 
 locals {
   /* resource group information */
-  resource_group_name     = "jms-tf-rg-3"
-  resource_group_location = "westus2"
+  resource_group_name     = "${var.resource_group_name}"
+  resource_group_location = "${var.resource_group_location}"
 
   /* network information */
   vnet_address_space      = "10.200.0.0/16"
   subnet_address_space    = "10.200.0.0/16"
 
   /* cluster information */
-  cluster_name = "aks-basic-cluster"
+  cluster_name = "${var.cluster_name}"
 
   /* aks information */
   agent_vm_count            = "3"
@@ -25,6 +25,9 @@ locals {
   /* service principal information */
   service_principal_id      = "${var.service_principal_id}"
   service_principal_secret  = "${var.service_principal_secret}"
+
+  /* output information */
+  output_directory          = "${var.output_directory}"
 }
 
 module "azure_aks" {
@@ -41,4 +44,5 @@ module "azure_aks" {
   ssh_public_key            = "${local.ssh_public_key}"
   client_id                 = "${local.service_principal_id}"
   client_secret             = "${local.service_principal_secret}"
+  output_directory          = "${local.output_directory}"
 }

@@ -39,3 +39,9 @@ module "aks" {
   client_id               = "${var.client_id}"
   client_secret           = "${var.client_secret}"
 }
+
+resource "null_resource" "cluster_credentials" {
+  provisioner "local-exec" {
+    command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo \"${module.aks.kube_config}\" > ${var.output_directory}/kube_config"
+  }
+}
