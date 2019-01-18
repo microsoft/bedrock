@@ -1,7 +1,7 @@
 module "azure_aks" {
   source = "../../providers/azure-aks"
 
-  cluster_name   = "my-dev-cluster"
+  cluster_name   = "${var.cluster_id}-${local.key_id}"
   agent_vm_count = "3"
   agent_vm_size  = "Standard_DS3_v2"
 

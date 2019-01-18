@@ -1,31 +1,27 @@
-resource "random_integer" "ri" {
-  min = 10000
-  max = 99999
-}
 resource "azurerm_resource_group" "cluster" {
-  name     = "${var.cluster_name}-${random_integer.ri.result}-rg"
+  name     = "${var.cluster_name}-rg"
   location = "${var.location}"
 }
 
 resource "azurerm_virtual_network" "cluster" {
-  name                = "${var.cluster_name}-${random_integer.ri.result}-vnet"
+  name                = "${var.cluster_name}-vnet"
   address_space       = ["${var.vnet_address_space}"]
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.cluster.name}"
 }
 
 resource "azurerm_subnet" "cluster" {
-  name                 = "${var.cluster_name}-${random_integer.ri.result}-subnet"
+  name                 = "${var.cluster_name}-subnet"
   resource_group_name  = "${azurerm_resource_group.cluster.name}"
   address_prefix       = "${var.subnet_address_space}"
   virtual_network_name = "${azurerm_virtual_network.cluster.name}"
 }
 
 resource "azurerm_kubernetes_cluster" "cluster" {
-  name                = "${var.cluster_name}-${random_integer.ri.result}"
+  name                = "${var.cluster_name}"
   location            = "${azurerm_resource_group.cluster.location}"
   resource_group_name = "${azurerm_resource_group.cluster.name}"
-  dns_prefix          = "${var.cluster_name}-${random_integer.ri.result}"
+  dns_prefix          = "${var.cluster_name}"
   kubernetes_version  = "${var.kubernetes_version}"
 
   linux_profile {
@@ -69,7 +65,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
   resource "null_resource" "cluster_credentials" {
     provisioner "local-exec" {
-      command = "az aks get-credentials --resource-group ${azurerm_resource_group.cluster.name} --name ${var.cluster_name}-${random_integer.ri.result} --overwrite-existing"
+      command = "az aks get-credentials --resource-group ${azurerm_resource_group.cluster.name} --name ${var.cluster_name} --overwrite-existing"
     }
     depends_on = ["azurerm_kubernetes_cluster.cluster"]
   }
