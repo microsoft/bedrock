@@ -19,6 +19,12 @@ variable "cluster_id" {
   type = "string"
   default = "my-dev-cluster"
 }
+
+variable "location" {
+  type = "string"
+  default = "westus2"
+}
+
 variable "client_id" {
   type = "string"
 }
