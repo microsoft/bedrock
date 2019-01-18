@@ -15,6 +15,10 @@ variable "aad_tenant_id" {
   type = "string"
 }
 */
+variable "cluster_id" {
+  type = "string"
+  default = "my-dev-cluster"
+}
 variable "client_id" {
   type = "string"
 }
@@ -47,4 +51,14 @@ variable "gitops_url" {
 variable "gitops_ssh_key" {
   type    = "string"
   default = "./identity"
+}
+
+# generate a random unique key to be apended to cluster name
+locals {
+  key_id = "${random_integer.ri.result}"
+}
+
+resource "random_integer" "ri" {
+  min = 10000
+  max = 99999
 }
