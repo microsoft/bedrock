@@ -5,7 +5,7 @@ module "azure_aks" {
   agent_vm_count = "3"
   agent_vm_size  = "Standard_DS3_v2"
 
-  location   = "eastus2"
+  location   = "${var.location}"
   admin_user = "ops"
 
   subnet_address_space = "10.200.0.0/16"
