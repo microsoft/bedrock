@@ -65,7 +65,7 @@ In order to deploy the AKS cluster template, do the following:
 
 ### Deploying AKS with Flux
 
-[flux])https://github.com/weaveworks/flux-get-started) is a product from Weaveworks which enables 
+[flux](https://github.com/weaveworks/flux-get-started) is a product from Weaveworks which enables 
 [gitops](https://www.weave.works/blog/gitops-operations-by-pull-request) style deployment of services into 
 a Kubernetes cluster.  `flux` is installed into the Kubernetes cluster and is configured to monitor a 
 specific git repository in which yaml files are deployed.  `flux` takes those yaml files and deploys the
