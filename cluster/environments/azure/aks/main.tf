@@ -30,15 +30,10 @@ locals {
 
     /* output information */
     output_directory          = "${var.output_directory}"
-
-    /* flux information */
-    flux_repo_url             = "${var.flux_repo_url}"
-    gitops_url                = "${var.gitops_url}"
-    gitops_ssh_key            = "${var.gitops_ssh_key}"
 }
 
-module "aks-flux" "cluster" {
-    source = "../../../templates/azure/aks-flux"
+module "aks" "cluster" {
+    source = "../../../templates/azure/aks"
 
     resource_group_name       = "${local.resource_group_name}"
     resource_group_location   = "${local.resource_group_location}"
@@ -53,8 +48,10 @@ module "aks-flux" "cluster" {
     ssh_public_key            = "${local.ssh_public_key}"
     client_id                 = "${local.service_principal_id}"
     client_secret             = "${local.service_principal_secret}"
-    output_directory          = "${local.output_directory}"
-    flux_repo_url             = "${local.flux_repo_url}"
-    gitops_url                = "${local.gitops_url}"
-    gitops_ssh_key            = "${local.gitops_ssh_key}"
+}
+
+resource "null_resource" "cluster_credentials" {
+  provisioner "local-exec" {
+    command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo \"${module.aks.kube_config}\" > ${var.output_directory}/kube_config"
+  }
 }
