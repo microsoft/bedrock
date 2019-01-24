@@ -9,7 +9,8 @@ do
 done 
 
 KUBE_SECRET_NAME="flux-ssh"
-KUBE_NAMESPACE=flux
+RELEASE_NAME="flux"
+KUBE_NAMESPACE="flux"
 REPO_DIR="flux"
 FLUX_CHART_DIR="flux/chart/flux"
 FLUX_MANIFESTS="manifests"
@@ -35,18 +36,24 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name flux --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.secretName=$KUBE_SECRET_NAME; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.secretName=$KUBE_SECRET_NAME; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
 
 cd ../../../
 
+echo "creating kubernetes namespace $KUBE_NAMESPACE"
+if ! kubectl create namespace $KUBE_NAMESPACE; then
+    echo "ERROR: failed to create kubernetes namespace $KUBE_NAMESPACE"
+    exit 1
+fi
+
 echo "creating kubernetes secret $KUBE_SECRET_NAME from key file path $GITOPS_SSH_KEY"
-kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY
+kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE
 
 echo "Applying flux deployment"
-if ! kubectl apply -f  $FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates; then
+if ! kubectl apply -f  $FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
     echo "ERROR: failed to apply flux deployment"
     exit 1
 fi
