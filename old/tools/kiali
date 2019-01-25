@@ -1,2 +1,0 @@
-`sleep 2 && open http://localhost:20001` &
-kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=kiali -ojsonpath='{.items[0].metadata.name}') 20001:20001

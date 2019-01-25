@@ -1,3 +1,0 @@
-export JAEGER_POD=$(kubectl get pods  -l "jaeger-component=query" -o jsonpath="{.items[0].metadata.name}")
-`sleep 1 && open http://localhost:16686/` &
-kubectl port-forward $JAEGER_POD 16686 
