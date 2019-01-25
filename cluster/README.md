@@ -4,24 +4,26 @@ Bedrock automates cluster deployments with [Terraform](https://www.terraform.io)
 
 Azure is currently the only provider supported, but we would welcome pull requests for other clouds.
 
-## Creating a new Cluster Environment
+## Setup
 
-This automation `kubectl` for interacting with Kubernetes clusters, and `Terraform` for infrastructure automation.  If you haven't already, install them:
+Bedrock's cluster creation automation requires `kubectl` for interacting with Kubernetes clusters, and `Terraform` for infrastructure automation.  If you haven't already, install them:
 
 - [terraform](https://www.terraform.io/intro/getting-started/install.html)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
  
-For Azure based clusters, it also uses the `az` command line tool:
+For Azure based clusters, you also need to have the `az` command line tool:
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
-Copy an existing cluster environment to use as a template for your deployment:
+## Creating a new Cluster Environment
+
+In bedrock, each cluster is defined in an environment that captures its configuration.  To create a new cluster environment, one typically copies an existing cluster environment to use as a template for your deployment.  For example, for an AKS cluster:
 
 ```bash
 $ cp -r environments/azure/aks-flux environments/azure/my-cluster
 ```
 
-Edit `environments/azure/my-cluster/cluster.tfvars` (or whatever name you chose for your cluster) and update the following variables (for the full list of customizable variables see `inputs.tf`):
+The next step is to edit `environments/azure/my-cluster/cluster.tfvars` (or whatever name you chose for your cluster) and update the following variables (for a full list of customizable variables see `inputs.tf`):
 
 - `resource_group_name` - Name of the resource group for the cluster
 - `cluster_name` - Name of the cluster itself
@@ -35,7 +37,7 @@ In the configuration above, `service_principal_id` should be set to `appId` and 
 
 ## Deploying Cluster
 
-From your cluster environment's directory (`environments/azure/my-cluster`) execute:
+To deploy the cluster you have defined, execute the following two steps from your cluster environment's directory (eg. `environments/azure/my-cluster`):
 
 ```
 $ terraform init
@@ -50,7 +52,7 @@ $ terraform apply -var-file=./cluster.tfvars
 This will deploy the infrastructure for your cluster and install [Flux](https://github.com/weaveworks/flux)
 in the cluster. Flux is an open source project that enables a [gitops](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow to deploy resources in a Kubernetes cluster. 
 
-Its operational model is very simple: it monitors a specific git repository in which Kubernetes resource
+Its operational model is very simple: it monitors a specific git repository that Kubernetes resource
 manifest files are checked into, and when it detects a change to those resource manifests, it applies those changes to the cluster. 
 
 Once your cluster has been created the credentials for the cluster will be placed in the specified `output_directory` which defaults to `./output`. 
