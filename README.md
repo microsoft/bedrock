@@ -29,7 +29,7 @@ Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/
 
 ## Getting Started
 
-1. Copy a cluster environment template, modify it, and deploy a AKS cluster [following these instructions](./cluster).
+1. [Create and deploy a cluster](./cluster)
 
 ## Contributing
 
