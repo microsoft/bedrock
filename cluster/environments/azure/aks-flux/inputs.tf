@@ -68,7 +68,6 @@ variable "gitops_url" {
 
 variable "gitops_ssh_key" {
   type    = "string"
-  default = "./identity"
 }
 
 variable "output_directory" {

@@ -57,20 +57,6 @@ variable "service_principal_secret" {
     type = "string"
 }
 
-variable "flux_repo_url" {
-  type = "string"
-  default = "https://github.com/weaveworks/flux.git"
-}
-
-variable "gitops_url" {
-  type = "string"
-}
-
-variable "gitops_ssh_key" {
-  type    = "string"
-  default = "./identity"
-}
-
 variable "output_directory" {
     type = "string"
     default = "./output"
