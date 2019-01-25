@@ -1,7 +1,0 @@
-cluster_id = "cluster-name"
-client_id = "client-id"
-client_secret  = "client-secret"
-ssh_public_key = "ssh-key"
-flux_repo_url = "https://github.com/weaveworks/flux.git"
-gitops_url = "git@github.com:sarath-p/flux-get-started.git"
-gitops_ssh_key = "./identity"

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-REPO_ROOT=https://github.com/timfpark \
-REPO_NAME=simple-service \
-SERVICE_NAME=simple-service \
-NAMESPACE=services \
-CONTAINER_REPO=$2 \
-VALUES_FILE=devops/$1.yaml \
-../../common/deploy-service $1
