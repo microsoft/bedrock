@@ -16,7 +16,7 @@ is necessary for interacting with Kubernetes clusters (AKS, etc).
 
 Currently, the following infrastructure examples are defined:
 
-- `environments/azure/aks-flux` is an AKS cluster with [flux])https://github.com/weaveworks/flux-get-started) installed.
+- `environments/azure/aks-flux` is an AKS cluster with [flux](https://github.com/weaveworks/flux-get-started) installed.
 - `environments/azure/aks` is a vanilla AKS deployment
 
 As mentioned, one can either work directly with these examples or create a copy for customization.
@@ -92,7 +92,7 @@ When deploying clusters, one thing to be aware of is the following:
 - `gitops_ssh_key` must be a path to the *private key file* that was configured to work with the Gitops repository
 - `gitops_url` must point to the same repository that the `gitops_ssh_key` was generated / configured as part of the prerequisite steps outline in [Setting up Gitops Repository for Flux](#setting-up-gitops-repository-for-flux).
 
-### Setup Gitops Repository for Flux
+### Setting Up Gitops Repository for Flux
 
 Flux requires a repository to monitor in order to deploy services to the Kubernetes cluster.  In order to configure 
 a repository for use with Flux, the basic steps are as follows:
