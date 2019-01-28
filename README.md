@@ -29,7 +29,7 @@ Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/
 
 ## Getting Started
 
-1. [Create and deploy a cluster](./cluster)
+1. Instructions for [creating a cluster environment and deploying it](./cluster).
 
 ## Contributing
 
