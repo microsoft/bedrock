@@ -1,3 +1,0 @@
-#!/bin/bash
-
-terraform destroy -state=terraform.tfstate

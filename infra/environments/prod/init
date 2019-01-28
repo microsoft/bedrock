@@ -1,9 +1,0 @@
-#!/bin/bash
-
-rm -rf .terraform
-rm terraform.tfstate
-rm terraform.tfstate.backup
-
-helm repo update
-helm init
-terraform init -var-file="../common/common.tfvars"

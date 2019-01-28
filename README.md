@@ -1,179 +1,35 @@
 # bedrock
 
-The cloud native ecosystem is in a virtual cambrian explosion of platforms and projects that individually promise to greatly improve our lives as developers. At the same time, even as an experienced developer in this space, it is difficult to start from stratch and stitch all of these projects together into a coherent whole without having to do a substantial amount of research and work.
+Bedrock is a set of automation, tooling, and infrastructue stacks for deploying production-level Kubernetes 
+clusters with a secure and auditable GitOps workflow.
 
-This project is our humble attempt to combine the collective wisdom of our cloud native community for building best practice cloud native Kubernetes clusters. It is based on the real world experience that we have of deploying cloud native applications with our largest customers.
+This project is our humble attempt to combine the collective wisdom of our cloud native community for 
+building best practice cloud native Kubernetes clusters, based on real world experience of 
+deploying and operating cloud native applications.
 
 ## What's in the box?
 
-Bedrock is a set of devops scripts for automated deployment of the common elements of a production-ready cloud native Kubernetes cluster. It includes:
+Bedrock, by default, includes the workflow, platforms, and tools that we believe are the best in class for 
+operating a Kubernetes cluster. It includes Terraform scripts for creating the core infrastructure for your cluster
+and also, by default, includes a cloud native set of observability infrastructure via a set of "batteries removable"
+[Fabrikate](https://github.com/Microsoft/fabrikate) stacks.
 
-Cluster Management
+Cluster Creation
+-   [Cluster Deployment](./cluster): Automated cluster creation
+-   [Flux](https://github.com/weaveworks/flux): Secure GitOps Kubernetes Operator
 
--   [Kured](https://github.com/weaveworks/kured) (automatic cordon/drain/reboot after node level patches are applied)
-
-Monitoring
-
+Monitoring (via [fabrikate-prometheus-grafana](https://github.com/timfpark/fabrikate-prometheus-grafana))
 -   [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
 -   [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
 
-Log Management
-
+Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/timfpark/fabrikate-elasticsearch-fluentd-kibana))
 -   [Fluentd](https://www.fluentd.org/) collection and forwarding
 -   [Elasticsearch](https://www.elastic.co/) aggregation
 -   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
 
-Ingress and Service Mesh
+## Getting Started
 
--   [Istio](https://istio.io/) ingress gateway and service mesh
-
-Distributed Tracing
-
--   [Jaeger](https://www.jaegertracing.io/) end to end distributed request tracing.
-
-## Quick Start
-
-### Deploy a Cluster
-
-If you already have a Kubernetes cluster running and its context is the default, you can skip ahead to the "Deploying Infrastructure" section.
-
-We've included Terraform scripts for building a Kubernetes cluster with Azure AKS or ACS Engine, but would welcome pull requests for other cloud providers.
-
-To deploy a cluster,
-
-1. Ensure you have the [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) installed, in your path, and logged in to your subscription.
-2. Edit cluster/environments/azure-aks/main.tf and adjust the name of the cluster and, if desired, any of the sizing or network parameters.
-
-3. Create a service principal (optional - feel free to use an existing service principal) for your cluster using the Azure CLI: `az ad sp create-for-rbac` - note down the `appId` and `password`.
-
-4. Deploy the cluster using:
-
-```
-$ cd cluster/environments/azure-aks
-$ export TF_VAR_client_id="" # the `appId` from `az ad sp create-for-rbac`, or some other existing appId
-$ export TF_VAR_client_secret="" # the `password` from `az ad sp create-for-rbac` or some other existing service principal's secret.
-$ export TF_VAR_ssh_public_key="" # the contents of your ssh public key.
-$ ./init
-$ ./apply
-```
-
-### Deploy Infrastructure
-
-1. Install docker locally and confirm that it is in your path. We've encapsulated the rest of the dependencies in a Docker image, but you can also run these tools locally by installing the following set of tools locally as well:
-
--   [docker](https://docs.docker.com/docker-for-mac/install/)
--   [helm](https://helm.sh/)
--   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
--   [terraform](https://www.terraform.io/intro/getting-started/install.html)
-
-2. If you haven't, create a new Kubernetes cluster with RBAC enabled and switch to it such that it is the default context `kubectl` is using.
-
-3. Clone this project locally:
-
-```
-$ git clone https://github.com/Microsoft/bedrock
-```
-
-4. Choose a password for your grafana deployment and set an environmental variable with it.
-
-```
-$ export TF_VAR_grafana_admin_password="SECRETpass"
-```
-
-5. Deploy the dev configuration:
-
-```
-bash-4.4# helm repo update
-bash-4.4# cd infra/environments/dev
-bash-4.4# ./init
-bash-4.4# ./apply
-bash-4.4# cd ../../..
-```
-
-6. Take it for a test spin!
-
-```
-bash-4.4# tools/grafana
-
-NOTE: By default the credentials for grafana are 'ops' and the password you chose above.
-```
-
-Grafana provides a visualization of the metrics being collected by our cluster's Prometheus service -- and we've included a couple of Kubernetes related dashboards out of the box.
-
-![Grafana Image](./docs/images/grafana.png)
-
-```
-bash-4.4# tools/kibana
-```
-
-Fluentd, Elasticsearch, and Kibana are installed and integrated with each other and your cluster -- ready for you to start querying and visualizing text logs immediately.
-
-![Kibana Image](./docs/images/kibana.png)
-
-```
-bash-4.4# tools/traefik
-```
-
-Ingress traffic to the cluster is managed by Traefik, which includes a management console for monitoring the health and performance of your externally exposed services.
-
-![Traefik Image](./docs/images/traefik.png)
-
-```
-bash-4.4# tools/jaeger
-```
-
-Jaeger provides distributed tracing of requests through your system so you can discover and optimize performance hotspots.
-
-![Jaeger Image](./docs/images/jaeger.png)
-
-#### Using the Docker image
-
-If you'd like to avoid installing the tool dependencies, you can use our Docker container with these dependencies already installed:
-
-1. Build the image locally:
-
-```
-$ docker build -t bedrock:latest .
-```
-
-2. Choose a password for your grafana deployment and then start the container with your grafana password as an environmental variable and the kube config as a volume mount (the typical path for your kube config is ~/.kube/config below):
-
-```
-$ docker run --rm -it -v <path-to-your-kube-config>/config:/.kube/config -e TF_VAR_grafana_admin_password="SECRETpass" bedrock:latest /bin/bash
-
-bash-4.4#
-```
-
-From here, rejoin the quick start steps above.
-
-### Deploy a Service
-
-We have also included terraform devops scripts for a [simple node.js service](https://github.com/timfpark/simple-service), giving you both a starting point for your own services, but also enabling you to see how all of the parts of the system fit together with a real service.
-
-Deploying it is as simple as:
-
-```
-$ set TF_VAR_container_repo=docker.io/timfpark  <-- adjust this to your container repo
-$ cd services/environments/dev
-$ ./init && ./apply
-```
-
-You can then access the service externally by noting the public IP address of the Traefik service:
-
-```
-$ kubectl get services -n kube-system
-NAME                     TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)...
-...
-istio-ingressgateway     LoadBalancer   10.0.184.127   40.123.43.171   80:31380/TCP,443:31390/TCP,31400:31400/TCP,15011:32347/TCP,8060:30113/TCP,853:31090/TCP,15030:32107/TCP,15031:30020/TCP   1h
-...
-```
-
-and then using `curl` to inject the Host header for your request so Istio knows how to route it:
-
-```
-$ curl -HHost:simple.bedrock.tools http://40.123.43.171:80
-Your lucky number is 58 (instance id 65300 at Wed Nov 28 2018 21:46:46 GMT+0000 (UTC))
-```
+1. Instructions for [creating a cluster environment and deploying it](./cluster).
 
 ## Contributing
 
@@ -192,7 +48,3 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 For project related questions or comments, please contact [Tim Park](https://github.com/timfpark).
-
-```
-
-```
