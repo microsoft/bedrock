@@ -11,6 +11,11 @@ else
     VERSION_TO_DOWNLOAD=$VERSION
 fi
 
+echo "RUN HELM INIT"
+helm init
+echo "HELM ADD INCUBATOR"
+helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+
 echo "Downloading Fabrikate..."
 echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
 wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-linux-amd64.zip"
