@@ -14,7 +14,12 @@ fi
 echo "RUN HELM INIT"
 helm init
 echo "HELM ADD INCUBATOR"
-helm repo add $HELM_CHART_REPO $HELM_CHART_REPO_URL
+if [ -z "$HELM_CHART_REPO"] && [ -z "$HELM_CHART_REPO_URL"]
+then
+    helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+else
+    helm repo add $HELM_CHART_REPO $HELM_CHART_REPO_URL
+fi
 
 echo "Downloading Fabrikate..."
 echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
