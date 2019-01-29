@@ -63,7 +63,7 @@ Once your cluster has been created the credentials for the cluster will be place
 You can copy this to your `~/.kube/config` by executing:
 
 ```bash
-$ KUBECONFIG=~/.kube/config:./output/kube_config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
+$ KUBECONFIG=./output/kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
 or directly use the kube_config file ala:
