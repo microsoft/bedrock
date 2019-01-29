@@ -18,14 +18,20 @@ Cluster Creation
 -   [Cluster Deployment](./cluster): Automated cluster creation
 -   [Flux](https://github.com/weaveworks/flux): Secure GitOps Kubernetes Operator
 
+Cluster Maintainance
+-   [Kured](https://github.com/weaveworks/kured): Automatic node reboot when OS is patched. (via [fabrikate-kured](https://github.com/timfpark/fabrikate-kured))
+
 Monitoring (via [fabrikate-prometheus-grafana](https://github.com/timfpark/fabrikate-prometheus-grafana))
 -   [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
 -   [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
 
 Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/timfpark/fabrikate-elasticsearch-fluentd-kibana))
--   [Fluentd](https://www.fluentd.org/) collection and forwarding
--   [Elasticsearch](https://www.elastic.co/) aggregation
--   [Kibana](https://www.elastic.co/products/kibana) querying and visualization
+-   [Fluentd](https://www.fluentd.org/): collection and forwarding
+-   [Elasticsearch](https://www.elastic.co/): aggregation and query execution
+-   [Kibana](https://www.elastic.co/products/kibana): query UI and visualization
+
+Service Mesh (via [fabribate-istio](https://github.com/evanlouie/fabrikate-istio))
+-   [Istio](https://istio.io/): connect, secure, control, and observe services.
 
 ## Getting Started
 
