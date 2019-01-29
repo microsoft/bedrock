@@ -9,3 +9,4 @@ terraform.tfvars
 *.out
 output
 *.log
+.DS_Store
