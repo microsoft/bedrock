@@ -20,7 +20,7 @@ steps:
 
 - task: ShellScript@2
   inputs:
-    scriptPath: generate.sh
+    scriptPath: build.sh
   env:
     ACCESS_TOKEN: $(accesstoken)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
