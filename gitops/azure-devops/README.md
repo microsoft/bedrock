@@ -1,4 +1,6 @@
 # GitOps with Azure DevOps
+Components of a GitOps workflow
+<img src="PAT.svg?sanitize=true">
 
 Here's an example setup for azure-pipelines.yml. Two variables need to be created as part of the azure pipelines build
 
