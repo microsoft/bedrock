@@ -14,9 +14,7 @@ fi
 echo "RUN HELM INIT"
 helm init
 echo "HELM ADD INCUBATOR"
-echo "HELM_CHART_REPO:$HELM_CHART_REPO"
-echo "HELM_CHART_REPO_URL:$HELM_CHART_REPO_URL"
-if [ -z "$HELM_CHART_REPO"] && [ -z "$HELM_CHART_REPO_URL"]
+if [ -z "$HELM_CHART_REPO"] || [ -z "$HELM_CHART_REPO_URL" ];
 then
     echo "Using DEFAULT helm repo..."
     helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
