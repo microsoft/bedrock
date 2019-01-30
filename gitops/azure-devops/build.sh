@@ -11,20 +11,6 @@ else
     VERSION_TO_DOWNLOAD=$VERSION
 fi
 
-echo "RUN HELM INIT"
-helm init
-echo "HELM ADD INCUBATOR"
-echo "HELM_CHART_REPO:$HELM_CHART_REPO"
-echo "HELM_CHART_REPO_URL:$HELM_CHART_REPO_URL"
-if [ -z "$HELM_CHART_REPO"] && [ -z "$HELM_CHART_REPO_URL"]
-then
-    echo "Using DEFAULT helm repo..."
-    helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-else
-    echo "Using DEFINED help repo..."
-    helm repo add $HELM_CHART_REPO $HELM_CHART_REPO_URL
-fi
-
 echo "Downloading Fabrikate..."
 echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
 wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-linux-amd64.zip"
