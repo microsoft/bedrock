@@ -11,6 +11,10 @@ Bedrock automates cluster deployments and other related infrastructure with [Ter
 Bedrock also uses `kubectl` for interacting with Kubernetes clusters:
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+Bedrock uses [Helm](https://github.com/helm/helm) to setup the cluster. If you haven't already, install it:
+
+- [helm](https://github.com/helm/helm)
  
 For Azure based clusters, you also need the `az` command line tool:
 
