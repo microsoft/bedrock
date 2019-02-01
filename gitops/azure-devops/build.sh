@@ -38,7 +38,7 @@ function get_os() {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         eval "$1='linux'"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        eval "$1='darwin18'"
+        eval "$1='darwin'"
     elif [[ "$OSTYPE" == "msys" ]]; then
         eval "$1='windows'"
     else
