@@ -44,7 +44,7 @@ module "aks-flux-02" "cluster02" {
   output_directory        = "${var.output_directory}"
 }
 
-# Read second AKS cluster client object to create a role assignment
+# Read AKS cluster service principal (client) object to create a role assignment
 data "azuread_service_principal" "sp" {
   application_id = "${var.client_id}"
 }
