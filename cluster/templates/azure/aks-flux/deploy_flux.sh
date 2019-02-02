@@ -50,7 +50,10 @@ if ! kubectl create namespace $KUBE_NAMESPACE; then
 fi
 
 echo "creating kubernetes secret $KUBE_SECRET_NAME from key file path $GITOPS_SSH_KEY"
-kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE
+if ! kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE; then
+    echo "ERROR: failed to create kubernetes secret $KUBE_SECRET_NAME from key file path $GITOPS_SSH_KEY"
+    exit 1
+fi
 
 echo "Applying flux deployment"
 if ! kubectl apply -f  $FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
