@@ -2,6 +2,29 @@ module "provider" {
     source = "../../../templates/providers/azure/default"
 }
 
+/**
+ * Uncomment to enable remote storage of Terraform state (terraform.tfstate)
+ * file to Azure Blob Store.
+ * 
+ * The following additional variables must be defined:
+ *
+ *  - tfstate_storage_account_name -- name of the storage account to store the state to
+ *  - tfstate_container_name -- name of the container to store the state in
+ *  - tfstate_storage_account_key -- key for accessing 
+terraform {
+   backend "azure" {
+       storage_account_name = "${var.tfstate_storage_account_name}"
+       container_name = "${var.tfstate_container_name}"
+       key = "${var.tfstate_storage_account_key}"
+   }
+}
+*/
+
+terraform {
+   backend "azurerm" {
+   }
+}
+
 locals {
     /* resource group information */
     resource_group_name     = "${var.resource_group_name}"

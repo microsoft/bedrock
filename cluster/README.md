@@ -129,3 +129,57 @@ $ ls -l gitops_repo_key*
 
 Flux currently requires write access to the git repository to store reconcilation state. For Github, the process to add a deploy key is documented 
 [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
+
+### Terraform State
+
+When one isses a `terraform apply`, Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/).  By default, the directory in which `terraform apply` is executed in will create a file named `terraform.tfstte`.  Terraform needs this information to know the state of the cluster for future modifications to the infrastructure.
+
+In devops / production scenarios, storing the state file on a local file system may not be the desired scenario.  Terraform supports storing state remotely.  One of those possible locations is in an Azure Blob Store.  This is defined using a `backend` block.  The basic block looks like:
+
+```bash
+terraform {
+   backend “azure” {
+   }
+}
+```
+
+In addition to the block above, one needs to define a set of variables that will be used by the backend for infomring Terraform to store the state.  Typically these variables are stored within a file named `backend.tfvars`.  For storing state to Azure Blob Store, the required variables are as follows:
+
+```bash
+storage_account_name="<storage account>"
+container_name="<container name>"
+access_key="<storage account access key>"
+key="terraform.tfstate"
+```
+
+It should be noted, `key`, is the name of the `file` where the `terraform.tfstate` file is written to in the Azure Blob Store.
+
+In order to use the Azure Blob Store for remote state, it is required that both the Resource Group for the  Storage Account, as well as the Storage Account and the Container within that acocount be created.  For a container `tfstate` within a storage account named `aksfluxtfstatestore` located in the resource group `aksfluxstaterg` which is in `westus2` the Azure CLI commands are as follows:
+
+```bash
+> az group create -n aksfluxstaterg -l westus2
+> az storage account create -g aksfluxstaterg -n aksfluxtfstatestore
+> az storage container create -n tfstate --account-name aksfluxtfstatestore
+```
+
+Once the above is created and your `backend.tfvars` file has been updated, one uses `terraform init` as follows `terraform init -backend-config=./backend.tfvars`.  Next, perform `terraform apply` as above.  Once complete, the contents of the container `tfstate` in the storage account can be queried (and verify that state is stored there) as follows:
+
+```bash
+az storage container show -n tfstate --account-name aksfluxtfstatestore
+{
+  "metadata": {},
+  "name": "tfstate",
+  "properties": {
+    "etag": "\"0x8D68A55573A2B75\"",
+    "hasImmutabilityPolicy": false,
+    "hasLegalHold": false,
+    "lastModified": "2019-02-04T04:00:45+00:00",
+    "lease": {
+      "duration": null,
+      "state": "available",
+      "status": "unlocked"
+    },
+    "publicAccess": null
+  }
+}
+```
