@@ -109,13 +109,3 @@ variable "aks_client_role_assignment_role" {
   type    = "string"
   default = "Contributor"
 }
-
-variable "traffic_manager_routing_method" {
-  type    = "string"
-  default = "Weighted"
-}
-
-variable "traffic_manager_endpoint_type" {
-  type    = "string"
-  default = "azureEndpoints"
-}

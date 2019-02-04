@@ -84,7 +84,7 @@ resource "azurerm_resource_group" "globalrg" {
 resource "azurerm_traffic_manager_profile" "profile" {
   name                   = "${azurerm_resource_group.globalrg.name}-tmprofile"
   resource_group_name    = "${azurerm_resource_group.globalrg.name}"
-  traffic_routing_method = "${var.traffic_manager_routing_method}"
+  traffic_routing_method = "Weighted"
 
   dns_config {
     relative_name = "${azurerm_resource_group.globalrg.name}"
@@ -107,7 +107,7 @@ resource "azurerm_traffic_manager_endpoint" "endpoint01" {
   profile_name        = "${azurerm_traffic_manager_profile.profile.name}"
   target              = "${var.dns01_prefix}-ep01"
   target_resource_id  = "${azurerm_public_ip.pip01.id}"
-  type                = "${var.traffic_manager_endpoint_type}"
+  type                = "azureEndpoints"
   depends_on          = ["azurerm_traffic_manager_profile.profile"]
 }
 
@@ -118,6 +118,6 @@ resource "azurerm_traffic_manager_endpoint" "endpoint02" {
   profile_name        = "${azurerm_traffic_manager_profile.profile.name}"
   target              = "${var.dns02_prefix}-ep02"
   target_resource_id  = "${azurerm_public_ip.pip02.id}"
-  type                = "${var.traffic_manager_endpoint_type}"
+  type                = "azureEndpoints"
   depends_on          = ["azurerm_traffic_manager_profile.profile"]
 }
