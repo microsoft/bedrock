@@ -60,10 +60,10 @@ manifest files, and when it detects a change to those resource manifests, it app
 
 Once your cluster has been created the credentials for the cluster will be placed in the specified `output_directory` which defaults to `./output`. 
 
-You can copy this to your `~/.kube/config` by executing:
+You can copy this to your `~/.kube/config` by replacing `clustername` in the following command and executing for each cluster:
 
 ```bash
-$ KUBECONFIG=~/.kube/config:./output/kube_config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
+$ KUBECONFIG=~/.kube/config:./output/<clustername>_kube_config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
 or directly use the kube_config file ala:

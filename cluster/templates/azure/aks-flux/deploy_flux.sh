@@ -1,19 +1,30 @@
 #!/bin/sh
-while getopts f:g:k:c option 
+while getopts f:g:k:d:c option 
 do 
  case "${option}" in 
- f) FLUX_REPO_URL=${OPTARG};; 
- g) GITOPS_URL=${OPTARG};; 
- k) GITOPS_SSH_KEY=${OPTARG};; 
+ f) FLUX_REPO_URL=${OPTARG};;
+ g) GITOPS_URL=${OPTARG};;
+ k) GITOPS_SSH_KEY=${OPTARG};;
+ d) REPO_ROOT_DIR=${OPTARG};;
  esac
 done 
 
 KUBE_SECRET_NAME="flux-ssh"
 RELEASE_NAME="flux"
 KUBE_NAMESPACE="flux"
-REPO_DIR="flux"
+REPO_DIR="$REPO_ROOT_DIR/flux"
 FLUX_CHART_DIR="flux/chart/flux"
 FLUX_MANIFESTS="manifests"
+
+rm -rf $REPO_ROOT_DIR
+
+echo "creating $REPO_ROOT_DIR directory"
+if ! mkdir $REPO_ROOT_DIR; then
+    echo "ERROR: failed to create directory $REPO_ROOT_DIR"
+    exit 1
+fi
+
+cd $REPO_ROOT_DIR
 
 echo "cloning $FLUX_REPO_URL"
 rm -rf $REPO_DIR
@@ -23,6 +34,7 @@ if ! git clone $FLUX_REPO_URL; then
     exit 1
 fi
 
+echo "flux chart dir is $FLUX_CHART_DIR"
 cd $FLUX_CHART_DIR
 
 echo "creating $FLUX_MANIFESTS directory"
@@ -41,7 +53,8 @@ if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values v
     exit 1
 fi
 
-cd ../../../
+# back to the roor dir
+cd ../../../../
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE"
 if ! kubectl create namespace $KUBE_NAMESPACE; then
@@ -56,7 +69,7 @@ if ! kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOP
 fi
 
 echo "Applying flux deployment"
-if ! kubectl apply -f  $FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
+if ! kubectl apply -f  $REPO_ROOT_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
     echo "ERROR: failed to apply flux deployment"
     exit 1
 fi
