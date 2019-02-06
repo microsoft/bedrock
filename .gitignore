@@ -10,3 +10,4 @@ terraform.tfvars
 output
 *.log
 .DS_Store
+shunit2/*
