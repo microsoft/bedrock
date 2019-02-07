@@ -65,6 +65,8 @@ function download_fab() {
 
 # Install Fabrikate
 function install_fab() {
+    # Run this command to make script exit on any failure
+    set -e
     export PATH=$PATH:$HOME/fab
     fab install
     echo "FAB INSTALL COMPLETED"
@@ -75,6 +77,7 @@ function fab_generate() {
     fab generate prod
     echo "FAB GENERATE COMPLETED"
     ls -a
+    set +e
 
     # If generated folder is empty, quit
     # In the case that all components are removed from the source hld, 
