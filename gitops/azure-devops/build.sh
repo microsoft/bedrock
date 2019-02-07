@@ -1,8 +1,14 @@
-#!/bin/bash
-
-function copy_files() {
+function init() {
     cp -r * $HOME/
     cd $HOME
+
+    if [[ "$GIT_TYPE" == "github" ]]; then
+        git_dest_repo="https://github.com/$AKS_MANIFEST_REPO"
+        git_type=$GIT_TYPE
+    elif [[ "$GIT_TYPE" == "azure" ]]; then
+        git_dest_repo="https://dev.azure.com/$AKS_MANIFEST_REPO" # For repos that reside in Azure Devops, the AKS_MANIFEST_REPO should be formatted like "user_account/project_name/_git/repo_name"
+        git_type="dev.azure"   
+    fi
 }
 
 # Initialize Helm
@@ -49,7 +55,7 @@ function get_os() {
 
 # Download Fabrikate
 function download_fab() {
-    echo "DOWNLOADING FABRIKATE..."
+    echo "DOWNLOADING FABRIKATE"
     echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
     os=''
     get_os os
@@ -74,7 +80,6 @@ function install_fab() {
 function fab_generate() {
     fab generate prod
     echo "FAB GENERATE COMPLETED"
-    ls -a
 
     # If generated folder is empty, quit
     # In the case that all components are removed from the source hld, 
@@ -91,8 +96,8 @@ function fab_generate() {
 function git_connect() {
     cd $HOME
     echo "GIT CLONE"
-    git clone https://github.com/$AKS_MANIFEST_REPO.git
-    repo_url=https://github.com/$AKS_MANIFEST_REPO.git
+    git clone $git_dest_repo
+    repo_url=$git_dest_repo
     repo=${repo_url##*/}
 
     # Extract repo name from url
@@ -109,7 +114,6 @@ function git_commit() {
     echo "COPY YAML FILES TO REPO DIRECTORY..."
     rm -rf prod/
     cp -r $HOME/generated/* .
-    ls $HOME/$repo_name
     echo "GIT ADD"
     git add *
 
@@ -128,7 +132,7 @@ function git_commit() {
 # Perform a Git push
 function git_push() {
     echo "GIT PUSH"
-    git push https://$ACCESS_TOKEN@github.com/$AKS_MANIFEST_REPO.git
+    git push https://$ACCESS_TOKEN@$git_type.com/$AKS_MANIFEST_REPO
     echo "GIT STATUS"
     git status
 }
@@ -139,7 +143,7 @@ function unit_test() {
 
 function verify() {
     echo "Starting verification"
-    copy_files
+    init
     helm_init
     get_fab_version
     download_fab

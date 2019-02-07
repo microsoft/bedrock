@@ -5,4 +5,4 @@ terraform.tfstate.backup
 translations
 istio-1.0.4
 .DS_Store
-shunit2/*
+shunit2
