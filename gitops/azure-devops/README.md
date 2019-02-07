@@ -2,11 +2,18 @@
 Components of a GitOps workflow
 <img src="PAT.svg?sanitize=true">
 
-Here's an example setup for azure-pipelines.yml. Two variables need to be created as part of the azure pipelines build
+The following variables *need* to be created as part of the azure pipelines build:
 
-- `accesstoken` this one should contain the personal access token and made secret
-- `aks_manifest_repo` this one should contain the url to destination repo in the format: `username/repo_name` 
+- `ACCESS_TOKEN`: The personal access token (encrypted)
+- `GIT_TYPE`: The Git host that is used (for now, only GitHub and Azure DevOps are supported)
 
+The `build.sh` supports repositories held in GitHub or in Azure DevOps. Although, this needs to be explicitly specified as environment variables in the pipeline build. If using GitHub repos, the variable `GIT_TYPE` should be specified as `github`, and for Azure DevOps repos, the variable should be `azure`.
+
+- `AKS_MANIFEST_REPO`: The url to destination repo. Depending on the git host, the format could be the following:
+  - `username/repo_name` (GitHub)
+  - `username/project_name/_git/repo_name` (Azure DevOps)
+
+Here's an example setup for azure-pipelines.yml
 
 ```
 trigger:
@@ -20,17 +27,10 @@ steps:
   persistCredentials: true
   clean: true
 
-- bash: |
-    chmod +x ./build.sh && ./build.sh --verify-only
-  condition: eq(variables['Build.Reason'], 'PullRequest')
-
 - task: ShellScript@2
   inputs:
     scriptPath: build.sh
-  condition: ne(variables['Build.Reason'], 'PullRequest')
   env:
-    ACCESS_TOKEN: $(accesstoken)
-    COMMIT_MESSAGE: $(Build.SourceVersionMessage)
-    AKS_MANIFEST_REPO: $(aks_manifest_repo)
+   ACCESS_TOKEN: $(ACCESS_TOKEN)
 
 ```
