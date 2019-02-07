@@ -1,7 +1,6 @@
 # GitOps with Azure DevOps
-Components of a GitOps workflow
+Components of a GitOps workflow:
 <img src="PAT.svg?sanitize=true">
-
 The following variables *need* to be created as part of the azure pipelines build:
 
 - `ACCESS_TOKEN`: The personal access token (encrypted)
@@ -32,5 +31,4 @@ steps:
     scriptPath: build.sh
   env:
    ACCESS_TOKEN: $(ACCESS_TOKEN)
-
 ```
