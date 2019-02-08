@@ -1,66 +1,69 @@
 # Cluster Deployment
 
-Azure is currently the only cloud supported, but we would welcome pull requests for other providers.
+Bedrock automates Kubernetes cluster deployments with Terraform so that they can be reproducably built to make cluster operations more predictable than ad hoc or shell script based approaches.  This automation currently only has support for the Azure cloud, but we would welcome pull requests for other public clouds.
 
 ## Setup
 
-Bedrock automates cluster deployments and other related infrastructure with [Terraform](https://www.terraform.io). If you haven't already, install it:
+Bedrock uses three tools to automate cluster deployments. Take a moment to install these if you don't have any of them:
 
 - [terraform](https://www.terraform.io/intro/getting-started/install.html)
-
-Bedrock also uses `kubectl` for interacting with Kubernetes clusters:
-
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-
-Bedrock uses [Helm](https://github.com/helm/helm) to setup the cluster. If you haven't already, install it:
-
 - [helm](https://github.com/helm/helm)
  
-For Azure based clusters, you also need the `az` command line tool:
+For Azure based clusters, you will also need the `az` command line tool:
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
 ## Creating a new Cluster Environment
 
-In bedrock, each physical cluster that you deploy is as an environment that captures its configuration. 
+In bedrock, each physical cluster that you deploy has a corresponding environment that captures its configuration. 
 
-The typical way to create a new environment is to copy an existing one. For example, for an AKS cluster, copy our generic environment to a new subdirectory with the name of your cluster:
+The typical way to create a new environment is to copy an existing one. For example, for an AKS cluster, copy our aks-flux template environment to a new subdirectory with the name of your cluster:
 
 ```bash
-$ cp -r environments/azure/aks-flux environments/azure/my-cluster
+$ cp -r environments/azure/aks-flux environments/azure/<cluster name>
 ```
 
-Next, edit `environments/azure/my-cluster/cluster.tfvars` (adjusting this for what you named your cluster) and update the following variables (for a full list of customizable variables see `inputs.tf`):
+Next, edit `environments/azure/<cluster name>/cluster.tfvars` and update the following variables (for a full list of customizable variables see [inputs.tf](./azure/aks-flux/inputs.tf)):
 
 - `resource_group_name` - Name of the resource group for the cluster
 - `cluster_name` - Name of the cluster itself
-- `dns_prefix`: Base DNS name for accessing the cluster from the internet
-- `service_principal_id`, `service_principal_secret`: The id and secret of the service principal used to deploy the AKS cluster.  This is generated using the Azure CLI (see [Creating Service Principal](#creating-service-principal) for generation instructions).
-- `ssh_public_key`: Contents of a public key authorized to access virtual machines within the cluster.
+- `dns_prefix`: Base DNS name for accessing the cluster from the internet.
+- `service_principal_id`, `service_principal_secret`: The id and secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Creating Service Principal](#creating-service-principal) for details).
+- `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.
 - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the Gitops repository.
-- `gitops_url`: The git repo to use as the repository of truth in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-materialized.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
-
-In the configuration above, `service_principal_id` should be set to `appId` and `service_principal_secret` set to `password`.
+- `gitops_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-materialized.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
 
 ## Deploying Cluster
 
-To deploy the cluster you have defined, execute the following two steps from your cluster environment's directory (eg. `environments/azure/my-cluster`):
+Bedrock requires a bash shell for the executing the automation it runs under. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
+
+To deploy into Azure, Terraform relies on a set of four environmental variables to provide it with the 
+authorization it needs to deploy the cluster. Set these in your shell with a service principal that is authorized to create infrastructure for the desired subscription (see [Creating Service Principal](#creating-service-[rincipal) below for details) before you start deployment:
+
+```
+export ARM_SUBSCRIPTION_ID=xxxxxxxxx-yyyy-zzzz-xxxx-yyyyyyyyyyyy
+export ARM_CLIENT_ID=xxxxxxxxx-yyyy-zzzz-xxxx-yyyyyyyyyyyy
+export ARM_CLIENT_SECRET=xxxxxxxxx-yyyy-zzzz-xxxx-yyyyyyyyyyyy
+export ARM_TENANT_ID=xxxxxxxxx-yyyy-zzzz-xxxx-yyyyyyyyyyyy
+```
+
+Then, from the directory of the cluster you defined above (eg. `environments/azure/<cluster name>`), run:
 
 ```
 $ terraform init
 ```
 
-This will download all of the Terraform modules needed for the deployment.  You can then deploy the cluster with:
+This will download all of the modules needed for the deployment.  You can then deploy the cluster with:
 
 ```
 $ terraform apply -var-file=./cluster.tfvars
 ```
 
-This will deploy the infrastructure for your cluster and install [Flux](https://github.com/weaveworks/flux)
-in the cluster. Flux is an open source project that enables a [gitops](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow to deploy resources in a Kubernetes cluster. 
+This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
 
-Its operational model is very simple: it monitors a the git repository that you specified above that houses all of the Kubernetes resource
-manifest files, and when it detects a change to those resource manifests, it applies those changes to the cluster. 
+Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux)
+in the cluster to enable a [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow, and deploy any resource manifests in the `gitops_url`.
 
 Once your cluster has been created the credentials for the cluster will be placed in the specified `output_directory` which defaults to `./output`. 
 
@@ -70,7 +73,7 @@ You can copy this to your `~/.kube/config` by executing:
 $ KUBECONFIG=./output/kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
-or directly use the kube_config file ala:
+or directly use the kube_config file with:
 
 ```
 $ KUBECONFIG=./output/kube_config kubectl get po --namespace=flux` 
@@ -78,10 +81,10 @@ $ KUBECONFIG=./output/kube_config kubectl get po --namespace=flux`
 
 ### Creating Service Principal
 
-If you do not already have a Azure service principal, you can generate one via:
+You can generate an Azure service principal for a particular subscription with the following `az` cli command:
 
 ```bash
-$ az ad sp create-for-rbac
+$ az ad sp create-for-rbac --subscription 
 {
   "appId": "50d65587-abcd-4619-1234-f99fb2ac0987",
   "displayName": "azure-cli-2019-01-23-20-27-37",
@@ -93,11 +96,10 @@ $ az ad sp create-for-rbac
 
 ### Setting Up Gitops Repository for Flux
 
-Flux requires a repository to monitor in order to deploy services to the Kubernetes cluster.  
+Flux watches a Git repository that contains the resource manifests that should be deployed into the Kubernetes cluster, and, as such, we need to configure that repo and give Flux permissions to access it, and cluster creation time.
 
-1.  Create the repo to use for Gitops (this example will assume that you are using Github).
-2.  Create (or choose) an SSH key pair that will be given permission to do read/write access to the repository.  Use either
-an existing SSH key or to generate an unencrypted key (using linux):
+1.  Create the repo to use for Gitops (this example will assume that you are using Github, but Gitlab and Azure Devops are also supported).
+2.  Create/choose an SSH key pair that will be given permission to do read/write access to the repository.  You can create an ssh key pair with the following:
 
 ```bash
 $ ssh-keygen -b 2048 -t rsa -f gitops_repo_key
@@ -107,7 +109,7 @@ Enter same passphrase again:
 Your identification has been saved in gitops_repo_key.
 Your public key has been saved in gitops_repo_key.pub.
 The key fingerprint is:
-SHA256:DgAbaIRrET0rM/U5PIT0mcBFVMW/AQ9sRJ/TsdcmmFA jims@tiremunchie
+SHA256:DgAbaIRrET0rM/U5PIT0mcBFVMW/AQ9sRJ/TsdcmmFA
 The key's randomart image is:
 +---[RSA 2048]----+
 |o+Bo=+..*+..E.   |
