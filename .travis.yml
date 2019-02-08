@@ -9,6 +9,8 @@ go_import_path: github.com/NathanielRose/bedrock
 before_install:
 - wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
 - unzip terraform_0.11.11_linux_amd64.zip
+- mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
+- terraform -v
 - cp .netrc ~/.netrc
 - chmod 600 ~/.netrc
 
