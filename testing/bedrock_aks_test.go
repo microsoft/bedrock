@@ -36,8 +36,7 @@ func TestIT_BedrockExample(t *testing.T) {
 			"gitops_ssh_key" :publickey,
 		},
 
-		}
-
+	}
 
 	// Terraform init, apply, output, and destroy
 	defer terraform.Destroy(t, tfOptions)
