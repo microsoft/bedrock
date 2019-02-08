@@ -28,7 +28,7 @@ To activate the above checks we must create an Azure DevOps _build_.
 In the Azure DevOps
 1. Click on "Pipelines" on the left side to expand a submenu
 2. Click on "Builds" from the submenu
-3. In the 2 column from the left click the "+ New" button
+3. In the 2nd column from the left click the "+ New" button
 4. Select "New build pipeline"
 5. Choose "Azure Repos" as the selection to the "Where is your code?" prompt
 6. Choose the repo that you named as $HLD_REPO_NAME
