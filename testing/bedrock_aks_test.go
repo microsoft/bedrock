@@ -18,9 +18,9 @@ func TestIT_BedrockExample(t *testing.T) {
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 	k8sRG := k8sName + "-rg"
 	dnsprefix := k8sName + "-dns"
-	clientid := os.Getenv("client-id")
-	clientsecret := os.Getenv("client-secret")
-	publickey := os.Getenv("public-key")
+	clientid := os.Getenv("clientID")
+	clientsecret := os.Getenv("clientSecret")
+	publickey := os.Getenv("publicKey")
 
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
