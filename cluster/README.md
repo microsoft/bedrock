@@ -1,4 +1,6 @@
-# Cluster Deployment
+# Cluster Deployment 
+
+[![Build Status](https://travis-ci.org/NathanielRose/bedrock.svg?branch=master)](https://travis-ci.org/NathanielRose/bedrock)
 
 Bedrock automates Kubernetes cluster deployments with Terraform so that they can be reproducably built to make cluster operations more predictable than ad hoc or shell script based approaches.  This automation currently only has support for the Azure cloud, but we would welcome pull requests for other public clouds.
 
