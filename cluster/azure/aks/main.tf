@@ -10,7 +10,7 @@ resource "azurerm_virtual_network" "cluster" {
   resource_group_name = "${azurerm_resource_group.cluster.name}"
 }
 
-resource "azurerm_subnet" "cluster" {
+resource "azurerm_subnet" "cluster" { 
   name                 = "${var.cluster_name}-subnet"
   resource_group_name  = "${azurerm_resource_group.cluster.name}"
   address_prefix       = "${var.subnet_address_space}"
