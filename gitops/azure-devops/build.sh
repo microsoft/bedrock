@@ -78,7 +78,7 @@ function install_fab() {
 
 # Run fab generate
 function fab_generate() {
-    fab generate prod
+    fab generate prod --no-validation
     echo "FAB GENERATE COMPLETED"
 
     # If generated folder is empty, quit
