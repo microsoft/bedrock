@@ -21,4 +21,5 @@ variable "gitops_ssh_key" {
 
 variable "output_directory" {
     type = "string"
+    default = "./output"
 }

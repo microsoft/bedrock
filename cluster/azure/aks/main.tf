@@ -42,12 +42,13 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   service_principal {
-    client_id     = "${var.client_id}"
-    client_secret = "${var.client_secret}"
+    client_id     = "${var.service_principal_id}"
+    client_secret = "${var.service_principal_secret}"
   }
 }
 
 resource "null_resource" "cluster_credentials" {
+  count  = "${var.enable_cluster_creds_to_disk ? 1 : 0}"
   provisioner "local-exec" {
     command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo \"${azurerm_kubernetes_cluster.cluster.kube_config}\" > ${var.output_directory}/kube_config"
   }
