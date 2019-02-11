@@ -5,3 +5,4 @@ terraform.tfstate.backup
 translations
 istio-1.0.4
 terraform.tfvars
+.terraform.tfstate.lock.info

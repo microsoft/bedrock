@@ -31,7 +31,7 @@ resource "azurerm_resource_group" "clusterrg" {
 }
 
 resource "azurerm_resource_group" "vnetrg" {
-  name     = "aksvnetrg"
+  name     = "aks-vnetrg"
   location = "${var.resource_group_location}"
 }
 
@@ -55,7 +55,7 @@ module "aks" {
     cluster_name              = "${var.cluster_name}"
     cluster_location          = "${azurerm_resource_group.clusterrg.location}"
     dns_prefix                = "${var.dns_prefix}"
-    vnet_subnet_id            = "${module.vnet.vnet_subnet_ids}"
+    vnet_subnet_id            = "${module.vnet.vnet_subnet_ids[0]}"
     ssh_public_key            = "${var.ssh_public_key}"
     service_principal_id      = "${var.service_principal_id}"
     service_principal_secret  = "${var.service_principal_secret}"
@@ -64,7 +64,7 @@ module "aks" {
 
 module "aks-flux" {
     source = "../../common/flux"
-
+    enable_flux               = "false"
     gitops_url                = "${var.gitops_url}"
     gitops_ssh_key            = "${var.gitops_ssh_key}"
 }

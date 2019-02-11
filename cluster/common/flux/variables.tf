@@ -23,3 +23,8 @@ variable "output_directory" {
     type = "string"
     default = "./output"
 }
+
+variable "enable_flux" {
+    type = "string"
+    default = "true"
+}
