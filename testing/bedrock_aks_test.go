@@ -4,6 +4,7 @@ import (
         "fmt"
 		"testing"
 		"os"
+		"io/ioutil"
 
         "github.com/gruntwork-io/terratest/modules/random"
         "github.com/gruntwork-io/terratest/modules/terraform"
@@ -42,8 +43,10 @@ func TestIT_BedrockExample(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	kubeConfig := terraform.Output(t, tfOptions, "kube_config")
+	//kubeConfig := terraform.Output(t, tfOptions, "kube_config")
+	kubeConfig, err := ioutil.ReadFile("../cluster/environments/azure/aks/output/kube_config")
 
+    fmt.Print(string(kubeConfig))
 
 	options := k8s.NewKubectlOptions(kubeConfig, "")
 
