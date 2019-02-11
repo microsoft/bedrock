@@ -3,10 +3,6 @@ variable "resource_group_name" {
     type = "string"
 }
 
-variable "resource_group_location" {
-    type = "string"
-}
-
 variable "cluster_name" {
     type = "string"
 }
@@ -37,7 +33,7 @@ variable "agent_vm_size" {
 
 variable "kubernetes_version" {
     type = "string"
-    default = "1.11.6"
+    default = "1.12.4"
 }
 
 variable "admin_user" {
@@ -48,10 +44,10 @@ variable "ssh_public_key" {
     type = "string"
 }
 
-variable "subnet_address_space" {
+variable "output_directory" {
     type = "string"
 }
 
-variable "vnet_address_space" {
+variable "vnet_subnet_id" {
     type = "string"
 }
