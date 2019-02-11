@@ -41,6 +41,6 @@ For Github repos, instructions for configuring Flux are noted [here](https://git
 For Azure DevOps repos, instructions for configuring Flux follow this [documentation](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host). In summary, the following steps need to take place:
 
 1. Like GitHub, you need to run `fluxctl identity` once Flux is running on a cluster.
-2. Under your `User Profile > Security > SSH public keys, click on `Add` and add the Flux deploy key.
+2. In Azure DevOps, under your `User Profile > Security > SSH public keys, click on `Add` and add the Flux deploy key.
 3. From there, follow the steps in getting Flux to work with [private git hosts](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host).
 
