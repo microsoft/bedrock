@@ -26,11 +26,18 @@ steps:
   persistCredentials: true
   clean: true
 
+- bash: |
+    chmod +x ./build.sh && ./build.sh --verify-only
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+
 - task: ShellScript@2
   inputs:
     scriptPath: build.sh
+  condition: ne(variables['Build.Reason'], 'PullRequest')
   env:
-   ACCESS_TOKEN: $(ACCESS_TOKEN)
+    ACCESS_TOKEN: $(accesstoken)
+    COMMIT_MESSAGE: $(Build.SourceVersionMessage)
+    AKS_MANIFEST_REPO: $(aks_manifest_repo)
 ```
 ## A note on Flux
 
