@@ -40,16 +40,20 @@ variable "gitops_ssh_key" {
 
 variable "tfstate_storage_account_name" {
   type    = "string"
+  default = ""
 }
 
 variable "tfstate_storage_account_access_key" {
   type    = "string"
+  default = ""
 }
 
 variable "tfstate_container_name" {
   type    = "string"
+  default = "bedrockstate"
 }
 
 variable "tfstate_key" {
   type    = "string"
+  default = "bedrock.dev.tfstate"
 }

@@ -1,7 +1,7 @@
-terraform {
-   backend "azurerm" {
-   }
-}
+# terraform {
+#    backend "azurerm" {
+#    }
+# }
 
 module "provider" {
     source = "../../azure/provider"
@@ -48,4 +48,5 @@ module "aks-flux" {
     gitops_url                = "${var.gitops_url}"
     gitops_ssh_key            = "${var.gitops_ssh_key}"
     flux_recreate             = ""
+    kubeconfig_complete       = "${module.aks.kubeconfig_done}"
 }
