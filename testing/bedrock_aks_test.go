@@ -44,8 +44,10 @@ func TestIT_BedrockExample(t *testing.T) {
 	terraform.InitAndApply(t, tfOptions)
 
 	cmd := exec.Command("export", "KUBECONFIG", "../cluster/environments/azure/aks/output/kube_config")
-    kubeConfig = os.Environ("KUBECONFIG")
-	
+    //kubeConfig := os.Environ("KUBECONFIG")
+	kubeConfig := os.Getenv("KUBECONFIG")
+
+
 	//kubeConfig := terraform.Output(t, tfOptions, "kube_config")
 	//kubeConfig, err := ioutil.ReadFile("../cluster/environments/azure/aks/output/kube_config")
 
