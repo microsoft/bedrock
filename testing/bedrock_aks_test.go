@@ -43,9 +43,6 @@ func TestIT_BedrockExample(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-
-	export KUBECONFIG=path-to-kube-config
-
 	cmd := exec.Command("export", "KUBECONFIG", "../cluster/environments/azure/aks/output/kube_config")
     kubeConfig = os.Environ("KUBECONFIG")
 	
