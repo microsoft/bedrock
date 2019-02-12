@@ -38,3 +38,18 @@ variable "gitops_ssh_key" {
   type    = "string"
 }
 
+variable "tfstate_storage_account_name" {
+  type    = "string"
+}
+
+variable "tfstate_storage_account_access_key" {
+  type    = "string"
+}
+
+variable "tfstate_container_name" {
+  type    = "string"
+}
+
+variable "tfstate_key" {
+  type    = "string"
+}

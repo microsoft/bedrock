@@ -16,5 +16,4 @@ resource "azurerm_storage_account" "remote_state_sa" {
   lifecycle {
     prevent_destroy = true
   }
-
 }
