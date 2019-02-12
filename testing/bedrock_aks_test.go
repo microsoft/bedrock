@@ -24,7 +24,7 @@ func TestIT_BedrockExample(t *testing.T) {
 
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure/aks",
+		TerraformDir: "../cluster/environments/azure/aks-flux",
 		Vars: map[string]interface{}{
 			"cluster_name": k8sName,
 			"resource_group_name":k8sRG,
@@ -42,7 +42,7 @@ func TestIT_BedrockExample(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	os.Setenv("KUBECONFIG", "../cluster/environments/azure/aks/output/kube_config")
+	os.Setenv("KUBECONFIG", "../cluster/environments/azure/aks-flux/output/kube_config")
     //kubeConfig := os.Environ("KUBECONFIG")
 	kubeConfig := os.Getenv("KUBECONFIG")
 
