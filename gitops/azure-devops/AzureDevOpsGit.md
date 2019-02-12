@@ -1,3 +1,6 @@
+# Azure DevOps Example
+These instructions guide you through a GitOps workflow using Azure DevOps git repositories.
+
 ## Requirements
 + You belong to an Azure DevOps _organization_
 
