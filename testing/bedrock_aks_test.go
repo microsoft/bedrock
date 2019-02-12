@@ -57,7 +57,7 @@ func TestIT_BedrockExample(t *testing.T) {
 
 	//kubeCommand := strings.ToLower("get", "services")
 
-	k8s.RunKubectlAndGetOutputE(t, options, "get", "credentials")
+	k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
 
 }
 
