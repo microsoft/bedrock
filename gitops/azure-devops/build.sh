@@ -2,12 +2,24 @@ function init() {
     cp -r * $HOME/
     cd $HOME
 
-    if [[ "$GIT_TYPE" == "github" ]]; then
+    echo "CHECKING GIT HOST"
+    if [[ "$GIT_HOST" == "github" ]]; then
         git_dest_repo="https://github.com/$AKS_MANIFEST_REPO"
-        git_type=$GIT_TYPE
-    elif [[ "$GIT_TYPE" == "azure" ]]; then
+        git_type=$GIT_HOST
+    elif [[ "$GIT_HOST" == "azure" ]]; then
         git_dest_repo="https://dev.azure.com/$AKS_MANIFEST_REPO" # For repos that reside in Azure Devops, the AKS_MANIFEST_REPO should be formatted like "user_account/project_name/_git/repo_name"
-        git_type="dev.azure"   
+        git_type="dev.azure"
+    else
+        echo 'Git host not specified in variable $GIT_HOST'
+        exit 1
+    fi
+
+    echo "VERIFYING PERSONAL ACCESS TOKEN"
+    if [ -z "$ACCESS_TOKEN" ]
+    then
+        echo "Personal Access token defined for git host: $GIT_HOST"
+    else
+        exit 1
     fi
 }
 

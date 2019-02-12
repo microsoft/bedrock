@@ -4,9 +4,9 @@ Components of a GitOps workflow:
 The following variables *need* to be created as part of the azure pipelines build:
 
 - `ACCESS_TOKEN`: The personal access token (encrypted)
-- `GIT_TYPE`: The Git host that is used (for now, only GitHub and Azure DevOps are supported)
+- `GIT_HOST`: The Git host that is used (for now, only GitHub and Azure DevOps are supported)
 
-The `build.sh` supports repositories held in GitHub or in Azure DevOps. Although, this needs to be explicitly specified as environment variables in the pipeline build. If using GitHub repos, the variable `GIT_TYPE` should be specified as `github`, and for Azure DevOps repos, the variable should be `azure`.
+The `build.sh` supports repositories held in GitHub or in Azure DevOps. Although, this needs to be explicitly specified as environment variables in the pipeline build. If using GitHub repos, the variable `GIT_HOST` should be specified as `github`, and for Azure DevOps repos, the variable should be `azure`.
 
 - `AKS_MANIFEST_REPO`: The url to destination repo. Depending on the git host, the format could be the following:
   - `username/repo_name` (GitHub)
@@ -49,5 +49,5 @@ For Azure DevOps repos, instructions for configuring Flux follow this [documenta
 
 1. Like GitHub, you need to run `fluxctl identity` once Flux is running on a cluster.
 2. In Azure DevOps, under your `User Profile > Security > SSH public keys, click on `Add` and add the Flux deploy key.
-3. From there, follow the steps in getting Flux to work with [private git hosts](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host).
+3. From there, follow the steps in getting Flux to work with [private git hosts](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host). The git host to known host file is `ssh.dev.azure.com`
 
