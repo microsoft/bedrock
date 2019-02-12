@@ -4,7 +4,7 @@ import (
         "fmt"
 		"testing"
 		"os"
-		"io/ioutil"
+		"os/exec"
 
         "github.com/gruntwork-io/terratest/modules/random"
         "github.com/gruntwork-io/terratest/modules/terraform"
