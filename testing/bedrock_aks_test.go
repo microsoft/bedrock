@@ -52,7 +52,8 @@ func TestIT_BedrockExample(t *testing.T) {
 
     fmt.Print(string(kubeConfig))
 
-	options := k8s.NewKubectlOptions(kubeConfig, "")
+	//options := k8s.NewKubectlOptions(kubeConfig, "")
+	options := k8s.NewKubectlOptions("", kubeConfig)
 
 	//kubeCommand := strings.ToLower("get", "services")
 
