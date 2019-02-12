@@ -40,11 +40,12 @@ module "aks" {
     ssh_public_key            = "${var.ssh_public_key}"
     service_principal_id      = "${var.service_principal_id}"
     service_principal_secret  = "${var.service_principal_secret}"
+    kubeconfig_recreate       = ""
 }
 
 module "aks-flux" {
     source = "../../common/flux"
-    enable_flux               = "false"
     gitops_url                = "${var.gitops_url}"
     gitops_ssh_key            = "${var.gitops_ssh_key}"
+    flux_recreate             = ""
 }
