@@ -39,13 +39,13 @@ steps:
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
     AKS_MANIFEST_REPO: $(aks_manifest_repo)
 ```
-## A note on Flux
+## Flux
 
-This GitOps workflow relies heavily on [Flux](https://github.com/weaveworks/flux), which is a DevOps tool that ensures the state of the Kubernetes cluster aligns with the config in the AKS Manifest repo. Flux has been tested to support both GitHub and Azure DevOps repos However, configuration for both may differ.
+This GitOps workflow relies heavily on [Flux](https://github.com/weaveworks/flux), which is a DevOps tool that ensures the state of the Kubernetes cluster aligns with the config in the AKS Manifest repo. Flux has been tested to support both GitHub and Azure DevOps repos.
 
-For Github repos, instructions for configuring Flux are noted [here](https://github.com/weaveworks/flux/blob/master/site/get-started.md#get-started-with-flux).
+For Github and Azure DevOps repos, instructions for configuring Flux are noted [here](https://github.com/weaveworks/flux/blob/master/site/get-started.md#get-started-with-flux).
 
-For Azure DevOps repos, instructions for configuring Flux follow this [documentation](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host). In summary, the following steps need to take place:
+If configuring Flux with Azure DevOps repos fail, follow instructions on [private git hosts](https://github.com/weaveworks/flux/blob/master/site/standalone-setup.md#using-a-private-git-host). In summary, the following steps need to take place:
 
 1. Like GitHub, you need to run `fluxctl identity` once Flux is running on a cluster.
 2. In Azure DevOps, under your `User Profile > Security > SSH public keys, click on `Add` and add the Flux deploy key.
