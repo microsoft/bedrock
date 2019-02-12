@@ -15,7 +15,7 @@ function init() {
     fi
 
     echo "VERIFYING PERSONAL ACCESS TOKEN"
-    if [ -z "$ACCESS_TOKEN" ]
+    if [ -n "$ACCESS_TOKEN" ]
     then
         echo "Personal Access token defined for git host: $GIT_HOST"
     else
