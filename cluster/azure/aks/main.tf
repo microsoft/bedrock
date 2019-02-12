@@ -1,26 +1,10 @@
-resource "azurerm_resource_group" "cluster" {
-  name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
+module "azure-provider" {
+    source = "../provider"
 }
-
-resource "azurerm_virtual_network" "cluster" {
-  name                = "${var.cluster_name}-vnet"
-  address_space       = ["${var.vnet_address_space}"]
-  location            = "${var.cluster_location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
-}
-
-resource "azurerm_subnet" "cluster" {
-  name                 = "${var.cluster_name}-subnet"
-  resource_group_name  = "${azurerm_resource_group.cluster.name}"
-  address_prefix       = "${var.subnet_address_space}"
-  virtual_network_name = "${azurerm_virtual_network.cluster.name}"
-}
-
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
   location            = "${var.cluster_location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
+  resource_group_name = "${var.resource_group_name}"
   dns_prefix          = "${var.dns_prefix}"
   kubernetes_version  = "${var.kubernetes_version}"
 
@@ -38,7 +22,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     vm_size         = "${var.agent_vm_size}"
     os_type         = "Linux"
     os_disk_size_gb = 30
-    vnet_subnet_id  = "${azurerm_subnet.cluster.id}"
+    vnet_subnet_id  = "${var.vnet_subnet_id}"
   }
 
   network_profile {
@@ -58,7 +42,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   service_principal {
-    client_id     = "${var.client_id}"
-    client_secret = "${var.client_secret}"
+    client_id     = "${var.service_principal_id}"
+    client_secret = "${var.service_principal_secret}"
   }
 }

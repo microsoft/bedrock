@@ -15,6 +15,10 @@ REPO_DIR="flux"
 FLUX_CHART_DIR="flux/chart/flux"
 FLUX_MANIFESTS="manifests"
 
+GIT_KNOWN_HOSTS="`ssh-keyscan github.com gitlab.com bitbucket.org ssh.dev.azure.com`"
+
+echo "known_hosts $GIT_KNOWN_HOSTS"
+
 echo "cloning $FLUX_REPO_URL"
 rm -rf $REPO_DIR
 
@@ -36,7 +40,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.secretName=$KUBE_SECRET_NAME; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.secretName=$KUBE_SECRET_NAME --set ssh.known_hosts="$GIT_KNOWN_HOSTS"; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
