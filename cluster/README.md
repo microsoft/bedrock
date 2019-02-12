@@ -8,6 +8,9 @@ Bedrock uses three tools to automate cluster deployments. Take a moment to insta
 
 - [terraform](https://www.terraform.io/intro/getting-started/install.html)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+Bedrock uses [Helm](https://github.com/helm/helm) to setup the cluster. If you haven't already, install it:
+
 - [helm](https://github.com/helm/helm)
  
 For Azure based clusters, you will also need the `az` command line tool:
