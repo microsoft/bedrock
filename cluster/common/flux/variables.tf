@@ -28,3 +28,15 @@ variable "enable_flux" {
     type = "string"
     default = "true"
 }
+
+variable "kubeconfig_filename" {
+    description = "Name of the kube config file saved to disk."
+    type = "string"
+    default = "bedrock_kube_config"
+}
+
+variable "flux_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flux execution script."
+    type = "string"
+    default = ""
+}

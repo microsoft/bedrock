@@ -62,7 +62,20 @@ variable "enable_virtual_node_addon" {
     default = "false"
 }
 
-variable "enable_cluster_creds_to_disk" {
+variable "kubeconfig_to_disk" {
+    description = "This disables or enables the kube config file from being written to disk."
     type = "string"
     default = "true"
+}
+
+variable "kubeconfig_recreate" {
+    description = "Make any change to this value to trigger the recreation of the kube config file to disk."
+    type = "string"
+    default = ""
+}
+
+variable "kubeconfig_filename" {
+    description = "Name of the kube config file saved to disk."
+    type = "string"
+    default = "bedrock_kube_config"
 }
