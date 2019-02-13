@@ -14,6 +14,11 @@ variable "cluster_location" {
     type = "string"
 }
 
+variable "agent_vm_count" {
+    type = "string"
+    default = "3"
+}
+
 variable "dns_prefix" {
     type = "string"
 }
