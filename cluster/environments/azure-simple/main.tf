@@ -35,6 +35,7 @@ module "aks" {
     resource_group_name       = "${azurerm_resource_group.clusterrg.name}"
     cluster_name              = "${var.cluster_name}"
     cluster_location          = "${azurerm_resource_group.clusterrg.location}"
+    agent_vm_count            = "${var.agent_vm_count}"
     dns_prefix                = "${var.dns_prefix}"
     vnet_subnet_id            = "${module.vnet.vnet_subnet_ids[0]}"
     ssh_public_key            = "${var.ssh_public_key}"
