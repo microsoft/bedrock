@@ -13,7 +13,7 @@ resource "azurerm_resource_group" "clusterrg" {
 }
 
 resource "azurerm_resource_group" "vnetrg" {
-  name     = "aks-vnetrg"
+  name     = "${var.cluster_name}-vnetrg"
   location = "${var.resource_group_location}"
 }
 
@@ -43,7 +43,7 @@ module "aks" {
     kubeconfig_recreate       = ""
 }
 
-module "aks-flux" {
+module "flux" {
     source = "../../common/flux"
     gitops_url                = "${var.gitops_url}"
     gitops_ssh_key            = "${var.gitops_ssh_key}"
