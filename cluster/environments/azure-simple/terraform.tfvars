@@ -1,7 +1,7 @@
 resource_group_name="resource-group-name"
 resource_group_location="westus2"
 cluster_name="cluster-name"
-agent_vm_count = "3"
+cluster_location="westus2"
 dns_prefix="dns-prefix"
 service_principal_id = "client-id"
 service_principal_secret = "client-secret"

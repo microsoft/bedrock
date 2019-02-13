@@ -8,6 +8,6 @@ output "kube_config" {
   value = "${azurerm_kubernetes_cluster.cluster.kube_config_raw}"
 }
 
-output "kubeconfig_done" {
-  value = "${join("",null_resource.cluster_credentials.*.id)}"
+output "depend_id" {
+  value = "${azurerm_kubernetes_cluster.cluster.id}"
 }

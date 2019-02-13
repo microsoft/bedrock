@@ -1,13 +1,27 @@
-# terraform {
-#    backend "azurerm" {
-#    }
-# }
+terraform {
+   backend "azurerm" {
+   }
+}
+
+module "provider" {
+    source = "../../azure/provider"
+}
+
+resource "azurerm_resource_group" "clusterrg" {
+  name     = "${var.resource_group_name}"
+  location = "${var.resource_group_location}"
+}
+
+resource "azurerm_resource_group" "vnetrg" {
+  name     = "aks-vnetrg"
+  location = "${var.resource_group_location}"
+}
 
 module "vnet" {
     source = "../../azure/vnet"
 
-    resource_group_name = "myaksvnet"
-    location            = "${var.resource_group_location}"
+    resource_group_name = "${azurerm_resource_group.vnetrg.name}"
+    location            = "${azurerm_resource_group.vnetrg.location}"
     subnet_names        = ["${var.cluster_name}-aks-subnet"]
 
     tags = {
@@ -18,10 +32,9 @@ module "vnet" {
 module "aks" {
     source = "../../azure/aks"
 
-    resource_group_location   = "${var.resource_group_location}"
-    resource_group_name       = "${var.resource_group_name}"
+    resource_group_name       = "${azurerm_resource_group.clusterrg.name}"
     cluster_name              = "${var.cluster_name}"
-    agent_vm_count            = "${var.agent_vm_count}"
+    cluster_location          = "${azurerm_resource_group.clusterrg.location}"
     dns_prefix                = "${var.dns_prefix}"
     vnet_subnet_id            = "${module.vnet.vnet_subnet_ids[0]}"
     ssh_public_key            = "${var.ssh_public_key}"
@@ -30,11 +43,9 @@ module "aks" {
     kubeconfig_recreate       = ""
 }
 
-module "flux" {
+module "aks-flux" {
     source = "../../common/flux"
-
     gitops_url                = "${var.gitops_url}"
     gitops_ssh_key            = "${var.gitops_ssh_key}"
     flux_recreate             = ""
-    kubeconfig_complete       = "${module.aks.kubeconfig_done}"
 }

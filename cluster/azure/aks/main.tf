@@ -1,16 +1,10 @@
 module "azure-provider" {
     source = "../provider"
 }
-
-resource "azurerm_resource_group" "cluster" {
-  name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
-}
-
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
-  location            = "${azurerm_resource_group.cluster.location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
+  location            = "${var.cluster_location}"
+  resource_group_name = "${var.resource_group_name}"
   dns_prefix          = "${var.dns_prefix}"
   kubernetes_version  = "${var.kubernetes_version}"
 
