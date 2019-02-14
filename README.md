@@ -1,41 +1,44 @@
 # bedrock
 
 Bedrock is a set of automation, tooling, and infrastructue stacks for deploying production-level Kubernetes 
-clusters with a secure and auditable GitOps workflow.
+clusters with a secure and auditable [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow.
 
-This project is our humble attempt to combine the collective wisdom of our cloud native community for 
-building best practice cloud native Kubernetes clusters, based on real world experience of 
-deploying and operating cloud native applications.
+This project is our humble attempt to combine the collective wisdom of the cloud native community for 
+building best practice cloud native Kubernetes clusters, based on real world experiences 
+deploying and operating applications in Kubernetes clusters.
 
 ## What's in the box?
 
 Bedrock, by default, includes the workflow, platforms, and tools that we believe are the best in class for 
 operating a Kubernetes cluster. It includes Terraform scripts for creating the core infrastructure for your cluster
-and also, by default, includes a cloud native set of observability infrastructure via a set of "batteries removable"
+and also, by default, includes a [cloud native](https://github.com/timfpark/fabrikate-cloud-native) set of observability infrastructure via a set of "batteries removable"
 [Fabrikate](https://github.com/Microsoft/fabrikate) stacks.
 
 Cluster Creation
 -   [Cluster Deployment](./cluster): Automated cluster creation
--   [Flux](https://github.com/weaveworks/flux): Secure GitOps Kubernetes Operator
+-   [Flux](https://github.com/weaveworks/flux): Secure GitOps Kubernetes operator
 
 Cluster Maintainance
 -   [Kured](https://github.com/weaveworks/kured): Automatic node reboot when OS is patched. (via [fabrikate-kured](https://github.com/timfpark/fabrikate-kured))
 
-Monitoring (via [fabrikate-prometheus-grafana](https://github.com/timfpark/fabrikate-prometheus-grafana))
--   [Prometheus](https://prometheus.io/) metrics monitoring and aggregation
--   [Grafana](https://grafana.com/) metrics visualization with Kubernetes monitoring dashboards preconfigured
+Metrics Monitoring (via [fabrikate-prometheus-grafana](https://github.com/timfpark/fabrikate-prometheus-grafana))
+-   [Prometheus](https://prometheus.io/) Metrics aggregation
+-   [Grafana](https://grafana.com/) Visualization with Kubernetes monitoring dashboards preconfigured
 
 Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/timfpark/fabrikate-elasticsearch-fluentd-kibana))
--   [Fluentd](https://www.fluentd.org/): collection and forwarding
--   [Elasticsearch](https://www.elastic.co/): aggregation and query execution
--   [Kibana](https://www.elastic.co/products/kibana): query UI and visualization
+-   [Fluentd](https://www.fluentd.org/): Collection and forwarding
+-   [Elasticsearch](https://www.elastic.co/): Aggregation and query execution
+-   [Kibana](https://www.elastic.co/products/kibana): Full text query UI and visualization
 
-Service Mesh (via [fabribate-istio](https://github.com/evanlouie/fabrikate-istio))
--   [Istio](https://istio.io/): connect, secure, control, and observe services.
+Service Mesh (via [fabrikate-istio](https://github.com/evanlouie/fabrikate-istio))
+-   [Istio](https://istio.io/): Connect, secure, control, and observe services.
+
+Distributed Tracing (via [fabrikate-jaeger](https://github.com/bnookala/fabrikate-jaeger))
+-   [Jaeger](https://www.jaegertracing.io/): Distributed transaction, latency, and dependency tracing
 
 ## Getting Started
 
-1. Instructions for [creating a cluster environment and deploying it](./cluster).
+1. Instructions for [creating and deploying](./cluster) a cluster environment.
 
 ## Contributing
 
