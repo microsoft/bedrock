@@ -23,14 +23,6 @@ resource "azurerm_key_vault" "keyvault" {
     tenant_id = "${data.azurerm_client_config.current.tenant_id}"
     object_id = "${data.azurerm_client_config.current.service_principal_object_id}"
 
-    key_permissions = [
-    ]
-
-    secret_permissions = [
-      "delete",
-      "get",
-      "set"
-    ]
   }
 
   network_acls {
@@ -42,10 +34,12 @@ resource "azurerm_key_vault" "keyvault" {
     environment = "Production"
   }
 }
-/*
-resource "azurerm_key_vault_secret" "keyvault" {
-  name      = "${var.secret_name}"
-  value     = "${var.secret_value}"
-  vault_uri = "${azurerm_key_vault.keyvault.vault_uri}"
+
+module "keyvault_access_policy" "keyvault" {
+  source              = "./keyvault_policy"
+
+  vault_name          = "${azurerm_key_vault.keyvault.name}"
+  resource_group_name = "${azurerm_key_vault.keyvault.resource_group_name}"
+  tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
+  object_id           = "${data.azurerm_client_config.current.service_principal_object_id}"
 }
-*/
