@@ -42,7 +42,7 @@ func TestIT_BedrockExample(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	os.Setenv("KUBECONFIG", "../cluster/environments/azure-simple/output/kube_config")
+	os.Setenv("KUBECONFIG", "../cluster/environments/azure-simple/output/bedrock_kube_config")
     //kubeConfig := os.Environ("KUBECONFIG")
 	kubeConfig := os.Getenv("KUBECONFIG")
 
