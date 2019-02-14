@@ -19,12 +19,6 @@ resource "azurerm_key_vault" "keyvault" {
     name = "standard"
   }
 
-  access_policy {
-    tenant_id = "${data.azurerm_client_config.current.tenant_id}"
-    object_id = "${data.azurerm_client_config.current.service_principal_object_id}"
-
-  }
-
   network_acls {
     default_action = "Deny"
     bypass         = "AzureServices"
