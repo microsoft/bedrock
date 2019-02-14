@@ -28,8 +28,7 @@ before_install:
 - ./get_helm.sh
 - az -v
 - terraform -v
-- cp .netrc ~/.netrc
-- chmod 600 ~/.netrc
+
 
 script: go test -v  ./... -timeout 99999s
 
