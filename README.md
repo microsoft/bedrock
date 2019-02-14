@@ -11,7 +11,7 @@ deploying and operating applications in Kubernetes clusters.
 
 Bedrock, by default, includes the workflow, platforms, and tools that we believe are the best in class for 
 operating a Kubernetes cluster. It includes Terraform scripts for creating the core infrastructure for your cluster
-and also, by default, includes a cloud native set of observability infrastructure via a set of "batteries removable"
+and also, by default, includes a [cloud native](https://github.com/timfpark/fabrikate-cloud-native) set of observability infrastructure via a set of "batteries removable"
 [Fabrikate](https://github.com/Microsoft/fabrikate) stacks.
 
 Cluster Creation
@@ -38,7 +38,7 @@ Distributed Tracing (via [fabrikate-jaeger](https://github.com/bnookala/fabrikat
 
 ## Getting Started
 
-1. Instructions for [creating and deploying a cluster environment](./cluster).
+1. Instructions for [creating and deploying](./cluster) a cluster environment.
 
 ## Contributing
 

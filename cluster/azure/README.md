@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-Creating Azure clusters requires that you have the `az` command line tool installed
+Beyond the [base requirements](../README.md) for Bedrock, we also need the Azure `az` command line tool installed for Azure Kubernetes clusters:
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
@@ -10,7 +10,7 @@ Creating Azure clusters requires that you have the `az` command line tool instal
 
 The typical way to create a new environment is to start from an existing template. For Azure, we currently have the following templates:
 
-- [azure-simple](../environments/azure-simple): Simplest single cluster deployment with Flux
+- [azure-simple](../environments/azure-simple): Single cluster deployment with Flux
 
 So, for example, to create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of your cluster:
 
@@ -18,7 +18,7 @@ So, for example, to create a cluster environment based on the `azure-simple` tem
 $ cp -r cluster/environments/azure-simple cluster/environments/<cluster name>
 ```
 
-With this new environment created, edit `environments/azure/<cluster name>/terraform.tfvars` and update the following variables (for a full list of customizable variables see [variables.tf](../azure/aks-flux/variables.tf)):
+With this new environment created, edit `environments/azure/<cluster name>/terraform.tfvars` and update the following variables (for a full list of customizable variables see [variables.tf](../azure/aks/variables.tf)):
 
 - `resource_group_name`: Name of the resource group for the cluster
 - `resource_group_location`: Azure region the resource group should be created in.
@@ -31,6 +31,8 @@ With this new environment created, edit `environments/azure/<cluster name>/terra
 - `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.
 - `gitops_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-materialized.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
 - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the Gitops repository.
+
+Finally, if you are deploying a production cluster, you will want to [configure storage](#storing-terraform-state) of Terraform state.
 
 ## Deploying Cluster
 
@@ -130,7 +132,7 @@ $ ls -l gitops_repo_key*
 Flux requires read and write access to the resource manifest git repository. For Github, the process to add a deploy key is documented 
 [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
 
-### Terraform State
+### Storing Terraform State
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
 
@@ -143,7 +145,7 @@ terraform {
 }
 ```
 
-In order to setup an Azure backend, navigate to the [backend state](http://github.com/Microsoft/bedrock/cluster/azure/backend-state) directory and issue the following command:
+In order to setup an Azure backend, navigate to the [backend state](./backend-state) directory and issue the following command:
 
 ```bash
 > terraform apply -var 'name=<storage account name>' -var 'location=<storage account location>' -var 'resource_group_name=<storage account resource group>'

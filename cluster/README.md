@@ -12,6 +12,6 @@ Bedrock uses three tools to automate cluster deployments that you'll need to ins
 
 ## Creating a new Cluster Environment
 
-Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider you'd like to create a cluster environment for to get started:
+Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- but we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider you'd like to create a cluster environment for to get started:
 
 - [Azure](./azure)
