@@ -102,7 +102,7 @@ Once the build is successful navigate to your manifest repository. You see a ver
 * Use [Kubediff](https://github.com/weaveworks/kubediff) to make sure your cluster configuration and matches your manifest repo configuration
 
 ## 7. Repeat As Necessary
-At this point a cycle of a GitOps flow has completed. To make additional changes to your cluster visit [Step 4](#4.-Make-a-Pull-Request). 
+At this point a cycle of a GitOps flow has completed. To make additional changes to your cluster visit [Step 4](#4-make-a-pull-request). 
 
 ## Reference
 * [Azure Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops)
