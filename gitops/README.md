@@ -18,7 +18,7 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
     5. Monitor
     6. Repeat
 
-<img src="images/GitOpsFlow.svg?sanitize=true">
+<img src="images/GitOpsFlow.png?sanitize=true">
 
 ## Defintions
 
