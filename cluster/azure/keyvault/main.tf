@@ -28,12 +28,3 @@ resource "azurerm_key_vault" "keyvault" {
     environment = "Production"
   }
 }
-
-module "keyvault_access_policy" "keyvault" {
-  source              = "./keyvault_policy"
-
-  vault_name          = "${azurerm_key_vault.keyvault.name}"
-  resource_group_name = "${azurerm_key_vault.keyvault.resource_group_name}"
-  tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
-  object_id           = "${data.azurerm_client_config.current.service_principal_object_id}"
-}
