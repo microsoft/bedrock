@@ -17,15 +17,15 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
     4. Merge
     5. Monitor
     6. Repeat
-
+<img src="images/GitOpsFlow.svg?sanitize=true">
 ## Defintions
 
-### High Level Deployment Description
+### High Level Deployment Description (HLD) Repo
 + A specification of the helm charts to use to build a deployment of a logically higher level component
 + Simplifies the complexity and repeativeness of low level YAML
 + Lives in a git repository
 
-### Manifests
+### Manifest Repo
 + These are the `kubectl` friendly low level YAML that declare the desired cluster state. 
 + They live in a git repository and are the expected state of the cluster. 
 + The git repository they live in is considered the source of truth. 
