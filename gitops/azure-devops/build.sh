@@ -1,8 +1,26 @@
-#!/bin/bash
-
-function copy_files() {
+function init() {
     cp -r * $HOME/
     cd $HOME
+
+    echo "CHECKING GIT HOST"
+    if [[ "$GIT_HOST" == "github" ]]; then
+        git_dest_repo="https://github.com/$AKS_MANIFEST_REPO"
+        git_type=$GIT_HOST
+    elif [[ "$GIT_HOST" == "azure" ]]; then
+        git_dest_repo="https://dev.azure.com/$AKS_MANIFEST_REPO" # For repos that reside in Azure Devops, the AKS_MANIFEST_REPO should be formatted like "user_account/project_name/_git/repo_name"
+        git_type="dev.azure"
+    else
+        echo 'Git host not specified in variable $GIT_HOST'
+        exit 1
+    fi
+
+    echo "VERIFYING PERSONAL ACCESS TOKEN"
+    if [ -n "$ACCESS_TOKEN" ]
+    then
+        echo "Personal Access token defined for git host: $GIT_HOST"
+    else
+        exit 1
+    fi
 }
 
 # Initialize Helm
@@ -34,6 +52,7 @@ function get_fab_version() {
     fi
 }
 
+# Obtain OS to download the appropriate version of Fabrikate
 function get_os() {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         eval "$1='linux'"
@@ -46,15 +65,26 @@ function get_os() {
     fi
 }
 
-# Download Fabrikate and install
+# Download Fabrikate
 function download_fab() {
-    echo "DOWNLOADING FABRIKATE..."
+    echo "DOWNLOADING FABRIKATE"
     echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
     os=''
     get_os os
+    fab_wget=$(wget -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | egrep -i "302")
+    if [[ $fab_wget == *"302 Found"* ]]; then
+       echo "Fabrikate $VERSION_TO_DOWNLOAD downloaded successfully."
+    else
+        echo "There was an error when downloading Fabrikate. Please check version number and try again."
+    fi
     wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
-    ls
+}
+
+# Install Fabrikate
+function install_fab() {
+    # Run this command to make script exit on any failure
+    set -e
     export PATH=$PATH:$HOME/fab
     fab install
     echo "FAB INSTALL COMPLETED"
@@ -62,9 +92,10 @@ function download_fab() {
 
 # Run fab generate
 function fab_generate() {
-    fab generate prod
+    fab generate prod --no-validation
     echo "FAB GENERATE COMPLETED"
-    ls -a
+    
+    set +e
 
     # If generated folder is empty, quit
     # In the case that all components are removed from the source hld, 
@@ -81,8 +112,8 @@ function fab_generate() {
 function git_connect() {
     cd $HOME
     echo "GIT CLONE"
-    git clone https://github.com/$AKS_MANIFEST_REPO.git
-    repo_url=https://github.com/$AKS_MANIFEST_REPO.git
+    git clone $git_dest_repo
+    repo_url=$git_dest_repo
     repo=${repo_url##*/}
 
     # Extract repo name from url
@@ -99,7 +130,6 @@ function git_commit() {
     echo "COPY YAML FILES TO REPO DIRECTORY..."
     rm -rf prod/
     cp -r $HOME/generated/* .
-    ls $HOME/$repo_name
     echo "GIT ADD"
     git add *
 
@@ -118,17 +148,22 @@ function git_commit() {
 # Perform a Git push
 function git_push() {
     echo "GIT PUSH"
-    git push https://$ACCESS_TOKEN@github.com/$AKS_MANIFEST_REPO.git
+    git push https://$ACCESS_TOKEN@$git_type.com/$AKS_MANIFEST_REPO
     echo "GIT STATUS"
     git status
 }
 
+function unit_test() {
+    echo "Sourcing for unit test..."
+}
+
 function verify() {
     echo "Starting verification"
-    copy_files
+    init
     helm_init
     get_fab_version
     download_fab
+    install_fab
     fab_generate
 }
 
@@ -141,12 +176,11 @@ function verify_and_push() {
     git_push
 }
 
-
 echo "argument is ${1}"
 if [ "${1}" == "--verify-only" ]; then
     verify
-elif [ "${1}" != "--source-only" ]; then
-    verify_and_push "${@}"
+elif [ "${1}" == "--source-only" ]; then
+    unit_test
 else
     verify_and_push
 fi
