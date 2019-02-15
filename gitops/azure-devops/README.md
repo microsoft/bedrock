@@ -50,9 +50,9 @@ We provide instructions for creating HLD and Manifest repos in two flavors:
 * [Azure DevOps](ADORepos.md)
 * [GitHub](GitHubRepos.md)
 
-### 2. Create an Azure DevOps Build Pipeline
+### 2. Create an Orchestration Pipeline
 
-Configuration of an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) is necessary. We provide a YAML configration file in the sample HLD repository that performs the following behaviors:
+Configuration of an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) is necessary for orchestration. We provide a YAML configration file in the sample HLD repository that performs the following behaviors:
 
 + On a pull request (pre push to master) will execute a simple validation on proposed changes to infrastructure definition in the HLD repo.
 
