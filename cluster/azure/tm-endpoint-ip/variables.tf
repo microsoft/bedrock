@@ -22,7 +22,7 @@ variable "resource_location" {
   type = "string"
 }
 
-variable "ip_address_filename" {
+variable "ip_address_out_filename" {
   type    = "string"
   default = "bedrock_public_ip_address"
 }
@@ -30,7 +30,7 @@ variable "ip_address_filename" {
 variable "ipaddress_to_disk" {
   description = "This disables or enables the ip address output file from being written to disk."
   type        = "string"
-  default     = "true"
+  default     = "false"
 }
 
 variable "output_directory" {

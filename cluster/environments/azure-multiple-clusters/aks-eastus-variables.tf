@@ -4,5 +4,4 @@ variable "east_resource_group_name" {
 
 variable "east_resource_group_location" {
   type    = "string"
-  default = "eastus2"
 }

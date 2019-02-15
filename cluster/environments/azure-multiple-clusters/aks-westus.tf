@@ -5,18 +5,21 @@ resource "azurerm_resource_group" "westrg" {
 
 # local variable with cluster and location specific
 locals {
-  west_flux_clone_dir      = "${azurerm_resource_group.westrg.location}-${var.cluster_name}-flux"
-  west_kubeconfig_filename = "${azurerm_resource_group.westrg.location}_${var.cluster_name}_kube_config"
-  west_ip_address_filename = "${azurerm_resource_group.westrg.location}_${var.cluster_name}_ip_address"
+  west_rg_name                 = "${azurerm_resource_group.westrg.name}"
+  west_rg_location             = "${azurerm_resource_group.westrg.location}"
+  west_prefix                  = "${local.west_rg_location}-${var.cluster_name}"
+  west_flux_clone_dir          = "${local.west_prefix}-flux"
+  west_kubeconfig_filename     = "${local.west_prefix}_kube_config"
+  west_ip_address_out_filename = "${local.west_prefix}_ip_address"
 }
 
 # Creates vnet
 module "west_vnet" {
   source = "../../azure/vnet"
 
-  resource_group_name     = "${azurerm_resource_group.westrg.name}"
-  resource_group_location = "${azurerm_resource_group.westrg.location}"
-  location                = "${azurerm_resource_group.westrg.location}"
+  resource_group_name     = "${local.west_rg_name}"
+  resource_group_location = "${local.west_rg_location}"
+  location                = "${local.west_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
 
   tags = {
@@ -28,8 +31,8 @@ module "west_vnet" {
 module "west_aks" {
   source = "../../azure/aks"
 
-  resource_group_name      = "${azurerm_resource_group.westrg.name}"
-  resource_group_location  = "${azurerm_resource_group.westrg.location}"
+  resource_group_name      = "${local.west_rg_name}"
+  resource_group_location  = "${local.west_rg_location}"
   cluster_name             = "${var.cluster_name}"
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
@@ -57,16 +60,16 @@ module "west_flux" {
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.westrg.name}"
-  resource_location                   = "${azurerm_resource_group.westrg.location}"
+  resource_group_name                 = "${local.west_rg_name}"
+  resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${azurerm_resource_group.westrg.location}-${var.cluster_name}"
+  endpoint_name                       = "${local.west_rg_location}-${var.cluster_name}"
   public_ip_name                      = "${var.cluster_name}"
-  ip_address_filename                 = "${local.west_ip_address_filename}"
+  ip_address_out_filename             = "${local.west_ip_address_out_filename}"
 
   tags = {
-    environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
+    environment = "azure-multiple-clusters - ${local.west_prefix} - public ip"
   }
 }
 

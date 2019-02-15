@@ -21,7 +21,7 @@ resource "null_resource" "ip_address" {
   count = "${var.ipaddress_to_disk ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo ${azurerm_public_ip.pip.ip_address} > ${var.output_directory}/${var.ip_address_filename}"
+    command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo ${azurerm_public_ip.pip.ip_address} > ${var.output_directory}/${var.ip_address_out_filename}"
   }
 
   triggers {

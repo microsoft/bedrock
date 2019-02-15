@@ -13,8 +13,9 @@ done
 KUBE_SECRET_NAME="flux-ssh"
 RELEASE_NAME="flux"
 KUBE_NAMESPACE="flux"
-REPO_DIR="$REPO_ROOT_DIR/flux"
-FLUX_CHART_DIR="flux/chart/flux"
+CLONE_DIR="flux"
+REPO_DIR="$REPO_ROOT_DIR/$CLONE_DIR"
+FLUX_CHART_DIR="chart/flux"
 FLUX_MANIFESTS="manifests"
 
 echo "flux repo root directory: $REPO_ROOT_DIR"
@@ -36,7 +37,7 @@ if ! git clone $FLUX_REPO_URL; then
     exit 1
 fi
 
-cd $FLUX_CHART_DIR
+cd $CLONE_DIR/$FLUX_CHART_DIR
 
 echo "creating $FLUX_MANIFESTS directory"
 if ! mkdir $FLUX_MANIFESTS; then
@@ -67,7 +68,7 @@ echo "creating kubernetes secret $KUBE_SECRET_NAME from key file path $GITOPS_SS
 kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE
 
 echo "Applying flux deployment"
-if ! kubectl apply -f  $REPO_ROOT_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
+if ! kubectl apply -f  $REPO_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
     echo "ERROR: failed to apply flux deployment"
     exit 1
 fi

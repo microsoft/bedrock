@@ -10,7 +10,6 @@ variable "resource_group_name" {
 
 variable "resource_group_location" {
   description = "Default resource group location that the resource group will be created in. The full list of Azure regions can be found at https://azure.microsoft.com/regions"
-  default     = "westus2"
 }
 
 variable "location" {

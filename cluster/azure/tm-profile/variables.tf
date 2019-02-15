@@ -14,11 +14,15 @@ variable "resource_group_location"{
   type="string"
 }
 
-# variable "public_ips" {
-#   description = "A list of public ips"
-#   type        = "list"
-#   default     = ["ip1", "ip2"]
-# }
+variable "traffic_manager_monitor_protocol"{
+  type="string"
+  default="http"
+}
+
+variable "traffic_manager_monitor_port"{
+  type="string"
+  default="80"
+}
 
 variable "tags" {
   description = "The tags to associate with the traffic maanger."

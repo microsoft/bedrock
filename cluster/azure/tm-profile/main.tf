@@ -15,8 +15,8 @@ resource "azurerm_traffic_manager_profile" "profile" {
   }
 
   monitor_config {
-    protocol = "http"
-    port     = 80
+    protocol = "${var.traffic_manager_monitor_protocol}"
+    port     = "${var.traffic_manager_monitor_port}"
     path     = "/"
   }
 
