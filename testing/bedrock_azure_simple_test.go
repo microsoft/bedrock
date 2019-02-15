@@ -42,20 +42,12 @@ func TestIT_BedrockExample(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
+	// Obtain Kube_config file from module output
 	os.Setenv("KUBECONFIG", "../cluster/environments/azure-simple/output/bedrock_kube_config")
-    //kubeConfig := os.Environ("KUBECONFIG")
 	kubeConfig := os.Getenv("KUBECONFIG")
+	fmt.Print(string(kubeConfig))
 
-
-	//kubeConfig := terraform.Output(t, tfOptions, "kube_config")
-	//kubeConfig, err := ioutil.ReadFile("../cluster/environments/azure/aks/output/kube_config")
-
-    fmt.Print(string(kubeConfig))
-
-	//options := k8s.NewKubectlOptions(kubeConfig, "")
 	options := k8s.NewKubectlOptions("", kubeConfig)
-
-	//kubeCommand := strings.ToLower("get", "services")
 
 	k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
 
