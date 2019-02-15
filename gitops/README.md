@@ -17,7 +17,8 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
     4. Merge
     5. Monitor
     6. Repeat
-<img src="images/GitOpsFlow.svg?sanitize=true">
+
+<img src="images/GitOpsFlow.png?sanitize=true">
 
 ## Defintions
 
@@ -31,12 +32,12 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
 + They live in a git repository and are the expected state of the cluster. 
 + The git repository they live in is considered the source of truth. 
 
-### CI/CD
+### Orchestration
 + We leverage operational features of CI/CD platforms to build, test, deploy, and orchestrate processes. 
 
 ### Fabrikate
 + A [tool](https://github.com/Microsoft/fabrikate) we use to transform high level declared infrastructure into manifests 
-+ Used in the CI/CD process
++ Used in the orchestration process
 
 ## A GitOps scenario with Bedrock
 
