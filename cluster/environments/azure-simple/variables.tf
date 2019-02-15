@@ -10,10 +10,6 @@ variable "cluster_name" {
     type = "string"
 }
 
-variable "cluster_location" {
-    type = "string"
-}
-
 variable "agent_vm_count" {
     type = "string"
     default = "3"

@@ -23,7 +23,6 @@ With this new environment created, edit `environments/azure/<cluster name>/terra
 - `resource_group_name`: Name of the resource group for the cluster
 - `resource_group_location`: Azure region the resource group should be created in.
 - `cluster_name`: Name of the Kubernetes cluster
-- `cluster_location`:  Azure region that the cluster should be placed in.
 - `agent_vm_count`: The number of agents VMs in the the node pool.
 - `dns_prefix`: DNS name for accessing the cluster from the internet.
 - `service_principal_id`: The id of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Creating Service Principal](#creating-service-principal) for details).
