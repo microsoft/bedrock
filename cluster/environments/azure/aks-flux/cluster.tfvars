@@ -1,7 +1,0 @@
-resource_group_name="resource-group-name"
-cluster_name="cluster-name"
-dns_prefix="dns-prefix"
-service_principal_id = "client-id"
-service_principal_secret = "client-secret"
-ssh_public_key = "public-key"
-gitops_url = "git@github.com:timfpark/fabrikate-cloud-native-materialized.git"

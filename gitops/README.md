@@ -4,9 +4,9 @@ There exist many opinions about _GitOps_. In Bedrock we attempt to take the best
 
 ## Why GitOps?
 
-+ **Simplicity** - TODO
-+ **Congruent with Kubernetes** - TODO
-+ **More Secure** - TODO
++ **Simplicity**
++ **Congruent with Kubernetes**
++ **More Secure**
 
 ## How we practice Gitops in Bedrock
 We follow a version of a _Release Flow_. At a high level the steps for an operator of a Kubernetes cluster are:
@@ -17,15 +17,16 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
     4. Merge
     5. Monitor
     6. Repeat
+<img src="images/GitOpsFlow.svg?sanitize=true">
 
 ## Defintions
 
-### High Level Deployment Description
+### High Level Deployment Description (HLD) Repo
 + A specification of the helm charts to use to build a deployment of a logically higher level component
 + Simplifies the complexity and repeativeness of low level YAML
 + Lives in a git repository
 
-### Manifests
+### Manifest Repo
 + These are the `kubectl` friendly low level YAML that declare the desired cluster state. 
 + They live in a git repository and are the expected state of the cluster. 
 + The git repository they live in is considered the source of truth. 
@@ -34,7 +35,7 @@ We follow a version of a _Release Flow_. At a high level the steps for an operat
 + We leverage operational features of CI/CD platforms to build, test, deploy, and orchestrate processes. 
 
 ### Fabrikate
-+ A [tool]() we use to transform high level declared infrastructure into manifests 
++ A [tool](https://github.com/Microsoft/fabrikate) we use to transform high level declared infrastructure into manifests 
 + Used in the CI/CD process
 
 ## A GitOps scenario with Bedrock
