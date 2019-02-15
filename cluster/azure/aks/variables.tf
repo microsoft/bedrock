@@ -1,3 +1,6 @@
+variable "resource_group_location" {
+    type = "string"
+}
 variable "resource_group_name" {
     type = "string"
 }
@@ -5,10 +8,6 @@ variable "resource_group_name" {
 variable "cluster_name" {
     type = "string"
     default = "bedrockaks"
-}
-
-variable "cluster_location" {
-    type = "string"
 }
 
 variable "dns_prefix" {
@@ -35,7 +34,7 @@ variable "agent_vm_size" {
 
 variable "kubernetes_version" {
     type = "string"
-    default = "1.12.4"
+    default = "1.12.5"
 }
 
 variable "admin_user" {

@@ -4,10 +4,15 @@ variable "flux_repo_url" {
   default = "https://github.com/weaveworks/flux.git"
 }
 
-# URL of git repo with Kubernetes manifests including services which runs in the cluster
-# flux monitors this repo for Kubernetes manifest additions/changes preriodiaclly and apply them in the cluster
 variable "gitops_url" {
+  description = "ssh git clone repository URL with Kubernetes manifests including services which runs in the cluster. Flux monitors this repo for Kubernetes manifest additions/changes preriodiaclly and apply them in the cluster."
   type = "string"
+}
+
+variable "gitops_url_branch" {
+  description = "Git branch associated with the gitops_url where flux checks for the raw kubernetes yaml files to deploy to the cluster."
+  type = "string"
+  default = "master"
 }
 
 # generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
@@ -39,4 +44,9 @@ variable "flux_recreate" {
     description = "Make any change to this value to trigger the recreation of the flux execution script."
     type = "string"
     default = ""
+}
+
+variable "kubeconfig_complete" {
+    description = "Allows flux to wait for the kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
+    type = "string"
 }
