@@ -66,16 +66,27 @@ in the cluster to start a [GitOps](https://www.weave.works/blog/gitops-operation
 
 Once your cluster has been created the credentials for the cluster will be placed in the specified `output_directory` which defaults to `./output`. 
 
-You can copy this to your `~/.kube/config` by executing:
+With the default kube config file name, you can copy this to your `~/.kube/config` by executing:
 
 ```bash
 $ KUBECONFIG=./output/bedrock_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
-or directly use the kube_config file with:
+In a multi cluster deployment environment, you can copy this to your `~/.kube/config` by replacing `location` and `clustername` in the following command for each cluster:
+```
+$ KUBECONFIG=./output/<location>-<clustername>_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
+```
+
+or directly use the kube_config file with default output file name:
 
 ```
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux` 
+```
+
+or directly use the kube_config file by replacing `location` and `clustername` in the following command in multi cluster deployment:
+
+```
+$ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux` 
 ```
 
 ### Creating Service Principal
