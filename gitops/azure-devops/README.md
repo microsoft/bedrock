@@ -93,12 +93,11 @@ At this point you will see `azure-pipeline.yml`, which is contained in the HLD r
 2. You should see the output of an azure pipeline. Instead of waiting for the build to finish, click the ellipsis (...) in the upper right corner and choose "Edit pipeline".
 3. You will see the YAML contents again. Click on the ellipsis to the right of the blue "Run" button and choose "Pipeline settings".
 4. Click the "Variables" tab.
-5. Add two variables:
+5. Add a variables:
     ![set variables](images/set-variables.png)
     1. __Name__ ACCESS_TOKEN __Value__ Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type
         1. Click the "lock" icon to the right of the value field to indicate this is a _secret_. See screenshoot above.
-    2. __Name__ GIT_HOST __Value Enter "azure" for Azure DevOps repos and "github" for GitHub Repos. 
-        1. These variables are consumed by the `build.sh` called in `azure_pipeline.yml`.
+        2. These variables are consumed by the `build.sh` called in `azure_pipeline.yml`.
 6. Click "Save & Queue".
 7. You will see the build run and hopefully complete successfully. At this point we can make a PR change to the HLD repo.
   ![ADO Build](images/azure-pipelines-yaml.png)

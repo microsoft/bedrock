@@ -10,18 +10,6 @@ function init() {
         exit 1
     fi
 
-    echo "CHECKING GIT HOST"
-    if [[ "$GIT_HOST" == "github" ]]; then
-        git_dest_repo="$AKS_MANIFEST_REPO"
-        git_type=$GIT_HOST
-    elif [[ "$GIT_HOST" == "azure" ]]; then
-        git_dest_repo="$AKS_MANIFEST_REPO" 
-        git_type="dev.azure"
-    else
-        echo 'Git host not specified in variable $GIT_HOST'
-        exit 1
-    fi
-
     echo "VERIFYING PERSONAL ACCESS TOKEN"
     if [[ -z "$ACCESS_TOKEN_SECRET" ]]; then
         echo "Please set env var ACCESS_TOKEN_SECRET for git host: $GIT_HOST"
@@ -118,8 +106,8 @@ function fab_generate() {
 function git_connect() {
     cd $HOME
     echo "GIT CLONE"
-    git clone $git_dest_repo
-    repo_url=$git_dest_repo
+    git clone $AKS_MANIFEST_REPO
+    repo_url=$AKS_MANIFEST_REPO
     repo=${repo_url##*/}
 
     # Extract repo name from url
