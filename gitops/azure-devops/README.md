@@ -52,7 +52,7 @@ steps:
     AKS_MANIFEST_REPO: REPLACE_ME_WITH_ABSOLUTE_MANIFEST_REPO_URL
 ```
 
- ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+**NOTE**: Besure to set the **AKS_MANIFEST_REPO** environment variable value with the absolute URL to your manifest repo. (i.e. https://dev.azure.com/abrig/bedrock_gitops/_git/manifest_repo)
 
 
 At the end of this walkthrough you will have kubernetes manifest files corresponding to the Cloud Native stack on your manifest repo. These YAML files will then be deployed to your AKS cluster via Flux. 
