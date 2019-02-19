@@ -27,19 +27,33 @@ steps:
   clean: true
 
 - bash: |
-    chmod +x ./build.sh && ./build.sh --verify-only
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+    curl $BEDROCK_BUILD_SCRIPT > build.sh
+    chmod +x ./build.sh
+  displayName: Download Bedrock orchestration script
+  env:
+    BEDROCK_BUILD_SCRIPT: https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh
 
 - task: ShellScript@2
+  displayName: Validate fabrikate definitions
+  inputs:
+    scriptPath: build.sh
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+  env:
+    VERIFY_ONLY: 1
+
+- task: ShellScript@2
+  displayName: Transform fabrikate definitions and publish to YAML manifests to repo
   inputs:
     scriptPath: build.sh
   condition: ne(variables['Build.Reason'], 'PullRequest')
   env:
-    ACCESS_TOKEN: $(accesstoken)
+    ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
-    AKS_MANIFEST_REPO: $(aks_manifest_repo)
-
+    AKS_MANIFEST_REPO: REPLACE_ME_WITH_ABSOLUTE_MANIFEST_REPO_URL
 ```
+
+ ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+
 
 At the end of this walkthrough you will have kubernetes manifest files corresponding to the Cloud Native stack on your manifest repo. These YAML files will then be deployed to your AKS cluster via Flux. 
 
@@ -80,10 +94,11 @@ At this point you will see `azure-pipeline.yml`, which is contained in the HLD r
 3. You will see the YAML contents again. Click on the ellipsis to the right of the blue "Run" button and choose "Pipeline settings".
 4. Click the "Variables" tab.
 5. Add two variables:
-    1. __Name__ AKS_MANIFEST_REPO __Value__ MANIFEST_REPO_NAME_GIT_URL
-    2. __Name__ ACCESS_TOKEN __Value__ MANIFEST_REPO_NAME_GIT_URL
-    3. __Name__ GIT_HOST __Value "azure"
-    These variables are consumed by the `build.sh` called in `azure_pipeline.yml`.
+    ![set variables](images/set-variables.png)
+    1. __Name__ ACCESS_TOKEN __Value__ Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type
+        1. Click the "lock" icon to the right of the value field to indicate this is a _secret_. See screenshoot above.
+    2. __Name__ GIT_HOST __Value Enter "azure" for Azure DevOps repos and "github" for GitHub Repos. 
+        1. These variables are consumed by the `build.sh` called in `azure_pipeline.yml`.
 6. Click "Save & Queue".
 7. You will see the build run and hopefully complete successfully. At this point we can make a PR change to the HLD repo.
   ![ADO Build](images/azure-pipelines-yaml.png)
