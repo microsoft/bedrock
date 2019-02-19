@@ -6,7 +6,7 @@ function init() {
 
     echo "CHECKING MANIFEST REPO URL"
     if [[ -z "$AKS_MANIFEST_REPO" ]]; then
-        echo 'MANIFEST REPO URL not specified in variable $MANIFEST REPO URL'
+        echo 'MANIFEST REPO URL not specified in variable $AKS_MANIFEST_REPO'
         exit 1
     fi
 
@@ -15,7 +15,7 @@ function init() {
         git_dest_repo="$AKS_MANIFEST_REPO"
         git_type=$GIT_HOST
     elif [[ "$GIT_HOST" == "azure" ]]; then
-        git_dest_repo="$AKS_MANIFEST_REPO" # For repos that reside in Azure Devops, the AKS_MANIFEST_REPO should be formatted like "user_account/project_name/_git/repo_name"
+        git_dest_repo="$AKS_MANIFEST_REPO" 
         git_type="dev.azure"
     else
         echo 'Git host not specified in variable $GIT_HOST'
