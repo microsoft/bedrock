@@ -140,7 +140,7 @@ Now, when a change is commited to the Manifest repo, Flux should acknowledge the
 ### 5. Monitor Repository Changes
 * Once a pull request is approved you can monitor the progress of the HLD transformation in the Build menu in your Azure DevOps _Project_.
 * Once the build is successful navigate to your manifest repository. You see a very recent commit to the main branch.
-  ![ADO Build](images/ADO_builds.png)
+  ![ADO Build](images/ado-builds.png)
 
 ### 6. Monitor Cluster Changes
 
