@@ -1,34 +1,43 @@
 #!/bin/sh
-while getopts :b:f:g:k: option 
+while getopts :b:f:g:k:d: option 
 do 
  case "${option}" in 
  b) GITOPS_URL_BRANCH=${OPTARG};;
  f) FLUX_REPO_URL=${OPTARG};; 
  g) GITOPS_URL=${OPTARG};; 
  k) GITOPS_SSH_KEY=${OPTARG};; 
+ d) REPO_ROOT_DIR=${OPTARG};;
  esac
 done 
 
 KUBE_SECRET_NAME="flux-ssh"
 RELEASE_NAME="flux"
 KUBE_NAMESPACE="flux"
-REPO_DIR="flux"
-FLUX_CHART_DIR="flux/chart/flux"
+CLONE_DIR="flux"
+REPO_DIR="$REPO_ROOT_DIR/$CLONE_DIR"
+FLUX_CHART_DIR="chart/flux"
 FLUX_MANIFESTS="manifests"
 
-GIT_KNOWN_HOSTS="`ssh-keyscan github.com gitlab.com bitbucket.org ssh.dev.azure.com`"
+echo "flux repo root directory: $REPO_ROOT_DIR"
 
-echo "known_hosts $GIT_KNOWN_HOSTS"
+rm -rf $REPO_ROOT_DIR
+
+echo "creating $REPO_ROOT_DIR directory"
+if ! mkdir $REPO_ROOT_DIR; then
+    echo "ERROR: failed to create directory $REPO_ROOT_DIR"
+    exit 1
+fi
+
+cd $REPO_ROOT_DIR
 
 echo "cloning $FLUX_REPO_URL"
-rm -rf $REPO_DIR
 
 if ! git clone $FLUX_REPO_URL; then
     echo "ERROR: failed to clone $FLUX_REPO_URL"
     exit 1
 fi
 
-cd $FLUX_CHART_DIR
+cd $CLONE_DIR/$FLUX_CHART_DIR
 
 echo "creating $FLUX_MANIFESTS directory"
 if ! mkdir $FLUX_MANIFESTS; then
@@ -41,12 +50,13 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set ssh.known_hosts="$GIT_KNOWN_HOSTS"; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
 
-cd ../../../
+# back to the roor dir
+cd ../../../../
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE"
 if ! kubectl create namespace $KUBE_NAMESPACE; then
@@ -58,7 +68,7 @@ echo "creating kubernetes secret $KUBE_SECRET_NAME from key file path $GITOPS_SS
 kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE
 
 echo "Applying flux deployment"
-if ! kubectl apply -f  $FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
+if ! kubectl apply -f  $REPO_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
     echo "ERROR: failed to apply flux deployment"
     exit 1
 fi
