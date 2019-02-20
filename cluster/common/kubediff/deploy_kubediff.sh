@@ -15,8 +15,7 @@ if ! git clone $KUBEDIFF_REPO_URL $REPO_DIR; then
     echo "ERROR: failed to clone $KUBEDIFF_REPO_URL"
     exit 1
 fi
- 
-echo "Cloned kubediff. cd"
+
 cd $REPO_DIR/k8s
 
 re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
@@ -24,14 +23,16 @@ if [[ $GITOPS_URL =~ $re ]]; then
     user=${BASH_REMATCH[4]}
     repo=${BASH_REMATCH[5]}
 
+    # kubediff does not include a helm chart, replace the config repo with 
+    # gitops url
     if ! sed -i -e "s|<your config repo>|$user/$repo|g" ./kubediff-rc.yaml; then
         echo "ERROR: failed to update with gitops url $GITOPS_URL"
         exit 1
     fi
 fi
 
-sed '23q;d' ./kubediff-rc.yaml
 echo "Updated with gitops url $GITOPS_URL"
+sed '23q;d' ./kubediff-rc.yaml
 
 echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE"
 if ! kubectl create namespace $KUBEDIFF_NAMESPACE; then
