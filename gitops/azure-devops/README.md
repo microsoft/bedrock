@@ -6,13 +6,12 @@ The expectation here is that from scratch you can set up the necessary repos to 
   * Create and deploy a [flux enabled AKS cluster](../../cluster/README.md)
 * Permissions:
   * Be able to create _Projects_ in your Azure DevOps _Organization_ 
-  * Create GitHub Personal Access Token (if using GitHub Repos)
 
 ## Sample HLD Repository
 We provide a [sample HLD repo](https://github.com/samiyaakhtar/aks-deploy-source) that can be imported or cloned based on the flavor of git repository you use. The sample HLD contains a [Cloud Native](https://github.com/timfpark/fabrikate-cloud-native) fabrikate definition.
 
 ### Azure Pipelines Build YAML
-The repo also contains an Azure Pipelines YAML file that controls some build rules on based upon whether a PR is occuring or if a merge to master branch has occured.
+The repo also contains an azure-pipelines.yml file that controls the build rules on based upon whether a PR is occuring or if a merge to master branch has occured. <u>You will need this file on your repository HLD repo even if you don't use the sample HLD repo.</u>
 
 ```
 trigger:
@@ -27,26 +26,37 @@ steps:
   clean: true
 
 - bash: |
-    chmod +x ./build.sh && ./build.sh --verify-only
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+    curl $BEDROCK_BUILD_SCRIPT > build.sh
+    chmod +x ./build.sh
+  displayName: Download Bedrock orchestration script
+  env:
+    BEDROCK_BUILD_SCRIPT: https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh
 
 - task: ShellScript@2
+  displayName: Validate fabrikate definitions
+  inputs:
+    scriptPath: build.sh
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+  env:
+    VERIFY_ONLY: 1
+
+- task: ShellScript@2
+  displayName: Transform fabrikate definitions and publish to YAML manifests to repo
   inputs:
     scriptPath: build.sh
   condition: ne(variables['Build.Reason'], 'PullRequest')
   env:
-    ACCESS_TOKEN: $(accesstoken)
+    ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
-    AKS_MANIFEST_REPO: $(aks_manifest_repo)
-
+    MANIFEST_REPO: $(MANIFEST_REPO)
 ```
 
 At the end of this walkthrough you will have kubernetes manifest files corresponding to the Cloud Native stack on your manifest repo. These YAML files will then be deployed to your AKS cluster via Flux. 
 
 ## Walkthrough
-### 1. Create Repositories
+### 1. Create Repositories and Personal Access Tokens
 
-We provide instructions for creating HLD and Manifest repos in two flavors:
+We provide instructions for creating HLD/Manifest repos and personal access tokens in two flavors:
 * [Azure DevOps](ADORepos.md)
 * [GitHub](GitHubRepos.md)
 
@@ -69,7 +79,8 @@ In the Azure DevOps,
 5. Choose the appropriate repo flavor as the selection to the "Where is your code?" prompt
   ![SELECT REPO TYPE](images/select-git-repo.png)
 6. Choose the repo that you named as $HLD_REPO_NAME
-  ![SELECT REPO NAME](images/select-ado-repo.png)
+    1. Azure DevOps Repo Example: ![SELECT REPO NAME](images/select-ado-repo.png)
+    2. GitHub Repo Example:![SELECT REPO NAME](images/select-github-repo.png)
 
 
 #### Configure a Build
@@ -77,13 +88,15 @@ In the Azure DevOps,
 At this point you will see `azure-pipeline.yml`, which is contained in the HLD repo.
 1. Click the blue run button on the right side.
 2. You should see the output of an azure pipeline. Instead of waiting for the build to finish, click the ellipsis (...) in the upper right corner and choose "Edit pipeline".
+    1. ![edit pipleline](images/edit-pipeline.png)
 3. You will see the YAML contents again. Click on the ellipsis to the right of the blue "Run" button and choose "Pipeline settings".
+    1. ![pipleline settings](images/pipeline-settings.png)
 4. Click the "Variables" tab.
-5. Add two variables:
-    1. __Name__ AKS_MANIFEST_REPO __Value__ MANIFEST_REPO_NAME_GIT_URL
-    2. __Name__ ACCESS_TOKEN __Value__ MANIFEST_REPO_NAME_GIT_URL
-    3. __Name__ GIT_HOST __Value "azure"
-    These variables are consumed by the `build.sh` called in `azure_pipeline.yml`.
+5. Add two variables that are consumed by the `build.sh` referenced in `azure_pipeline.yml`:
+    ![set variables](images/set-variables.png)
+    1. __Name__ `ACCESS_TOKEN` __Value__ Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type
+        1. Click the "lock" icon to the right of the value field to indicate this is a _secret_. See screenshoot above.
+    2.  __Name__ `MANIFEST_REPO` __Value__ The full URL to your manifest repo (i.e. https://github.com/andrebriggs/acme-company-yaml.git)
 6. Click "Save & Queue".
 7. You will see the build run and hopefully complete successfully. At this point we can make a PR change to the HLD repo.
   ![ADO Build](images/azure-pipelines-yaml.png)
@@ -125,7 +138,7 @@ Now, when a change is commited to the Manifest repo, Flux should acknowledge the
 ### 5. Monitor Repository Changes
 * Once a pull request is approved you can monitor the progress of the HLD transformation in the Build menu in your Azure DevOps _Project_.
 * Once the build is successful navigate to your manifest repository. You see a very recent commit to the main branch.
-  ![ADO Build](images/ADO_builds.png)
+  ![ADO Build](images/ado-builds.png)
 
 ### 6. Monitor Cluster Changes
 

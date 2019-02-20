@@ -1,24 +1,18 @@
+#!/bin/bash
+
 function init() {
     cp -r * $HOME/
     cd $HOME
 
-    echo "CHECKING GIT HOST"
-    if [[ "$GIT_HOST" == "github" ]]; then
-        git_dest_repo="https://github.com/$AKS_MANIFEST_REPO"
-        git_type=$GIT_HOST
-    elif [[ "$GIT_HOST" == "azure" ]]; then
-        git_dest_repo="https://dev.azure.com/$AKS_MANIFEST_REPO" # For repos that reside in Azure Devops, the AKS_MANIFEST_REPO should be formatted like "user_account/project_name/_git/repo_name"
-        git_type="dev.azure"
-    else
-        echo 'Git host not specified in variable $GIT_HOST'
+    echo "CHECKING MANIFEST REPO URL"
+    if [[ -z "$MANIFEST_REPO" ]]; then
+        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
         exit 1
     fi
 
     echo "VERIFYING PERSONAL ACCESS TOKEN"
-    if [ -n "$ACCESS_TOKEN" ]
-    then
-        echo "Personal Access token defined for git host: $GIT_HOST"
-    else
+    if [[ -z "$ACCESS_TOKEN_SECRET" ]]; then
+        echo "Please set env var ACCESS_TOKEN_SECRET for git host: $GIT_HOST"
         exit 1
     fi
 }
@@ -111,9 +105,14 @@ function fab_generate() {
 # Authenticate with Git
 function git_connect() {
     cd $HOME
-    echo "GIT CLONE"
-    git clone $git_dest_repo
-    repo_url=$git_dest_repo
+    # Remove http(s):// protocol from URL so we can insert PA token
+    repo_url=$MANIFEST_REPO
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+
+    git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
+    repo_url=$MANIFEST_REPO
     repo=${repo_url##*/}
 
     # Extract repo name from url
@@ -139,6 +138,7 @@ function git_commit() {
 
     echo "GIT COMMIT"
     git commit -m "Updated k8s manifest files post commit: $COMMIT_MESSAGE"
+    retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     echo "GIT STATUS" 
     git status
     echo "GIT PULL" 
@@ -146,9 +146,15 @@ function git_commit() {
 }
 
 # Perform a Git push
-function git_push() {
-    echo "GIT PUSH"
-    git push https://$ACCESS_TOKEN@$git_type.com/$AKS_MANIFEST_REPO
+function git_push() {  
+    # Remove http(s):// protocol from URL so we can insert PA token
+    repo_url=$MANIFEST_REPO
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+
+    echo "GIT PUSH: https://$ACCESS_TOKEN_SECRET@$repo_url"
+    git push https://$ACCESS_TOKEN_SECRET@$repo_url
+    retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     echo "GIT STATUS"
     git status
 }
@@ -177,7 +183,7 @@ function verify_and_push() {
 }
 
 echo "argument is ${1}"
-if [ "${1}" == "--verify-only" ]; then
+if [[ "$VERIFY_ONLY" == "1" ]]; then
     verify
 elif [ "${1}" == "--source-only" ]; then
     unit_test
