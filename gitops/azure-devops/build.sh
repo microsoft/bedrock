@@ -5,8 +5,8 @@ function init() {
     cd $HOME
 
     echo "CHECKING MANIFEST REPO URL"
-    if [[ -z "$AKS_MANIFEST_REPO" ]]; then
-        echo 'MANIFEST REPO URL not specified in variable $AKS_MANIFEST_REPO'
+    if [[ -z "$MANIFEST_REPO" ]]; then
+        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
         exit 1
     fi
 
@@ -105,9 +105,14 @@ function fab_generate() {
 # Authenticate with Git
 function git_connect() {
     cd $HOME
-    echo "GIT CLONE"
-    git clone $AKS_MANIFEST_REPO
-    repo_url=$AKS_MANIFEST_REPO
+    # Remove http(s):// protocol from URL so we can insert PA token
+    repo_url=$MANIFEST_REPO
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+
+    git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
+    repo_url=$MANIFEST_REPO
     repo=${repo_url##*/}
 
     # Extract repo name from url
@@ -143,11 +148,11 @@ function git_commit() {
 # Perform a Git push
 function git_push() {  
     # Remove http(s):// protocol from URL so we can insert PA token
-    repo_url=$AKS_MANIFEST_REPO
+    repo_url=$MANIFEST_REPO
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
 
-    echo "GIT PUSH"
+    echo "GIT PUSH: https://$ACCESS_TOKEN_SECRET@$repo_url"
     git push https://$ACCESS_TOKEN_SECRET@$repo_url
     retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     echo "GIT STATUS"
