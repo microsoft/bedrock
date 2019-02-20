@@ -79,7 +79,8 @@ In the Azure DevOps,
 5. Choose the appropriate repo flavor as the selection to the "Where is your code?" prompt
   ![SELECT REPO TYPE](images/select-git-repo.png)
 6. Choose the repo that you named as $HLD_REPO_NAME
-  ![SELECT REPO NAME](images/select-ado-repo.png)
+    1. Azure DevOps Repo Example: ![SELECT REPO NAME](images/select-ado-repo.png)
+    2. GitHub Repo Example:![SELECT REPO NAME](images/select-github-repo.png)
 
 
 #### Configure a Build
@@ -87,7 +88,9 @@ In the Azure DevOps,
 At this point you will see `azure-pipeline.yml`, which is contained in the HLD repo.
 1. Click the blue run button on the right side.
 2. You should see the output of an azure pipeline. Instead of waiting for the build to finish, click the ellipsis (...) in the upper right corner and choose "Edit pipeline".
+    1. ![edit pipleline](images/edit-pipeline.png)
 3. You will see the YAML contents again. Click on the ellipsis to the right of the blue "Run" button and choose "Pipeline settings".
+    1. ![pipleline settings](images/pipeline-settings.png)
 4. Click the "Variables" tab.
 5. Add two variables that are consumed by the `build.sh` referenced in `azure_pipeline.yml`:
     ![set variables](images/set-variables.png)
