@@ -48,7 +48,7 @@ module "west_aks" {
 module "west_flux" {
   source = "../../common/flux"
 
-  gitops_url          = "${var.gitops_url}"
+  gitops_ssh_url      = "${var.gitops_ssh_url}"
   gitops_ssh_key      = "${var.gitops_ssh_key}"
   flux_recreate       = ""
   kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
