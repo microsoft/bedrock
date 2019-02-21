@@ -1,5 +1,7 @@
 # bedrock
 
+[![Build Status](https://travis-ci.org/Microsoft/bedrock.svg?branch=master)](https://travis-ci.org/Microsoft/bedrock)
+
 Bedrock is a set of automation, tooling, and infrastructue stacks for deploying production-level Kubernetes 
 clusters with a secure and auditable [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow.
 
