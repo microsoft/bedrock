@@ -59,7 +59,7 @@ $ ls -l GitOps_repo_key*
 
 ## Create an Azure service principal
 
-You can generate an Azure service principal for a particular subscription with the following `az` cli command:
+You can generate an Azure service principal for your Azure subscription with the following `az` cli command:
 
 ```bash
 $ az ad sp create-for-rbac --subscription <id | name>
