@@ -22,6 +22,8 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	clientid := os.Getenv("clientID")
 	clientsecret := os.Getenv("clientSecret")
 	publickey := os.Getenv("public_key")
+	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
+	tenantid := os.Getenv("ARM_TENANT_ID")
 	sshkey := os.Getenv("ssh_key")
 
 	// Specify the test case folder and "-var" options
@@ -36,6 +38,8 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"ssh_public_key" :publickey,
 			"gitops_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
 			"gitops_ssh_key" :sshkey,
+			"tenant_id" :tenantid,
+			"subscription_id" : subscriptionid,
 		},
 
 	}
