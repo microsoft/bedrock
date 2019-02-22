@@ -1,8 +1,8 @@
 provider "azurerm" {
-  subscription_id          = "${var.subscription_id}"
-  service_principal_id     = "${var.service_principal_id}"
-  service_principal_secret = "${var.service_principal_secret}"
-  tenant_id                = "${var.tenant_id}"
+  subscription_id = "${var.subscription_id}"
+  client_id       = "${var.service_principal_id}"
+  client_secret   = "${var.service_principal_secret}"
+  tenant_id       = "${var.tenant_id}"
 }
 
 # terraform {
@@ -10,9 +10,8 @@ provider "azurerm" {
 #    }
 # }
 
-data "azurerm_subscription" "current" {}
- "current_subscription_display_name" {
-  value = "${var.subscription_id}"
+data "azurerm_subscription" "current" {
+  subscription_id = "${var.subscription_id}"
 }
 
 module "vnet" {
