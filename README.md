@@ -1,44 +1,23 @@
-# bedrock
-
-Bedrock is a set of automation, tooling, and infrastructue stacks for deploying production-level Kubernetes 
-clusters with a secure and auditable [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow.
+# Bedrock
 
 This project is our humble attempt to combine the collective wisdom of the cloud native community for 
 building best practice cloud native Kubernetes clusters, based on real world experiences 
 deploying and operating applications in Kubernetes clusters.
 
-## What's in the box?
+In particular, Bedrock is a set of automation, tooling, and infrastructue stacks for deploying production-level Kubernetes 
+clusters with a secure and auditable [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow.  
 
-Bedrock, by default, includes the workflow, platforms, and tools that we believe are the best in class for 
-operating a Kubernetes cluster. It includes Terraform scripts for creating the core infrastructure for your cluster
-and also, by default, includes a [cloud native](https://github.com/timfpark/fabrikate-cloud-native) set of observability infrastructure via a set of "batteries removable"
-[Fabrikate](https://github.com/Microsoft/fabrikate) stacks.
+In our version of this methodology, you assemble a [Fabrikate](https://github.com/Microsoft/fabrikate) high level deployment definition to define what should be deployed in your cluster.  This higher level construct avoids having to edit low level error prone resource manifest files, leverage common pieces across many deployments, and allow you to share structure amongst clusters with different applied config.
 
-Cluster Creation
--   [Cluster Deployment](./cluster): Automated cluster creation
--   [Flux](https://github.com/weaveworks/flux): Secure GitOps Kubernetes operator
+Next, you configure a CI/CD pipeline that generates the Kubernetes resource manifests from these Fabrikate definitions on each change and checks these generated resource manifests into a deployment git repo.  This resource manifest repo maintains an audit trail of all of the low level operational changes that have been made, allowing you to secure, control, code review, and audit what is currently deployed.
 
-Cluster Maintainance
--   [Kured](https://github.com/weaveworks/kured): Automatic node reboot when OS is patched. (via [fabrikate-kured](https://github.com/timfpark/fabrikate-kured))
-
-Metrics Monitoring (via [fabrikate-prometheus-grafana](https://github.com/timfpark/fabrikate-prometheus-grafana))
--   [Prometheus](https://prometheus.io/) Metrics aggregation
--   [Grafana](https://grafana.com/) Visualization with Kubernetes monitoring dashboards preconfigured
-
-Log Management (via [fabrikate-elasticsearch-fluentd-kibana](https://github.com/timfpark/fabrikate-elasticsearch-fluentd-kibana))
--   [Fluentd](https://www.fluentd.org/): Collection and forwarding
--   [Elasticsearch](https://www.elastic.co/): Aggregation and query execution
--   [Kibana](https://www.elastic.co/products/kibana): Full text query UI and visualization
-
-Service Mesh (via [fabrikate-istio](https://github.com/evanlouie/fabrikate-istio))
--   [Istio](https://istio.io/): Connect, secure, control, and observe services.
-
-Distributed Tracing (via [fabrikate-jaeger](https://github.com/bnookala/fabrikate-jaeger))
--   [Jaeger](https://www.jaegertracing.io/): Distributed transaction, latency, and dependency tracing
+Finally, we provide cluster environment templates for automating the creation of Kubernetes clusters with [Flux](https://github.com/weaveworks/flux), which automatically reconciles your Kubernetes cluster to your resource manifest repo.
 
 ## Getting Started
 
-1. Instructions for [creating and deploying](./cluster) a cluster environment.
+1. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) deployment definition for your deployment.
+2. [Deploy a CI/CD pipeline](./gitops) to build resource manifests from this deployment definition.
+3. [Create and deploy](./cluster) a Kubernetes environment with Flux.
 
 ## Contributing
 
