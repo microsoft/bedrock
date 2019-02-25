@@ -4,6 +4,7 @@ terraform.tfstate
 terraform.tfstate.backup
 translations
 istio-1.0.4
+
 terraform.tfvars
 .terraform.tfstate.lock.info
 *.out
@@ -11,3 +12,6 @@ output
 *.log
 .DS_Store
 shunit2
+
+.DS_Store
+
