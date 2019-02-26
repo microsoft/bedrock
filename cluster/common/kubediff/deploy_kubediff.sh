@@ -34,13 +34,17 @@ fi
 echo "Updated with gitops url $GITOPS_URL"
 sed '23q;d' ./kubediff-rc.yaml
 
+cd ../../ 
+
+echo "KUBECTL CONFIG GET-CONTEXTS"
+kubectl config get-contexts
+
 echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE"
 if ! kubectl create namespace $KUBEDIFF_NAMESPACE; then
     echo "ERROR: failed to create kubernetes namespace $KUBEDIFF_NAMESPACE"
     exit 1
 fi
 
-cd ../../
 
 echo "Applying kubediff deployment"
 if ! kubectl create -f  $REPO_DIR/k8s/ -n $KUBEDIFF_NAMESPACE; then

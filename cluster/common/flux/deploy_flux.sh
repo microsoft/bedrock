@@ -58,6 +58,9 @@ fi
 # back to the roor dir
 cd ../../../../
 
+echo "KUBECTL CONFIG GET-CONTEXTS"
+kubectl config get-contexts
+
 echo "creating kubernetes namespace $KUBE_NAMESPACE"
 if ! kubectl create namespace $KUBE_NAMESPACE; then
     echo "ERROR: failed to create kubernetes namespace $KUBE_NAMESPACE"
