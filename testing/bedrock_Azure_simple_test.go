@@ -58,6 +58,13 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	strings.Contains(_flux, "flux")
 	
+	//Test Case 2: Verify Kubediff namespace
+	_kubediff, kubediff_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=kubediff")
+	if kubediff_err != nil {
+		t.Fatal(kubediff_err)
+	}
+
+	strings.Contains(_kubediff, "kubediff")
 }
 
 		
