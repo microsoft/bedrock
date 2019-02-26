@@ -29,6 +29,11 @@ if [[ $GITOPS_URL =~ $re ]]; then
         echo "ERROR: failed to update with gitops url $GITOPS_URL"
         exit 1
     fi
+
+    if ! sed -i -e "s|<location in your repo of yaml files>||g" ./kubediff-rc.yaml; then
+        echo "ERROR: failed to update location in your repo of yaml files"
+        exit 1
+    fi
 fi
 
 echo "Updated with gitops url $GITOPS_URL"
