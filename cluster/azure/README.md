@@ -28,7 +28,7 @@ With this new environment created, edit `environments/azure/<cluster name>/terra
 - `service_principal_id`: The id of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Creating Service Principal](#creating-service-principal) for details).
 - `service_principal_secret`: The secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Creating Service Principal](#creating-service-principal) for details).
 - `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.
-- `gitops_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-materialized.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
+- `gitops_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
 - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the Gitops repository.
 
 Finally, if you are deploying a production cluster, you will want to [configure storage](#storing-terraform-state) of Terraform state.
