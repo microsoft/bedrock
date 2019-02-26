@@ -23,7 +23,6 @@ module "aks" {
   resource_group_name      = "${var.resource_group_name}"
   cluster_name             = "${var.cluster_name}"
   agent_vm_count           = "${var.agent_vm_count}"
-  agent_vm_size            = "${var.agent_vm_size}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.vnet.vnet_subnet_ids[0]}"
   ssh_public_key           = "${var.ssh_public_key}"
