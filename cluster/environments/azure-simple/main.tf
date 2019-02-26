@@ -40,3 +40,10 @@ module "flux" {
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
   flux_clone_dir      = "${var.cluster_name}-flux"
 }
+
+module "kubediff" {
+    source = "../../common/kubediff"
+
+    kubeconfig_complete       = "${module.aks.kubeconfig_done}"
+    gitops_url                = "${var.gitops_url}"
+}
