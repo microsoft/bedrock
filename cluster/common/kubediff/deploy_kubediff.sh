@@ -9,7 +9,8 @@ done
  
 KUBEDIFF_NAMESPACE="kubediff"
 REPO_DIR="kubediff"
- 
+
+rm -rf $REPO_DIR
 echo "Cloning Kubediff $KUBEDIFF_REPO_URL"
 if ! git clone $KUBEDIFF_REPO_URL $REPO_DIR; then
     echo "ERROR: failed to clone $KUBEDIFF_REPO_URL"
@@ -41,15 +42,11 @@ sed '23q;d' ./kubediff-rc.yaml
 
 cd ../../ 
 
-echo "KUBECTL CONFIG GET-CONTEXTS"
-kubectl config get-contexts
-
 echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE"
 if ! kubectl create namespace $KUBEDIFF_NAMESPACE; then
     echo "ERROR: failed to create kubernetes namespace $KUBEDIFF_NAMESPACE"
     exit 1
 fi
-
 
 echo "Applying kubediff deployment"
 if ! kubectl create -f  $REPO_DIR/k8s/ -n $KUBEDIFF_NAMESPACE; then
