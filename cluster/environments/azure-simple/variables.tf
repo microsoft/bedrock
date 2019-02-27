@@ -63,3 +63,9 @@ variable "tfstate_key" {
   type    = "string"
   default = "bedrock.dev.tfstate"
 }
+
+variable "flux_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flux execution script."
+    type = "string"
+    default = ""
+}
