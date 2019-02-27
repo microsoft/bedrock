@@ -42,10 +42,12 @@ sed '23q;d' ./kubediff-rc.yaml
 
 cd ../../ 
 
-echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE"
-if ! kubectl create namespace $KUBEDIFF_NAMESPACE; then
-    echo "ERROR: failed to create kubernetes namespace $KUBEDIFF_NAMESPACE"
-    exit 1
+echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE if needed"
+if ! kubectl describe namespace $KUBEDIFF_NAMESPACE > /dev/null 2>&1; then  
+    if ! kubectl create namespace $KUBEDIFF_NAMESPACE; then  
+        echo "ERROR: failed to create kubernetes namespace $KUBEDIFF_NAMESPACE"  
+        exit 1  
+    fi   
 fi
 
 echo "Applying kubediff deployment"
