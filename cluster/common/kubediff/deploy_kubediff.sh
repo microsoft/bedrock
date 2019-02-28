@@ -3,7 +3,7 @@ while getopts :f:g: option
 do
  case "${option}" in
  f) KUBEDIFF_REPO_URL=${OPTARG};;
- g) GITOPS_URL=${OPTARG};; 
+ g) GITOPS_SSH_URL=${OPTARG};; 
  esac
 done
  

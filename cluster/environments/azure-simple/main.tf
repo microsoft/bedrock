@@ -56,5 +56,5 @@ module "kubediff" {
     source = "../../common/kubediff"
 
     kubeconfig_complete       = "${module.aks.kubeconfig_done}"
-    gitops_url                = "${var.gitops_url}"
+    gitops_ssh_url            = "${var.gitops_ssh_url}"
 }
