@@ -19,7 +19,6 @@ module "east_vnet" {
 
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
-  location                = "${local.east_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
 
   tags = {

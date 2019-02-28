@@ -19,7 +19,6 @@ module "west_vnet" {
 
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
-  location                = "${local.west_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
 
   tags = {
@@ -75,6 +74,7 @@ module "west_tm_endpoint" {
 
 # Create a role assignment with Contributor role for AKS client service principal object 
 #   to join vnet/subnet/ip for load balancer/ingress controller
+
 resource "azurerm_role_assignment" "west_spra" {
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
