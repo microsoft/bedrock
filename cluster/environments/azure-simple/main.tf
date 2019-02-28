@@ -1,7 +1,18 @@
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+  client_id       = "${var.service_principal_id}"
+  client_secret   = "${var.service_principal_secret}"
+  tenant_id       = "${var.tenant_id}"
+}
+
 # terraform {
 #    backend "azurerm" {
 #    }
 # }
+
+data "azurerm_subscription" "current" {
+  subscription_id = "${var.subscription_id}"
+}
 
 module "vnet" {
   source = "../../azure/vnet"
@@ -35,7 +46,7 @@ module "aks" {
 module "flux" {
   source = "../../common/flux"
 
-  gitops_url          = "${var.gitops_url}"
+  gitops_ssh_url      = "${var.gitops_ssh_url}"
   gitops_ssh_key      = "${var.gitops_ssh_key}"
   flux_recreate       = ""
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
