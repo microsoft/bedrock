@@ -55,13 +55,22 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	options := k8s.NewKubectlOptions("", kubeConfig)
 
 	//Test Case 1: Verify Flux namespace
+	fmt.Println("Test case 1: Verifying flux namespace")
 	_flux, flux_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
-	if flux_err != nil {
+	if flux_err != nil || !strings.Contains(_flux, "flux") {
 		t.Fatal(flux_err)
+	} else {
+		fmt.Println("Flux verification complete")
 	}
 
-	strings.Contains(_flux, "flux")
-	
+	//Test Case 2: Verify Kubediff namespace
+	fmt.Println("Test case 2: Verifying kubediff namespace")
+	_kubediff, kubediff_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=kubediff")
+	if kubediff_err != nil || !strings.Contains(_kubediff, "kubediff") {
+		t.Fatal(kubediff_err)
+	} else {
+		fmt.Println("Kubediff verification complete")
+	}	
 }
 
 		
