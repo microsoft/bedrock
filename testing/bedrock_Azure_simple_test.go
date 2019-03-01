@@ -36,7 +36,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_id":clientid,
 			"service_principal_secret" :clientsecret,
 			"ssh_public_key" :publickey,
-			"gitops_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
+			"gitops_ssh_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
 			"gitops_ssh_key" :sshkey,
 			"tenant_id" :tenantid,
 			"subscription_id" : subscriptionid,
