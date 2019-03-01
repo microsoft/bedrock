@@ -59,7 +59,7 @@ module "east_flux" {
 module "east_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${local.east_rg_name }"
+  resource_group_name                 = "${module.east_aks.cluster_derived_resource_group}"
   resource_location                   = "${local.east_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -70,12 +70,4 @@ module "east_tm_endpoint" {
   tags = {
     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
   }
-}
-
-# Create a role assignment with Contributor role for AKS client service principal object 
-#   to join vnet/subnet/ip for load balancer/ingress controller
-resource "azurerm_role_assignment" "east_spra" {
-  principal_id         = "${data.azuread_service_principal.sp.id}"
-  role_definition_name = "${var.aks_client_role_assignment_role}"
-  scope                = "${azurerm_resource_group.eastrg.id}"
 }
