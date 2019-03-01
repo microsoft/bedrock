@@ -20,14 +20,14 @@ fi
 cd $REPO_DIR/k8s
 
 re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
-if [[ $GITOPS_URL =~ $re ]]; then
+if [[ $GITOPS_SSH_URL =~ $re ]]; then
     user=${BASH_REMATCH[4]}
     repo=${BASH_REMATCH[5]}
 
     # kubediff does not include a helm chart, replace the config repo with 
     # gitops url
     if ! sed -i -e "s|<your config repo>|$user/$repo|g" ./kubediff-rc.yaml; then
-        echo "ERROR: failed to update with gitops url $GITOPS_URL"
+        echo "ERROR: failed to update with gitops url $GITOPS_SSH_URL"
         exit 1
     fi
 
@@ -37,7 +37,7 @@ if [[ $GITOPS_URL =~ $re ]]; then
     fi
 fi
 
-echo "Updated with gitops url $GITOPS_URL"
+echo "Updated with gitops url $GITOPS_SSH_URL"
 sed '23q;d' ./kubediff-rc.yaml
 
 cd ../../ 
