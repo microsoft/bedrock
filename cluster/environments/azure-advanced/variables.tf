@@ -31,7 +31,7 @@ variable "service_principal_secret" {
     type = "string"
 }
 
-variable "gitops_url" {
+variable "gitops_ssh_url" {
   type = "string"
 }
 
