@@ -1,20 +1,24 @@
 #!/bin/bash
 
-function init() {
-    cp -r * $HOME/
-    cd $HOME
-
-    echo "CHECKING MANIFEST REPO URL"
-    if [[ -z "$MANIFEST_REPO" ]]; then
-        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
-        exit 1
-    fi
-
+function verify_access_token() {
     echo "VERIFYING PERSONAL ACCESS TOKEN"
     if [[ -z "$ACCESS_TOKEN_SECRET" ]]; then
         echo "Please set env var ACCESS_TOKEN_SECRET for git host: $GIT_HOST"
         exit 1
     fi
+}
+function verify_repo() {
+    echo "CHECKING MANIFEST REPO URL"
+    if [[ -z "$MANIFEST_REPO" ]]; then
+        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
+        exit 1
+    fi
+}
+
+function init() {
+    cp -r * $HOME/
+    cd $HOME
+    verify_repo
 }
 
 # Initialize Helm
@@ -163,7 +167,7 @@ function unit_test() {
     echo "Sourcing for unit test..."
 }
 
-function verify() {
+function pr_verify() {
     echo "Starting verification"
     init
     helm_init
@@ -175,7 +179,8 @@ function verify() {
 
 # Run functions
 function verify_and_push() {
-    verify
+    verify_access_token
+    pr_verify
     echo "Verification complete, push to yaml repo"
     git_connect
     git_commit
@@ -184,7 +189,7 @@ function verify_and_push() {
 
 echo "argument is ${1}"
 if [[ "$VERIFY_ONLY" == "1" ]]; then
-    verify
+    pr_verify
 elif [ "${1}" == "--source-only" ]; then
     unit_test
 else
