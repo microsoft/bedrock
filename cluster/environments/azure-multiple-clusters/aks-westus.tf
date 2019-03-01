@@ -69,6 +69,7 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${local.west_prefix} - public ip"
+    kubedone = "${module.west_aks.kubeconfig_done}"
   }
 }
 

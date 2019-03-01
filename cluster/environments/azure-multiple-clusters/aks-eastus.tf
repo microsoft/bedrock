@@ -69,5 +69,6 @@ module "east_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
+    kubedone = "${module.east_aks.kubeconfig_done}"
   }
 }
