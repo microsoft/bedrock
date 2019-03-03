@@ -1,58 +1,33 @@
-# GitOps: The Substrata 
+# GitOps
 
-There exist many opinions about _GitOps_. In Bedrock we attempt to take the best aspects of _DevOps_ and lean on Git for implicit auditing/security. 
+A [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow is one that utilizes a git workflow to build, code review, and deploy operational changes to your system. Utilizing git to manage the current state of what should be deployed in your Kubernetes cluster also closely matches the declarative nature of Kubernetes.
 
-## Why GitOps?
+## Overview
 
-+ **Simplicity**
-+ **Congruent with Kubernetes**
-+ **More Secure**
+In Bedrock's implementation of this methodology, you build a [Fabrikate](https://github.com/Microsoft/fabrikate) high level definition of what should be deployed in your cluster. This high level definition seperates the structure of the deployment from its configuration, enabling it to be used in deployments across multiple cluster environments, and it lives in a git repo such that it is version controlled and backed by solid engineering practices like pull requests, code reviews, and automated validation and linting.
 
-## How we practice Gitops in Bedrock
-We follow a version of a _Release Flow_. At a high level the steps for an operator of a Kubernetes cluster are:
-
-    1. Branch
-    2. Push
-    3. PR
-    4. Merge
-    5. Monitor
-    6. Repeat
+On a commit to the high level definition repo, a CI/CD system uses Fabrikate to generate the low level Kubernetes resource manifests for the deployment.  These low level Kubernetes resource manifests are checked into a resource manifest repo that serves as the operational "source of truth" for what should be deployed in the Kubernetes cluster. Finally, [Flux](https://github.com/weaveworks/flux), running inside of the Kubernetes cluster, watches for commits to this repo and reconciles the cluster to it.
 
 <img src="images/GitOpsFlow.png?sanitize=true">
 
-## Defintions
+## Process
 
-### High Level Deployment Description (HLD) Repo
-+ A specification of the helm charts to use to build a deployment of a logically higher level component
-+ Simplifies the complexity and repeativeness of low level YAML
-+ Lives in a git repository
+At a high level, the steps for an operator of a Kubernetes cluster to make an operational change follow closely the model that one uses for making a code change in a pull request model.
 
-### Manifest Repo
-+ These are the `kubectl` friendly low level YAML that declare the desired cluster state. 
-+ They live in a git repository and are the expected state of the cluster. 
-+ The git repository they live in is considered the source of truth. 
+1. _Branch_: Create a branch and one or more commits for your operational change to your high level definition.
+2. _Push_: Push this branch to your high level definition Git repo.
+3. _Pull Request_: Create a pull request for your change and have it code reviewed by a member of your team. In parallel, the CI/CD system will validate your high level definition.
+4. _Merge_: Merge your pull request into your high level definition's git repo master branch.  A CI/CD pipeline will trigger on this commit, build the low level Kubernetes resource manifests, check them into the resource manifest git repo, which [Flux](https://github.com/weaveworks/flux), running in your Kubernetes cluster, will deploy.
+5. _Monitor_: Monitor your normal operational metrics to verify that the change has not negatively impacted your application.
+6. _Commit or Rollback_
 
-### Orchestration
-+ We leverage operational features of CI/CD platforms to build, test, deploy, and orchestrate processes. 
+## Getting Started
 
-### Fabrikate
-+ A [tool](https://github.com/Microsoft/fabrikate) we use to transform high level declared infrastructure into manifests 
-+ Used in the orchestration process
+We provide instructions for deploying this CI/CD pipeline for the following systems:
 
-## A GitOps scenario with Bedrock
+* [Azure Devops](./azure-devops)
 
-1. Propose changes to your infrastructure
-	+ Make a PR against your high level deployment descriptions.
-2. Initial tests and checks 
-	+ An extensible CI/CD platform is configured to make sure infrastructure changes are valid (linting, etc)
-3. Resource Manifest generation (Infrastructure as Code)
-	+ Publish resource manifests that represent the new changes to the Kubernetes cluster.
-4. Rollout changes (deploy)
-	+ Have a process to apply the manifest files to the Kubernetes cluster.
-5. Monitor and Validate
-	+ Is the cluster in the expected state?
-6. Repeat
-    + Go back to step #1
+Pull requests would be gratefully accepted for other CI/CD platforms.
 
 ## Additional Resources
 + https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/use-git-microsoft
