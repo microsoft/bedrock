@@ -166,6 +166,7 @@ $ kubectl logs POD_NAME -n flux -f
 
 ```
 $ kubediff ./cloned-resource-manifest-repo
+```
 
 3. Finally, you should watch your normal operational metrics to make sure the change was successful.
 
