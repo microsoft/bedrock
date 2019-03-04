@@ -19,7 +19,6 @@ module "east_vnet" {
 
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
-  location                = "${local.east_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
 
   tags = {
@@ -48,7 +47,7 @@ module "east_aks" {
 module "east_flux" {
   source = "../../common/flux"
 
-  gitops_url          = "${var.gitops_url}"
+  gitops_ssh_url      = "${var.gitops_ssh_url}"
   gitops_ssh_key      = "${var.gitops_ssh_key}"
   flux_recreate       = "${var.flux_recreate}"
   kubeconfig_complete = "${module.east_aks.kubeconfig_done}"

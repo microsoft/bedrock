@@ -22,6 +22,8 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	clientid := os.Getenv("clientID")
 	clientsecret := os.Getenv("clientSecret")
 	publickey := os.Getenv("public_key")
+	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
+	tenantid := os.Getenv("ARM_TENANT_ID")
 	sshkey := os.Getenv("ssh_key")
 
 	// Specify the test case folder and "-var" options
@@ -34,8 +36,10 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_id":clientid,
 			"service_principal_secret" :clientsecret,
 			"ssh_public_key" :publickey,
-			"gitops_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
+			"gitops_ssh_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
 			"gitops_ssh_key" :sshkey,
+			"tenant_id" :tenantid,
+			"subscription_id" : subscriptionid,
 		},
 
 	}
@@ -51,13 +55,22 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	options := k8s.NewKubectlOptions("", kubeConfig)
 
 	//Test Case 1: Verify Flux namespace
+	fmt.Println("Test case 1: Verifying flux namespace")
 	_flux, flux_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
-	if flux_err != nil {
+	if flux_err != nil || !strings.Contains(_flux, "flux") {
 		t.Fatal(flux_err)
+	} else {
+		fmt.Println("Flux verification complete")
 	}
 
-	strings.Contains(_flux, "flux")
-	
+	//Test Case 2: Verify Kubediff namespace
+	fmt.Println("Test case 2: Verifying kubediff namespace")
+	_kubediff, kubediff_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=kubediff")
+	if kubediff_err != nil || !strings.Contains(_kubediff, "kubediff") {
+		t.Fatal(kubediff_err)
+	} else {
+		fmt.Println("Kubediff verification complete")
+	}	
 }
 
 		
