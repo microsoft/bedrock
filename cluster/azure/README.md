@@ -30,6 +30,7 @@ are also supported).
 2. Create/choose a SSH key pair that will be given permission to do read/write access to the repository. You can create an ssh key 
 pair with the Bash `ssh-keygen` command as shown in the code block below.
 3. Add the SSH key to the repository. Flux requires read and write access to the resource manifest git repository. For GitHub, the process to add a deploy key is documented [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
+4. Have your CI/CD pipeline run at least once and commit an initial set of resource manifests to your repo.  Flux requires at least one commit in your resource manifest repo to operate correctly.
 
 ```bash
 $ ssh-keygen -b 2048 -t rsa -f gitops_repo_key
