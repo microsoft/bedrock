@@ -4,13 +4,13 @@ variable "flux_repo_url" {
   default = "https://github.com/weaveworks/flux.git"
 }
 
-variable "gitops_url" {
+variable "gitops_ssh_url" {
   description = "ssh git clone repository URL with Kubernetes manifests including services which runs in the cluster. Flux monitors this repo for Kubernetes manifest additions/changes preriodiaclly and apply them in the cluster."
   type = "string"
 }
 
 variable "gitops_url_branch" {
-  description = "Git branch associated with the gitops_url where flux checks for the raw kubernetes yaml files to deploy to the cluster."
+  description = "Git branch associated with the gitops_ssh_url where flux checks for the raw kubernetes yaml files to deploy to the cluster."
   type = "string"
   default = "master"
 }
