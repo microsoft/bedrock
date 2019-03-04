@@ -85,7 +85,7 @@ if kubectl get secret $KUBE_SECRET_NAME -n $KUBE_NAMESPACE > /dev/null 2>&1; the
     fi
 else 
     if ! kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE; then
-        echo "ERRORL failed to create secret: $KUBE_SECRET_NAME"
+        echo "ERROR: failed to create secret: $KUBE_SECRET_NAME"
         exit 1
     fi
 fi
