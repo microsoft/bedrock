@@ -32,7 +32,7 @@ module "west_aks" {
 
   resource_group_name      = "${local.west_rg_name}"
   resource_group_location  = "${local.west_rg_location}"
-  cluster_name             = "${var.cluster_name}"
+  cluster_name             = "${var.cluster_name}-west"
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.west_vnet.vnet_subnet_ids[0]}"
