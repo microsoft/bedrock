@@ -51,3 +51,8 @@ variable "login_service_principal_id" {
 variable "login_service_principal_password" {
   type = "string"
 }
+variable "flux_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flux execution script."
+    type = "string"
+    default = ""
+}

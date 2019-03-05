@@ -49,7 +49,7 @@ module "east_flux" {
 
   gitops_ssh_url      = "${var.gitops_ssh_url}"
   gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = ""
+  flux_recreate       = "${var.flux_recreate}"
   kubeconfig_complete = "${module.east_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.east_kubeconfig_filename}"
   flux_clone_dir      = "${local.east_flux_clone_dir}"
