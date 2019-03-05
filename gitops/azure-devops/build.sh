@@ -167,7 +167,7 @@ function unit_test() {
     echo "Sourcing for unit test..."
 }
 
-function pr_verify() {
+function verify_pull_request() {
     echo "Starting verification"
     init
     helm_init
@@ -178,9 +178,9 @@ function pr_verify() {
 }
 
 # Run functions
-function verify_and_push() {
+function verify_pull_request_and_merge() {
     verify_access_token
-    pr_verify
+    verify_pull_request
     echo "Verification complete, push to yaml repo"
     git_connect
     git_commit
@@ -189,9 +189,9 @@ function verify_and_push() {
 
 echo "argument is ${1}"
 if [[ "$VERIFY_ONLY" == "1" ]]; then
-    pr_verify
+    verify_pull_request
 elif [ "${1}" == "--source-only" ]; then
     unit_test
 else
-    verify_and_push
+    verify_pull_request_and_merge
 fi
