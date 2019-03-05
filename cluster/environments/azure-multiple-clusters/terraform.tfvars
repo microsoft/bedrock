@@ -9,6 +9,9 @@ west_resource_group_location="westus2"
 east_resource_group_name="spin-east-rg"
 east_resource_group_location="eastus2"
 
+central_resource_group_name="spin-central-rg"
+central_resource_group_location="centralus"
+
 cluster_name="spincluster"
 agent_vm_count = "3"
 dns_prefix="spindns"
