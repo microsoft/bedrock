@@ -15,6 +15,52 @@ is created in.
 
 **This is a placeholder, this repo currently only deploys the second method -- where the Public IP is in the same resource group as the AKS cluster**
 
+Deploying this environment requires a service principal.  To create that service principal, one uses the Azure CLI and issues the following command:
+
+```bash
+> az ad sp create-for-rbac
+{
+  "appId": "4a1dff34-aaaa-bbbb-b62e-dddd5d601a27",
+  "displayName": "azure-cli-2019-03-05-01-59-32",
+  "name": "http://azure-cli-2019-03-05-01-59-32",
+  "password": "5ee46342-eeee-1111-94c1-37c0d6d1cccc",
+  "tenant": "abcd88bf-cccc-41af-91ab-2d7cd0111234"
+}
+```
+
+Now, one uses the above Service Principal for two uses.  First, to set environment variables required
+by Terraform to deploy to Azure, to do so, one sets the environment variables as follows:
+
+```bash
+export ARM_SUBSCRIPTION_ID=aaaabca0-7a3c-44bd-1234-4bb1e9facccc
+export ARM_CLIENT_ID=4a1dff34-aaaa-bbbb-b62e-dddd5d601a27
+export ARM_CLIENT_SECRET=5ee46342-eeee-1111-94c1-37c0d6d1cccc
+export ARM_TENANT_ID=abcd88bf-cccc-41af-91ab-2d7cd0111234
+```
+
+For `ARM_SUBSCRIPTION_ID`, one can find that value by issuing the command `az account show` and grabbing
+the value from the output as follows:
+
+```bash
+> az account show
+{
+  "environmentName": "AzureCloud",
+  "id": "aaaabca0-7a3c-44bd-1234-4bb1e9facccc",
+  "isDefault": true,
+  "name": "Playing with Azure",
+  "state": "Enabled",
+  "tenantId": "abcd88bf-cccc-41af-91ab-2d7cd0111234",
+  "user": {
+    "name": "anaccount@contoso.com",
+    "type": "user"
+  }
+}
+```
+
+Additionall, when editing the `terraform.tfvars` file mentioned below, use `appId` from the Service Principal for `service_principal_id` and `password` for `service_principal_secret`.
+
+
+
 In order to get started, one needs to populate the values within the `terraform.tfvars` file
 which resembles:
 
