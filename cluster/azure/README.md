@@ -17,6 +17,10 @@ To get started with Bedrock, perform the following steps create an Azure Kuberne
 
 As a first step, make sure you have installed the [pre-requisite tools](../README.md) on your machine.
 
+Additionally, you need the Azure `az` command line tool in order to create and fetch Azure configuration info:
+
+- [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+
 ## Set up GitOps Repository for Flux
 
 Flux watches a Git repository containing the resource manifests that should be deployed into the Kubernetes cluster, and, as such, we need to configure that repo and give Flux permissions to access it at cluster creation time.
