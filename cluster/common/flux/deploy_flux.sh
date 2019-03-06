@@ -7,6 +7,7 @@ do
  g) GITOPS_SSH_URL=${OPTARG};; 
  k) GITOPS_SSH_KEY=${OPTARG};; 
  d) REPO_ROOT_DIR=${OPTARG};;
+ e) GIT_PATH=${OPTARG};;
  esac
 done 
 
@@ -50,7 +51,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set git.path=$GIT_PATH; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
