@@ -5,7 +5,7 @@ A unit test framework for shell scripts that relies on [shUnit2](https://github.
 
 This unit test makes the following assumptions:
 
-- The user has an existing AKS Manifest repository (e.g. [yradsmikham/walmart-k8s](https://github.com/yradsmikham/walmart-k8s))
+- The user has an existing AKS Manifest repository (e.g. [yradsmikham/k8s](https://github.com/yradsmikham/k8s))
 - A Personal Access Token is generated that grants permission to read/write to the AKS Manifest repo.
 
 ## Instructions

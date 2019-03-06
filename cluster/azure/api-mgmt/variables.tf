@@ -21,7 +21,7 @@ variable "apimgmt_capacity" {
 variable "apimgmt_scm_url" {
   description = "The URL for the SCM (Source Code Management) Endpoint associated with this API Management service."
   type = "string"
-  default = "https://apim:git%26201904040814%266TB4ifiremvuKn3U8JwZASLbTcVT9CJJYf83%2Ba3z947MhONc5zoqsCnVN1gKGQH%2FThH1H0vjmKPGLhL3Zp3Gbw%3D%3D@walmartoption1apim.scm.azure-api.net"
+  default = ""
 }
 variable "resource_group_name" {
   description = "Default resource group name that the management service will be created in."
