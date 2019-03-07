@@ -11,4 +11,3 @@ output
 *.log
 .DS_Store
 shunit2
-deploy_key*
