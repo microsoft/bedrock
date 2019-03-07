@@ -73,7 +73,7 @@ $ az ad sp create-for-rbac --subscription <id | name>
 }
 ```
 
-Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.
+Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
 
 ## Create Terraform Configuration Files
 
