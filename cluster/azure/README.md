@@ -17,7 +17,7 @@ To get started with Bedrock, perform the following steps create an Azure Kuberne
 
 As a first step, make sure you have installed the [pre-requisite tools](../README.md) on your machine.
 
-In addition, you need the Azure `az` command line tool in order to create and fetch Azure configuration info:
+Additionally, you need the Azure `az` command line tool in order to create and fetch Azure configuration info:
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
@@ -73,6 +73,8 @@ $ az ad sp create-for-rbac --subscription <id | name>
 }
 ```
 
+Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
+
 ## Create Terraform Configuration Files
 
 This is a two step process:
@@ -88,26 +90,26 @@ The typical way to create a new environment is to start from an existing templat
 - [azure-multiple-clusters](../environments/azure-multiple-clusters): Multiple cluster deployment with Traffic Manager
 - [azure-simple](../environments/azure-simple): Single cluster deployment
 
-So, for example, to create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of your cluster:
+So, for example, to create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
 
 ```bash
-$ cp -r cluster/environments/azure-simple cluster/environments/<cluster name>
+$ cp -r cluster/environments/azure-simple cluster/environments/<your new cluster name>
 ```
 
 ### Edit Configuration Values
 
-With this new environment created, edit `environments/azure/<cluster name>/terraform.tfvars` and update the following variables:
+With this new environment created, edit `environments/azure/<your new cluster name>/terraform.tfvars` and update the following variables:
 
-- `resource_group_name`: Name of the resource group for the cluster
+- `resource_group_name`: Name of the resource group where the cluster will be located.
 - `resource_group_location`: Azure region the resource group should be created in.
-- `cluster_name`: Name of the Kubernetes cluster
+- `cluster_name`: Name of the Kubernetes cluster you want to create.
 - `agent_vm_count`: The number of agents VMs in the the node pool.
-- `dns_prefix`: DNS name for accessing the cluster from the internet.
+- `dns_prefix`: DNS name for accessing the cluster from the internet (up to 64 characters in length, alphanumeric characters and hyphen '-' allowed, and must start with a letter).
 - `service_principal_id`: The id of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
 - `service_principal_secret`: The secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
-- `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.
+- `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.  Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step.
 - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
-- `GitOps_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.
+- `GitOps_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
 
 (For a full list of customizable variables, see [variables.tf](../azure/aks/variables.tf).
 
@@ -146,7 +148,7 @@ With this, update `backend.tfvars` file in your cluster environment directory wi
 
 Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
 
-From the directory of the cluster you defined above (eg. `environments/azure/<cluster name>`), run:
+From the directory of the cluster you defined above (eg. `environments/azure/<your new cluster name>`), run:
 
 ```
 $ terraform init
@@ -162,6 +164,8 @@ This will display the plan for what infrastructure Terraform plans to deploy int
 
 Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux)
 in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator in the cluster, and deploy any resource manifests in the `gitops_ssh_url`.
+
+If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
 ## Configure `kubectl` to see your new AKS cluster
 
