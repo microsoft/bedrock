@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d: option 
+while getopts :b:f:g:k:d:e: option 
 do 
  case "${option}" in 
  b) GITOPS_URL_BRANCH=${OPTARG};;

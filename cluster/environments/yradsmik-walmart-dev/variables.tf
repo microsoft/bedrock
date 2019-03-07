@@ -47,6 +47,7 @@ variable "tenant_id" {
 variable "git_path" {
     type= "string"
 }
+
 variable "gitops_ssh_url" {
   type = "string"
 }
