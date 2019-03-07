@@ -145,7 +145,7 @@ function git_commit() {
     echo "GIT STATUS"
     git status
     echo "GIT REMOVE"
-    rm -r -- ./*/
+    rm -rf ./*/
     git rm -rf */
     echo "COPY YAML FILES TO REPO DIRECTORY..."
     cp -r $HOME/generated/* .
