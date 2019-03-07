@@ -25,15 +25,6 @@ function init() {
 function helm_init() {
     echo "RUN HELM INIT"
     helm init
-    echo "HELM ADD INCUBATOR"
-    if [ -z "$HELM_CHART_REPO" ] || [ -z "$HELM_CHART_REPO_URL" ];
-    then
-        echo "Using DEFAULT helm repo..."
-        helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-    else
-        echo "Using DEFINED helm repo..."
-        helm repo add $HELM_CHART_REPO $HELM_CHART_REPO_URL
-    fi
 }
 
 # Obtain version for Fabrikate
