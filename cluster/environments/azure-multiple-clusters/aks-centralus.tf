@@ -53,6 +53,7 @@ module "central_flux" {
   kubeconfig_complete = "${module.central_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.central_kubeconfig_filename}"
   flux_clone_dir      = "${local.central_flux_clone_dir}"
+  git_path            = "${var.git_central_path}"
 }
 
 # create a static public ip and associate with traffic manger endpoint 

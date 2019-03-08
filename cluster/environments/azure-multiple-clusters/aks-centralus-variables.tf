@@ -5,3 +5,7 @@ variable "central_resource_group_name" {
 variable "central_resource_group_location" {
   type = "string"
 }
+
+variable "git_central_path" {
+  type = "string"
+}

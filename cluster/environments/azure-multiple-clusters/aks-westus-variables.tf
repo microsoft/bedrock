@@ -5,3 +5,7 @@ variable "west_resource_group_name" {
 variable "west_resource_group_location" {
   type    = "string"
 }
+
+variable "git_west_path" {
+  type = "string"
+}
