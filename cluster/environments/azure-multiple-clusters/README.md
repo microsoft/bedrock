@@ -155,7 +155,7 @@ Make a note of the _appId_ and _password_. These values are used in the followin
     flux-memcached-59947476d9-d6kqw   1/1     Running   0          8m07s
     ```
 
-If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](#Step-2:-Deploy-the-environment-using-Terraform).
+If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](#Step-2-Deploy-the-environment-using-Terraform).
 
 #### You're done!
 
