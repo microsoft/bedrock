@@ -15,6 +15,7 @@ This environment creates:
 3. Deploys Azure Traffic Manager profile with three different endpoint connecting to public IPs to route traffic based on a configured routing method.
 
 ## Prerequisites
+Please [install required tools](/cluster/Azure/readme.md/#install-required-tools) as well as [setup GitOps repo for Flux](/cluster/Azure/readme.md/#set-up-gitops-repository-for-flux) before continuing to the next section if you have not already.
 
 ### 1. Azure Authentication
 You can authenticate to Azure with user account in Azure CLI (`az login`). If you are using a Service Principal for authentication, the client id and client secret needs to be [configured with Terrafrom Azure provider](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html#configuring-the-service-principal-in-terraform).

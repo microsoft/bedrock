@@ -9,6 +9,8 @@ The following sections provide instructions to deploy azure-simple environment i
 - [Configure `kubectl` to see your new AKS cluster](configure-kubectl-to-see-your-new-aks-cluster)
 - [Verify that your AKS cluster is healthy](verify-that-your-aks-cluster-is-healthy)
 
+Please [install required tools](/cluster/Azure/readme.md/#install-required-tools) as well as [setup GitOps repo for Flux](/cluster/Azure/readme.md/#set-up-gitops-repository-for-flux) before continuing to the next section if you have not already.
+
 ### Create an Azure Service Principal
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
