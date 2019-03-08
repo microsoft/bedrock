@@ -7,11 +7,13 @@ To get started with Bedrock, perform the following steps create an Azure Kuberne
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux)
 - [Create an Azure service principal](#create-an-azure-service-principal)
-- [Create Terraform configuration files](#create-terraform-configuration-files)
-- [Configure Terraform to store state data in Azure](#configure-terraform-to-store-state-data-in-azure)
-- [Create the AKS cluster using Terraform](#create-the-aks-cluster-using-terraform)
-- [Configure `kubectl` to see your new AKS cluster](configure-kubectl-to-see-your-new-aks-cluster)
-- [Verify that your AKS cluster is healthy](verify-that-your-aks-cluster-is-healthy)
+- [Bedrock Templates](#Bedrock-Templates)
+- [Getting started with Azure Simple Environment](##Getting-started-with-azure-simple-environment)
+  - [Create Terraform configuration files](#create-terraform-configuration-files)
+  - [Configure Terraform to store state data in Azure](#configure-terraform-to-store-state-data-in-azure)
+  - [Create the AKS cluster using Terraform](#create-the-aks-cluster-using-terraform)
+  - [Configure `kubectl` to see your new AKS cluster](configure-kubectl-to-see-your-new-aks-cluster)
+  - [Verify that your AKS cluster is healthy](verify-that-your-aks-cluster-is-healthy)
 
 ## Install required tools
 
@@ -25,11 +27,9 @@ Additionally, you need the Azure `az` command line tool in order to create and f
 
 Flux watches a Git repository containing the resource manifests that should be deployed into the Kubernetes cluster, and, as such, we need to configure that repo and give Flux permissions to access it at cluster creation time.
 
-1. Create a repo to use for GitOps (this example will assume that you are using GitHub, but GitLab and Azure DevOps 
-are also supported).
-2. Create/choose a SSH key pair that will be given permission to do read/write access to the repository. You can create an ssh key 
-pair with the Bash `ssh-keygen` command as shown in the code block below.
-3. Add the SSH key to the repository. Flux requires read and write access to the resource manifest git repository. For GitHub, the process to add a deploy key is documented [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
+1. Create a repo to use for GitOps. This example will assume that you are using one of the public git repo such as GitHub, Azure DevOps, GitLab, or BitBucket, but flux supports private git repos with [additional configuration](https://github.com/weaveworks/flux/blob/master/site/faq.md#how-do-i-use-a-private-git-host-or-one-thats-not-githubcom-gitlabcom-bitbucketorg-or-devazurecom).
+2. Create/choose a SSH key pair that will be given permission to do read/write access to the repository. You can create an ssh key pair with the Bash `ssh-keygen` command as shown in the code block below.
+3. Add the SSH public key to the repository. Flux requires read and write access to the resource manifest git repository. For GitHub, the process to add a deploy key is documented [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/). For Azure DevOps repos, the process is documented [here](https://docs.microsoft.com/en-us/azure/devops/repos/git/use-ssh-keys-to-authenticate?view=azure-devops).
 4. Have your CI/CD pipeline run at least once and commit an initial set of resource manifests to your repo.  Flux requires at least one commit in your resource manifest repo to operate correctly.
 
 ```bash
@@ -59,9 +59,7 @@ $ ls -l GitOps_repo_key*
 ```
 
 ## Create an Azure Service Principal
-
-You can generate an Azure service principal for your Azure subscription with the following `az` cli command:
-
+You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 ```bash
 $ az ad sp create-for-rbac --subscription <id | name>
 {
@@ -75,7 +73,18 @@ $ az ad sp create-for-rbac --subscription <id | name>
 
 Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
 
-## Create Terraform Configuration Files
+# Bedrock Templates
+Bedrock currently have the following templates:
+
+- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Deploy Multiple cluster deployment with Traffic Manager
+- [azure-simple](../environments/azure-simple): Single cluster deployment. 
+
+The following sections provides instructions to deploy azure-simple environment in Azure.
+
+## Getting started with azure-simple environment
+
+### Create Terraform Configuration Files
 
 This is a two step process:
 
@@ -115,7 +124,7 @@ With this new environment created, edit `environments/azure/<your new cluster na
 
 Finally, if you are deploying a production cluster, you will want to [configure storage](#storing-terraform-state) of Terraform state.
 
-## Configure Terraform to Store State Data in Azure
+### Configure Terraform to Store State Data in Azure
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
 
@@ -144,7 +153,7 @@ Once the storage account is created, we need to fetch storage account key so we 
 
 With this, update `backend.tfvars` file in your cluster environment directory with these values and use `terraform init -backend-config=./backend.tfvars` to setup usage of the Azure backend.
 
-## Create the AKS Cluster using Terraform
+### Create the AKS Cluster using Terraform
 
 Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
 
@@ -167,7 +176,7 @@ in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operation
 
 If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
-## Configure `kubectl` to see your new AKS cluster
+### Configure `kubectl` to see your new AKS cluster
 
 Once your cluster has been created the credentials for the cluster will be placed in the specified `output_directory` which defaults to `./output`. 
 
@@ -194,7 +203,7 @@ or directly use the kube_config file by replacing `location` and `clustername` i
 $ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux` 
 ```
 
-## Verify that your AKS cluster is healthy
+### Verify that your AKS cluster is healthy
 
 Enter the following command to view the pods running in your cluster:
 
