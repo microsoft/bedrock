@@ -30,34 +30,34 @@ The Service Principal that is configured for authentication must have a Owner ro
 #### Authentication Service Principal
 Create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
 
-    ```bash
-    $ az ad sp create-for-rbac --role "Owner" --subscription <id | name>
-    ```
+```bash
+$ az ad sp create-for-rbac --role "Owner" --subscription <id | name>
+```
 #### AKS Cluster Service Principal
 To allow an AKS cluster to interact with other Azure resources, an Azure Active Directory service principal is used. Create a service principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
-    ```bash
-    $ az ad sp create-for-rbac --skip-assignment --subscription <id | name>
-    ```
+```bash
+$ az ad sp create-for-rbac --skip-assignment --subscription <id | name>
+```
 
 The output of the above commands are similar to the following example:
 
-    ```bash
-    {
-    "appId": "50d65587-abcd-4619-1234-f99fb2ac0987",
-    "displayName": "azure-cli-2019-01-23-20-27-37",
-    "name": "http://azure-cli-2019-01-23-20-27-37",
-    "password": "3ac38e00-aaaa-bbbb-bb87-7222bc4b1f11",
-    "tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47"
-    }
-    ```
+```bash
+{
+"appId": "50d65587-abcd-4619-1234-f99fb2ac0987",
+"displayName": "azure-cli-2019-01-23-20-27-37",
+"name": "http://azure-cli-2019-01-23-20-27-37",
+"password": "3ac38e00-aaaa-bbbb-bb87-7222bc4b1f11",
+"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+}
+```
 Make a note of the _appId_ and _password_. These values are used in the following steps.
 ## Deployment
 
 ### Step 1: Terraform Configuration
 
 1. Copy [azure-multiple-clusters](../environments/azure-multiple-clusters) folder to a new sub directory
-    ```bash
+    ```
     $ cp -r cluster/environments/azure-multiple-clusters cluster/environments/<environment name>
     ```
 2. Configure your clusters by updating following variables in `environments/azure/<environment name>/terraform.tfvars`:

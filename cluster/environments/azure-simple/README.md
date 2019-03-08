@@ -16,7 +16,7 @@ You can generate an Azure Service Principal using the [`az ad sp create-for-rbac
 $ az ad sp create-for-rbac --subscription <id | name>
 ```
 The output of the above commands are similar to the following example:
-```
+```bash
 {
   "appId": "50d65587-abcd-4619-1234-f99fb2ac0987",
   "displayName": "azure-cli-2019-01-23-20-27-37",
