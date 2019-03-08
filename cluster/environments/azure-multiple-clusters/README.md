@@ -9,7 +9,9 @@ This environment creates:
 1. Deploys three AKS clusters in three different configurable Azure regions.
 2. Creates three static public IP's to use in kubernetes loadbalancer service.
 3. Creates a Azure Role Assignment for each AKS cluster Service Principal with `Network Contributor` role on each Public IP resource. 
-_The service principal used by the AKS cluster must have delegated permissions to the other resource group to modify network resources when kubernetes loadbalancer service is deployed. More information is available [here](https://docs.microsoft.com/en-us/azure/aks/static-ip#use-a-static-ip-address-outside-of-the-node-resource-group)._
+
+    _The service principal used by the AKS cluster must have delegated permissions to the other resource group to modify network resources when kubernetes loadbalancer service is deployed. More information is available [here](https://docs.microsoft.com/en-us/azure/aks/static-ip#use-a-static-ip-address-outside-of-the-node-resource-group)._
+
 3. Deploys Azure Traffic Manager profile with three different endpoint connecting to public IPs to route traffic based on a configured routing method.
 
 ## Prerequisites
@@ -37,7 +39,9 @@ To allow an AKS cluster to interact with other Azure resources, an Azure Active 
     ```bash
     $ az ad sp create-for-rbac --skip-assignment --subscription <id | name>
     ```
-    The output of the above commands are similar to the following example:
+
+The output of the above commands are similar to the following example:
+
     ```bash
     {
     "appId": "50d65587-abcd-4619-1234-f99fb2ac0987",
@@ -47,8 +51,8 @@ To allow an AKS cluster to interact with other Azure resources, an Azure Active 
     "tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47"
     }
     ```
-    Make a note of the _appId_ and _password_. These values are used in the following steps.
-## Setup
+Make a note of the _appId_ and _password_. These values are used in the following steps.
+## Deployment
 
 ### Step 1: Terraform Configuration
 
@@ -57,7 +61,7 @@ To allow an AKS cluster to interact with other Azure resources, an Azure Active 
     $ cp -r cluster/environments/azure-multiple-clusters cluster/environments/<environment name>
     ```
 2. Configure your clusters by updating following variables in `environments/azure/<environment name>/terraform.tfvars`:
-* Azure Provider authentication configuration
+* Terraform Azure Provider authentication configuration
     - `subscription_id`: Azure subscription id
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
     - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](####-Authentication-Service-Principal) section.
@@ -67,7 +71,7 @@ To allow an AKS cluster to interact with other Azure resources, an Azure Active 
     - `traffic_manager_dns_name`: DNS name for accessing the traffic manager url from the internet. For ex: `http://<dnsname>.trafficmanager.net`.
     - `traffic_manager_resource_group_name`: Name of the resource group for the Traffic Manager.
     - `traffic_manager_resource_group_location`: Azure region the Traffic Manager resource group.
-* Common Cluster configuration for all three clusters
+* Common configuration for all Kubernetes clusters
     - `cluster_name`: The name of the Kubernetes cluster. The location will be added as a suffix.
     - `agent_vm_count`: The number of agents VMs in the the node pool.
     - `dns_prefix`: DNS name for accessing the cluster from the internet.
@@ -86,7 +90,7 @@ To allow an AKS cluster to interact with other Azure resources, an Azure Active 
     - `east_resource_group_name`:  Name of the resource group for the cluster.
     - `east_resource_group_locatio`: Location of the Azure region. For ex: `eastus2`.
 3. Configure Terraform backend. It is optional, but a best practice for production environment
-* Navigate to the [backend state](../Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
+* Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
     - `storage account name`: Name of the storage account to store the Terraform state.
     - `storage account location`: Location of the storage account.
     - `storage account resource group`: Name of the resource group to create the storage account in.
