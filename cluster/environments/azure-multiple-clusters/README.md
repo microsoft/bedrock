@@ -64,7 +64,7 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 * Terraform Azure Provider authentication configuration
     - `subscription_id`: Azure subscription id
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
-    - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](####-Authentication-Service-Principal) section.
+    - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](#-Authentication-Service-Principal) section.
     - `login_service_principal_password`: The secret of the service principal used to authenticate with Azure.
 * Traffic Manager configuration
     - `traffic_manager_profile_name`: Name of the Azure Traffic Manager Profile.
@@ -75,7 +75,7 @@ Make a note of the _appId_ and _password_. These values are used in the followin
     - `cluster_name`: The name of the Kubernetes cluster. The location will be added as a suffix.
     - `agent_vm_count`: The number of agents VMs in the the node pool.
     - `dns_prefix`: DNS name for accessing the cluster from the internet.
-    - `service_principal_id`: The id of the service principal used by the AKS cluster. The creation of service principal described above in [Service Principals](####AKS-Cluster-Service-Principal) section.
+    - `service_principal_id`: The id of the service principal used by the AKS cluster. The creation of service principal described above in [Service Principals](#AKS-Cluster-Service-Principal) section.
     - `service_principal_secret`: he secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
     - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
     - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
@@ -155,7 +155,7 @@ Make a note of the _appId_ and _password_. These values are used in the followin
     flux-memcached-59947476d9-d6kqw   1/1     Running   0          8m07s
     ```
 
-If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](###-Step-2:-Deploy-the-environment-using-Terraform).
+If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](#-Step-2:-Deploy-the-environment-using-Terraform).
 
 #### You're done!
 
