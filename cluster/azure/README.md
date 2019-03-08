@@ -6,9 +6,9 @@ To get started with Bedrock, perform the following steps create an Azure Kuberne
 
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux)
-- [Create an Azure service principal](#create-an-azure-service-principal)
-- [Bedrock Templates](#Bedrock-Templates)
+- [Bedrock Azure Templates](##Bedrock-Azure-Templates)
 - [Getting started with Azure Simple Environment](##Getting-started-with-azure-simple-environment)
+  - [Create an Azure service principal](#create-an-azure-service-principal)
   - [Create Terraform configuration files](#create-terraform-configuration-files)
   - [Configure Terraform to store state data in Azure](#configure-terraform-to-store-state-data-in-azure)
   - [Create the AKS cluster using Terraform](#create-the-aks-cluster-using-terraform)
@@ -58,7 +58,17 @@ $ ls -l GitOps_repo_key*
 -rw-r--r--  1 jims  staff   398 Jan 24 16:28 GitOps_repo_key.pub
 ```
 
-## Create an Azure Service Principal
+## Bedrock Azure Templates
+Bedrock currently have the following templates:
+
+- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Multiple clusters  deployment with Traffic Manager
+- [azure-simple](../environments/azure-simple): Single cluster deployment. 
+
+## Getting started with azure-simple environment
+The following sections provide instructions to deploy azure-simple environment in Azure.
+
+### Create an Azure Service Principal
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 ```bash
 $ az ad sp create-for-rbac --subscription <id | name>
@@ -72,16 +82,6 @@ $ az ad sp create-for-rbac --subscription <id | name>
 ```
 
 Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
-
-# Bedrock Templates
-Bedrock currently have the following templates:
-
-- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
-- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Multiple clusters  deployment with Traffic Manager
-- [azure-simple](../environments/azure-simple): Single cluster deployment. 
-
-## Getting started with azure-simple environment
-The following sections provide instructions to deploy azure-simple environment in Azure.
 
 ### Create Terraform Configuration Files
 
