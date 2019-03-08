@@ -54,6 +54,6 @@ $ ls -l GitOps_repo_key*
 ## Azure Cluster Deployment
 Bedrock currently have the following templates that you can choose to deploy in your Azure subscription by following template specific documentation.
 
-- [azure-simple](../environments/azure-simple/readme.md): Single cluster deployment.
-- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Multiple clusters  deployment with Traffic Manager.
+- [azure-simple](../environments/azure-simple/): Single cluster deployment.
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple clusters  deployment with Traffic Manager.
 - [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes.
