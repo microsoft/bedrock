@@ -80,9 +80,8 @@ Bedrock currently have the following templates:
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Multiple clusters  deployment with Traffic Manager
 - [azure-simple](../environments/azure-simple): Single cluster deployment. 
 
-The following sections provides instructions to deploy azure-simple environment in Azure.
-
 ## Getting started with azure-simple environment
+The following sections provide instructions to deploy azure-simple environment in Azure.
 
 ### Create Terraform Configuration Files
 
