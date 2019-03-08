@@ -92,13 +92,7 @@ This is a two step process:
 
 ### Clone Terraform Template
 
-The typical way to create a new environment is to start from an existing template. For Azure, we currently have the following templates:
-
-- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
-- [azure-multiple-clusters](../environments/azure-multiple-clusters): Multiple cluster deployment with Traffic Manager
-- [azure-simple](../environments/azure-simple): Single cluster deployment
-
-So, for example, to create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
+The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
 
 ```bash
 $ cp -r cluster/environments/azure-simple cluster/environments/<your new cluster name>
