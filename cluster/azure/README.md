@@ -77,7 +77,7 @@ Note: You may receive an error if you do not have sufficient permissions on your
 Bedrock currently have the following templates:
 
 - [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
-- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Deploy Multiple cluster deployment with Traffic Manager
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/readme.md): Multiple clusters  deployment with Traffic Manager
 - [azure-simple](../environments/azure-simple): Single cluster deployment. 
 
 The following sections provides instructions to deploy azure-simple environment in Azure.
