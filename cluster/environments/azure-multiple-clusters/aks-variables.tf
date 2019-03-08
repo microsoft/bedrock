@@ -15,6 +15,11 @@ variable "ssh_public_key" {
     type = "string"
 }
 
+variable "service_principal_is_owner" {
+    type = "string"
+    default = "1"
+}
+
 variable "service_principal_id" {
     type = "string"
 }
