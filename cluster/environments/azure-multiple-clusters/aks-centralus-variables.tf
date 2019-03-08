@@ -3,5 +3,5 @@ variable "central_resource_group_name" {
 }
 
 variable "central_resource_group_location" {
-  type    = "string"
+  type = "string"
 }
