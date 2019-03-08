@@ -58,7 +58,7 @@ With this new environment created, edit `environments/azure/<your new cluster na
 - `service_principal_secret`: The secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
 - `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.  Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step.
 - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
-- `GitOps_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
+- `gitops_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
 
 (For a full list of customizable variables, see [variables.tf](../azure/aks/variables.tf).
 
@@ -126,21 +126,10 @@ With the default kube config file name, you can copy this to your `~/.kube/confi
 $ KUBECONFIG=./output/bedrock_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
-In a multi cluster deployment environment, you can copy this to your `~/.kube/config` by replacing `location` and `clustername` in the following command for each cluster:
-```
-$ KUBECONFIG=./output/<location>-<clustername>_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
-```
-
 or directly use the kube_config file with default output file name:
 
 ```
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux` 
-```
-
-or directly use the kube_config file by replacing `location` and `clustername` in the following command in multi cluster deployment:
-
-```
-$ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux` 
 ```
 
 ### Verify that your AKS cluster is healthy
