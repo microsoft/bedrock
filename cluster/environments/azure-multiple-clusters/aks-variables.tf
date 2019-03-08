@@ -35,3 +35,9 @@ variable "aks_client_role_assignment_role" {
   type    = "string"
   default = "Contributor"
 }
+
+variable "flux_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flux execution script."
+    type = "string"
+    default = ""
+}

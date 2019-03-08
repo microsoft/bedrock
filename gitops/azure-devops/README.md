@@ -1,17 +1,22 @@
-# Getting Started with Azure DevOps and GitOps  
-The expectation here is that from scratch you can set up the necessary repos to get a Bedrock GitOps release flow™ working. 
+# GitOps CI/CD with Azure Devops 
+
+This section describes how to configure Azure Devops as the CI/CD system for your GitOps Workflow.
 
 ## Prerequisites
-* AKS Cluster
-  * Create and deploy a [flux enabled AKS cluster](../../cluster/README.md)
-* Permissions:
-  * Be able to create _Projects_ in your Azure DevOps _Organization_ 
 
-## Sample HLD Repository
-We provide a [sample HLD repo](https://github.com/samiyaakhtar/aks-deploy-source) that can be imported or cloned based on the flavor of git repository you use. The sample HLD contains a [Cloud Native](https://github.com/timfpark/fabrikate-cloud-native) fabrikate definition.
+1. _Permissions_: The ability to create Projects in your Azure DevOps Organization.
+2. _High Level Deployment Description_: Either your own [Fabrikate](https://github.com/Microsoft/fabrikate) high level definition for your deployment or a sample one of ours.  We provide a [sample HLD repo](https://github.com/samiyaakhtar/aks-deploy-source) that builds upon the [cloud-native](https://github.com/timfpark/fabrikate-cloud-native) Fabrikate definition.
 
-### Azure Pipelines Build YAML
-The repo also contains an azure-pipelines.yml file that controls the build rules on based upon whether a PR is occuring or if a merge to master branch has occured. <u>You will need this file on your repository HLD repo even if you don't use the sample HLD repo.</u>
+## Setup
+
+### 1. Create Repositories and Personal Access Tokens
+
+Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
+* [Azure DevOps](ADORepos.md)
+* [GitHub](GitHubRepos.md)
+
+#### Add Azure Pipelines Build YAML
+If you are using your own high level description, add the following `azure-pipelines.yml` file to its root to defines the build rules for your Azure Devops pipeline.
 
 ```
 trigger:
@@ -51,61 +56,57 @@ steps:
     MANIFEST_REPO: $(MANIFEST_REPO)
 ```
 
-At the end of this walkthrough you will have kubernetes manifest files corresponding to the Cloud Native stack on your manifest repo. These YAML files will then be deployed to your AKS cluster via Flux. 
+### 2. Create Pipeline
 
-## Walkthrough
-### 1. Create Repositories and Personal Access Tokens
+We use an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) to build your high level description into resource manifests:
 
-We provide instructions for creating HLD/Manifest repos and personal access tokens in two flavors:
-* [Azure DevOps](ADORepos.md)
-* [GitHub](GitHubRepos.md)
+1. On a pull request (pre push to master) it executes a simple validation on proposed changes to infrastructure definition in the HLD repo.
+1. On a merge to master branch (post push to master) it executes a script to transform the high level definition to YAML using [Fabrikate](https://github.com/Microsoft/fabrikate) and pushes the generated results into the resource manifest repo.
 
-### 2. Create an Orchestration Pipeline
+#### Create Build for your Definition Repo
 
-Configuration of an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) is necessary for orchestration. We provide a YAML configration file in the sample HLD repository that performs the following behaviors:
-
-+ On a pull request (pre push to master) will execute a simple validation on proposed changes to infrastructure definition in the HLD repo.
-
-+ On a merge to master branch (post push to master) we execute a script to transform the high level definition to YAML using [Microsoft Fabrikate](https://github.com/Microsoft/fabrikate) and push it to the manifest repository.
-
-#### Create a Build from your HLD Repo
-
-In the Azure DevOps,
+In Azure DevOps:
 1. Click on "Pipelines" on the left side to expand a submenu
 2. Click on "Builds" from the submenu
 3. In the 2nd column from the left click the "+ New" button
-4. Select "New build pipeline"
-  ![New pipleline](images/new-pipeline.png)
-5. Choose the appropriate repo flavor as the selection to the "Where is your code?" prompt
+4. Select "New pipeline"
+
+  ![New pipeline](images/new-pipeline.png)
+
+5. Choose the platform you are using for source control:
+
   ![SELECT REPO TYPE](images/select-git-repo.png)
-6. Choose the repo that you named as $HLD_REPO_NAME
+
+6. Choose your high level definition repo:
     1. Azure DevOps Repo Example: ![SELECT REPO NAME](images/select-ado-repo.png)
-    2. GitHub Repo Example:![SELECT REPO NAME](images/select-github-repo.png)
+    1. GitHub Repo Example:![SELECT REPO NAME](images/select-github-repo.png)
 
+7. Select the "Configuration as Code" template
 
-#### Configure a Build
+  ![SELECT REPO TYPE](images/configuration-as-code.png)
 
-At this point you will see `azure-pipeline.yml`, which is contained in the HLD repo.
-1. Click the blue run button on the right side.
-2. You should see the output of an azure pipeline. Instead of waiting for the build to finish, click the ellipsis (...) in the upper right corner and choose "Edit pipeline".
-    1. ![edit pipleline](images/edit-pipeline.png)
-3. You will see the YAML contents again. Click on the ellipsis to the right of the blue "Run" button and choose "Pipeline settings".
-    1. ![pipleline settings](images/pipeline-settings.png)
-4. Click the "Variables" tab.
-5. Add two variables that are consumed by the `build.sh` referenced in `azure_pipeline.yml`:
+8. Name the build and choose the `azure-pipeline.yml` file in the root of your high level definition repo.
+
+#### Configure Build
+
+1. Click the "Variables" tab.
+
+5. Add two variables that are used by the `build.sh` script referenced in `azure_pipeline.yml`:
     ![set variables](images/set-variables.png)
-    1. __Name__ `ACCESS_TOKEN` __Value__ Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type
-        1. Click the "lock" icon to the right of the value field to indicate this is a _secret_. See screenshoot above.
-    2.  __Name__ `MANIFEST_REPO` __Value__ The full URL to your manifest repo (i.e. https://github.com/andrebriggs/acme-company-yaml.git)
+    1. __Name__: `ACCESS_TOKEN` __Value__: Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type. Click the "lock" icon to the right of the value field to indicate this is a _secret_ per the screenshot above.
+    2.  __Name__: `MANIFEST_REPO` __Value__: The full URL to your manifest repo (i.e. https://github.com/andrebriggs/acme-company-yaml.git)
+
 6. Click "Save & Queue".
-7. You will see the build run and hopefully complete successfully. At this point we can make a PR change to the HLD repo.
+
+7. You should now see the build run and complete successfully.
   ![ADO Build](images/azure-pipelines-yaml.png)
 
 ### 3. Configure Flux
 
-Once you have your Azure DevOps repos in place and the Azure Pipelne Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/README.md).
+Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/README.md).
 
-1. Copy the SSH key.
+1. Copy the SSH key to your clipboard.
+
 2. In Azure DevOps, under your User Profile > Security > SSH public keys, click on `Add` and add the Flux deploy key.
   ![ssh](images/ssh-key.png)
 
@@ -117,7 +118,7 @@ Once you have your Azure DevOps repos in place and the Azure Pipelne Build worki
     flux-memcached-59947476d9-49xs6   1/1     Running   0          24h
     ```
 
-4. Monitor the logs of your flux using the command `kubectl logs POD_NAME -n flux` to ensure that the initial manifest YAML files are being applied to yourt cluster.
+4. Monitor the logs of your running Flux instance using the command `kubectl logs POD_NAME -n flux` to ensure that the initial manifest YAML files are being applied to your cluster.
 ```
 $ kubectl logs flux-7d459f5f9-c2wtd -n flux
 ts=2019-02-14T19:37:55.332948174Z caller=main.go:156 version=1.10.1
@@ -126,28 +127,45 @@ ts=2019-02-14T19:37:55.414659575Z caller=main.go:417 url=git@github.com:andrebri
 ...
 ...
 ```
-Now, when a change is commited to the Manifest repo, Flux should acknowledge the commit and make changes to the state of your cluster as necessary. You can monitor Flux by viewing the logs by running `kubectl logs POD_NAME -n flux -f` in stream mode.
+Now, when a change is commited to the resource manifest repo, Flux should acknowledge the commit and make changes to the state of your cluster as necessary. You can monitor Flux by viewing the logs by running `kubectl logs POD_NAME -n flux -f` in stream mode.
 
 ### 4. Make a Pull Request
+
 1. Create a new branch in your HLD repo and make a commit to the high level definition.
-1. An example of a change could be adding a Prometheus and Grafana stack to your definition
+
+1. For example, let's say we wanted to make a change that dropped the `cloud-native` stack and instead added directly a Elasticsearch / Fluentd / Kibana logging stack and Prometheus / Grafana metrics monitoring stack to your definition.  We would make a commit that made this change:
   ![ADO Build](images/definition-change.png)
-1. Perform a pull request to merge your changes into master branch
-1. Once checks has passed have the PR approved 
+
+1. Then, create a pull request to merge your changes into master branch.
+
+1. When you do this, the Azure Devops pipeline will automatically run validation checks against your pull request.
+
+1. Once these checks have passed and the PR has been approved by your team process, you can merge it into master.
 
 ### 5. Monitor Repository Changes
-* Once a pull request is approved you can monitor the progress of the HLD transformation in the Build menu in your Azure DevOps _Project_.
-* Once the build is successful navigate to your manifest repository. You see a very recent commit to the main branch.
+1. Once merged, you can monitor the progress of the HLD transformation in the Build menu in your Azure DevOps _Project_.
+
+1. When the commit is merged into master, your Azure Devops pipeline will build the resource manifests for this definition and check them into the resource manifest repo.
+
+1. Once the build is successful, navigate to your manifest repository. You should see a very recent commit to the main branch.
   ![ADO Build](images/ado-builds.png)
 
 ### 6. Monitor Cluster Changes
 
-* Use [Flux](https://github.com/weaveworks/flux/blob/master/site/get-started.md#confirm-the-change-landed) to provide automated deploy synchronization between your manifest repo and cluster. 
-  * Watch the cluster in stream mode by running `kubectl logs POD_NAME -n flux -f`
-* Use [Kubediff](https://github.com/weaveworks/kubediff) to make sure your cluster configuration and matches your manifest repo configuration
+1. Next, [Flux](https://github.com/weaveworks/flux/blob/master/site/get-started.md#confirm-the-change-landed) will automatically apply the build resource manifest changes to your cluster.  You can watch this with the following `kubectl` command:
 
-### 7. Repeat As Necessary
-At this point a cycle of a GitOps flow has completed. To make additional changes to your cluster visit [Step 4](#4-make-a-pull-request). 
+```
+$ kubectl logs POD_NAME -n flux -f
+```
 
-## Reference
+2. You can also use [Kubediff](https://github.com/weaveworks/kubediff) to make sure the applied resource manifests in your cluster match your resource manifest repo by cloning your resource manifest repo and then running:
+
+```
+$ kubediff ./cloned-resource-manifest-repo
+```
+
+3. Finally, you should watch your normal operational metrics to make sure the change was successful.
+
+### Reference
+
 * [Azure Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops)

@@ -21,7 +21,7 @@ In addition, you need the Azure `az` command line tool in order to create and fe
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
-## Set up GitOps repository for Flux
+## Set up GitOps Repository for Flux
 
 Flux watches a Git repository containing the resource manifests that should be deployed into the Kubernetes cluster, and, as such, we need to configure that repo and give Flux permissions to access it at cluster creation time.
 
@@ -30,6 +30,7 @@ are also supported).
 2. Create/choose a SSH key pair that will be given permission to do read/write access to the repository. You can create an ssh key 
 pair with the Bash `ssh-keygen` command as shown in the code block below.
 3. Add the SSH key to the repository. Flux requires read and write access to the resource manifest git repository. For GitHub, the process to add a deploy key is documented [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
+4. Have your CI/CD pipeline run at least once and commit an initial set of resource manifests to your repo.  Flux requires at least one commit in your resource manifest repo to operate correctly.
 
 ```bash
 $ ssh-keygen -b 2048 -t rsa -f gitops_repo_key
@@ -57,7 +58,7 @@ $ ls -l GitOps_repo_key*
 -rw-r--r--  1 jims  staff   398 Jan 24 16:28 GitOps_repo_key.pub
 ```
 
-## Create an Azure service principal
+## Create an Azure Service Principal
 
 You can generate an Azure service principal for your Azure subscription with the following `az` cli command:
 
@@ -72,17 +73,20 @@ $ az ad sp create-for-rbac --subscription <id | name>
 }
 ```
 
-## Create Terraform configuration files
+## Create Terraform Configuration Files
 
 This is a two step process:
 
 1. Create a new cluster configuration by copying an existing Terraform template
 2. Customize your cluster by entering configuration values into '*.tfvars' files 
 
-### Copy Terraform template
+### Clone Terraform Template
+
 The typical way to create a new environment is to start from an existing template. For Azure, we currently have the following templates:
 
-- [azure-simple](../environments/azure-simple): Single cluster deployment with Flux
+- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes
+- [azure-multiple-clusters](../environments/azure-multiple-clusters): Multiple cluster deployment with Traffic Manager
+- [azure-simple](../environments/azure-simple): Single cluster deployment
 
 So, for example, to create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of your cluster:
 
@@ -90,7 +94,7 @@ So, for example, to create a cluster environment based on the `azure-simple` tem
 $ cp -r cluster/environments/azure-simple cluster/environments/<cluster name>
 ```
 
-### Enter configuration values
+### Edit Configuration Values
 
 With this new environment created, edit `environments/azure/<cluster name>/terraform.tfvars` and update the following variables:
 
@@ -109,7 +113,7 @@ With this new environment created, edit `environments/azure/<cluster name>/terra
 
 Finally, if you are deploying a production cluster, you will want to [configure storage](#storing-terraform-state) of Terraform state.
 
-## Configure Terraform to store state data in Azure
+## Configure Terraform to Store State Data in Azure
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
 
@@ -138,7 +142,7 @@ Once the storage account is created, we need to fetch storage account key so we 
 
 With this, update `backend.tfvars` file in your cluster environment directory with these values and use `terraform init -backend-config=./backend.tfvars` to setup usage of the Azure backend.
 
-## Create the AKS cluster using Terraform
+## Create the AKS Cluster using Terraform
 
 Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
 
