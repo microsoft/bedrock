@@ -64,7 +64,7 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 * Terraform Azure Provider authentication configuration
     - `subscription_id`: Azure subscription id
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
-    - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](#-Authentication-Service-Principal) section.
+    - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](#Authentication-Service-Principal) section.
     - `login_service_principal_password`: The secret of the service principal used to authenticate with Azure.
 * Traffic Manager configuration
     - `traffic_manager_profile_name`: Name of the Azure Traffic Manager Profile.
