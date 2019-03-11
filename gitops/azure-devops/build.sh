@@ -1,35 +1,30 @@
 #!/bin/bash
 
-function init() {
-    cp -r * $HOME/
-    cd $HOME
-
-    echo "CHECKING MANIFEST REPO URL"
-    if [[ -z "$MANIFEST_REPO" ]]; then
-        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
-        exit 1
-    fi
-
+function verify_access_token() {
     echo "VERIFYING PERSONAL ACCESS TOKEN"
     if [[ -z "$ACCESS_TOKEN_SECRET" ]]; then
         echo "Please set env var ACCESS_TOKEN_SECRET for git host: $GIT_HOST"
         exit 1
     fi
 }
+function verify_repo() {
+    echo "CHECKING MANIFEST REPO URL"
+    if [[ -z "$MANIFEST_REPO" ]]; then
+        echo 'MANIFEST REPO URL not specified in variable $MANIFEST_REPO'
+        exit 1
+    fi
+}
+
+function init() {
+    cp -r * $HOME/
+    cd $HOME
+    verify_repo
+}
 
 # Initialize Helm
 function helm_init() {
     echo "RUN HELM INIT"
     helm init
-    echo "HELM ADD INCUBATOR"
-    if [ -z "$HELM_CHART_REPO" ] || [ -z "$HELM_CHART_REPO_URL" ];
-    then
-        echo "Using DEFAULT helm repo..."
-        helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-    else
-        echo "Using DEFINED helm repo..."
-        helm repo add $HELM_CHART_REPO $HELM_CHART_REPO_URL
-    fi
 }
 
 # Obtain version for Fabrikate
@@ -86,7 +81,21 @@ function install_fab() {
 
 # Run fab generate
 function fab_generate() {
-    fab generate prod --no-validation
+    # For backwards compatibility, support pipelines that have not set this variable
+    echo "CHECKING FABRIKATE ENVIRONMENTS"
+    if [ -z "$FAB_ENVS" ]; then 
+        echo "FAB_ENVS is not set" 
+        echo "FAB GENERATE prod"
+        fab generate prod --no-validation
+    else 
+        echo "FAB_ENVS is set to $FAB_ENVS" 
+        IFS=',' read -ra ENV <<< "$FAB_ENVS"
+        for i in "${ENV[@]}"; do
+            echo "FAB GENERATE $i"
+            fab generate $i --no-validation
+        done
+    fi
+
     echo "FAB GENERATE COMPLETED"
     
     set +e
@@ -126,21 +135,26 @@ function git_commit() {
     git checkout master
     echo "GIT STATUS"
     git status
+    echo "GIT REMOVE"
+    rm -rf ./*/
+    git rm -rf */
     echo "COPY YAML FILES TO REPO DIRECTORY..."
-    rm -rf prod/
     cp -r $HOME/generated/* .
     echo "GIT ADD"
-    git add *
+    git add -A
 
     #Set git identity 
     git config user.email "admin@azuredevops.com"
     git config user.name "Automated Account"
 
-    echo "GIT COMMIT"
-    git commit -m "Updated k8s manifest files post commit: $COMMIT_MESSAGE"
-    retVal=$? && [ $retVal -ne 0 ] && exit $retVal
-    echo "GIT STATUS" 
-    git status
+    if [[ `git status --porcelain` ]]; then
+        echo "GIT COMMIT"
+        git commit -m "Updated k8s manifest files post commit: $COMMIT_MESSAGE"
+        retVal=$? && [ $retVal -ne 0 ] && exit $retVal
+    else
+        echo "NOTHING TO COMMIT"
+    fi
+
     echo "GIT PULL" 
     git pull
 }
@@ -163,7 +177,7 @@ function unit_test() {
     echo "Sourcing for unit test..."
 }
 
-function verify() {
+function verify_pull_request() {
     echo "Starting verification"
     init
     helm_init
@@ -174,8 +188,9 @@ function verify() {
 }
 
 # Run functions
-function verify_and_push() {
-    verify
+function verify_pull_request_and_merge() {
+    verify_access_token
+    verify_pull_request
     echo "Verification complete, push to yaml repo"
     git_connect
     git_commit
@@ -184,9 +199,9 @@ function verify_and_push() {
 
 echo "argument is ${1}"
 if [[ "$VERIFY_ONLY" == "1" ]]; then
-    verify
+    verify_pull_request
 elif [ "${1}" == "--source-only" ]; then
     unit_test
 else
-    verify_and_push
+    verify_pull_request_and_merge
 fi

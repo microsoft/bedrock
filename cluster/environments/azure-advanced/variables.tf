@@ -15,11 +15,6 @@ variable "agent_vm_count" {
     default = "3"
 }
 
-variable "agent_vm_size" {
-    type = "string"
-    default = "Standard_D2s_v3"
-}
-
 variable "dns_prefix" {
     type = "string"
 }
@@ -36,20 +31,26 @@ variable "service_principal_secret" {
     type = "string"
 }
 
-variable "subscription_id" {
-  type    = "string"
-}
-
-variable "tenant_id" {
-  type    = "string"
-}
-
 variable "gitops_ssh_url" {
   type = "string"
 }
 
 variable "gitops_ssh_key" {
   type    = "string"
+}
+
+variable "keyvault_name" {
+    type    = "string"
+}
+
+variable "secret_name" {
+    type    = "string"
+    default = ""
+}
+
+variable "secret_value" {
+    type    = "string"
+    default = ""
 }
 
 variable "tfstate_storage_account_name" {
