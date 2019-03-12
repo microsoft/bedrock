@@ -31,6 +31,15 @@ variable "service_principal_secret" {
     type = "string"
 }
 
+variable "subscription_id" {
+  type    = "string"
+}
+
+variable "tenant_id" {
+  type    = "string"
+}
+
+
 variable "gitops_ssh_url" {
   type = "string"
 }
@@ -78,3 +87,10 @@ variable "flux_recreate" {
     type = "string"
     default = ""
 }
+
+variable "flexvol_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flex volume execution script."
+    type = "string"
+    default = ""
+}
+
