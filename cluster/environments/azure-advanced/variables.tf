@@ -78,3 +78,10 @@ variable "flux_recreate" {
     type = "string"
     default = ""
 }
+
+variable "flexvol_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flex volume execution script."
+    type = "string"
+    default = ""
+}
+
