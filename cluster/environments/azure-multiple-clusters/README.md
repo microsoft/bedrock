@@ -19,7 +19,7 @@ And, depending on how one is deploying the clusters, the environment may also cr
 
 4. Deploys Azure Traffic Manager profile with three different endpoint connecting to public IPs to route traffic based on a configured routing method.
 
-It should be noted, in the case where the clusters are deployed *without* `Owner` level permissions, the public IP addresses will be created within the node resource group where the AKS cluster resources are created.
+When clusters are deployed *without* `Owner` level permissions, the public IP addresses will be created within the node resource group where the AKS cluster resources are created.
 
 ## Prerequisites
 Please [install required tools](/cluster/Azure/readme.md/#install-required-tools) as well as [setup GitOps repo for Flux](/cluster/Azure/readme.md/#set-up-gitops-repository-for-flux) before continuing to the next section if you have not already.
@@ -36,7 +36,7 @@ The Service Principal that is configured for authentication must have a Owner ro
 
 ### 2. Service Principals
 #### Authentication Service Principal
-If one is wanting to deploy a cluster with a Service Principal having `Owner` level permissions, one must create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
+If you want to deploy a cluster with a Service Principal having `Owner` level permissions, create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
 
 ```bash
 $ az ad sp create-for-rbac --role "Owner" --subscription <id | name>
