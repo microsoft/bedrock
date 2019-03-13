@@ -31,15 +31,6 @@ variable "service_principal_secret" {
     type = "string"
 }
 
-variable "subscription_id" {
-  type    = "string"
-}
-
-variable "tenant_id" {
-  type    = "string"
-}
-
-
 variable "gitops_ssh_url" {
   type = "string"
 }
