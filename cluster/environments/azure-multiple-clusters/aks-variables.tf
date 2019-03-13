@@ -15,6 +15,11 @@ variable "ssh_public_key" {
   type = "string"
 }
 
+variable "service_principal_is_owner" {
+    type = "string"
+    default = "1"
+}
+
 variable "service_principal_id" {
   type = "string"
 }
@@ -44,13 +49,6 @@ variable "tenant_id" {
   type = "string"
 }
 
-variable "login_service_principal_id" {
-  type = "string"
-}
-
-variable "login_service_principal_password" {
-  type = "string"
-}
 variable "flux_recreate" {
     description = "Make any change to this value to trigger the recreation of the flux execution script."
     type = "string"

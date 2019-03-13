@@ -4,15 +4,22 @@
 
 This section describes how to deploy multiple AKS clusters by copying terraform scripts in this directory to a new directory.
 
+There are two methods to deploying the clusters.  One method requires that the service principal you are using to deploy a cluster has `Owner` level permissions on the Azure subscription being used.  The second method does not require the same level of permissions.
+
 This environment creates:
 
 1. Deploys three AKS clusters in three different configurable Azure regions.
 2. Creates three static public IP's to use in kubernetes loadbalancer service.
+
+And, depending on how one is deploying the clusters, the environment may also create:
+
 3. Creates a Azure Role Assignment for each AKS cluster Service Principal with `Network Contributor` role on each Public IP resource. 
 
-    _The service principal used by the AKS cluster must have delegated permissions to the other resource group to modify network resources when kubernetes loadbalancer service is deployed. More information is available [here](https://docs.microsoft.com/en-us/azure/aks/static-ip#use-a-static-ip-address-outside-of-the-node-resource-group)._
+    _If one deploys clusters using the `Owner` level permissions, the Azure Role Assignment will be created.  To do this, the service principal used by the AKS cluster must have delegated permissions to the other resource group to modify network resources when kubernetes loadbalancer service is deployed. More information is available [here](https://docs.microsoft.com/en-us/azure/aks/static-ip#use-a-static-ip-address-outside-of-the-node-resource-group)._
 
-3. Deploys Azure Traffic Manager profile with three different endpoint connecting to public IPs to route traffic based on a configured routing method.
+4. Deploys Azure Traffic Manager profile with three different endpoint connecting to public IPs to route traffic based on a configured routing method.
+
+When clusters are deployed *without* `Owner` level permissions, the public IP addresses will be created within the node resource group where the AKS cluster resources are created.
 
 ## Prerequisites
 Please [install required tools](/cluster/Azure/readme.md/#install-required-tools) as well as [setup GitOps repo for Flux](/cluster/Azure/readme.md/#set-up-gitops-repository-for-flux) before continuing to the next section if you have not already.
@@ -29,11 +36,18 @@ The Service Principal that is configured for authentication must have a Owner ro
 
 ### 2. Service Principals
 #### Authentication Service Principal
-Create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
+If you want to deploy a cluster with a Service Principal having `Owner` level permissions, create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
 
 ```bash
 $ az ad sp create-for-rbac --role "Owner" --subscription <id | name>
 ```
+
+Otherwise, one can simply create a normal Service Principal as follows:
+
+```bash
+$ az ad sp create-for-rbac --role "Contributor" --subscription <id | name>
+```
+
 #### AKS Cluster Service Principal
 To allow an AKS cluster to interact with other Azure resources, an Azure Active Directory service principal is used. Create a service principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
@@ -65,8 +79,6 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 * Terraform Azure Provider authentication configuration
     - `subscription_id`: Azure subscription id
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
-    - `login_service_principal_id`: The appid of the service principal to authenticate and deploy the environment in Azure. The creation of service principal described above in [Service Principals](#Authentication-Service-Principal) section.
-    - `login_service_principal_password`: The secret of the service principal used to authenticate with Azure.
 * Traffic Manager configuration
     - `traffic_manager_profile_name`: Name of the Azure Traffic Manager Profile.
     - `traffic_manager_dns_name`: DNS name for accessing the traffic manager url from the internet. For ex: `http://<dnsname>.trafficmanager.net`.
@@ -77,7 +89,8 @@ Make a note of the _appId_ and _password_. These values are used in the followin
     - `agent_vm_count`: The number of agents VMs in the the node pool.
     - `dns_prefix`: DNS name for accessing the cluster from the internet.
     - `service_principal_id`: The id of the service principal used by the AKS cluster. The creation of service principal described above in [Service Principals](#AKS-Cluster-Service-Principal) section.
-    - `service_principal_secret`: he secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
+    - `service_principal_secret`: The secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
+    - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group. 
     - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
     - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
     - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.

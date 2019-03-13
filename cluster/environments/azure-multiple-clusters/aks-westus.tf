@@ -32,7 +32,7 @@ module "west_aks" {
 
   resource_group_name      = "${local.west_rg_name}"
   resource_group_location  = "${local.west_rg_location}"
-  cluster_name             = "${var.cluster_name}"
+  cluster_name             = "${var.cluster_name}-west"
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.west_vnet.vnet_subnet_ids[0]}"
@@ -59,7 +59,8 @@ module "west_flux" {
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${local.west_rg_name}"
+  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}"
+  resource_group_name                 = "${module.west_aks.cluster_derived_resource_group}"
   resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -69,13 +70,14 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${local.west_prefix} - public ip"
+    kubedone = "${module.west_aks.kubeconfig_done}"
   }
 }
 
 # Create a role assignment with Contributor role for AKS client service principal object 
 #   to join vnet/subnet/ip for load balancer/ingress controller
-
 resource "azurerm_role_assignment" "west_spra" {
+  count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
   scope                = "${azurerm_resource_group.westrg.id}"
