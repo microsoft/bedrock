@@ -24,6 +24,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	publickey := os.Getenv("public_key")
 	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
 	tenantid := os.Getenv("ARM_TENANT_ID")
+	location := os.Getenv("datacenter_location")
 	sshkey := os.Getenv("ssh_key")
 
 	// Specify the test case folder and "-var" options
@@ -32,6 +33,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 		Vars: map[string]interface{}{
 			"cluster_name":             k8sName,
 			"resource_group_name":      k8sRG,
+			"resource_group_location":  location,
 			"dns_prefix":               dnsprefix,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
