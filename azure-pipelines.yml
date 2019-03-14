@@ -1,7 +1,29 @@
-# https://docs.microsoft.com/azure/devops/pipelines/languages/go
-
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - /cluster/azure/*
+    - /cluster/common/*
+    - /cluster/environments/azure-simple/*
+    exclude:
+    - gitops/*
+    - README.md
+pr:
+  autoCancel: false
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - /cluster/azure/*
+    - /cluster/common/*
+    - /cluster/environments/azure-simple/*
+    exclude:
+    - gitops/*
+    - README.md
 
 pool:
   vmImage: 'Ubuntu-16.04'
