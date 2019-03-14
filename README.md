@@ -1,6 +1,6 @@
 # Bedrock
 
-[![Build Status](https://travis-ci.org/Microsoft/bedrock.svg?branch=master)](https://travis-ci.org/Microsoft/bedrock)
+[![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
 
 This project is our humble attempt to combine the collective wisdom of the cloud native community for 
 building best practice cloud native Kubernetes clusters, based on real world experiences 
