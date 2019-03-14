@@ -19,8 +19,8 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 	k8sRG := k8sName + "-rg"
 	dnsprefix := k8sName + "-dns"
-	clientid := os.Getenv("clientID")
-	clientsecret := os.Getenv("clientSecret")
+	clientid := os.Getenv("ARM_CLIENT_ID")
+	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	publickey := os.Getenv("public_key")
 	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
 	tenantid := os.Getenv("ARM_TENANT_ID")
