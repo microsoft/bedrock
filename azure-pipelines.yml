@@ -32,17 +32,22 @@ steps:
     wget https://releases.hashicorp.com/terraform/$(tf_version)1/terraform_$(tf_version)1_linux_amd64.zip
     unzip terraform_$(tf_version)_linux_amd64.zip
     mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
+    sudo apt-get install apt-transport-https lsb-release software-properties-common dirmngr -y
+    AZ_REPO=$(lsb_release -cs)
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+    sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --keyserver packages.microsoft.com --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update
     sudo apt-get install -y kubectl
+    sudo apt-get install azure-cli
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
     chmod 700 get_helm.sh
     ./get_helm.sh
     ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     export ssh_key=$(readlink -f id_rsa.pub)
     export public_key=$(cat id_rsa.pub)
-  displayName: 'Set up the Helm, Kubectl, Terraform and sshkeys'
+  displayName: 'Set up AZ-cli, Helm, Kubectl, Terraform and sshkeys'
 
 - script: |
     go version
