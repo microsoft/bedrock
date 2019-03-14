@@ -26,10 +26,9 @@ steps:
 
 - script: |
     terraform -version
-    which terraform
     wget https://releases.hashicorp.com/terraform/$(tf_version)/terraform_$(tf_version)_linux_amd64.zip -q
-    unzip terraform_$(tf_version)_linux_amd64.zip
-    mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
+    unzip -o terraform_$(tf_version)_linux_amd64.zip -d /usr/local/bin
+    terraform -version
     #sudo apt-get install apt-transport-https lsb-release software-properties-common dirmngr -y
     #AZ_REPO=$(lsb_release -cs)
     #echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
