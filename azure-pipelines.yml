@@ -27,7 +27,7 @@ steps:
 - script: |
     terraform -version
     wget https://releases.hashicorp.com/terraform/$(tf_version)/terraform_$(tf_version)_linux_amd64.zip -q
-    unzip terraform_$(tf_version)_linux_amd64.zip -q
+    unzip -q terraform_$(tf_version)_linux_amd64.zip
     sudo mv terraform /usr/local/bin
     terraform -version
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -44,6 +44,9 @@ steps:
     export public_key=$(cat id_rsa.pub)
     go test -v -timeout 99999s
   env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
   workingDirectory: '$(modulePath)/test'
   displayName: 'Create ssh keys, get deps, then test'
