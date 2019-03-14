@@ -27,24 +27,15 @@ steps:
 - script: |
     terraform -version
     wget https://releases.hashicorp.com/terraform/$(tf_version)/terraform_$(tf_version)_linux_amd64.zip -q
-    unzip terraform_$(tf_version)_linux_amd64.zip
+    unzip terraform_$(tf_version)_linux_amd64.zip -q
     sudo mv terraform /usr/local/bin
     terraform -version
-    #sudo apt-get install apt-transport-https lsb-release software-properties-common dirmngr -y
-    #AZ_REPO=$(lsb_release -cs)
-    #echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-    #sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --keyserver packages.microsoft.com --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF
-    #sudo apt-get install azure-cli
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     chmod +x ./kubectl
     sudo mv ./kubectl /usr/local/bin/kubectl
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
     chmod 700 get_helm.sh
     ./get_helm.sh
-    env
-  env: 
-    testsecret: $(testsecret)
-    tmpsecret: $(testsecret)
   displayName: 'Install terraform, kubectl, helm'
 
 - script: |
