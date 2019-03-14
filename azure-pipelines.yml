@@ -47,6 +47,8 @@ steps:
     ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     export ssh_key=$(readlink -f id_rsa.pub)
     export public_key=$(cat id_rsa.pub)
+    echo $ssh_key
+    echo $public_key
   displayName: 'Set up AZ-cli, Helm, Kubectl, Terraform and sshkeys'
 
 - script: |
