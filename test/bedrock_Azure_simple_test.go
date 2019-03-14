@@ -1,15 +1,15 @@
 package test
 
 import (
-        "fmt"
-		"testing"
-		"os"
-		"strings"
-		
-        "github.com/gruntwork-io/terratest/modules/random"
-        "github.com/gruntwork-io/terratest/modules/terraform"
-        "github.com/gruntwork-io/terratest/modules/k8s"
-    )
+	"fmt"
+	"os"
+	"strings"
+	"testing"
+
+	"github.com/gruntwork-io/terratest/modules/k8s"
+	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+)
 
 func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	t.Parallel()
@@ -30,18 +30,17 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-simple",
 		Vars: map[string]interface{}{
-			"cluster_name": k8sName,
-			"resource_group_name":k8sRG,
-			"dns_prefix":dnsprefix,
-			"service_principal_id":clientid,
-			"service_principal_secret" :clientsecret,
-			"ssh_public_key" :publickey,
-			"gitops_ssh_url":"git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
-			"gitops_ssh_key" :sshkey,
-			"tenant_id" :tenantid,
-			"subscription_id" : subscriptionid,
+			"cluster_name":             k8sName,
+			"resource_group_name":      k8sRG,
+			"dns_prefix":               dnsprefix,
+			"service_principal_id":     clientid,
+			"service_principal_secret": clientsecret,
+			"ssh_public_key":           publickey,
+			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
+			"gitops_ssh_key":           sshkey,
+			"tenant_id":                tenantid,
+			"subscription_id":          subscriptionid,
 		},
-
 	}
 
 	// Terraform init, apply, output, and destroy
@@ -56,12 +55,10 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	//Test Case 1: Verify Flux namespace
 	fmt.Println("Test case 1: Verifying flux namespace")
-	_flux, flux_err := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
-	if flux_err != nil || !strings.Contains(_flux, "flux") {
-		t.Fatal(flux_err)
+	_flux, fluxErr := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
+	if fluxErr != nil || !strings.Contains(_flux, "flux") {
+		t.Fatal(fluxErr)
 	} else {
 		fmt.Println("Flux verification complete")
 	}
 }
-
-		
