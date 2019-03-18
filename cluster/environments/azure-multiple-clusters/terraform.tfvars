@@ -42,8 +42,8 @@ gitops_ssh_url = ""
 
 gitops_ssh_key = ""
 
-git_east_path = ""
+gitops_east_path = ""
 
-git_central_path = ""
+gitops_central_path = ""
 
-git_west_path = ""
+gitops_west_path = ""

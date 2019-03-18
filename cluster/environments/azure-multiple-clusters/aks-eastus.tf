@@ -53,7 +53,7 @@ module "east_flux" {
   kubeconfig_complete = "${module.east_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.east_kubeconfig_filename}"
   flux_clone_dir      = "${local.east_flux_clone_dir}"
-  git_path            = "${var.git_east_path}"
+  gitops_path            = "${var.git_east_path}"
 }
 
 # create a static public ip and associate with traffic manger endpoint 

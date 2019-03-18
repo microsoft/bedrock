@@ -4,7 +4,7 @@ variable "flux_repo_url" {
   default = "https://github.com/weaveworks/flux.git"
 }
 
-variable "git_path" {
+variable "gitops_path" {
     type = "string"
 }
 
