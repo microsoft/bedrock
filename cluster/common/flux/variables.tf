@@ -6,6 +6,7 @@ variable "flux_repo_url" {
 
 variable "gitops_path" {
     type = "string"
+    default = "/"
 }
 
 variable "gitops_ssh_url" {
