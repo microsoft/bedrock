@@ -84,15 +84,15 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
     - `west_resource_group_location`: Location of the Azure region. For ex: `westus2`.
-    - `git_west_path`: Path to a subdirectory, or folder in a git repo
+    - `gitops_west_path`: Path to a subdirectory, or folder in a git repo
 * Central cluster
     - `central_resource_group_name`: Name of the resource group for the cluster.
     - `central_resource_group_location`: Location of the Azure region. For ex: `centralus`.
-    - `git_central_path`: Path to a subdirectory, or folder in a git repo
+    - `gitops_central_path`: Path to a subdirectory, or folder in a git repo
 * East Cluster
     - `east_resource_group_name`:  Name of the resource group for the cluster.
     - `east_resource_group_locatio`: Location of the Azure region. For ex: `eastus2`.
-    - `git_east_path`: Path to a subdirectory, or folder in a git repo
+    - `gitops_east_path`: Path to a subdirectory, or folder in a git repo
 3. Configure Terraform backend. It is optional, but a best practice for production environment
 * Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
     - `storage account name`: Name of the storage account to store the Terraform state.

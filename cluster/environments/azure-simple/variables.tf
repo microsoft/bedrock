@@ -44,7 +44,7 @@ variable "tenant_id" {
   type    = "string"
 }
 
-variable "git_path" {
+variable "gitops_path" {
     type= "string"
 }
 
