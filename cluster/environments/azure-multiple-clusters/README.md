@@ -97,12 +97,15 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
     - `west_resource_group_location`: Location of the Azure region. For ex: `westus2`.
+    - `gitops_west_path`: Path to a subdirectory, or folder in a git repo
 * Central cluster
     - `central_resource_group_name`: Name of the resource group for the cluster.
     - `central_resource_group_location`: Location of the Azure region. For ex: `centralus`.
+    - `gitops_central_path`: Path to a subdirectory, or folder in a git repo
 * East Cluster
     - `east_resource_group_name`:  Name of the resource group for the cluster.
     - `east_resource_group_locatio`: Location of the Azure region. For ex: `eastus2`.
+    - `gitops_east_path`: Path to a subdirectory, or folder in a git repo
 3. Configure Terraform backend. It is optional, but a best practice for production environment
 * Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
     - `storage account name`: Name of the storage account to store the Terraform state.
@@ -172,4 +175,3 @@ Make a note of the _appId_ and _password_. These values are used in the followin
 If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](#Step-2-Deploy-the-environment-using-Terraform).
 
 #### You're done!
-

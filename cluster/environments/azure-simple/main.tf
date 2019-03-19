@@ -50,6 +50,7 @@ module "flux" {
   flux_recreate       = "${var.flux_recreate}"
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
   flux_clone_dir      = "${var.cluster_name}-flux"
+  gitops_path            = "${var.gitops_path}"
 }
 
 module "kubediff" {
