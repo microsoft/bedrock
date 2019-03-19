@@ -60,7 +60,6 @@ module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}"
-  resource_group_name                 = "${module.west_aks.cluster_derived_resource_group}"
   resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
