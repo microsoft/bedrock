@@ -31,6 +31,14 @@ variable "service_principal_secret" {
     type = "string"
 }
 
+variable "registry_server" {
+    type = "string"
+}
+
+variable "registry_name" {
+    type = "string"
+}
+
 variable "gitops_ssh_url" {
   type = "string"
 }

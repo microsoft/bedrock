@@ -48,6 +48,10 @@ module "flux" {
     flux_recreate             = "${var.flux_recreate}"
     kubeconfig_complete       = "${module.aks.kubeconfig_done}"
     flux_clone_dir            = "${var.cluster_name}-flux"
+    registry_name             = "${var.registry_name}"
+    registry_server           = "${var.registry_server}"
+    registry_username         = "${var.service_principal_id}"
+    registry_password         = "${var.service_principal_secret}"
 }
 
 module "kubediff" {

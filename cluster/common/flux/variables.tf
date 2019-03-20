@@ -9,6 +9,26 @@ variable "gitops_path" {
     default = "/"
 }
 
+variable "registry_server" {
+    type = "string"
+    default = ""
+}
+
+variable "registry_name" {
+    type = "string"
+    default = ""
+}
+
+variable "registry_username" {
+    type = "string"
+    default = ""
+}
+
+variable "registry_password" {
+    type = "string"
+    default = ""
+}
+
 variable "gitops_ssh_url" {
   description = "ssh git clone repository URL with Kubernetes manifests including services which runs in the cluster. Flux monitors this repo for Kubernetes manifest additions/changes preriodiaclly and apply them in the cluster."
   type = "string"

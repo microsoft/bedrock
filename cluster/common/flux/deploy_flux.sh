@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e: option 
+while getopts :b:f:g:k:d:e:h:i:j:l: option 
 do 
  case "${option}" in 
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -8,6 +8,10 @@ do
  k) GITOPS_SSH_KEY=${OPTARG};; 
  d) REPO_ROOT_DIR=${OPTARG};;
  e) GITOPS_PATH=${OPTARG};;
+ h) REGISTRY_NAME=${OPTARG};;
+ i) REGISTRY_SERVER=${OPTARG};;
+ j) REGISTRY_USERNAME=${OPTARG};;
+ l) REGISTRY_PASSWORD=${OPTARG};;
  esac
 done 
 
@@ -87,6 +91,17 @@ if kubectl get secret $KUBE_SECRET_NAME -n $KUBE_NAMESPACE > /dev/null 2>&1; the
 else 
     if ! kubectl create secret generic $KUBE_SECRET_NAME --from-file=identity=$GITOPS_SSH_KEY -n $KUBE_NAMESPACE; then
         echo "ERROR: failed to create secret: $KUBE_SECRET_NAME"
+        exit 1
+    fi
+fi
+
+# Create kubernetes secrets for flux to read from ACR using this secret
+echo "creating kubernetes registry secrets $REGISTRY_NAME for $REGISTRY_SERVER"
+if [[ -z $REGISTRY_NAME || -z $REGISTRY_SERVER || -z $REGISTRY_USERNAME || -z $REGISTRY_PASSWORD ]]; then
+    echo "Skipping kubernetes registry secrets for flux"
+else
+    if ! kubectl create secret docker-registry $REGISTRY_NAME --docker-server=$REGISTRY_SERVER --docker-username=$REGISTRY_USERNAME --docker-password=$REGISTRY_PASSWORD -n $KUBE_NAMESPACE; then 
+        echo "ERROR: Failed to create registry secret $REGISTRY_NAME"
         exit 1
     fi
 fi
