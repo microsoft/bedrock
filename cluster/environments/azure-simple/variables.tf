@@ -36,14 +36,6 @@ variable "service_principal_secret" {
     type = "string"
 }
 
-variable "subscription_id" {
-  type    = "string"
-}
-
-variable "tenant_id" {
-  type    = "string"
-}
-
 variable "gitops_path" {
     type = "string"
 }
@@ -54,26 +46,6 @@ variable "gitops_ssh_url" {
 
 variable "gitops_ssh_key" {
   type    = "string"
-}
-
-variable "tfstate_storage_account_name" {
-  type    = "string"
-  default = ""
-}
-
-variable "tfstate_storage_account_access_key" {
-  type    = "string"
-  default = ""
-}
-
-variable "tfstate_container_name" {
-  type    = "string"
-  default = "bedrockstate"
-}
-
-variable "tfstate_key" {
-  type    = "string"
-  default = "bedrock.dev.tfstate"
 }
 
 variable "flux_recreate" {

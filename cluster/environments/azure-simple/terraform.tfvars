@@ -1,5 +1,3 @@
-subscription_id = "subscription name/id"
-tenant_id = "AAD id"
 resource_group_name="resource-group-name"
 resource_group_location="westus2"
 cluster_name="cluster-name"

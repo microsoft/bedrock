@@ -1,17 +1,10 @@
-provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
-  client_id       = "${var.service_principal_id}"
-  client_secret   = "${var.service_principal_secret}"
-  tenant_id       = "${var.tenant_id}"
-}
-
 # terraform {
 #    backend "azurerm" {
 #    }
 # }
 
-data "azurerm_subscription" "current" {
-  subscription_id = "${var.subscription_id}"
+module "provider" {
+  source = "../../azure/provider"
 }
 
 module "vnet" {
