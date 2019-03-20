@@ -53,26 +53,6 @@ variable "secret_value" {
     default = ""
 }
 
-variable "tfstate_storage_account_name" {
-  type    = "string"
-  default = ""
-}
-
-variable "tfstate_storage_account_access_key" {
-  type    = "string"
-  default = ""
-}
-
-variable "tfstate_container_name" {
-  type    = "string"
-  default = "bedrockstate"
-}
-
-variable "tfstate_key" {
-  type    = "string"
-  default = "bedrock.dev.tfstate"
-}
-
 variable "flux_recreate" {
     description = "Make any change to this value to trigger the recreation of the flux execution script."
     type = "string"
@@ -84,4 +64,3 @@ variable "flexvol_recreate" {
     type = "string"
     default = ""
 }
-
