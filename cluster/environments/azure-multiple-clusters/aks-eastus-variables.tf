@@ -6,6 +6,6 @@ variable "east_resource_group_location" {
   type    = "string"
 }
 
-variable "gitops_east_path" {
+variable "east_gitops_path" {
   type = "string"
 }

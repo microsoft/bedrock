@@ -53,7 +53,7 @@ module "west_flux" {
   kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.west_kubeconfig_filename}"
   flux_clone_dir      = "${local.west_flux_clone_dir}"
-  gitops_path         = "${var.git_west_path}"
+  gitops_path         = "${var.west_gitops_path}"
 }
 
 # create a static public ip and associate with traffic manger endpoint 
