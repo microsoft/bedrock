@@ -50,8 +50,8 @@ module "flux" {
     flux_clone_dir            = "${var.cluster_name}-flux"
     registry_name             = "${var.registry_name}"
     registry_server           = "${var.registry_server}"
-    registry_username         = "${var.service_principal_id}"
-    registry_password         = "${var.service_principal_secret}"
+    service_principal_id      = "${var.service_principal_id}"
+    service_principal_secret  = "${var.service_principal_secret}"
 }
 
 module "kubediff" {

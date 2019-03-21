@@ -95,19 +95,19 @@ else
     fi
 fi
 
+echo "Applying flux deployment"
+if ! kubectl apply -f  $REPO_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
+    echo "ERROR: failed to apply flux deployment"
+    exit 1
+fi
+
 # Create kubernetes secrets for flux to read from ACR using this secret
 echo "creating kubernetes registry secrets $REGISTRY_NAME for $REGISTRY_SERVER"
 if [[ -z $REGISTRY_NAME || -z $REGISTRY_SERVER || -z $REGISTRY_USERNAME || -z $REGISTRY_PASSWORD ]]; then
     echo "Skipping kubernetes registry secrets for flux"
 else
-    if ! kubectl create secret docker-registry $REGISTRY_NAME --docker-server=$REGISTRY_SERVER --docker-username=$REGISTRY_USERNAME --docker-password=$REGISTRY_PASSWORD -n $KUBE_NAMESPACE; then 
+    if ! kubectl create secret docker-registry $REGISTRY_NAME --docker-server=$REGISTRY_SERVER --docker-username=$REGISTRY_USERNAME --docker-password=$REGISTRY_PASSWORD; then 
         echo "ERROR: Failed to create registry secret $REGISTRY_NAME"
         exit 1
     fi
-fi
-
-echo "Applying flux deployment"
-if ! kubectl apply -f  $REPO_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
-    echo "ERROR: failed to apply flux deployment"
-    exit 1
 fi
