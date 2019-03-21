@@ -11,18 +11,22 @@ variable "gitops_path" {
 
 variable "registry_server" {
     type = "string"
+    default = ""
 }
 
 variable "registry_name" {
     type = "string"
+    default = ""
 }
 
 variable "service_principal_id" {
     type = "string"
+    default = ""
 }
 
 variable "service_principal_secret" {
     type = "string"
+    default = ""
 }
 
 variable "gitops_ssh_url" {
