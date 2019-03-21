@@ -29,7 +29,7 @@ Each cluster (east, west, central) has three cluster-specific configuration vari
 - `<region>-resource_group_location`: The location of the resource group and where the cluster will be deployed
 - `<region>-gitops-path`: This value is optional.  If configured, it should be configured for each of the three regions.  It specifies a path within the GitOps repo from which [Flux](../../common/flux) will pull manifests from.
 
-Variables for each cluster can be found for [east](./aks-eastus-variables.tf), [west](./aks-westus-variables.tf),[central](./aks-centralus-variables.tf).
+Variables for each cluster can be found for [east](./aks-eastus-variables.tf), [west](./aks-westus-variables.tf), [central](./aks-centralus-variables.tf).
 
 As part of cluster deployment, if one is deploying with `service_principal_is_owner=1`, in addition to creating the cluster, an Azure Role Assignment for each AKS cluster Service Principal will be created with `Network Contributor` role on the appropriate Public IP resource. 
 

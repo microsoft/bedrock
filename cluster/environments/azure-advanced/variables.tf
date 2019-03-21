@@ -39,6 +39,11 @@ variable "gitops_ssh_key" {
   type    = "string"
 }
 
+variable "gitops_path" {
+    type = "string"
+    default = "/"
+}
+
 variable "keyvault_name" {
     type    = "string"
 }
