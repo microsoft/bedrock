@@ -10,6 +10,8 @@ To deploy the `azure-advanced` environment, follow the [common steps](../../azur
 - [Azure Key Vault](#azure-key-vault)
 - [Kubernetes Key Vault Flex Volume](#kubernetes-key-vault-flex-volume)
 
+Additional variables that can be configured for `azure-advanced`, see [variables.tf](./variables.tf).
+
 *NOTE*: Because the deployment of Flex Volume requires additional [Azure Role Assignments](https://docs.microsoft.com/en-us/rest/api/authorization/roleassignments) be created.  The Service Principal provisioned as part of the [common setup](../../azure/README.md#create-an-azure-service-principal) is required to have `Owner` level privileges on the subscription.
 
 ### Azure Key Vault
