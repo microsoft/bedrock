@@ -5,6 +5,11 @@ The `azure-advanced` builds upon the `azure-simple` environment and adds the fol
 - Provisions an [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/)
 - Configure Key Vault support within the AKS cluster making use of [Kubernetes Key Vault Flex Volume](https://github.com/Azure/kubernetes-keyvault-flexvol)
 
+To deploy the `azure-advanced` environment, follow the [common steps](../../azure/) taking into account the additional configuration required for each of the added components:
+
+- [Azure Key Vault](#azure-key-vault)
+- [Kubernetes Key Vault Flex Volume](#kubernetes-key-vault-flex-volume)
+
 *NOTE*: Because the deployment of Flex Volume requires additional [Azure Role Assignments](https://docs.microsoft.com/en-us/rest/api/authorization/roleassignments) be created.  The Service Principal provisioned as part of the [common setup](../../azure/README.md#create-an-azure-service-principal) is required to have `Owner` level privileges on the subscription.
 
 ### Azure Key Vault
