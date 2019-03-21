@@ -34,8 +34,8 @@ The common steps necessary to deploy a cluster are:
 - [Configure Terraform CLI to use the Azure Service Principal](#configure-terraform-cli-for-azure)
 - [Create Terraform configuration files](#create-terraform-configuration-files)
 - [Create the AKS cluster using Terraform](#create-the-aks-cluster-using-terraform)
-- [Configure `kubectl` to see your new AKS cluster](configure-kubectl-to-see-your-new-aks-cluster)
-- [Verify that your AKS cluster is healthy](verify-that-your-aks-cluster-is-healthy)
+- [Configure `kubectl` to see your new AKS cluster](#configure-kubectl-to-see-your-new-aks-cluster)
+- [Verify that your AKS cluster is healthy](#verify-that-your-aks-cluster-is-healthy)
 
 ### Create an Azure Service Principal
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
