@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e:h:i:j:l: option 
+while getopts :b:f:g:k:d:e:h:s:p:l: option 
 do 
  case "${option}" in 
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -9,8 +9,8 @@ do
  d) REPO_ROOT_DIR=${OPTARG};;
  e) GITOPS_PATH=${OPTARG};;
  h) REGISTRY_NAME=${OPTARG};;
- i) REGISTRY_SERVER=${OPTARG};;
- j) REGISTRY_USERNAME=${OPTARG};;
+ s) REGISTRY_SERVER=${OPTARG};;
+ p) REGISTRY_USERNAME=${OPTARG};;
  l) REGISTRY_PASSWORD=${OPTARG};;
  esac
 done 
