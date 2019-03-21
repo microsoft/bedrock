@@ -103,7 +103,6 @@ fi
 
 # Create kubernetes secrets for flux to read from ACR using this secret
 echo "creating kubernetes registry secrets $REGISTRY_NAME for $REGISTRY_SERVER"
-echo "Variables are $REGISTRY_NAME, $REGISTRY_SERVER, $REGISTRY_USERNAME, $REGISTRY_PASSWORD"
 
 if [[ -z $REGISTRY_NAME || -z $REGISTRY_SERVER || -z $REGISTRY_USERNAME || -z $REGISTRY_PASSWORD ]]; then
     echo "Skipping kubernetes registry secrets for flux"
