@@ -146,8 +146,7 @@ $ terraform apply
 
 This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
 
-Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux)
-in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator in the cluster, and deploy any resource manifests in the `gitops_ssh_url`.
+Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator in the cluster, and deploy any resource manifests in the `gitops_ssh_url`.
 
 If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
@@ -179,3 +178,37 @@ Once the storage account is created, we need to fetch storage account key so we 
 ```
 
 With this, update `backend.tfvars` file in your cluster environment directory with these values and use `terraform init -backend-config=./backend.tfvars` to setup usage of the Azure backend.
+
+### Configure `kubectl` to see your new AKS cluster
+
+Upon deployment of the cluster, one artificat that the `terraform` scripts generate is the credentials necessaryfor logging into the AKS cluster that was deployed.  These credentials, are placed in the location specified by the variable `output_directory`.  For single cluster environments, this defaults to `./output`.  For multi cluster environments, the default `output_directory` will be documented in those environments.
+
+With the default kube config file name, you can copy this to your `~/.kube/config` by executing:
+
+```bash
+$ KUBECONFIG=./output/bedrock_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
+```
+
+It is also possible to use the config that was generated directly.  For instance, to list all the pods within the `flux` namespace, one would execute:
+
+```
+$ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux` 
+```
+
+### Verify that your AKS cluster is healthy
+
+It is possible to verify the health of the AKS cluster deployment by looking at the status of the `flux` pods that were deployed.  A standard deployment of `flux` creates two pods `flux` and `flux-memcached`.  To check the status, enter the command:
+
+```bash
+kubectl get pods --namespace=flux
+```
+
+The pods should be deployed, and if in a healthy state, should be in a `Running` status.  The output should resemble:
+
+```bash
+NAME                              READY   STATUS    RESTARTS   AGE
+flux-568b7ccbbc-qbnmv             1/1     Running   0          8m07s
+flux-memcached-59947476d9-d6kqw   1/1     Running   0          8m07s
+```
+
+If the Flux pod shows a status other than 'Running' (e.g. 'Restarting...'), it likely indicates that it is unable to connect to your GitOps repo. In this case, verify that you have assigned the correct public key to the GitOps repo (with write privileges) and that you have specified the matching private key in your Terraform configuration.
