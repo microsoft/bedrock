@@ -128,6 +128,8 @@ The common variables:
 
 The full list of variables that are customizable will be linked within each environment.
 
+Each component also may contain component specific variables that can be configured.  For instance, for the AKS module, additional configuration variables are found in [variables.tf](./aks/variables.tf).
+
 ### Create the AKS Cluster using Terraform
 
 Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
