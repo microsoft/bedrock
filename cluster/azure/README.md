@@ -128,6 +128,29 @@ The common variables:
 
 The full list of variables that are customizable will be linked within each environment.
 
+### Create the AKS Cluster using Terraform
+
+Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
+
+From the directory of the cluster you defined above (eg. `environments/azure/<your new cluster name>`), run:
+
+```
+$ terraform init
+```
+
+This will download all of the modules needed for the deployment.  You can then deploy the cluster with:
+
+```
+$ terraform apply
+```
+
+This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
+
+Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux)
+in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator in the cluster, and deploy any resource manifests in the `gitops_ssh_url`.
+
+If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
+
 ### Configure Terraform to Store State Data in Azure
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
