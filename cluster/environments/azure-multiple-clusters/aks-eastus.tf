@@ -54,9 +54,10 @@ module "east_flux" {
   kubeconfig_filename = "${local.east_kubeconfig_filename}"
   flux_clone_dir      = "${local.east_flux_clone_dir}"
   gitops_path            = "${var.gitops_east_path}"
+  gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
-# create a static public ip and associate with traffic manger endpoint 
+# create a static public ip and associate with traffic manger endpoint
 module "east_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
@@ -74,7 +75,7 @@ module "east_tm_endpoint" {
   }
 }
 
-# Create a role assignment with Contributor role for AKS client service principal object 
+# Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller
 resource "azurerm_role_assignment" "east_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
