@@ -6,7 +6,6 @@ variable "flux_repo_url" {
 
 variable "gitops_path" {
     type = "string"
-    default = "/"
 }
 
 variable "gitops_poll_interval" {
