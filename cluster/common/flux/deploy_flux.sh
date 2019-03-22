@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e:c: option
+while getopts :b:f:g:k:d:e:c:s: option
 do
  case "${option}" in
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -9,6 +9,7 @@ do
  d) REPO_ROOT_DIR=${OPTARG};;
  e) GITOPS_PATH=${OPTARG};;
  c) GITOPS_POLL_INTERVAL=${OPTARG};;
+ s) ACR_ENABLED=${OPTARG};;
  esac
 done
 
@@ -52,7 +53,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set git.path=$GITOPS_PATH --set git.pollInterval=$GITOPS_POLL_INTERVAL --set registry.acr.enabled=true; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set git.path=$GITOPS_PATH --set git.pollInterval=$GITOPS_POLL_INTERVAL --set registry.acr.enabled=$ACR_ENABLED; then
     echo "ERROR: failed to helm template"
     exit 1
 fi

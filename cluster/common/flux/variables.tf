@@ -25,6 +25,11 @@ variable "gitops_url_branch" {
   default = "master"
 }
 
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
+}
+
 # generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
 # or use existing ssh public/private key pair
 # add deploy key in gitops repo using public key with read/write access
