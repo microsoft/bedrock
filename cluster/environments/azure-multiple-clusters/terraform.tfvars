@@ -47,3 +47,5 @@ gitops_east_path = ""
 gitops_central_path = ""
 
 gitops_west_path = ""
+
+gitops_poll_interval = "5m"

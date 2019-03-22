@@ -86,13 +86,13 @@ function fab_generate() {
     if [ -z "$FAB_ENVS" ]; then 
         echo "FAB_ENVS is not set" 
         echo "FAB GENERATE prod"
-        fab generate prod --no-validation
+        fab generate prod
     else 
         echo "FAB_ENVS is set to $FAB_ENVS" 
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"; do
             echo "FAB GENERATE $i"
-            fab generate $i --no-validation
+            fab generate $i
         done
     fi
 
