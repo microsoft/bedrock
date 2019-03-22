@@ -48,6 +48,7 @@ module "flux" {
     flux_recreate             = "${var.flux_recreate}"
     kubeconfig_complete       = "${module.aks.kubeconfig_done}"
     flux_clone_dir            = "${var.cluster_name}-flux"
+    gitops_poll_interval      = "${var.gitops_poll_interval}"
 }
 
 module "kubediff" {
