@@ -6,7 +6,7 @@ provider "null" {
 resource "null_resource" "deploy_flux" {
   count  = "${var.enable_flux ? 1 : 0}"
   provisioner "local-exec" {
-    command = "echo 'Need to use this var so terraform waits for kubeconfig ' ${var.kubeconfig_complete};KUBECONFIG=${var.output_directory}/${var.kubeconfig_filename} ${path.module}/deploy_flux.sh -b ${var.gitops_url_branch} -f ${var.flux_repo_url} -g ${var.gitops_ssh_url} -k ${var.gitops_ssh_key} -d ${var.flux_clone_dir} -c ${var.gitops_poll_interval} -e ${var.gitops_path}"
+    command = "echo 'Need to use this var so terraform waits for kubeconfig ' ${var.kubeconfig_complete};KUBECONFIG=${var.output_directory}/${var.kubeconfig_filename} ${path.module}/deploy_flux.sh -b ${var.gitops_url_branch} -f ${var.flux_repo_url} -g ${var.gitops_ssh_url} -k ${var.gitops_ssh_key} -d ${var.flux_clone_dir} -c ${var.gitops_poll_interval} -e ${var.gitops_path} -s ${var.acr_enabled}"
   }
 
   triggers {

@@ -63,6 +63,11 @@ variable "secret_value" {
     default = ""
 }
 
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
+}
+
 variable "tfstate_storage_account_name" {
   type    = "string"
   default = ""
