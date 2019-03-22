@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e:h:s:p:l: option 
+while getopts :b:f:g:k:d:e: option 
 do 
  case "${option}" in 
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -8,10 +8,6 @@ do
  k) GITOPS_SSH_KEY=${OPTARG};; 
  d) REPO_ROOT_DIR=${OPTARG};;
  e) GITOPS_PATH=${OPTARG};;
- h) REGISTRY_NAME=${OPTARG};;
- s) REGISTRY_SERVER=${OPTARG};;
- p) REGISTRY_USERNAME=${OPTARG};;
- l) REGISTRY_PASSWORD=${OPTARG};;
  esac
 done 
 
@@ -55,7 +51,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set git.path=$GITOPS_PATH; then
+if ! helm template . --name $RELEASE_NAME --namespace $KUBE_NAMESPACE --values values.yaml --output-dir ./$FLUX_MANIFESTS --set git.url=$GITOPS_SSH_URL --set git.branch=$GITOPS_URL_BRANCH --set git.secretName=$KUBE_SECRET_NAME --set git.path=$GITOPS_PATH --set registry.acr.enabled=true; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
@@ -99,16 +95,4 @@ echo "Applying flux deployment"
 if ! kubectl apply -f  $REPO_DIR/$FLUX_CHART_DIR/$FLUX_MANIFESTS/flux/templates -n $KUBE_NAMESPACE; then
     echo "ERROR: failed to apply flux deployment"
     exit 1
-fi
-
-# Create kubernetes secrets for flux to read from ACR using this secret
-echo "creating kubernetes registry secrets $REGISTRY_NAME for $REGISTRY_SERVER"
-
-if [[ -z $REGISTRY_NAME || -z $REGISTRY_SERVER || -z $REGISTRY_USERNAME || -z $REGISTRY_PASSWORD ]]; then
-    echo "Skipping kubernetes registry secrets for flux"
-else
-    if ! kubectl create secret docker-registry $REGISTRY_NAME --docker-server=$REGISTRY_SERVER --docker-username=$REGISTRY_USERNAME --docker-password=$REGISTRY_PASSWORD; then 
-        echo "ERROR: Failed to create registry secret $REGISTRY_NAME"
-        exit 1
-    fi
 fi
