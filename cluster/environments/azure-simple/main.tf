@@ -39,6 +39,9 @@ module "aks" {
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
+  service_CIDR             = "${var.service_CIDR}"
+  dns_IP                   = "${var.dns_IP}"
+  docker_CIDR              = "${var.docker_CIDR}"
   kubeconfig_recreate      = ""
 }
 
