@@ -17,6 +17,8 @@ Bedrock also provides automation for deploying Kubernetes clusters with Terrafor
 
 ## Getting Started
 
+The easiest way to test Bedrock is to start with simple deployment to [Azure](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/azure-simple) or to [minikube](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/minikube) if you prefer to work locally.   
+
 A Bedrock deployment follows three general steps at a high level:
 
 1. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition for your deployment.
