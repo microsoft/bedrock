@@ -44,7 +44,6 @@ steps:
   condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     VERIFY_ONLY: 1
-    BRANCH_NAME: $(Build.SourceBranchName)
 
 - task: ShellScript@2
   displayName: Transform fabrikate definitions and publish to YAML manifests to repo
