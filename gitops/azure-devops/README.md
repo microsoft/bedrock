@@ -44,6 +44,7 @@ steps:
   condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     VERIFY_ONLY: 1
+    BRANCH_NAME: $(Build.SourceBranchName)
 
 - task: ShellScript@2
   displayName: Transform fabrikate definitions and publish to YAML manifests to repo
@@ -54,6 +55,7 @@ steps:
     ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
     MANIFEST_REPO: $(MANIFEST_REPO)
+    BRANCH_NAME: $(Build.SourceBranchName)
 ```
 
 ### 2. Create Pipeline
