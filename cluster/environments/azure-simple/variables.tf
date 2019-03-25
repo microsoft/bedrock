@@ -98,3 +98,13 @@ variable "docker_CIDR" {
   default = "172.17.0.1/16"
   description = "IP address (in CIDR notation) used as the Docker bridge IP address on nodes. Default of 172.17.0.1/16."
 }
+
+variable "address_space" {
+  description = "The address space that is used by the virtual network."
+  default     = "10.10.0.0/16"
+}
+
+variable "subnet_prefixes" {
+  description = "The address prefix to use for the subnet."
+  default     = ["10.10.1.0/24", "10.10.2.0/24"]
+}

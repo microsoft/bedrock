@@ -19,7 +19,8 @@ module "vnet" {
     resource_group_name     = "${azurerm_resource_group.vnetrg.name}"
     resource_group_location = "${azurerm_resource_group.vnetrg.location}"
     subnet_names            = ["${var.cluster_name}-aks-subnet"]
-
+    address_space           = "${var.address_space}"
+    subnet_prefixes         = "${var.subnet_prefixes}"
     tags = {
       environment = "azure-advanced"
     }

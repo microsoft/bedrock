@@ -49,3 +49,33 @@ gitops_central_path = ""
 gitops_west_path = ""
 
 gitops_poll_interval = "5m"
+
+central_address_space="172.20.0.0/16"
+
+central_subnet_prefixes=["172.20.0.0/20"]
+
+central_service_CIDR="172.21.0.0/16"
+
+central_dns_IP="172.21.0.10"
+
+central_docker_CIDR="172.17.0.1/16"
+
+east_address_space="172.22.0.0/16"
+
+east_subnet_prefixes=["172.22.0.0/20"]
+
+east_service_CIDR="172.23.0.0/16"
+
+east_dns_IP="172.23.0.10"
+
+east_docker_CIDR="172.18.0.1/16"
+
+west_address_space="172.24.0.0/16"
+
+west_subnet_prefixes=["172.24.0.0/20"]
+
+west_service_CIDR="172.25.0.0/16"
+
+west_dns_IP="172.25.0.10"
+
+west_docker_CIDR="172.19.0.1/16"

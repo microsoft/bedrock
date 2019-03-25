@@ -20,6 +20,8 @@ module "vnet" {
   resource_group_name     = "${var.resource_group_name}"
   resource_group_location = "${var.resource_group_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
+  address_space           = "${var.address_space}"
+  subnet_prefixes         = "${var.subnet_prefixes}"
 
   tags = {
     environment = "azure-simple"
