@@ -44,6 +44,11 @@ variable "gitops_path" {
     default = "/"
 }
 
+variable "gitops_poll_interval" {
+    type = "string"
+    default = "5m"
+}
+
 variable "keyvault_name" {
     type    = "string"
 }
@@ -56,6 +61,11 @@ variable "secret_name" {
 variable "secret_value" {
     type    = "string"
     default = ""
+}
+
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
 }
 
 variable "tfstate_storage_account_name" {
@@ -89,4 +99,3 @@ variable "flexvol_recreate" {
     type = "string"
     default = ""
 }
-
