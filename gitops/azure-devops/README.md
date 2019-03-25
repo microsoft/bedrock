@@ -57,6 +57,8 @@ steps:
     BRANCH_NAME: $(Build.SourceBranchName)
 ```
 
+__Note__: If you would like to trigger the build on a branch other than master, add it to the above file under `trigger`
+
 ### 2. Create Pipeline
 
 We use an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) to build your high level description into resource manifests:
