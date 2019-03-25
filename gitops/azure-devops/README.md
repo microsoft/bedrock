@@ -54,7 +54,10 @@ steps:
     ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
     MANIFEST_REPO: $(MANIFEST_REPO)
+    BRANCH_NAME: $(Build.SourceBranchName)
 ```
+
+__Note__: If you would like to trigger the build on a branch other than master, add it to the above file under `trigger`
 
 ### 2. Create Pipeline
 

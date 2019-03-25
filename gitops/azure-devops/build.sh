@@ -131,8 +131,11 @@ function git_connect() {
 
 # Git commit
 function git_commit() {
-    echo "GIT CHECKOUT"
-    git checkout master
+    echo "GIT CHECKOUT $BRANCH_NAME"
+    if ! git checkout $BRANCH_NAME ; then
+        git checkout -b $BRANCH_NAME
+    fi
+    
     echo "GIT STATUS"
     git status
     echo "GIT REMOVE"
@@ -155,8 +158,8 @@ function git_commit() {
         echo "NOTHING TO COMMIT"
     fi
 
-    echo "GIT PULL" 
-    git pull
+    echo "GIT PULL origin $BRANCH_NAME" 
+    git pull origin $BRANCH_NAME
 }
 
 # Perform a Git push
