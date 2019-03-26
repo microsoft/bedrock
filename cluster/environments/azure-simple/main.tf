@@ -1,14 +1,23 @@
-terraform {
-  backend "azurerm" {}
-}
-
 resource "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
   location = "${var.resource_group_location}"
 }
 
+module "vnet" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
+
+  vnet_name = "${var.vnet_name}"
+
+  address_space   = "${var.address_space}"
+  subnet_prefixes = ["${var.subnet_prefix}"]
+
+  resource_group_name     = "${var.resource_group_name}"
+  resource_group_location = "${var.resource_group_location}"
+  subnet_names            = ["${var.subnet_name}"]
+}
+
 module "aks-gitops" {
-  source = "github.com/timfpark/bedrock//cluster/azure/aks-gitops?ref=aks_gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -25,5 +34,5 @@ module "aks-gitops" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${module.vnet.vnet_subnet_ids[0]}"
 }
