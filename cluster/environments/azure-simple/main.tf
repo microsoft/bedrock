@@ -2,6 +2,11 @@ terraform {
   backend "azurerm" {}
 }
 
+resource "azurerm_resource_group" "cluster_rg" {
+  name     = "${var.resource_group_name}"
+  location = "${var.resource_group_location}"
+}
+
 module "aks-gitops" {
   source = "github.com/timfpark/bedrock//cluster/azure/aks-gitops?ref=aks_gitops"
 
@@ -16,7 +21,7 @@ module "aks-gitops" {
   gitops_path              = "${var.gitops_path}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   resource_group_location  = "${var.resource_group_location}"
-  resource_group_name      = "${var.resource_group_name}"
+  resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
