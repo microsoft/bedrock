@@ -11,7 +11,7 @@ variable "api_management_resource_group_name" {
     default = "apimgmtresgrp5" 
 }
 
-variable "service_walmartoption1apim_name" {
+variable "service_option1apim_name" {
   default = ""
 }
 variable "location" {

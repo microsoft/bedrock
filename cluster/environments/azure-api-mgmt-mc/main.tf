@@ -2,7 +2,7 @@ module "apimgmt" {
   source = "../../azure/api-mgmt"
 
   apimgmt_name          = "${var.apimgmt_name}"
-  location              = "${var.location}"
+  location              = "${var.resource_group_location}"
   resource_group_name   = "${var.resource_group_name}"
   apimgmt_pub_name      = "${var.apimgmt_pub_name}"
   apimgmt_pub_email     = "${var.apimgmt_pub_email}"
@@ -31,11 +31,13 @@ resource "azurerm_api_management" "apimgmt" {
 
 
 resource "null_resource" "configure_apimgmt" {
+  depends_on = ["module.apimgmt"]
+  //count  = "${var.enable_api_scm ? 1 : 0}"
   provisioner "local-exec" {
-    command = "echo 'Need to use this var so terraform waits for api management service url '; push_api_mgmt.sh -b ${var.subscription_id} -f ${var.resource_group_name} -g ${var.apimgmt_name} -k ${var.api_config_repo} -d ${var.authorization_bearer}"
+    command = "echo 'Need to use this var so terraform waits for api management service url' ${module.apimgmt.scm_url}; push_api_mgmt.sh -b ${var.subscription_id} -f ${var.resource_group_name} -g ${var.apimgmt_name} -k ${var.api_config_repo}"
   }
 
-  triggers {
-    enable_api_mgmt  = "${var.enable_push_api_mgmt}"
-  }
+  //triggers {
+    //enable_api_scm  = "${var.enable_api_scm}"
+  //}
 }
