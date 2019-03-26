@@ -39,6 +39,15 @@ variable "gitops_ssh_key" {
   type    = "string"
 }
 
+variable "gitops_path" {
+    type = "string"
+}
+
+variable "gitops_poll_interval" {
+    type = "string"
+    default = "5m"
+}
+
 variable "keyvault_name" {
     type    = "string"
 }
@@ -51,6 +60,11 @@ variable "secret_name" {
 variable "secret_value" {
     type    = "string"
     default = ""
+}
+
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
 }
 
 variable "tfstate_storage_account_name" {
@@ -75,6 +89,12 @@ variable "tfstate_key" {
 
 variable "flux_recreate" {
     description = "Make any change to this value to trigger the recreation of the flux execution script."
+    type = "string"
+    default = ""
+}
+
+variable "flexvol_recreate" {
+    description = "Make any change to this value to trigger the recreation of the flex volume execution script."
     type = "string"
     default = ""
 }
