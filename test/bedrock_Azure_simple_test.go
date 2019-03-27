@@ -45,11 +45,11 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
-			"subnet_name":				subnetName,
-			"subnet_prefix":			addressSpace
+			"subnet_name":              subnetName,
+			"subnet_prefix":            addressSpace,
 			"subscription_id":          subscriptionid,
 			"tenant_id":                tenantid,
-			"vnet_name":				vnetName
+			"vnet_name":                vnetName,
 		},
 	}
 
