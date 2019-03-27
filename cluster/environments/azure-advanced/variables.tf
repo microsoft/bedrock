@@ -41,7 +41,6 @@ variable "gitops_ssh_key" {
 
 variable "gitops_path" {
     type = "string"
-    default = "/"
 }
 
 variable "gitops_poll_interval" {

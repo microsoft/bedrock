@@ -1,51 +1,34 @@
-variable "resource_group_name" {
-    type = "string"
-}
-
-variable "resource_group_location" {
-    type = "string"
-}
-
-variable "cluster_name" {
-    type = "string"
+variable "address_space" {
+  type = "string"
 }
 
 variable "agent_vm_count" {
-    type = "string"
-    default = "3"
+  type    = "string"
+  default = "3"
 }
 
 variable "agent_vm_size" {
-    type = "string"
-    default = "Standard_D2s_v3"
+  type    = "string"
+  default = "Standard_D2s_v3"
+}
+
+variable "acr_enabled" {
+  type    = "string"
+  default = "true"
+}
+
+variable "cluster_name" {
+  type = "string"
 }
 
 variable "dns_prefix" {
-    type = "string"
+  type = "string"
 }
 
-variable "ssh_public_key" {
-    type = "string"
-}
-
-variable "service_principal_id" {
-    type = "string"
-}
-
-variable "service_principal_secret" {
-    type = "string"
-}
-
-variable "subscription_id" {
-  type    = "string"
-}
-
-variable "tenant_id" {
-  type    = "string"
-}
-
-variable "gitops_path" {
-    type = "string"
+variable "flux_recreate" {
+  description = "Make any change to this value to trigger the recreation of the flux execution script."
+  type        = "string"
+  default     = ""
 }
 
 variable "gitops_ssh_url" {
@@ -53,33 +36,49 @@ variable "gitops_ssh_url" {
 }
 
 variable "gitops_ssh_key" {
-  type    = "string"
+  type = "string"
 }
 
-variable "tfstate_storage_account_name" {
-  type    = "string"
-  default = ""
-}
-
-variable "tfstate_storage_account_access_key" {
+variable "gitops_path" {
   type    = "string"
   default = ""
 }
 
-variable "tfstate_container_name" {
-  type    = "string"
-  default = "bedrockstate"
+variable "resource_group_name" {
+  type = "string"
 }
 
-variable "tfstate_key" {
-  type    = "string"
-  default = "bedrock.dev.tfstate"
+variable "resource_group_location" {
+  type = "string"
 }
 
-variable "flux_recreate" {
-    description = "Make any change to this value to trigger the recreation of the flux execution script."
-    type = "string"
-    default = ""
+variable "ssh_public_key" {
+  type = "string"
+}
+
+variable "service_principal_id" {
+  type = "string"
+}
+
+variable "service_principal_secret" {
+  type = "string"
+}
+
+variable "gitops_poll_interval" {
+  type    = "string"
+  default = "5m"
+}
+
+variable "subnet_name" {
+  type = "string"
+}
+
+variable "subnet_prefix" {
+  type = "string"
+}
+
+variable "vnet_name" {
+  type = "string"
 }
 
 variable "service_CIDR" {

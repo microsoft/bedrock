@@ -1,21 +1,15 @@
-provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
-  client_id       = "${var.service_principal_id}"
-  client_secret   = "${var.service_principal_secret}"
-  tenant_id       = "${var.tenant_id}"
-}
-
-# terraform {
-#    backend "azurerm" {
-#    }
-# }
-
-data "azurerm_subscription" "current" {
-  subscription_id = "${var.subscription_id}"
+resource "azurerm_resource_group" "cluster_rg" {
+  name     = "${var.resource_group_name}"
+  location = "${var.resource_group_location}"
 }
 
 module "vnet" {
-  source = "../../azure/vnet"
+  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
+
+  vnet_name = "${var.vnet_name}"
+
+  address_space   = "${var.address_space}"
+  subnet_prefixes = ["${var.subnet_prefix}"]
 
   resource_group_name     = "${var.resource_group_name}"
   resource_group_location = "${var.resource_group_location}"
@@ -28,22 +22,26 @@ module "vnet" {
   }
 }
 
-module "aks" {
-  source = "../../azure/aks"
+module "aks-gitops" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
-  resource_group_location  = "${var.resource_group_location}"
-  resource_group_name      = "${var.resource_group_name}"
-  cluster_name             = "${var.cluster_name}"
+  acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
+  cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
-  vnet_subnet_id           = "${module.vnet.vnet_subnet_ids[0]}"
-  ssh_public_key           = "${var.ssh_public_key}"
+  flux_recreate            = "${var.flux_recreate}"
+  gitops_ssh_url           = "${var.gitops_ssh_url}"
+  gitops_ssh_key           = "${var.gitops_ssh_key}"
+  gitops_path              = "${var.gitops_path}"
+  gitops_poll_interval     = "${var.gitops_poll_interval}"
+  resource_group_location  = "${var.resource_group_location}"
+  resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  service_CIDR             = "${var.service_CIDR}"
-  dns_IP                   = "${var.dns_IP}"
-  docker_CIDR              = "${var.docker_CIDR}"
+  service_cidr             = "${var.service_cidr}"
+  dns_ip                   = "${var.dns_ip}"
+  docker_cidr              = "${var.docker_cidr}"
   kubeconfig_recreate      = ""
 }
 
