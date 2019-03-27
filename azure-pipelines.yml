@@ -21,6 +21,7 @@ pr:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
+    - /test/*
     exclude:
     - gitops/*
     - README.md
