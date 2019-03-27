@@ -26,17 +26,7 @@ variable "resource_group_location" {
   description = "The location/region where the api management service will be deployed. The full list of Azure regions can be found at https://azure.microsoft.com/regions"
   type = "string"
 }
-variable "subscription_id" {
-  description = "Subscription ID for your Azure account"
-  default = ""
-}
-
 variable "api_config_repo" {
   description = "SCM Policy repo you want to have pushed to API Management repository upon creation"
   default = ""
-}
-
-variable "enable_api_scm" {
-    type = "string"
-    default = "true"
 }

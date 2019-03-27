@@ -18,11 +18,6 @@ variable "apimgmt_capacity" {
     type = "string"
     default = "1"
 }
-variable "apimgmt_scm_url" {
-  description = "The URL for the SCM (Source Code Management) Endpoint associated with this API Management service."
-  type = "string"
-  default = ""
-}
 variable "resource_group_name" {
   description = "Default resource group name that the management service will be created in."
   default     = "myapimgmt-rg"
