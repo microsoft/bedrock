@@ -15,6 +15,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	t.Parallel()
 
 	// Generate a random cluster name to prevent a naming conflict
+	uniqueID := random.UniqueId()
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 
 	addressSpace := "10.39.0.0/16"
@@ -28,7 +29,6 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	subnetName := k8sName + "-subnet"
 	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
 	tenantid := os.Getenv("ARM_TENANT_ID")
-	uniqueID := random.UniqueId()
 	vnetName := k8sName + "-vnet"
 
 	// Specify the test case folder and "-var" options
