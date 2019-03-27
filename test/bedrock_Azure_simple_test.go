@@ -15,33 +15,41 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	t.Parallel()
 
 	// Generate a random cluster name to prevent a naming conflict
-	uniqueID := random.UniqueId()
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
-	k8sRG := k8sName + "-rg"
-	dnsprefix := k8sName + "-dns"
+
+	addressSpace := "10.39.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	dnsprefix := k8sName + "-dns"
+	k8sRG := k8sName + "-rg"
+	location := os.Getenv("DATACENTER_LOCATION")
 	publickey := os.Getenv("public_key")
+	sshkey := os.Getenv("ssh_key")
+	subnetName := k8sName + "-subnet"
 	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
 	tenantid := os.Getenv("ARM_TENANT_ID")
-	location := os.Getenv("DATACENTER_LOCATION")
-	sshkey := os.Getenv("ssh_key")
+	uniqueID := random.UniqueId()
+	vnetName := k8sName + "-vnet"
 
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-simple",
 		Vars: map[string]interface{}{
+			"address_space":            addressSpace,
 			"cluster_name":             k8sName,
+			"dns_prefix":               dnsprefix,
+			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
+			"gitops_ssh_key":           sshkey,
 			"resource_group_name":      k8sRG,
 			"resource_group_location":  location,
-			"dns_prefix":               dnsprefix,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
-			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-materialized.git",
-			"gitops_ssh_key":           sshkey,
-			"tenant_id":                tenantid,
+			"subnet_name":				subnetName,
+			"subnet_prefix":			addressSpace
 			"subscription_id":          subscriptionid,
+			"tenant_id":                tenantid,
+			"vnet_name":				vnetName
 		},
 	}
 
