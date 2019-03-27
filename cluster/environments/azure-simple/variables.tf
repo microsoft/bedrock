@@ -3,11 +3,13 @@ variable "address_space" {
 }
 
 variable "agent_vm_count" {
-  type = "string"
+  type    = "string"
+  default = "3"
 }
 
 variable "agent_vm_size" {
-  type = "string"
+  type    = "string"
+  default = "Standard_D2s_v3"
 }
 
 variable "acr_enabled" {
@@ -67,14 +69,14 @@ variable "gitops_poll_interval" {
   default = "5m"
 }
 
-variable "keyvault_name" {
+variable "subnet_name" {
   type = "string"
 }
 
-variable "subnet_prefixes" {
+variable "subnet_prefix" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
+variable "vnet_name" {
   type = "string"
 }
