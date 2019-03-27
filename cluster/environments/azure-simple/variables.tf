@@ -105,5 +105,5 @@ variable "address_space" {
 
 variable "subnet_prefixes" {
   description = "The address prefix to use for the subnet."
-  default     = ["10.10.1.0/24", "10.10.2.0/24"]
+  default     = ["10.10.1.0/24"]
 }
