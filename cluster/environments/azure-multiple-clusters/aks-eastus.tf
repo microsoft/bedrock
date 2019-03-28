@@ -53,7 +53,7 @@ module "east_flux" {
   kubeconfig_complete = "${module.east_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.east_kubeconfig_filename}"
   flux_clone_dir      = "${local.east_flux_clone_dir}"
-  gitops_path            = "${var.gitops_east_path}"
+  gitops_path         = "${var.gitops_east_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
