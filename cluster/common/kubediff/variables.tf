@@ -16,7 +16,7 @@ variable "output_directory" {
  
 variable "enable_kubediff" {
     type = "string"
-    default = "false"
+    default = "true"
 }
  
 variable "kubeconfig_filename" {
