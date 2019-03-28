@@ -6,6 +6,7 @@ service_principal_secret = "client-secret"
 ssh_public_key = "public-key"
 gitops_ssh_url = "git@github.com:timfpark/fabrikate-cloud-native-manifests.git"
 gitops_ssh_key = "path-to-private-key"
+gitops_poll_interval = "5m"
 
 traffic_manager_profile_name = "spinprofile"
 traffic_manager_dns_name = "spintmdns"
@@ -14,12 +15,12 @@ traffic_manager_resource_group_location = "centralus"
 
 west_resource_group_name = "spin-west-rg"
 west_resource_group_location = "westus2"
-west_gitops_path = ""
+gitops_west_path = ""
 
 east_resource_group_name = "spin-east-rg"
 east_resource_group_location = "eastus2"
-east_gitops_path = ""
+gitops_east_path = ""
 
 central_resource_group_name = "spin-central-rg"
 central_resource_group_location = "centralus"
-central_gitops_path = ""
+gitops_central_path = ""

@@ -53,10 +53,11 @@ module "central_flux" {
   kubeconfig_complete = "${module.central_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.central_kubeconfig_filename}"
   flux_clone_dir      = "${local.central_flux_clone_dir}"
-  gitops_path         = "${var.central_gitops_path}"
+  gitops_path         = "${var.gitops_central_path}"
+  gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
-# create a static public ip and associate with traffic manger endpoint 
+# create a static public ip and associate with traffic manger endpoint
 module "central_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 

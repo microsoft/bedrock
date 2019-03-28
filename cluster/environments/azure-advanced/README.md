@@ -19,6 +19,9 @@ Additional variables that can be configured for `azure-advanced`, see [variables
 [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) is a secure repository for secets, keys, and certificates.  Within this environment, it is used to store and manage secrets that could be used by the AKS deployment itself or applications running within the cluster.  In order to configure Azure Key Vault in this environment, the following additional variables must be definted:
 
 - `keyvault_name`: this is a unique name for the Key Vault.  Per [this doc](https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates), Key Vault names are are globally unique and must be a 3-24 character string, containing only 0-9, a-z, A-Z, and -.
+
+The two items below are used to create a single secret within the Azure Key Vault:
+
 - `secret_name`: the name of a secret to create within the Key Vault
 - `secret_value`: the value of the secret to be stored within the Key Vault
 

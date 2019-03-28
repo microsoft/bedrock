@@ -6,7 +6,11 @@ variable "flux_repo_url" {
 
 variable "gitops_path" {
     type = "string"
-    default = "/"
+}
+
+variable "gitops_poll_interval" {
+    type = "string"
+    default =  "5m"
 }
 
 variable "gitops_ssh_url" {
@@ -18,6 +22,11 @@ variable "gitops_url_branch" {
   description = "Git branch associated with the gitops_ssh_url where flux checks for the raw kubernetes yaml files to deploy to the cluster."
   type = "string"
   default = "master"
+}
+
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
 }
 
 # generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity

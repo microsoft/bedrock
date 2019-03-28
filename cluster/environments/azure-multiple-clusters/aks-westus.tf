@@ -53,10 +53,11 @@ module "west_flux" {
   kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
   kubeconfig_filename = "${local.west_kubeconfig_filename}"
   flux_clone_dir      = "${local.west_flux_clone_dir}"
-  gitops_path         = "${var.west_gitops_path}"
+  gitops_path         = "${var.gitops_west_path}"
+  gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
-# create a static public ip and associate with traffic manger endpoint 
+# create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
@@ -74,7 +75,7 @@ module "west_tm_endpoint" {
   }
 }
 
-# Create a role assignment with Contributor role for AKS client service principal object 
+# Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller
 resource "azurerm_role_assignment" "west_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"

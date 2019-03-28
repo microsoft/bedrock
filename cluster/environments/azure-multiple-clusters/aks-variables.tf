@@ -32,6 +32,9 @@ variable "gitops_ssh_url" {
   type = "string"
 }
 
+variable "gitops_poll_interval" {
+  type = "string"
+}
 variable "gitops_ssh_key" {
   type = "string"
 }

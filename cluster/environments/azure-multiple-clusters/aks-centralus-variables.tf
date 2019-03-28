@@ -6,6 +6,6 @@ variable "central_resource_group_location" {
   type = "string"
 }
 
-variable "central_gitops_path" {
+variable "gitops_central_path" {
   type = "string"
 }

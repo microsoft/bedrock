@@ -19,7 +19,7 @@ Additionally, you need the Azure `az` command line tool in order to create and f
 ## Azure Cluster Deployment
 
 Bedrock provides different templates to choose from for deployment.  Each template has a set of common
-requirementts that must be met in order to deploy them.  Additionally, templates may have template 
+requirements that must be met in order to deploy them.  Additionally, templates may have template 
 specific requirements that need to be met.
 
 The following templates are currently available for deployment:
@@ -64,7 +64,7 @@ There are some environments that that perform role assignments during the proces
 
 Terraform allows for a few [different ways to configure](https://www.terraform.io/docs/providers/azurerm/index.html) `terraform` to interact with Azure.  Bedrock is using the [Service Principal with Client Secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html) method specifically through the use of environment variables.
 
-For *nxi based systems (Linux, Mac), one would set the variables as follows (using the values from the Service Principal created [above](#create-an-azure-service-principal)):
+For POSIX based systems (Linux, Mac), one would set the variables as follows (using the values from the Service Principal created [above](#create-an-azure-service-principal)):
 
 ```bash
 export ARM_SUBSCRIPTION_ID=7060ac3f-7a3c-44bd-b54c-4bb1e9cabcab
@@ -98,7 +98,7 @@ This is a two step process:
 1. Create a new cluster configuration by copying an existing Terraform template
 2. Customize your cluster by entering configuration values into '*.tfvars' files 
 
-#### Clone Terraform Template
+#### Copy Terraform Template
 
 The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
 
@@ -124,7 +124,7 @@ The common variables:
 - `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.  Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step.
 - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
 - `gitops_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
--`gitops_path`: Path to a subdirectory, or folder in a git repo
+- `gitops_path`: Path to a subdirectory, or folder in a git repo
 
 The full list of variables that are customizable will be linked within each environment.
 
@@ -148,7 +148,7 @@ $ terraform apply
 
 This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
 
-Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator in the cluster, and deploy any resource manifests in the `gitops_ssh_url`.
+Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator, and deploy any resource manifests in the `gitops_ssh_url`.
 
 If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
@@ -165,7 +165,7 @@ terraform {
 }
 ```
 
-In order to setup an Azure backend, navigate to the [backend state](/azure/backend-state) directory and issue the following command:
+In order to setup an Azure backend, one needs an Azure Storage account.  If one must be provisioned, navigate to the [backend state](/azure/backend-state) directory and issue the following command:
 
 ```bash
 > terraform apply -var 'name=<storage account name>' -var 'location=<storage account location>' -var 'resource_group_name=<storage account resource group>'
@@ -173,17 +173,19 @@ In order to setup an Azure backend, navigate to the [backend state](/azure/backe
 
 where `storage account name` is the name of the storage account to store the Terraform state, `storage account location` is the Azure region the storage account should be created in, and `storage account resource group` is the name of the resource group to create the storage account in.  
 
-Once the storage account is created, we need to fetch storage account key so we can configure Terraform with it:
+If there is already a pre-existing storage account, then retrieve the equivalent information for the existing account.
+
+Once the storage account details are known, we need to fetch the storage account key so we can configure Terraform with it:
 
 ```bash
 >  az storage account keys list --account-name <storage account name>
 ```
 
-With this, update `backend.tfvars` file in your cluster environment directory with these values and use `terraform init -backend-config=./backend.tfvars` to setup usage of the Azure backend.
+With this, update `backend.tfvars` file in your cluster environment directory with these values and use `terraform init -backend-config=./backend.tfvars` to setup using the Azure backend.
 
 ### Configure `kubectl` to see your new AKS cluster
 
-Upon deployment of the cluster, one artificat that the `terraform` scripts generate is the credentials necessaryfor logging into the AKS cluster that was deployed.  These credentials, are placed in the location specified by the variable `output_directory`.  For single cluster environments, this defaults to `./output`.  For multi cluster environments, the default `output_directory` will be documented in those environments.
+Upon deployment of the cluster, one artificat that the `terraform` scripts generate is the credentials necessary for logging into the AKS cluster that was deployed.  These credentials, are placed in the location specified by the variable `output_directory`.  For single cluster environments, this defaults to `./output`.  For multi cluster environments, the default `output_directory` will be documented in those environments.
 
 With the default kube config file name, you can copy this to your `~/.kube/config` by executing:
 

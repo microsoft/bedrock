@@ -41,7 +41,11 @@ variable "gitops_ssh_key" {
 
 variable "gitops_path" {
     type = "string"
-    default = "/"
+}
+
+variable "gitops_poll_interval" {
+    type = "string"
+    default = "5m"
 }
 
 variable "keyvault_name" {
@@ -56,6 +60,11 @@ variable "secret_name" {
 variable "secret_value" {
     type    = "string"
     default = ""
+}
+
+variable "acr_enabled" {
+    type    = "string"
+    default = "true"
 }
 
 variable "flux_recreate" {
