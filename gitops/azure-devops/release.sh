@@ -12,27 +12,27 @@ get_fab_version
 download_fab
 
 # Clone HLD repo
-git clone $MANIFEST_REPO --branch=master
-cd fabrikate-go-server
+git_connect
 
 # Fabrikate (Part 2)
 install_fab
 
 echo "FAB SET"
-fab set --subcomponent go-server image.tag=$(Build.BuildNumber)
+fab set --subcomponent $SUBCOMPONENT $PATH=$PATH_VALUE
 
 echo "GIT STATUS"
 git status
 
 echo "GIT ADD"
-git add config/common.yaml
+#git add config/common.yaml
+git add .
 
 # Set git identity
 git config user.email "admin@azuredevops.com"
 git config user.name "Automated Account"
 
 echo "GIT COMMIT"
-git commit -m "Updating image tag to $(Build.BuildNumber)"
+git commit -m $COMMIT_MESSAGE
 
 echo "GIT PUSH"
 git_push

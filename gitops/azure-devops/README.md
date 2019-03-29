@@ -1,4 +1,4 @@
-# GitOps CI/CD with Azure Devops 
+# GitOps CI/CD with Azure Devops
 
 This section describes how to configure Azure Devops as the CI/CD system for your GitOps Workflow.
 
@@ -7,7 +7,88 @@ This section describes how to configure Azure Devops as the CI/CD system for you
 1. _Permissions_: The ability to create Projects in your Azure DevOps Organization.
 2. _High Level Deployment Description_: Either your own [Fabrikate](https://github.com/Microsoft/fabrikate) high level definition for your deployment or a sample one of ours.  We provide a [sample HLD repo](https://github.com/samiyaakhtar/aks-deploy-source) that builds upon the [cloud-native](https://github.com/timfpark/fabrikate-cloud-native) Fabrikate definition.
 
-## Setup
+# Setup
+
+The GitOps workflow can be split into two components:
+
+1. Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
+2. High Level Definition (HLD) -> K8s Manifests
+
+![ADO Two Components](images/adp-two-processes-diagram.png)
+
+The automation within each process heavily involves the use of Azure DevOps Pipeline Build and Releases and Fabrikate.
+
+# Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
+
+### 1. Create Repositories and Personal Access Tokens
+
+Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
+* [Azure DevOps](ADORepos.md)
+* [GitHub](GitHubRepos.md)
+
+### 2. Create Azure Pipeline Build YAML
+
+The Azure Pipeline Build YAML will build and deploy Docker images to Azure Container Registry (ACR). Below is a sample yaml file:
+
+```
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  GOBIN:  '$(GOPATH)/bin' # Go binaries path
+  GOROOT: '/usr/local/go1.11' # Go installation path
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+
+steps:
+- script: |
+    mkdir -p '$(GOBIN)'
+    mkdir -p '$(GOPATH)/pkg'
+    mkdir -p '$(modulePath)'
+    shopt -s extglob
+    shopt -s dotglob
+    mv !(gopath) '$(modulePath)'
+    echo '##vso[task.prependpath]$(GOBIN)'
+    echo '##vso[task.prependpath]$(GOROOT)/bin'
+  displayName: 'Set up the Go workspace'
+
+- script: |
+    go version
+    go get -v -t -d ./...
+    if [ -f Gopkg.toml ]; then
+        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+        dep ensure
+    fi
+    docker run --rm -v "$PWD":/go/src/github.com/andrebriggs/goserver -w /go/src/github.com/andrebriggs/goserver iron/go:dev go build -ldflags "-X main.appVersion=$(build.BuildNumber)" -v -o bin/myapp
+    az login --service-principal --username "$(SP_APP_ID)" --password "$(SP_PASS)" --tenant "$(SP_TENANT)"
+    az acr build -r $(ACR_NAME) --image go-docker-k8s-demo:$(build.BuildNumber) .
+  workingDirectory: '$(modulePath)'
+  displayName: 'Get dependencies, build image, then publish to ACR'
+```
+
+This Azure Pipeline Build YAML file will be based on the application code that you are trying to build and deploy. The YAML shown is an example from: https://github.com/andrebriggs/go-docker-k8s-demo
+
+### 3. Create Azure Pipeline Release
+
+The Azure Pipeline Release will be triggered off of the Azure Pipeline Build that was created in Step 2. The Azure Pipeline Release will accomplish the following objectives:
+
+- Clone the HLD repo
+- Download and Install Fabrikate
+- Execute `fab set` to manipulate HLDs
+- Git commit and push to HLD repo
+
+![Release Environments](images/releases-env.png)
+
+![Artifacts](images/artifact_build.png)
+
+![Enable Continuous Deployment](images/releases-continuous-dep.png)
+
+![Release Pipeline Variable](images/releases-pipeline-var.png)
+
+# High Level Definition (HLD) -> K8s Manifests
 
 ### 1. Create Repositories and Personal Access Tokens
 
@@ -98,7 +179,7 @@ In Azure DevOps:
     ![set variables](images/set-variables.png)
     1. __Name__: `ACCESS_TOKEN` (_mandatory_) __Value__: Personal Access Token ([Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) or [GitHub](https://www.help.github.com/articles/creating-a-personal-access-token-for-the-command-line)) for your repo type. Click the "lock" icon to the right of the value field to indicate this is a _secret_ per the screenshot above.
     2.  __Name__: `MANIFEST_REPO` (_mandatory_) __Value__: The full URL to your manifest repo (i.e. https://github.com/andrebriggs/acme-company-yaml.git)
-    3. __Name__: `FAB_ENVS` (_optional_) __Value__: Comma-separated list of environments for which you have specified a config in your high level definition repo. If this variable is not created in the pipeline, the script will generate manifest files for a generic `prod` environment. For example, you may set this variable to `prod-east, prod-west` depending on your configuration.   
+    3. __Name__: `FAB_ENVS` (_optional_) __Value__: Comma-separated list of environments for which you have specified a config in your high level definition repo. If this variable is not created in the pipeline, the script will generate manifest files for a generic `prod` environment. For example, you may set this variable to `prod-east, prod-west` depending on your configuration.
 
 6. Click "Save & Queue".
 
