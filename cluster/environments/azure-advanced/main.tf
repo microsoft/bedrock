@@ -1,7 +1,6 @@
-# terraform {
-#    backend "azurerm" {
-#    }
-# }
+module "provider" {
+  source = "../../azure/provider"
+}
 
 resource "azurerm_resource_group" "clusterrg" {
   name     = "${var.resource_group_name}"

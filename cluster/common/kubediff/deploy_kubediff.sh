@@ -35,6 +35,11 @@ if [[ $GITOPS_SSH_URL =~ $re ]]; then
         echo "ERROR: failed to update location in your repo of yaml files"
         exit 1
     fi
+
+    if ! sed -i -e "s|- /data/repo/|- /data/repo/ --namespace default|g" ./kubediff-rc.yaml; then
+        echo "ERROR: failed to add namespace arg for kubediff"
+        exit 1
+    fi
 fi
 
 echo "Updated with gitops url $GITOPS_SSH_URL"
@@ -55,5 +60,10 @@ if ! kubectl create -f  $REPO_DIR/k8s/ -n $KUBEDIFF_NAMESPACE; then
     echo "ERROR: failed to apply kubediff deployment"
     exit 1
 fi
- 
+
+if ! kubectl create clusterrolebinding kubediff --clusterrole=cluster-admin --serviceaccount kubediff:default; then
+    echo "ERROR: failed to create clusterrolebinding for kubediff deployment"
+    exit 1
+fi
+
 echo "kubediff deployment complete"
