@@ -96,11 +96,11 @@ The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`,
 
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
 
-The stages each involve two tasks: `Download build.sh`, and `release.sh`. The `Download build.sh` task downloads the `build.sh` from the Microsoft/Bedrock repo.
+The stages each involve two tasks: `Download scripts`, and `release.sh`. The `Download scripts` task downloads the `build.sh` and `release.sh` from the Microsoft/Bedrock repo.
 
 ![Release Task 1](images/release-task1.png)
 
-The `release.sh` can either be fed a file if the `release.sh` file exists locally in the repo, or it can take in the script inline. Regardless, environment variables will need to be set for the tasks:
+The `Run release.sh` task will execute `release.sh` with the following environment variables:
 
 ```
 ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
