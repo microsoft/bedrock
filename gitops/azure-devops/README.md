@@ -16,17 +16,17 @@ The GitOps workflow can be split into two components:
 
 ![ADO Two Components](images/ado-two-processes-diagram.png)
 
-The automation within each process heavily involves the use of Azure DevOps Pipeline Build and Releases and Fabrikate.
+The automation within each process heavily involves the use of Azure DevOps Pipelines and Fabrikate.
 
 ### Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
 
-#### 1. Create Repositories and Personal Access Tokens
+### 1. Create Repositories and Personal Access Tokens
 
 Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
 * [Azure DevOps](ADORepos.md)
 * [GitHub](GitHubRepos.md)
 
-#### 2. Create Azure Pipeline Build YAML
+### 2. Create Azure Pipeline Build YAML
 
 The Azure Pipeline Build YAML will build and deploy Docker images to Azure Container Registry (ACR). Below is a sample yaml file:
 
@@ -71,7 +71,7 @@ steps:
 
 This Azure Pipeline Build YAML file will be based on the application code that you are trying to build and deploy. The YAML shown is an example from: https://github.com/andrebriggs/go-docker-k8s-demo
 
-#### 3. Create Azure Pipeline Release
+### 3. Create Azure Pipeline Release
 
 The Azure Pipeline Release will be triggered off of the Azure Pipeline Build that was created in Step 2. The Azure Pipeline Release will accomplish the following objectives:
 
@@ -90,13 +90,13 @@ The Azure Pipeline Release will be triggered off of the Azure Pipeline Build tha
 
 ### High Level Definition (HLD) -> K8s Manifests
 
-#### 1. Create Repositories and Personal Access Tokens
+### 1. Create Repositories and Personal Access Tokens
 
 Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
 * [Azure DevOps](ADORepos.md)
 * [GitHub](GitHubRepos.md)
 
-#### Add Azure Pipelines Build YAML
+### Add Azure Pipelines Build YAML
 If you are using your own high level description, add the following `azure-pipelines.yml` file to its root to defines the build rules for your Azure Devops pipeline.
 
 ```
@@ -140,7 +140,7 @@ steps:
 
 __Note__: If you would like to trigger the build on a branch other than master, add it to the above file under `trigger`
 
-#### 2. Create Pipeline
+### 2. Create Pipeline
 
 We use an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops) to build your high level description into resource manifests:
 
@@ -186,7 +186,7 @@ In Azure DevOps:
 7. You should now see the build run and complete successfully.
   ![ADO Build](images/azure-pipelines-yaml.png)
 
-#### 3. Configure Flux
+### 3. Configure Flux
 
 Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/README.md).
 
@@ -214,7 +214,7 @@ ts=2019-02-14T19:37:55.414659575Z caller=main.go:417 url=git@github.com:andrebri
 ```
 Now, when a change is commited to the resource manifest repo, Flux should acknowledge the commit and make changes to the state of your cluster as necessary. You can monitor Flux by viewing the logs by running `kubectl logs POD_NAME -n flux -f` in stream mode.
 
-#### 4. Make a Pull Request
+### 4. Make a Pull Request
 
 1. Create a new branch in your HLD repo and make a commit to the high level definition.
 
@@ -227,7 +227,7 @@ Now, when a change is commited to the resource manifest repo, Flux should acknow
 
 1. Once these checks have passed and the PR has been approved by your team process, you can merge it into master.
 
-#### 5. Monitor Repository Changes
+### 5. Monitor Repository Changes
 1. Once merged, you can monitor the progress of the HLD transformation in the Build menu in your Azure DevOps _Project_.
 
 1. When the commit is merged into master, your Azure Devops pipeline will build the resource manifests for this definition and check them into the resource manifest repo.
@@ -235,7 +235,7 @@ Now, when a change is commited to the resource manifest repo, Flux should acknow
 1. Once the build is successful, navigate to your manifest repository. You should see a very recent commit to the main branch.
   ![ADO Build](images/ado-builds.png)
 
-#### 6. Monitor Cluster Changes
+### 6. Monitor Cluster Changes
 
 1. Next, [Flux](https://github.com/weaveworks/flux/blob/master/site/get-started.md#confirm-the-change-landed) will automatically apply the build resource manifest changes to your cluster.  You can watch this with the following `kubectl` command:
 
@@ -251,6 +251,6 @@ $ kubediff ./cloned-resource-manifest-repo
 
 3. Finally, you should watch your normal operational metrics to make sure the change was successful.
 
-#### Reference
+### Reference
 
 * [Azure Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?toc=/azure/devops/pipelines/toc.json&bc=/azure/devops/boards/pipelines/breadcrumb/toc.json&view=azure-devops)
