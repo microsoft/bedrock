@@ -18,7 +18,7 @@ The GitOps workflow can be split into two components:
 
 The automation within each process heavily involves the use of Azure DevOps Pipelines and Fabrikate.
 
-### Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
+## Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
 
 ### 1. Create Repositories and Personal Access Tokens
 
@@ -114,7 +114,7 @@ YAML_PATH_VALUE: the value to the subkey
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
-### High Level Definition (HLD) -> K8s Manifests
+## High Level Definition (HLD) -> K8s Manifests
 
 ### 1. Create Repositories and Personal Access Tokens
 
