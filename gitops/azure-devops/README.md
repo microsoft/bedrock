@@ -28,7 +28,7 @@ Create both high level definition (HLD) and resource manifest repos and the pers
 
 ### 2. Create Azure Pipeline Build YAML
 
-The Azure Pipeline Build YAML will build and deploy Docker images to Azure Container Registry (ACR). Below is a sample yaml file:
+The Azure Pipeline Build YAML will build and deploy Docker images to Azure Container Registry (ACR). Below is a sample YAML file:
 
 ```
 trigger:
@@ -73,12 +73,14 @@ This Azure Pipeline Build YAML file will be based on the application code that y
 
 ### 3. Create Azure Pipeline Release
 
-The Azure Pipeline Release will be triggered off of the Azure Pipeline Build that was created in Step 2. The Azure Pipeline Release will accomplish the following objectives:
+The Azure Pipeline Release will be triggered off of the Azure Pipeline Build that was created in Step 2, and will accomplish the following objectives:
 
 - Clone the HLD repo
 - Download and Install Fabrikate
 - Execute `fab set` to manipulate HLDs
 - Git commit and push to HLD repo
+
+The Release should look similar to the following, where updates to the build artifact will automatically trigger the execution of tasks within the stages. Here, the different stages in the pipeline resemble environments in your DevOps workflow.
 
 ![Release Environments](images/releases-env.png)
 
@@ -86,7 +88,29 @@ The Azure Pipeline Release will be triggered off of the Azure Pipeline Build tha
 
 ![Enable Continuous Deployment](images/releases-continuous-dep.png)
 
+Each stage should require manual approval from a specific user in order to proceed to the next stage.
+
+![Pre-Deployment Approvals](images/deployment-approvals.png)
+
+The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`, which is sourced in the `release.sh`. As described before, the `ACCESS_TOKEN` is the Personal Access Token that grants access to your git account. In this case, the `REPO` variable is set to be the HLD repo.
+
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
+
+The stages each involve two tasks: `Download build.sh`, and `release.sh`. The `Download build.sh` task downloads the `build.sh` from the Microsoft/Bedrock repo.
+
+![Release Task 1](images/release-task1.png)
+
+The `release.sh` can either be fed a file if the `release.sh` file exists locally in the repo, or it can take in the script inline. Regardless, environment variables will need to be set for the tasks:
+
+`ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)`
+`COMMIT_MESSAGE: "custom message used when committing and pushing to git`
+`SUBCOMPONENT: "the subcomponent within your Fabrikate HLD that should be manipulated`
+`PATH: `
+`PATH_VALUE: the value to the path`
+
+![Release Task 2](image/release-task2.png)
+
+After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
 ### High Level Definition (HLD) -> K8s Manifests
 
