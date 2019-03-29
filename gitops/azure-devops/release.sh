@@ -32,7 +32,7 @@ git config user.email "admin@azuredevops.com"
 git config user.name "Automated Account"
 
 echo "GIT COMMIT"
-git commit -m $COMMIT_MESSAGE
+git commit -m "$COMMIT_MESSAGE"
 
 echo "GIT PUSH"
 git_push
