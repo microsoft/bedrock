@@ -14,7 +14,7 @@ The GitOps workflow can be split into two components:
 1. Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
 2. High Level Definition (HLD) -> K8s Manifests
 
-![ADO Two Components](images/adp-two-processes-diagram.png)
+![ADO Two Components](images/ado-two-processes-diagram.png)
 
 The automation within each process heavily involves the use of Azure DevOps Pipeline Build and Releases and Fabrikate.
 
