@@ -102,13 +102,15 @@ The stages each involve two tasks: `Download build.sh`, and `release.sh`. The `D
 
 The `release.sh` can either be fed a file if the `release.sh` file exists locally in the repo, or it can take in the script inline. Regardless, environment variables will need to be set for the tasks:
 
-`ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)`
-`COMMIT_MESSAGE: custom message used when committing and pushing to git`
-`SUBCOMPONENT: the subcomponent within your Fabrikate HLD that should be manipulated`
-`YAML_PATH: the yaml path to the subkey to set (e.g. data.replicas)`
-`YAML_PATH_VALUE: the value to the subkey`
+```
+ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+COMMIT_MESSAGE: custom message used when committing and pushing to git
+SUBCOMPONENT: the subcomponent within your Fabrikate HLD that should be manipulated
+YAML_PATH: the yaml path to the subkey to set (e.g. data.replicas)
+YAML_PATH_VALUE: the value to the subkey
+```
 
-![Release Task 2](image/release-task2.png)
+![Release Task 2](images/release-task2.png)
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
