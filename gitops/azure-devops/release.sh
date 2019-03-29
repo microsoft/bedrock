@@ -18,7 +18,7 @@ git_connect
 install_fab
 
 echo "FAB SET"
-fab set --subcomponent $SUBCOMPONENT $PATH=$PATH_VALUE
+fab set --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
 
 echo "GIT STATUS"
 git status
