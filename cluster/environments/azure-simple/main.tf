@@ -18,8 +18,7 @@ module "vnet" {
   resource_group_name     = "${var.resource_group_name}"
   resource_group_location = "${var.resource_group_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
-  address_space           = "${var.address_space}"
-  subnet_prefixes         = "${var.subnet_prefixes}"
+  subnet_prefixes         = ["${var.subnet_prefixes}"]
 
   tags = {
     environment = "azure-simple"
@@ -39,14 +38,15 @@ module "aks-gitops" {
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_path}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
+  ssh_public_key           = "${var.ssh_public_key}"
   resource_group_location  = "${var.resource_group_location}"
   resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
+  vnet_subnet_id           = "${module.vnet.vnet_subnet_ids[0]}"
   service_cidr             = "${var.service_cidr}"
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
-  kubeconfig_recreate      = ""
 }
 
 module "flux" {
@@ -55,7 +55,7 @@ module "flux" {
   gitops_ssh_url      = "${var.gitops_ssh_url}"
   gitops_ssh_key      = "${var.gitops_ssh_key}"
   flux_recreate       = "${var.flux_recreate}"
-  kubeconfig_complete = "${module.aks.kubeconfig_done}"
+  kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"
   flux_clone_dir      = "${var.cluster_name}-flux"
   gitops_path            = "${var.gitops_path}"
 }
@@ -63,6 +63,6 @@ module "flux" {
 module "kubediff" {
     source = "../../common/kubediff"
 
-    kubeconfig_complete       = "${module.aks.kubeconfig_done}"
+    kubeconfig_complete       = "${module.aks-gitops.kubeconfig_done}"
     gitops_ssh_url            = "${var.gitops_ssh_url}"
 }

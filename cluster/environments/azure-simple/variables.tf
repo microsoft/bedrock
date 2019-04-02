@@ -1,7 +1,3 @@
-variable "address_space" {
-  type = "string"
-}
-
 variable "agent_vm_count" {
   type    = "string"
   default = "3"
