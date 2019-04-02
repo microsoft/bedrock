@@ -24,9 +24,12 @@ specific requirements that need to be met.
 
 The following templates are currently available for deployment:
 
+- [azure-common-infra](../environments/azure-common-infra): Common infrastructure deployment template.
+
 - [azure-simple](../environments/azure-simple/): Single cluster deployment.
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple clusters  deployment with Traffic Manager.
-- [azure-advanced](../environments/azure-advanced): Single cluster deployment with Azure Keyvault integration through flex volumes.
+- [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
 
 The common steps necessary to deploy a cluster are:
 
@@ -135,7 +138,6 @@ Each component also may contain component specific variables that can be configu
 Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
 
 From the directory of the cluster you defined above (eg. `environments/azure/<your new cluster name>`), run:
-
 ```
 $ terraform init
 ```

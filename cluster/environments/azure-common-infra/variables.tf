@@ -1,12 +1,4 @@
-variable "vnet_name" {
-  type = "string"
-}
-
-variable "subnet_name" {
-  type = "string"
-}
-
-variable "subnet_cidr" {
+variable "address_space" {
   type = "string"
 }
 
@@ -26,6 +18,18 @@ variable "service_principal_id" {
   type = "string"
 }
 
+variable "subnet_name" {
+  type = "string"
+}
+
+variable "subnet_prefix" {
+  type = "string"
+}
+
 variable "tenant_id" {
+  type = "string"
+}
+
+variable "vnet_name" {
   type = "string"
 }
