@@ -11,3 +11,4 @@ output
 *.log
 .DS_Store
 shunit2
+vendor
