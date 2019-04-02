@@ -1,5 +1,8 @@
-## Getting started with azure-simple environment
+# azure-simple
 
-The `azure-simple` environment provided the baseline for the general steps necessary to deploy Bedrock to Azure as discussed [here](../../azure).
+The `azure-simple` environment is a non-production ready template we provide to easily try out Bedrock on Azure.
 
-Additional variables that can be configured for `azure-simple`, see [variables.tf](./variables.tf).
+## Getting Started
+
+1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
+2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure.

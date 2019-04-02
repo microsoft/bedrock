@@ -27,7 +27,6 @@ The following templates are currently available for deployment:
 - [azure-common-infra](../environments/azure-common-infra): Common infrastructure deployment template.
 
 - [azure-simple](../environments/azure-simple/): Single cluster deployment.
-- [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple clusters  deployment with Traffic Manager.
 - [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
 
@@ -111,7 +110,7 @@ $ cp -r cluster/environments/azure-simple cluster/environments/<your new cluster
 
 #### Edit Configuration Values
 
-Most of the Bedrock deployment environments share a common set of configuration values.  Listed below are the common set of values and an explanation of what those values are.  In addition to these common values, environments that have additional variables, those are documented in the specific environments.
+Most of the Bedrock deployment environments share a common set of configuration values.  Listed below are the common set of values and an explanation of what those values are.  In addition to these common values, environments that have additional variables, check the `variables.tf` file for your template for specifics.
 
 With the new environment created, edit `environments/azure/<your new cluster name>/terraform.tfvars` and update the variables as needed.
 
