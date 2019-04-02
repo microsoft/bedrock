@@ -39,7 +39,6 @@ module "flex_volume" {
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
   subscription_id          = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name            = "${var.keyvault_name}"
-  keyvault_id              = "removeme"
 
   kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"
 }
