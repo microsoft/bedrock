@@ -1,6 +1,6 @@
-# azure-simple
+# azure-common-infra
 
-The `azure-simple` environment is a non-production ready template we provide to easily try out Bedrock on Azure.
+The `azure-common-infra` environment is a production ready template we provide to setup common permanent elements of your infrastructure like vnets, keyvault, and a common resource group for them.
 
 ## Getting Started
 
