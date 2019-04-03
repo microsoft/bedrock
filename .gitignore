@@ -12,3 +12,5 @@ output
 .DS_Store
 shunit2
 vendor
+flux
+kubediff
