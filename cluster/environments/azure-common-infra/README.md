@@ -1,6 +1,6 @@
 # azure-common-infra
 
-The `azure-common-infra` environment is a production ready template we provide to setup common permanent elements of your infrastructure like vnets, keyvault, and a common resource group for them.
+The `azure-common-infra` environment is a production ready template to setup common permanent elements of your infrastructure like vnets, keyvault, and a common resource group for them.
 
 ## Getting Started
 

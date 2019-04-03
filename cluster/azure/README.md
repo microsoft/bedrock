@@ -1,8 +1,8 @@
-# Bedrock on Azure
+# Azure Cluster Creation Guide
 
 ## Summary
 
-To get started with Bedrock on Azure, perform the following steps create an Azure Kubernetes Service (AKS) cluster using Terraform. 
+Follow these steps to create an Azure Kubernetes Service (AKS) cluster using Terraform:
 
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](../common/flux/)
@@ -10,17 +10,15 @@ To get started with Bedrock on Azure, perform the following steps create an Azur
 
 ## Install required tools
 
-As a first step, make sure you have installed the [pre-requisite tools](../README.md) on your machine.
+Make sure you have installed the [common prerequisites](../README.md) on your machine.
 
-Additionally, you need the Azure `az` command line tool in order to create and fetch Azure configuration info:
+Beyond these, you'll only need the Azure `az` command line tool installed (used to create and fetch Azure configuration info):
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
 ## Azure Cluster Deployment
 
-Bedrock provides different templates to choose from for deployment.  Each template has a set of common
-requirements that must be met in order to deploy them.  Additionally, templates may have template 
-specific requirements that need to be met.
+Bedrock provides different templates to start from when building your deployment environment.  Each template has a set of common and specific requirements that must be met in order to deploy them.
 
 The following templates are currently available for deployment:
 
@@ -40,13 +38,14 @@ The common steps necessary to deploy a cluster are:
 - [Verify that your AKS cluster is healthy](#verify-that-your-aks-cluster-is-healthy)
 
 ### Create an Azure Service Principal
+
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
 ```bash
 $ az ad sp create-for-rbac --subscription <id | name>
 ```
 
-The output of the above commands are similar to the following example:
+The output of the above commands will look something like this:
 
 ```bash
 {
@@ -66,7 +65,7 @@ There are some environments that that perform role assignments during the proces
 
 Terraform allows for a few [different ways to configure](https://www.terraform.io/docs/providers/azurerm/index.html) `terraform` to interact with Azure.  Bedrock is using the [Service Principal with Client Secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html) method specifically through the use of environment variables.
 
-For POSIX based systems (Linux, Mac), one would set the variables as follows (using the values from the Service Principal created [above](#create-an-azure-service-principal)):
+For POSIX based systems (Linux, Mac), set the variables like this (using the values from the Service Principal created [above](#create-an-azure-service-principal)):
 
 ```bash
 export ARM_SUBSCRIPTION_ID=7060ac3f-7a3c-44bd-b54c-4bb1e9cabcab
@@ -75,7 +74,7 @@ export ARM_CLIENT_SECRET=3ac38e00-aaaa-bbbb-bb87-7222bc4b1f11
 export ARM_TENANT_ID=72f988bf-1234-abcd-91ab-2d7cd011db47
 ```
 
-In order to determine the Subscription Id, one can use the Azure CLI as follows:
+You can use the Azure CLI to determine the subscription id:
 
 ```bash
 $ az account show
@@ -97,20 +96,22 @@ $ az account show
 
 This is a two step process:
 
-1. Create a new cluster configuration by copying an existing Terraform template
-2. Customize your cluster by entering configuration values into '*.tfvars' files 
+1. Create a new cluster configuration by copying an existing Terraform template.
+2. Customize your cluster by entering configuration values into '*.tfvars' files.
 
 #### Copy Terraform Template
 
-The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
+The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, for example, copy it to a new subdirectory with the name of the cluster you want to create:
 
 ```bash
 $ cp -r cluster/environments/azure-simple cluster/environments/<your new cluster name>
 ```
 
+In this case, we are creating it within the Bedrock tree, but the deployment templates are designed to be relocatable to your own source tree instead as well.
+
 #### Edit Configuration Values
 
-Most of the Bedrock deployment environments share a common set of configuration values.  Listed below are the common set of values and an explanation of what those values are.  In addition to these common values, environments that have additional variables, check the `variables.tf` file for your template for specifics.
+Most Bedrock deployment environments share a common set of configuration values. Listed below are the common set of values and an explanation of those values. In addition to these common values, environments that have additional variables, check the `variables.tf` file for your template for specifics.
 
 With the new environment created, edit `environments/azure/<your new cluster name>/terraform.tfvars` and update the variables as needed.
 
@@ -128,13 +129,13 @@ The common variables:
 - `gitops_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
 - `gitops_path`: Path to a subdirectory, or folder in a git repo
 
-The full list of variables that are customizable will be linked within each environment.
+The full list of variables that are customizable are in the `variables.tf` file within each environment template.
 
 Each component also may contain component specific variables that can be configured.  For instance, for the AKS module, additional configuration variables are found in [variables.tf](./aks/variables.tf).
 
 ### Create the AKS Cluster using Terraform
 
-Bedrock requires a bash shell for the executing the automation. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
+Bedrock requires a bash shell for the execution. Currently MacOSX, Ubuntu, and the Windows Subsystem for Linux (WSL) are supported.
 
 From the directory of the cluster you defined above (eg. `environments/azure/<your new cluster name>`), run:
 ```
@@ -149,7 +150,7 @@ $ terraform apply
 
 This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
 
-Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to start a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator, and deploy any resource manifests in the `gitops_ssh_url`.
+Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to kick off a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator, and deploy any resource manifests in the `gitops_ssh_url`.
 
 If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
@@ -157,7 +158,7 @@ If errors occur during deployment, follow-on actions will depend on the nature o
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
 
-In production scenarios, storing the state file on a local file system is not desired because typically you want to share the state between operators of the system.  Instead, we configure Terraform to store state remotely, and in Bedrock we use Azure Blob Store for this storage.  This is defined using a `backend` block.  The basic block looks like:
+In production scenarios, storing the state file on a local file system is not desired because typically you want to share the state between operators of the system.  Instead, we configure Terraform to store state remotely, and in Bedrock, we use Azure Blob Store for this storage. This is defined using a `backend` block.  The basic block looks like:
 
 ```bash
 terraform {
@@ -166,7 +167,7 @@ terraform {
 }
 ```
 
-In order to setup an Azure backend, one needs an Azure Storage account.  If one must be provisioned, navigate to the [backend state](/azure/backend-state) directory and issue the following command:
+In order to setup an Azure backend, you need an Azure Storage account.  If you need to create one, navigate to the [backend state](/azure/backend-state) directory and issue the following command:
 
 ```bash
 > terraform apply -var 'name=<storage account name>' -var 'location=<storage account location>' -var 'resource_group_name=<storage account resource group>'
@@ -186,7 +187,7 @@ With this, update `backend.tfvars` file in your cluster environment directory wi
 
 ### Configure `kubectl` to see your new AKS cluster
 
-Upon deployment of the cluster, one artificat that the `terraform` scripts generate is the credentials necessary for logging into the AKS cluster that was deployed.  These credentials, are placed in the location specified by the variable `output_directory`.  For single cluster environments, this defaults to `./output`.  For multi cluster environments, the default `output_directory` will be documented in those environments.
+Upon deployment of the cluster, one artifact that the `terraform` scripts generate is the credentials necessary for logging into the AKS cluster that was deployed.  These credentials are placed in the location specified by the variable `output_directory`.  For single cluster environments, this defaults to `./output`.
 
 With the default kube config file name, you can copy this to your `~/.kube/config` by executing:
 
@@ -194,7 +195,7 @@ With the default kube config file name, you can copy this to your `~/.kube/confi
 $ KUBECONFIG=./output/bedrock_kube_config:~/.kube/config kubectl config view --flatten > merged-config && mv merged-config ~/.kube/config
 ```
 
-It is also possible to use the config that was generated directly.  For instance, to list all the pods within the `flux` namespace, one would execute:
+It is also possible to use the config that was generated directly.  For instance, to list all the pods within the `flux` namespace, run the following:
 
 ```
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux` 
