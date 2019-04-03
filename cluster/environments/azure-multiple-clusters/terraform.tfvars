@@ -23,4 +23,40 @@ gitops_east_path = ""
 
 central_resource_group_name = "spin-central-rg"
 central_resource_group_location = "centralus"
+
+cluster_name = "spincluster"
+
+agent_vm_count = "3"
+
+dns_prefix = "spindns"
+
+service_principal_id = "<replace me>"
+
+service_principal_secret = "<replace me>"
+
+ssh_public_key = ""
+
+gitops_ssh_url = ""
+
+gitops_ssh_key = ""
+
+gitops_east_path = ""
+
 gitops_central_path = ""
+
+gitops_west_path = ""
+
+gitops_poll_interval = "5m"
+
+
+
+
+west_address_space="172.24.0.0/16"
+
+west_subnet_prefixes=["172.24.0.0/20"]
+
+west_service_CIDR="172.25.0.0/16"
+
+west_dns_IP="172.25.0.10"
+
+west_docker_CIDR="172.19.0.1/16"

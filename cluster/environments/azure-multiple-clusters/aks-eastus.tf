@@ -20,7 +20,8 @@ module "east_vnet" {
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
-
+  address_space           = "${var.east_address_space}"
+  subnet_prefixes         = "${var.east_subnet_prefixes}"
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -36,6 +37,9 @@ module "east_aks" {
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.east_vnet.vnet_subnet_ids[0]}"
+  service_CIDR             = "${var.east_service_cidr}"
+  dns_IP                   = "${var.east_dns_ip}"
+  docker_CIDR              = "${var.east_docker_cidr}"
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"

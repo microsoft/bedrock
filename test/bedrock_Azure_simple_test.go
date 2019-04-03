@@ -34,6 +34,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-simple",
+		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":            addressSpace,
 			"cluster_name":             k8sName,

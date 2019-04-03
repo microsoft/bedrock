@@ -1,5 +1,5 @@
 provider "azurerm" {
-    version = "~>1.21.0"
+    version = "~>1.23.0"
 }
 
 provider "null" {
@@ -7,5 +7,10 @@ provider "null" {
 }
 
 terraform {
-  required_version = "~> 0.11.11"
+  required_version = "~> 0.11.13"
+}
+
+# Needed for the traffic manager role assignment
+provider "azuread" {
+  version = "~>0.1"
 }
