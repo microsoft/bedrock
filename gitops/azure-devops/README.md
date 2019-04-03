@@ -53,7 +53,7 @@ steps:
   env:
     ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
-    MANIFEST_REPO: $(MANIFEST_REPO)
+    REPO: $(MANIFEST_REPO)
     BRANCH_NAME: $(Build.SourceBranchName)
 ```
 

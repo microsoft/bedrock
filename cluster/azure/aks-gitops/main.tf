@@ -18,7 +18,8 @@ module "aks" {
 }
 
 module "flux" {
-  source               = "../../common/flux"
+  source = "../../common/flux"
+
   gitops_ssh_url       = "${var.gitops_ssh_url}"
   gitops_ssh_key       = "${var.gitops_ssh_key}"
   gitops_path          = "${var.gitops_path}"

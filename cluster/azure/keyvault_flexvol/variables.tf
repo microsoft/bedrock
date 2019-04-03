@@ -63,11 +63,6 @@ variable "keyvault_name" {
     type = "string"
 }
 
-variable "keyvault_id" {
-    description = "The id of the keyvault that will be associated with the flex volume."
-    type = "string"
-}
-
 variable "flexvol_recreate" {
     description = "Make any change to this value to trigger the recreation of the flex volume execution script."
     type = "string"
