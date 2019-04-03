@@ -12,46 +12,48 @@ In addition, the bedrock test suite allows for better collaboration with embeddi
 
 Please [install bedrock required tools](/cluster/README.md/#required-tools) in addition to the following:
 
-- [Go](https://golang.org/doc/install)
-- [Dep](https://github.com/golang/go/wiki/PackageManagementTools)
-- [Terratest Modules](https://github.com/gruntwork-io/terratest)
-- CI/CD Tool (Optional)
+- [Golang](https://golang.org/doc/install) 1.11 or later
+- [Dep](https://github.com/golang/go/wiki/PackageManagementTools) Optional, but required for now in order for VSCode intellisense and linting to work. [See issue 2317](https://github.com/Microsoft/vscode-go/issues/2317#issuecomment-479106825).
 
 ## Test Setup Locally
 
 In this example we are using the [`azure-simple`](/cluster/environments/azure-simple/readme.md) for a template integration test.
 
-### Setup for linux users:
+### Setup for linux users
 
 1. Install Go using:
 
-> `sudo snap install --classic go`
+    `sudo snap install --classic go`
 
-2. Install Dep using:
+1. Run `go get -m github.com/microsoft/bedrock/test` and navigate to the bedrock test repository in the `/go/src/github.com/microsoft/bedrock/test` directory in the `$GOPATH`
 
-> `curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh`
+1. Change _all_ instances of the module source in the `main.tf` file pointing to `github.com/Microsoft/bedrock/cluster` to be your local development path `../..`.
 
-3. Run `go get github.com/microsoft/bedrock` and navigate to the bedrock test repository in the `/go/src/github.com/microsoft/bedrock/test` directory in the `$GOPATH`
+    i.e. `source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"` becomes `source = "../../azure/aks-gitops"`
 
-4. Provide values for the environment variables and export for authenticating terraform to provision resources within your subscription.
+    Otherwise the tests will go against the code which is in the master branch in the GitHub repository.
 
-``` sh
-export ARM_CLIENT_ID="${clientid}"
-export ARM_CLIENT_SECRET="${clientsecret}"
-export ARM_SUBSCRIPTION_ID="${subscriptionid}"
-export ARM_TENANT_ID="${tenantid}"
-export DATACENTER_LOCATION="${location}"
-export ssh_key=$(readlink -f id_rsa.pub)
-export public_key=$(cat id_rsa.pub)
-```
+1. Provide values for the environment variables and export for authenticating Terraform to provision resources within your subscription.
 
-5. Run `dep init` which will make educated guesses about what versions to use for your dependencies, generates a `Gopkg.toml`
+    ```shell
+    export ARM_CLIENT_ID="${clientid}"
+    export ARM_CLIENT_SECRET="${clientsecret}"
+    export ARM_SUBSCRIPTION_ID="${subscriptionid}"
+    export ARM_TENANT_ID="${tenantid}"
+    export DATACENTER_LOCATION="${location}"
+    export ssh_key=$(readlink -f id_rsa.pub)
+    export public_key=$(cat id_rsa.pub)
+    ```
 
-> If you run into `dep init` hanging indefinitely, create an empty `Gopkg.toml` file and `dep ensure` will pull the correct dependencies. [#1896](https://github.com/golang/dep/issues/1896)
+1. Run `go test -v -timeout 99999s`
 
-6. Run `dep ensure`
+1. (Optional) Install Deps
 
-7. Run ` go test -v -timeout 99999s`
+    Install Dep with:
+    `curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh`
+
+    Then install the dependencies to the traditional path via running this from the test directory:
+    `dep ensure`
 
 ## Test Setup CI/CD
 
