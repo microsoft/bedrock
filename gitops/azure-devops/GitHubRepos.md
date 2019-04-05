@@ -4,7 +4,7 @@
 
 ## 1. Create HLD Repository
 
-If you have not already, create your own high level definition repository.  (We provide a [sample GitHub repo](https://github.com/samiyaakhtar/aks-deploy-source) that you can fork and modify for your own application.)
+If you have not already, create your own high level definition repository.  (We provide a [sample GitHub repo](https://github.com/andrebriggs/fabrikate-sample-app) that you can fork and modify for your own application.)
 
 Also, make sure you have an [azure-pipelines.yml](README.md#azure-pipelines-build-yaml) file at the root of your repository, as we will use this later to setup the build rules in Azure Devops.
 
