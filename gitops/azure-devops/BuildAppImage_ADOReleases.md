@@ -94,7 +94,7 @@ The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`,
 
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
 
-The stages each involve two tasks: `Download scripts`, and `release.sh`. The `Download scripts` task downloads the `build.sh` and `release.sh` from the Microsoft/Bedrock repo.
+Each stage targets specific environment defined via the `ENVIRONMENT` variable. Each stage contains two tasks: `Download scripts`, and `release.sh`. The `Download scripts` task downloads the `build.sh` and `release.sh` from the Microsoft/Bedrock repo.
 
 ![Release Task 1](images/release-task1.png)
 
@@ -106,6 +106,8 @@ COMMIT_MESSAGE: custom message used when committing and pushing to git
 SUBCOMPONENT: the subcomponent within your Fabrikate HLD that should be manipulated
 YAML_PATH: the yaml path to the subkey to set (e.g. data.replicas)
 YAML_PATH_VALUE: the value to the subkey
+ENVIRONMENT: the targeted environment
+
 ```
 
 ![Release Task 2](images/release-task2.png)
