@@ -24,6 +24,10 @@ Our cluster creation templates include deployments of a [cloud-native stack](htt
 
 The easiest way to try Bedrock is to start with our [azure-simple](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/azure-simple) deployment template or with [minikube](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/minikube) to try it locally.   
 
+## Community
+
+[Please join us on Slack](https://publicslack.com/slacks/https-bedrockco-slack-com/invites/new) for discussion and/or questions.
+
 ## Contributing
 
 We do not claim to have all the answers and would greatly appreciate your ideas and pull requests.
@@ -40,4 +44,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-For project related questions or comments, please contact [Tim Park](https://github.com/timfpark).
+For project level questions, please contact [Tim Park](mailto:tpark@microsoft.com).
