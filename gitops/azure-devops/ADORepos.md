@@ -29,7 +29,7 @@ $ az repos create --name $HLD_REPO_NAME
 $ az repos create --name $MANIFEST_REPO_NAME
 ```
 
-2. (optionally) If you are using our [sample HLD repo](https://github.com/samiyaakhtar/aks-deploy-source), import it with the following command:
+2. (optionally) If you are using our [sample HLD repo](https://github.com/andrebriggs/fabrikate-sample-app), import it with the following command:
 ```
 $ az repos import create --git-source-url $SAMPLE_HLD_REPO_PATH --repository HLD_REPO_NAME
 ```
