@@ -13,8 +13,9 @@ locals {
   west_ip_address_out_filename = "${local.west_prefix}_ip_address"
 }
 
-# Creates vnet
+# Creates west vnet
 module "west_vnet" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
   resource_group_name     = "${local.west_rg_name}"
@@ -27,45 +28,53 @@ module "west_vnet" {
   }
 }
 
-# Creates aks cluster
-module "west_aks" {
-  source = "../../azure/aks"
+data "azurerm_client_config" "westclient" {}
 
-  resource_group_name      = "${local.west_rg_name}"
-  resource_group_location  = "${local.west_rg_location}"
-  cluster_name             = "${var.cluster_name}-west"
+# Creates west aks cluster, flux, kubediff
+module "west-aks-gitops" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
+
+  acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
+  agent_vm_size            = "${var.agent_vm_size}"
+  cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
-  vnet_subnet_id           = "${module.west_vnet.vnet_subnet_ids[0]}"
+  flux_recreate            = "${var.flux_recreate}"
+  gitops_ssh_url           = "${var.gitops_ssh_url}"
+  gitops_ssh_key           = "${var.gitops_ssh_key}"
+  gitops_path              = "${var.gitops_west_path}"
+  gitops_poll_interval     = "${var.gitops_poll_interval}"
+  resource_group_location  = "${var.west_resource_group_location}"
+  resource_group_name      = "${azurerm_resource_group.westrg.name}"
   service_cidr             = "${var.west_service_cidr}"
-  dns_ip                   = "${var.west_dns_ip}"
-  docker_cidr              = "${var.west_docker_cidr}"
-  ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  kubeconfig_recreate      = ""
-  kubeconfig_filename      = "${local.west_kubeconfig_filename}"
+  ssh_public_key           = "${var.ssh_public_key}"
+  vnet_subnet_id           = "${module.west_vnet.vnet_subnet_ids[0]}"
+  dns_ip                   = "${var.west_dns_ip}"
+  docker_cidr              = "${var.west_docker_cidr}"
 }
 
-# Deploys flux in aks cluster
-module "west_flux" {
-  source = "../../common/flux"
+module "west-flex_volume" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = "${var.flux_recreate}"
-  kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.west_kubeconfig_filename}"
-  flux_clone_dir      = "${local.west_flux_clone_dir}"
-  gitops_path         = "${var.gitops_west_path}"
-  gitops_poll_interval = "${var.gitops_poll_interval}"
+  resource_group_name      = "${var.keyvault_resource_group}"
+  service_principal_id     = "${var.service_principal_id}"
+  service_principal_secret = "${var.service_principal_secret}"
+  tenant_id                = "${data.azurerm_client_config.westclient.tenant_id}"
+  subscription_id          = "${data.azurerm_client_config.westclient.subscription_id}"
+  keyvault_name            = "${var.keyvault_name}"
+
+  kubeconfig_complete = "${module.west-aks-gitops.kubeconfig_done}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}"
+  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west-aks-gitops.cluster_derived_resource_group}"
   resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -75,7 +84,7 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${local.west_prefix} - public ip"
-    kubedone = "${module.west_aks.kubeconfig_done}"
+    kubedone = "${module.west-aks-gitops.kubeconfig_done}"
   }
 }
 

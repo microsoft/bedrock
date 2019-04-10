@@ -7,6 +7,10 @@ variable "agent_vm_count" {
   default = "3"
 }
 
+variable "agent_vm_size" {
+  type = "string"
+}
+
 variable "dns_prefix" {
   type = "string"
 }
@@ -49,4 +53,17 @@ variable "flux_recreate" {
   description = "Make any change to this value to trigger the recreation of the flux execution script."
   type        = "string"
   default     = ""
+}
+
+variable "acr_enabled" {
+  type    = "string"
+  default = "true"
+}
+
+variable "keyvault_name" {
+  type = "string"
+}
+
+variable "keyvault_resource_group" {
+  type = "string"
 }

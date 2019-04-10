@@ -13,8 +13,9 @@ locals {
   central_ip_address_out_filename = "${local.central_prefix}_ip_address"
 }
 
-# Creates vnet
+# Creates central vnet
 module "central_vnet" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
   resource_group_name     = "${local.central_rg_name }"
@@ -27,45 +28,53 @@ module "central_vnet" {
   }
 }
 
-# Creates aks cluster
-module "central_aks" {
-  source = "../../azure/aks"
+data "azurerm_client_config" "centralclient" {}
 
-  resource_group_name      = "${local.central_rg_name }"
-  resource_group_location  = "${local.central_rg_location}"
-  cluster_name             = "${var.cluster_name}-central"
+# Creates central aks cluster, flux, kubediff
+module "central-aks-gitops" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
+
+  acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
+  agent_vm_size            = "${var.agent_vm_size}"
+  cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
-  vnet_subnet_id           = "${module.central_vnet.vnet_subnet_ids[0]}"
+  flux_recreate            = "${var.flux_recreate}"
+  gitops_ssh_url           = "${var.gitops_ssh_url}"
+  gitops_ssh_key           = "${var.gitops_ssh_key}"
+  gitops_path              = "${var.gitops_central_path}"
+  gitops_poll_interval     = "${var.gitops_poll_interval}"
+  resource_group_location  = "${var.central_resource_group_location}"
+  resource_group_name      = "${azurerm_resource_group.centralrg.name}"
   service_cidr             = "${var.central_service_cidr}"
-  dns_ip                   = "${var.central_dns_ip}"
-  docker_cidr              = "${var.central_docker_cidr}"
-  ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  kubeconfig_recreate      = ""
-  kubeconfig_filename      = "${local.central_kubeconfig_filename}"
+  ssh_public_key           = "${var.ssh_public_key}"
+  vnet_subnet_id           = "${module.central_vnet.vnet_subnet_ids[0]}"
+  dns_ip                   = "${var.central_dns_ip}"
+  docker_cidr              = "${var.central_docker_cidr}"
 }
 
-# Deploys flux in aks cluster
-module "central_flux" {
-  source = "../../common/flux"
+module "central-flex_volume" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = ""
-  kubeconfig_complete = "${module.central_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.central_kubeconfig_filename}"
-  flux_clone_dir      = "${local.central_flux_clone_dir}"
-  gitops_path         = "${var.gitops_central_path}"
-  gitops_poll_interval = "${var.gitops_poll_interval}"
+  resource_group_name      = "${var.keyvault_resource_group}"
+  service_principal_id     = "${var.service_principal_id}"
+  service_principal_secret = "${var.service_principal_secret}"
+  tenant_id                = "${data.azurerm_client_config.centralclient.tenant_id}"
+  subscription_id          = "${data.azurerm_client_config.centralclient.subscription_id}"
+  keyvault_name            = "${var.keyvault_name}"
+
+  kubeconfig_complete = "${module.central-aks-gitops.kubeconfig_done}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
 module "central_tm_endpoint" {
+  # source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
+  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central-aks-gitops.cluster_derived_resource_group}"
   resource_location                   = "${local.central_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -75,7 +84,7 @@ module "central_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.central_aks.kubeconfig_done}"
+    kubedone = "${module.central-aks-gitops.kubeconfig_done}"
   }
 }
 
