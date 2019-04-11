@@ -45,7 +45,7 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
     export public_key=$(cat id_rsa.pub)
     ```
 
-1. Run `go test -v -timeout 99999s`
+1. Run `go test -v -timeout 99999s` to execute all tests in your test suite. Or run `go test -v -run <You_Test_Name> -timeout 999999s` to run a targeted test.
 
 1. (Optional) Install Deps
 
@@ -57,4 +57,4 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
 
 ## Test Setup CI/CD
 
-For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yaml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts.
+For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yaml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts. Be sure to add the environment path your test is leveraging to the yml `paths/include:` section.
