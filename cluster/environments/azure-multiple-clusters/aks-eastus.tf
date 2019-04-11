@@ -22,6 +22,7 @@ module "east_vnet" {
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
   address_space           = "${var.east_address_space}"
   subnet_prefixes         = "${var.east_subnet_prefixes}"
+
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -37,9 +38,9 @@ module "east_aks" {
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.east_vnet.vnet_subnet_ids[0]}"
-  service_CIDR             = "${var.east_service_cidr}"
-  dns_IP                   = "${var.east_dns_ip}"
-  docker_CIDR              = "${var.east_docker_cidr}"
+  service_cidr             = "${var.east_service_cidr}"
+  dns_ip                   = "${var.east_dns_ip}"
+  docker_cidr              = "${var.east_docker_cidr}"
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
@@ -51,13 +52,13 @@ module "east_aks" {
 module "east_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = "${var.flux_recreate}"
-  kubeconfig_complete = "${module.east_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.east_kubeconfig_filename}"
-  flux_clone_dir      = "${local.east_flux_clone_dir}"
-  gitops_path         = "${var.gitops_east_path}"
+  gitops_ssh_url       = "${var.gitops_ssh_url}"
+  gitops_ssh_key       = "${var.gitops_ssh_key}"
+  flux_recreate        = "${var.flux_recreate}"
+  kubeconfig_complete  = "${module.east_aks.kubeconfig_done}"
+  kubeconfig_filename  = "${local.east_kubeconfig_filename}"
+  flux_clone_dir       = "${local.east_flux_clone_dir}"
+  gitops_path          = "${var.gitops_east_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
@@ -75,7 +76,7 @@ module "east_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.east_aks.kubeconfig_done}"
+    kubedone    = "${module.east_aks.kubeconfig_done}"
   }
 }
 
