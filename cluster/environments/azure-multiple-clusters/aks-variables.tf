@@ -35,6 +35,7 @@ variable "gitops_ssh_url" {
 variable "gitops_poll_interval" {
   type = "string"
 }
+
 variable "gitops_ssh_key" {
   type = "string"
 }
@@ -45,7 +46,7 @@ variable "aks_client_role_assignment_role" {
 }
 
 variable "flux_recreate" {
-    description = "Make any change to this value to trigger the recreation of the flux execution script."
-    type = "string"
-    default = ""
+  description = "Make any change to this value to trigger the recreation of the flux execution script."
+  type        = "string"
+  default     = ""
 }

@@ -227,7 +227,11 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	} else {
 		fmt.Println("Clean verification for Central Cluster complete")
 	}
+<<<<<<< HEAD
 
+=======
+	// Clean up Cluster load balancers
+>>>>>>> master
 
 	
 
