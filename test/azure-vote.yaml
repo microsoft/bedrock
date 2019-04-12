@@ -71,19 +71,7 @@ kind: Service
 metadata:
   name: azure-vote-front
 spec:
-  loadBalancerIP: 52.165.159.26
-
-
-
-
-
-
-
-
-
-
-
-
+  loadBalancerIP: 40.122.114.77
   type: LoadBalancer
   ports:
   - port: 80

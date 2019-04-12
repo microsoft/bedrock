@@ -34,7 +34,7 @@ func addIPtoYAML(input string, ipaddress string) {
 func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	t.Parallel()
 
-	// Generate a random cluster name to prevent a naming conflict and map variables to tfvars
+	//Generate a random cluster name to prevent a naming conflict and map variables to tfvars
 	uniqueID := strings.ToLower(random.UniqueId())
 	k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
 	tmName := k8sName + "-tm"
@@ -58,7 +58,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
 
-	// Specify the test case folder and "-var" options
+	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-multiple-clusters",
 		Vars: map[string]interface{}{
@@ -160,7 +160,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	fmt.Println("East Cluster IP: "+string(eastIP))
 	fmt.Println("Central Cluster IP: "+string(centralIP))
 
-	// Deploy app to all 3 clusters
+	//Deploy app to all 3 clusters
 	configFile := "azure-vote.yaml"
 
 	addIPtoYAML(configFile, string(westIP))	
@@ -177,8 +177,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	maxRetries := 60
 	timeBetweenRetries := 5 * time.Second
 
-	// Verify that we get a 200 OK response and response text contains `Cats` otherwise clean up AKS load balancer and destroy resources
-	// Bedrock is using the azure-vote.yaml service that provisions a stateless simple voting app using redis on all clusters
+	//Verify that we get a 200 OK response and response text contains `Cats` otherwise clean up AKS load balancer and destroy resources
+	//Bedrock is using the azure-vote.yaml service that provisions a stateless simple voting app using redis on all clusters
 	_reqErr := http_helper.HttpGetWithRetryWithCustomValidationE(t, testTM_URL, maxRetries, timeBetweenRetries, func(status int, body string) bool {
 		return status == 200 && strings.Contains(body, `"Cats"`)
 	})
@@ -203,11 +203,13 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 		} else {
 			fmt.Println("Clean verification for Central Cluster complete")
 		}
+		//Sleep job for 2 minutes while load balancer deallocates
+		time.Sleep(120 * time.Second)
 		t.Fatal(cleanErr)
 	} else {
 		fmt.Println("Traffic Manager Validation successful")
 	}
-	// Clean up Cluster load balancers
+	//Clean up Cluster load balancers
 	fmt.Println("Removing cluster load balancer and Destroying resources")
 	_clean, cleanErr := k8s.RunKubectlAndGetOutputE(t, options, "delete", "service", "azure-vote-front")
 	if cleanErr != nil || !strings.Contains(_clean, "delete") {
@@ -227,12 +229,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	} else {
 		fmt.Println("Clean verification for Central Cluster complete")
 	}
-<<<<<<< HEAD
-
-=======
-	// Clean up Cluster load balancers
->>>>>>> master
-
-	
-
+	//Sleep job for 2 minutes while load balancer deallocates
+	time.Sleep(120 * time.Second)
 }
