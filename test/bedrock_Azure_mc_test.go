@@ -177,7 +177,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	maxRetries := 60
 	timeBetweenRetries := 5 * time.Second
 
-	// Verify that we get a 200 OK response ptherwise clean up AKS load balancer and destroy resources
+	// Verify that we get a 200 OK response and response text contains `Cats` otherwise clean up AKS load balancer and destroy resources
+	// Bedrock is using the azure-vote.yaml service that provisions a stateless simple voting app using redis on all clusters
 	_reqErr := http_helper.HttpGetWithRetryWithCustomValidationE(t, testTM_URL, maxRetries, timeBetweenRetries, func(status int, body string) bool {
 		return status == 200 && strings.Contains(body, `"Cats"`)
 	})
@@ -226,7 +227,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	} else {
 		fmt.Println("Clean verification for Central Cluster complete")
 	}
-	// Clean up Cluster load balancers
+
 
 	
 
