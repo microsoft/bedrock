@@ -62,32 +62,32 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-multiple-clusters",
 		Vars: map[string]interface{}{
-			"cluster_name":            					k8sName,
-			"agent_vm_count":							3,
-			"dns_prefix":               				dnsprefix,
-			"service_principal_id":     				clientid,
-			"service_principal_secret":					clientsecret,
-			"ssh_public_key":           				publickey,
-			"gitops_ssh_url": 							"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-			"gitops_ssh_key":           				sshkey,
-			"gitops_poll_interval": 					"5m",
+			"cluster_name":	k8sName,
+			"agent_vm_count":	3,
+			"dns_prefix":	dnsprefix,
+			"service_principal_id":	clientid,
+			"service_principal_secret":	clientsecret,
+			"ssh_public_key":	publickey,
+			"gitops_ssh_url":	"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
+			"gitops_ssh_key":	sshkey,
+			"gitops_poll_interval":	"5m",
 
-			"traffic_manager_profile_name": 			tmName,
-			"traffic_manager_dns_name": 				tm_dnsprefix,
-			"traffic_manager_resource_group_name": 		k8s_globalRG,
-			"traffic_manager_resource_group_location": 	location,
+			"traffic_manager_profile_name":	tmName,
+			"traffic_manager_dns_name":	tm_dnsprefix,
+			"traffic_manager_resource_group_name":	k8s_globalRG,
+			"traffic_manager_resource_group_location":	location,
 
-			"west_resource_group_name": 				k8s_westRG,
-			"west_resource_group_location": 			"westus2",
-			"gitops_west_path": 						"",
+			"west_resource_group_name":	k8s_westRG,
+			"west_resource_group_location":	"westus2",
+			"gitops_west_path":	"",
 
-			"east_resource_group_name": 				k8s_eastRG,
-			"east_resource_group_location": 			"eastus2",
-			"gitops_east_path": 						"",
+			"east_resource_group_name":	k8s_eastRG,
+			"east_resource_group_location":	"eastus2",
+			"gitops_east_path":	"",
 
-			"central_resource_group_name": 				k8s_centralRG,
-			"central_resource_group_location": 			"centralus",
-			"gitops_central_path": 						"",
+			"central_resource_group_name":	k8s_centralRG,
+			"central_resource_group_location":	"centralus",
+			"gitops_central_path":	"",
 		},
 	}
 
@@ -95,9 +95,9 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	westCluster_out	:= 		cluster_location1 + "-" + k8sName + "_kube_config"
-	eastCluster_out	:= 		cluster_location2 + "-" + k8sName + "_kube_config"
-	centralCluster_out:= 	cluster_location3 + "-" + k8sName + "_kube_config"
+	westCluster_out	:=	cluster_location1 + "-" + k8sName + "_kube_config"
+	eastCluster_out	:=	cluster_location2 + "-" + k8sName + "_kube_config"
+	centralCluster_out:=	cluster_location3 + "-" + k8sName + "_kube_config"
 	
 	//Obtain Kube_config file from module outputs of each cluster region
 	os.Setenv("WEST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+westCluster_out)
