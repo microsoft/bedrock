@@ -43,7 +43,7 @@ steps:
   # condition: eq(variables['Build.Reason'], 'PullRequest')
 
 - script: |
-    git clone git://github.com/Microsoft/fabrikate-production-cluster-demo.git
+    git clone git://github.com/samiyaakhtar/jackson-source.git
   displayName: 'Clone HLD Repo'
 
 - task: ShellScript@2
@@ -53,7 +53,7 @@ steps:
   # condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     VERIFY_ONLY: 1
-    HLD_PATH: fabrikate-production-cluster-demo
+    HLD_PATH: jackson-source
     
 - script: |
     mkdir -p '$(GOBIN)'
