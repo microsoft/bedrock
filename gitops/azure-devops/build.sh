@@ -80,6 +80,7 @@ function install_fab() {
         echo "HLD path not specified, going to run fab install in current dir"
     else
         echo "Setting HLD path to $HLD_PATH"
+        ls
         cd $HLD_PATH
     fi
     fab install
