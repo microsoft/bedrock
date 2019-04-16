@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
     - master
+    - 340
   paths:
     include:
     - /cluster/azure/*
