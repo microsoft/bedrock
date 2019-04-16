@@ -43,7 +43,7 @@ steps:
   # condition: eq(variables['Build.Reason'], 'PullRequest')
 
 - script: |
-    git clone https://github.com/Microsoft/fabrikate-production-cluster-demo
+    git clone git://github.com/Microsoft/fabrikate-production-cluster-demo.git
   displayName: 'Clone HLD Repo'
 
 - task: ShellScript@2
