@@ -69,6 +69,19 @@ function download_fab() {
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
 }
 
+# Install the HLD repo if it's not running as part of the HLD build pipeline
+function install_hld() {
+    echo "git clone $HLD_PATH"
+    git clone $HLD_PATH
+    # Extract repo name from url
+    repo_name=${HLD_PATH%.*}
+    echo "Setting HLD path to $repo_name"
+    ls
+    pwd
+    cd $HLD_PATH
+    echo "HLD INSTALLED SUCCESSFULLY"
+}
+
 # Install Fabrikate
 function install_fab() {
     # Run this command to make script exit on any failure
@@ -79,14 +92,13 @@ function install_fab() {
     if [ -z "$HLD_PATH" ]; then 
         echo "HLD path not specified, going to run fab install in current dir"
     else
-        echo "Setting HLD path to $HLD_PATH"
-        ls
-        pwd
-        cd $HLD_PATH
+        echo "HLD repo specified: $HLD_PATH"
+        install_hld
     fi
     fab install
     echo "FAB INSTALL COMPLETED"
 }
+
 
 # Run fab generate
 function fab_generate() {
