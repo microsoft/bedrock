@@ -44,6 +44,8 @@ steps:
 
 - script: |
     git clone git://github.com/samiyaakhtar/jackson-source.git
+    ls
+    pwd
   displayName: 'Clone HLD Repo'
 
 - task: ShellScript@2

@@ -81,6 +81,7 @@ function install_fab() {
     else
         echo "Setting HLD path to $HLD_PATH"
         ls
+        pwd
         cd $HLD_PATH
     fi
     fab install
