@@ -42,6 +42,10 @@ steps:
   clean: true
   # condition: eq(variables['Build.Reason'], 'PullRequest')
 
+- script: |
+    git clone https://github.com/Microsoft/fabrikate-production-cluster-demo.git
+  displayName: 'Clone HLD Repo'
+
 - task: ShellScript@2
   displayName: Validate fabrikate definitions
   inputs:
@@ -49,6 +53,7 @@ steps:
   # condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     VERIFY_ONLY: 1
+    HLD_PATH: fabrikate-production-cluster-demo
     
 - script: |
     mkdir -p '$(GOBIN)'

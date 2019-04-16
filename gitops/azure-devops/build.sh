@@ -18,7 +18,6 @@ function verify_repo() {
 function init() {
     cp -r * $HOME/
     cd $HOME
-    verify_repo
 }
 
 # Initialize Helm
@@ -75,6 +74,11 @@ function install_fab() {
     # Run this command to make script exit on any failure
     set -e
     export PATH=$PATH:$HOME/fab
+
+    if [ -z "$HLD_PATH" ]; then 
+        echo "Setting HLD path to $HLD_PATH"
+        cd $HLD_PATH
+    fi
     fab install
     echo "FAB INSTALL COMPLETED"
 }
@@ -192,6 +196,7 @@ function verify_pull_request() {
 
 # Run functions
 function verify_pull_request_and_merge() {
+    verify_repo
     verify_access_token
     verify_pull_request
     echo "Verification complete, push to yaml repo"
