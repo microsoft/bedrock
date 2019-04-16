@@ -76,11 +76,10 @@ function install_hld() {
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
-    echo "Setting HLD path to $repo_name, repo = $repo"
+    echo "Setting HLD path to $repo_name"
     ls
     pwd
-    cd $HLD_PATH
-    
+    cd $repo_name
     echo "HLD INSTALLED SUCCESSFULLY"
 }
 
