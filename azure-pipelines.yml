@@ -78,12 +78,12 @@ steps:
 - checkout: self
   persistCredentials: true
   clean: true
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+  # condition: eq(variables['Build.Reason'], 'PullRequest')
 
 - task: ShellScript@2
   displayName: Validate fabrikate definitions
   inputs:
     scriptPath: gitops/azure-devops/build.sh
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+  # condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     VERIFY_ONLY: 1
