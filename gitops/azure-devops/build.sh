@@ -74,11 +74,14 @@ function install_hld() {
     echo "git clone $HLD_PATH"
     git clone $HLD_PATH
     # Extract repo name from url
-    repo_name=${HLD_PATH%.*}
-    echo "Setting HLD path to $repo_name"
-    ls
-    pwd
-    cd $HLD_PATH
+    re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
+    if [[ $HLD_PATH =~ $re ]]; then 
+        repo = ${BASH_REMATCH[5]}
+        echo "Setting HLD path to $repo"
+        ls
+        pwd
+        cd $HLD_PATH
+    fi
     echo "HLD INSTALLED SUCCESSFULLY"
 }
 
