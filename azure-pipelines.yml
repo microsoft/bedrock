@@ -73,3 +73,17 @@ steps:
     ARM_TENANT_ID: $(ARM_TENANT_ID)
   workingDirectory: '$(modulePath)/test'
   displayName: 'Create ssh keys, get deps, then test'
+
+- checkout: self
+  persistCredentials: true
+  clean: true
+  displayName: 'Checkout PR branch'
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+
+- task: ShellScript@2
+displayName: Validate fabrikate definitions
+inputs:
+  scriptPath: gitops/azure-devops/build.sh
+condition: eq(variables['Build.Reason'], 'PullRequest')
+env:
+  VERIFY_ONLY: 1
