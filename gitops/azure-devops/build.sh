@@ -119,7 +119,10 @@ function fab_generate() {
     fi
 
     echo "FAB GENERATE COMPLETED"
-
+    ls
+    pwd
+    echo "Checking if generated folder is available at $HOME"
+    ls $HOME
     set +e
 
     # If generated folder is empty, quit
