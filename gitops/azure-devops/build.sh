@@ -72,6 +72,7 @@ function download_fab() {
 # Install Fabrikate
 function install_fab() {
     # Run this command to make script exit on any failure
+    echo "FAB INSTALL STARTING"
     set -e
     export PATH=$PATH:$HOME/fab
 
