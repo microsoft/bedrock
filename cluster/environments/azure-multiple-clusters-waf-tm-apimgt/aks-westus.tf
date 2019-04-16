@@ -20,8 +20,7 @@ module "west_vnet" {
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
-  address_space           = "${var.west_address_space}"
-  subnet_prefixes         = "${var.west_subnet_prefixes}"
+
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -37,9 +36,6 @@ module "west_aks" {
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
   vnet_subnet_id           = "${module.west_vnet.vnet_subnet_ids[0]}"
-  service_cidr             = "${var.west_service_cidr}"
-  dns_ip                   = "${var.west_dns_ip}"
-  docker_cidr              = "${var.west_docker_cidr}"
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"

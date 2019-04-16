@@ -44,7 +44,6 @@ variable "aks_client_role_assignment_role" {
   default = "Contributor"
 }
 
-<<<<<<< HEAD
 variable "subscription_id" {
   type = "string"
 }
@@ -53,8 +52,6 @@ variable "tenant_id" {
   type = "string"
 }
 
-=======
->>>>>>> 97590d70e78cb66420a10bcb742868c4a878f946
 variable "flux_recreate" {
     description = "Make any change to this value to trigger the recreation of the flux execution script."
     type = "string"
