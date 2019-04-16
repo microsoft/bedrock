@@ -128,7 +128,7 @@ function fab_generate() {
     # If generated folder is empty, quit
     # In the case that all components are removed from the source hld,
     # generated folder should still not be empty
-    if find "$HOME/generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
+    if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
         echo "Manifest files have been generated."
     else
         echo "Manifest files could not be generated, quitting..."
