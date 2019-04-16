@@ -77,6 +77,8 @@ function install_fab() {
     export PATH=$PATH:$HOME/fab
 
     if [ -z "$HLD_PATH" ]; then 
+        echo "HLD path not specified, going to run fab install in current dir"
+    else
         echo "Setting HLD path to $HLD_PATH"
         cd $HLD_PATH
     fi
