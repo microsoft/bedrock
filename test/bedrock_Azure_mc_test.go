@@ -58,19 +58,28 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
 
+	agent_vm_count := "3"
+	agent_vm_size := "Standard_D2s_v3"
+
+	keyvault_name := k8sName + "-keyvault"
+	keyvault_rg := keyvault_name + "-rg"
+
 	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-multiple-clusters",
 		Vars: map[string]interface{}{
-			"cluster_name":	k8sName,
-			"agent_vm_count":	3,
-			"dns_prefix":	dnsprefix,
+			"cluster_name": k8sName,
+			"agent_vm_count": agent_vm_count,
+			"agent_vm_size": agent_vm_size,
+			"dns_prefix": dnsprefix,
 			"service_principal_id":	clientid,
 			"service_principal_secret":	clientsecret,
 			"ssh_public_key":	publickey,
 			"gitops_ssh_url":	"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":	sshkey,
 			"gitops_poll_interval":	"5m",
+			"keyvault_name": keyvault_name,
+			"keyvault_resource_group": keyvault_rg,
 
 			"traffic_manager_profile_name":	tmName,
 			"traffic_manager_dns_name":	tm_dnsprefix,
