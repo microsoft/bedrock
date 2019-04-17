@@ -41,7 +41,7 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
     export ARM_SUBSCRIPTION_ID="${subscriptionid}"
     export ARM_TENANT_ID="${tenantid}"
     export DATACENTER_LOCATION="${location}"
-    export ssh_key=$(readlink -f id_rsa.pub)
+    export ssh_key=$(readlink -f id_rsa)
     export public_key=$(cat id_rsa.pub)
     ```
 
@@ -57,4 +57,4 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
 
 ## Test Setup CI/CD
 
-For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yaml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts. Be sure to add the environment path your test is leveraging to the yml `paths/include:` section.
+For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yaml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts. Be sure to add the environment path your test is leveraging to the CI yml. For example `paths/include:` section in the `azure-pipelines.yml`.
