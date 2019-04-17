@@ -8,6 +8,9 @@ trigger:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
+    - /cluster/environments/azure-single-keyvault/*
+    - /cluster/environments/azure-common-infra/*
+    - /cluster/environments/azure-multiple-clusters/*
     exclude:
     - gitops/*
     - README.md
