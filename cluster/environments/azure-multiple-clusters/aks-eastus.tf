@@ -7,8 +7,8 @@ resource "azurerm_resource_group" "eastrg" {
 locals {
   east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
   east_rg_location             = "${azurerm_resource_group.eastrg.location}"
-  east_prefix                  = "${local.east_rg_location}-${var.cluster_name}"
-  east_flux_clone_dir          = "${local.east_prefix}-flux"
+  east_prefix                  = "${local.east_rg_location}_${var.cluster_name}"
+  east_flux_clone_dir          = "${local.east_prefix}_flux"
   east_kubeconfig_filename     = "${local.east_prefix}_kube_config"
   east_ip_address_out_filename = "${local.east_prefix}_ip_address"
 }
@@ -20,18 +20,18 @@ module "east_vnet" {
 
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
-  subnet_names            = ["${var.cluster_name}-aks-subnet"]
+  subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.east_address_space}"
   subnet_prefixes         = "${var.east_subnet_prefixes}"
   tags = {
-    environment = "azure-multiple-clusters"
+    environment = "azure_multiple_clusters"
   }
 }
 
 data "azurerm_client_config" "eastclient" {}
 
 # Creates east aks cluster, flux, kubediff
-module "east-aks-gitops" {
+module "east_aks_gitops" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
   source = "../../azure/aks-gitops"
 
@@ -56,7 +56,7 @@ module "east-aks-gitops" {
   docker_cidr              = "${var.east_docker_cidr}"
 }
 
-module "east-flex_volume" {
+module "east_flux_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
@@ -66,7 +66,7 @@ module "east-flex_volume" {
   subscription_id          = "${data.azurerm_client_config.eastclient.subscription_id}"
   keyvault_name            = "${var.keyvault_name}"
 
-  kubeconfig_complete = "${module.east-aks-gitops.kubeconfig_done}"
+  kubeconfig_complete = "${module.east_aks_gitops.kubeconfig_done}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
@@ -74,17 +74,17 @@ module "east_tm_endpoint" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east-aks-gitops.cluster_derived_resource_group}"
+  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks_gitops.cluster_derived_resource_group}"
   resource_location                   = "${local.east_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.east_rg_location}-${var.cluster_name}"
+  endpoint_name                       = "${local.east_rg_location}_${var.cluster_name}"
   public_ip_name                      = "${var.cluster_name}"
   ip_address_out_filename             = "${local.east_ip_address_out_filename}"
 
   tags = {
-    environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.east-aks-gitops.kubeconfig_done}"
+    environment = "azure_multiple_clusters - ${var.cluster_name} - public ip"
+    kubedone = "${module.east_aks_gitops.kubeconfig_done}"
   }
 }
 
