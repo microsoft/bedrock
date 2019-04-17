@@ -18,7 +18,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	uniqueID := random.UniqueId()
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 
-	addressSpace := "10.39.0.0/16"
+	addressSpace := "10.10.1.0/24"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	dnsprefix := k8sName + "-dns"
@@ -47,7 +47,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
 			"subnet_name":              subnetName,
-			"subnet_prefix":            addressSpace,
+			"subnet_prefixes":          addressSpace,
 			"subscription_id":          subscriptionid,
 			"tenant_id":                tenantid,
 			"vnet_name":                vnetName,
