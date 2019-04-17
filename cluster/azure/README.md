@@ -6,6 +6,7 @@ Follow these steps to create an Azure Kubernetes Service (AKS) cluster using Ter
 
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](../common/flux/)
+- [Understand Service Principal Requirements](./service-principal)
 - [Azure Cluster Deployment](##Azure-Cluster-Deployment)
 
 ## Install required tools
