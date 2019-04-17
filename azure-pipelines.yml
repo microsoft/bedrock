@@ -8,6 +8,7 @@ trigger:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
+    - gitops/*
     exclude:
     - README.md
 pr:
@@ -21,6 +22,7 @@ pr:
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
     - /test/*
+    - gitops/*
     exclude:
     - README.md
 
