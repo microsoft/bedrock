@@ -65,14 +65,6 @@ variable "gitops_poll_interval" {
   default = "5m"
 }
 
-variable "subnet_name" {
-  type = "string"
-}
-
-variable "subnet_prefix" {
-  type = "string"
-}
-
 variable "vnet_name" {
   type = "string"
 }
