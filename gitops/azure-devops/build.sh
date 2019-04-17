@@ -71,22 +71,21 @@ function download_fab() {
 
 # Install the HLD repo if it's not running as part of the HLD build pipeline
 function install_hld() {
+    echo "DOWNLOADING HLD REPO"
     echo "git clone $HLD_PATH"
     git clone $HLD_PATH
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
     echo "Setting HLD path to $repo_name"
-    ls
-    pwd
     cd $repo_name
-    echo "HLD INSTALLED SUCCESSFULLY"
+    echo "HLD DOWNLOADED SUCCESSFULLY"
 }
 
 # Install Fabrikate
 function install_fab() {
     # Run this command to make script exit on any failure
-    echo "FAB INSTALL STARTING"
+    echo "FAB INSTALL"
     set -e
     export PATH=$PATH:$HOME/fab
 
@@ -119,10 +118,6 @@ function fab_generate() {
     fi
 
     echo "FAB GENERATE COMPLETED"
-    ls
-    pwd
-    echo "Checking if generated folder is available at $HOME"
-    ls $HOME
     set +e
 
     # If generated folder is empty, quit

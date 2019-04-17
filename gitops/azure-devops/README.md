@@ -66,6 +66,8 @@ We use an [Azure Pipelines Build](https://docs.microsoft.com/en-us/azure/devops/
 1. On a pull request (pre push to master) it executes a simple validation on proposed changes to infrastructure definition in the HLD repo.
 1. On a merge to master branch (post push to master) it executes a script to transform the high level definition to YAML using [Fabrikate](https://github.com/Microsoft/fabrikate) and pushes the generated results into the resource manifest repo.
 
+__Note__: If you would like to trigger a build from a pipeline not linked to the high level definition repo, you can define a variable `HLD_PATH` and pass it into the script with other variables as shown above in `azure-pipelines.yml`. You need to set this to a git URL, such as `git://github.com/Microsoft/fabrikate-production-cluster-demo.git`.
+
 #### Create Build for your Definition Repo
 
 In Azure DevOps:
