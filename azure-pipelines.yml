@@ -9,7 +9,6 @@ trigger:
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
     exclude:
-    - gitops/*
     - README.md
 pr:
   autoCancel: false
@@ -23,7 +22,6 @@ pr:
     - /cluster/environments/azure-simple/*
     - /test/*
     exclude:
-    - gitops/*
     - README.md
 
 pool:
