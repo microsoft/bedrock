@@ -3,5 +3,5 @@ output "kubeconfig_done" {
 }
 
 output "cluster_derived_resource_group" {
-  value = "${azurerm_kubernetes_cluster.cluster.node_resource_group}"
+  value = "${module.aks.cluster_derived_resource_group}"
 }
