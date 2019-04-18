@@ -31,90 +31,6 @@ func addIPtoYAML(input string, ipaddress string) {
 	err = ioutil.WriteFile(input, []byte(output), 0644)
 }
 
-// func TestIT_Bedrock_AzureCommon_Simple_Test(t *testing.T) {
-//     t.Parallel()
-
-//     // Generate a common infra resources for integration use with azure-simple environment
-//     uniqueID := random.UniqueId()
-//     k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
-//     addressSpace := "10.39.0.0/16"
-//     kvName := k8sName + "-kv"
-//     kvRG := kvName + "-rg"
-//     location := os.Getenv("DATACENTER_LOCATION")
-//     clientid := os.Getenv("ARM_CLIENT_ID")
-//     subnetName := k8sName + "-subnet"
-//     tenantid := os.Getenv("ARM_TENANT_ID")
-//     vnetName := k8sName + "-vnet"
-
-//     // Specify the test case folder and "-var" options
-//     common_tfOptions := &terraform.Options{
-//         TerraformDir: "../cluster/environments/azure-common-infra",
-//         Upgrade:      true,
-//         Vars: map[string]interface{}{
-//             "address_space":                    addressSpace,
-//             "keyvault_name":                    kvName,
-//             "global_resource_group_name":       kvRG,
-//             "global_resource_group_location":   location,
-//             "service_principal_id":             clientid,
-//             "subnet_name":                      subnetName,
-//             "subnet_prefix":                    addressSpace,
-//             "tenant_id":                        tenantid,
-//             "vnet_name":                        vnetName,
-//         },
-
-        
-    
-//     }
-
-//     // Terraform init, apply, output, and destroy
-//     defer terraform.Destroy(t, common_tfOptions)
-//     terraform.InitAndApply(t, common_tfOptions)
-
-//     //Obtain the vnet_subnet_id for the deployed vnet from the common-infra terraform environment
-//     commonInfra_subnetID := terraform.Output(t, common_tfOptions, "vnet_subnet_id")
-//     fmt.Println(commonInfra_subnetID)
-//     // Generate azure single environment using resources generated from common
-//     dnsprefix := k8sName + "-dns"
-//     clientsecret := os.Getenv("ARM_CLIENT_SECRET")
-//     k8sRG := k8sName + "-rg"
-//     publickey := os.Getenv("public_key")
-//     sshkey := os.Getenv("ssh_key")
-
-//     // Specify the test case folder and "-var" options
-//     k8s_tfOptions := &terraform.Options{
-//         TerraformDir: "../cluster/environments/azure-single-keyvault",
-//         Upgrade:      true,
-//         Vars: map[string]interface{}{
-//             "address_space":                    addressSpace,
-//             "agent_vm_count":                    "3",
-//             "agent_vm_size":                    "Standard_D2s_v3",  
-//             "cluster_name":                     k8sName,
-//             "dns_prefix":                       dnsprefix,
-//             "gitops_ssh_url":                   "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-//             "gitops_ssh_key":                   sshkey,
-//             "keyvault_name":                    kvName,
-//             "keyvault_resource_group":           kvRG,
-//             "resource_group_name":               k8sRG,
-//             "resource_group_location":           location,
-//             "ssh_public_key":                   publickey,
-//             "service_principal_id":             clientid,
-//             "service_principal_secret":         clientsecret,
-//             "subnet_prefixes":                    "10.39.0.0/16",
-//             "vnet_subnet_id":                    commonInfra_subnetID,
-//         },
-    
-//     }
-
-//     // Terraform init, apply, output, and destroy
-//     defer terraform.Destroy(t, k8s_tfOptions)
-//     terraform.InitAndApply(t, k8s_tfOptions)
-//     fmt.Println("Inside Test! :)")
-
-//     time.Sleep(240 * time.Second)
-// }
-
-
-
 func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	t.Parallel()
 
@@ -154,13 +70,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
     defer terraform.Destroy(t, common_tfOptions)
     terraform.InitAndApply(t, common_tfOptions)
 
-
-	//Generate a random cluster name to prevent a naming conflict and map variables to tfvars
-	// uniqueID := strings.ToLower(random.UniqueId())
-	// k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
+	// Multicluster & keyvault deployment vars
 	tmName := k8sName + "-tm"
-
-	// clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 
 	dnsprefix := k8sName + "-dns"
@@ -171,7 +82,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	k8s_centralRG := k8sName + "-central-rg"
 	k8s_globalRG := k8sName + "-global-rg"
 
-	// location := os.Getenv("DATACENTER_LOCATION")
 	cluster_location1 :="westus2"
 	cluster_location2 :="eastus2"
 	cluster_location3 :="centralus"

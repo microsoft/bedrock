@@ -54,19 +54,6 @@ module "west_aks_gitops" {
   docker_cidr              = "${var.west_docker_cidr}"
 }
 
-module "west_flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
-
-  resource_group_name      = "${var.keyvault_resource_group}"
-  service_principal_id     = "${var.service_principal_id}"
-  service_principal_secret = "${var.service_principal_secret}"
-  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
-  subscription_id          = "${data.azurerm_client_config.current.subscription_id}"
-  keyvault_name            = "${var.keyvault_name}"
-
-  kubeconfig_complete = "${module.west_aks_gitops.kubeconfig_done}"
-}
-
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
