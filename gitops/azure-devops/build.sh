@@ -18,7 +18,6 @@ function verify_repo() {
 function init() {
     cp -r * $HOME/
     cd $HOME
-    verify_repo
 }
 
 # Initialize Helm
@@ -70,14 +69,36 @@ function download_fab() {
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
 }
 
+# Install the HLD repo if it's not running as part of the HLD build pipeline
+function install_hld() {
+    echo "DOWNLOADING HLD REPO"
+    echo "git clone $HLD_PATH"
+    git clone $HLD_PATH
+    # Extract repo name from url
+    repo=${HLD_PATH##*/}
+    repo_name=${repo%%.*}
+    echo "Setting HLD path to $repo_name"
+    cd $repo_name
+    echo "HLD DOWNLOADED SUCCESSFULLY"
+}
+
 # Install Fabrikate
 function install_fab() {
     # Run this command to make script exit on any failure
+    echo "FAB INSTALL"
     set -e
     export PATH=$PATH:$HOME/fab
+
+    if [ -z "$HLD_PATH" ]; then 
+        echo "HLD path not specified, going to run fab install in current dir"
+    else
+        echo "HLD repo specified: $HLD_PATH"
+        install_hld
+    fi
     fab install
     echo "FAB INSTALL COMPLETED"
 }
+
 
 # Run fab generate
 function fab_generate() {
@@ -97,13 +118,12 @@ function fab_generate() {
     fi
 
     echo "FAB GENERATE COMPLETED"
-
     set +e
 
     # If generated folder is empty, quit
     # In the case that all components are removed from the source hld,
     # generated folder should still not be empty
-    if find "$HOME/generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
+    if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
         echo "Manifest files have been generated."
     else
         echo "Manifest files could not be generated, quitting..."
@@ -192,6 +212,7 @@ function verify_pull_request() {
 
 # Run functions
 function verify_pull_request_and_merge() {
+    verify_repo
     verify_access_token
     verify_pull_request
     echo "Verification complete, push to yaml repo"

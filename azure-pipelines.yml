@@ -8,8 +8,8 @@ trigger:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
-    exclude:
     - gitops/*
+    exclude:
     - README.md
 pr:
   autoCancel: false
@@ -22,8 +22,8 @@ pr:
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
     - /test/*
-    exclude:
     - gitops/*
+    exclude:
     - README.md
 
 pool:
@@ -36,6 +36,18 @@ variables:
   modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
 steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
+
+- task: ShellScript@2
+  displayName: Validate GitOps pipeline
+  inputs:
+    scriptPath: gitops/azure-devops/build.sh
+  env:
+    VERIFY_ONLY: 1
+    HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
+    
 - script: |
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
