@@ -56,7 +56,7 @@ module "east_aks_gitops" {
   docker_cidr              = "${var.east_docker_cidr}"
 }
 
-module "east_flux_volume" {
+module "east_flex_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
