@@ -6,3 +6,5 @@ module "provider" {
 data "azuread_service_principal" "sp" {
   application_id = "${var.service_principal_id}"
 }
+
+data "azurerm_client_config" "current" {}

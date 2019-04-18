@@ -28,8 +28,6 @@ module "west_vnet" {
   }
 }
 
-data "azurerm_client_config" "westclient" {}
-
 # Creates west aks cluster, flux, kubediff
 module "west_aks_gitops" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
@@ -62,8 +60,8 @@ module "west_flex_volume" {
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  tenant_id                = "${data.azurerm_client_config.westclient.tenant_id}"
-  subscription_id          = "${data.azurerm_client_config.westclient.subscription_id}"
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
+  subscription_id          = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name            = "${var.keyvault_name}"
 
   kubeconfig_complete = "${module.west_aks_gitops.kubeconfig_done}"

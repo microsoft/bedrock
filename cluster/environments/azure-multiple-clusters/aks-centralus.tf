@@ -28,8 +28,6 @@ module "central_vnet" {
   }
 }
 
-data "azurerm_client_config" "centralclient" {}
-
 # Creates central aks cluster, flux, kubediff
 module "central_aks_gitops" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
@@ -62,8 +60,8 @@ module "central_flex_volume" {
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  tenant_id                = "${data.azurerm_client_config.centralclient.tenant_id}"
-  subscription_id          = "${data.azurerm_client_config.centralclient.subscription_id}"
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
+  subscription_id          = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name            = "${var.keyvault_name}"
 
   kubeconfig_complete = "${module.central_aks_gitops.kubeconfig_done}"
