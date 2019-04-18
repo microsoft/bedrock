@@ -54,12 +54,25 @@ module "central_aks_gitops" {
   docker_cidr              = "${var.central_docker_cidr}"
 }
 
+module "central_flex_volume" {	
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"	
+
+  resource_group_name      = "${var.keyvault_resource_group}"	
+  service_principal_id     = "${var.service_principal_id}"	
+  service_principal_secret = "${var.service_principal_secret}"	
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"	
+  subscription_id          = "${data.azurerm_client_config.current.subscription_id}"	
+  keyvault_name            = "${var.keyvault_name}"	
+
+  kubeconfig_complete = "${module.central_aks_gitops.kubeconfig_done}"	
+}
+
 # create a static public ip and associate with traffic manger endpoint
 module "central_tm_endpoint" {
   # source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks_gitops.cluster_derived_resource_group}"
+  resource_group_name                 = "${local.central_rg_name}"
   resource_location                   = "${local.central_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -76,7 +89,7 @@ module "central_tm_endpoint" {
 # Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller
 resource "azurerm_role_assignment" "central_spra" {
-  count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
+  count                = "1"
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
   scope                = "${azurerm_resource_group.centralrg.id}"
