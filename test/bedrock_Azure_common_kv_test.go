@@ -25,6 +25,22 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	vnetName := k8sName + "-vnet"
 
+	//Generate common-infra backend for tf.state files to be persisted in azure storage account
+	backendName:=		os.Getenv("ARM_BACKEND_STORAGE_NAME")
+	backendKey:=		os.Getenv("ARM_BACKEND_STORAGE_KEY")
+	backendContainer:=	os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendTfstatekey:=	k8sName +"-tfstatekey"
+
+	//Specify the test case folder and "-var" option mapping for the backend
+	common_backend_tfOptions := &terraform.Options{
+		BackendConfig: map[string]interface{}{
+			"storage_account_name": backendName,
+			"access_key":	backendKey,
+			"container_name":	backendContainer,
+			"key":	"common_"+backendTfstatekey,
+		},
+	}
+
 	//Specify the test case folder and "-var" option mapping
 	common_tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-common-infra",
@@ -42,9 +58,10 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 		},
 	}
 
-	// Terraform init, apply, output, and defer destroy for common-infra bedrock environment
+	//Terraform init, apply, output, and defer destroy for common-infra bedrock environment
 	defer terraform.Destroy(t, common_tfOptions)
-	terraform.InitAndApply(t, common_tfOptions)
+	terraform.Init(t, common_backend_tfOptions)
+	terraform.Apply(t, common_tfOptions)
 
 	//Obtain the vnet_subnet_id for the deployed vnet from the common-infra bedrock environment
 	commonInfra_subnetID := terraform.Output(t, common_tfOptions, "vnet_subnet_id")
@@ -55,6 +72,16 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	k8sRG := k8sName + "-rg"
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
+
+	//Specify the test case folder and "-var" option mapping for the environment backend
+	k8s_backend_tfOptions := &terraform.Options{
+		BackendConfig: map[string]interface{}{
+			"storage_account_name": backendName,
+			"access_key":	backendKey,
+			"container_name":	backendContainer,
+			"key":	backendTfstatekey,
+		},
+	}
 
 	// Specify the test case folder and "-var" options
 	k8s_tfOptions := &terraform.Options{
@@ -82,7 +109,8 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	//Terraform init, apply, output, and defer destroy on azure-single-keyvault bedrock environment
 	defer terraform.Destroy(t, k8s_tfOptions)
-	terraform.InitAndApply(t, k8s_tfOptions)
+	terraform.Init(t, k8s_backend_tfOptions)
+	terraform.Apply(t, k8s_tfOptions)
 
 	//Obtain Kube_config file from module output
 	os.Setenv("KUBECONFIG", "../cluster/environments/azure-single-keyvault/output/bedrock_kube_config")
