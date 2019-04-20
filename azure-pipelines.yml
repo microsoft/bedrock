@@ -13,7 +13,6 @@ trigger:
     - /cluster/environments/azure-multiple-clusters/*
     exclude:
     - gitops/*
-    exclude:
     - README.md
 pr:
   autoCancel: false
