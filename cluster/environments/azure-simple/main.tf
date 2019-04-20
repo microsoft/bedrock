@@ -10,11 +10,8 @@ resource "azurerm_resource_group" "cluster_rg" {
 module "vnet" {
   source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
 
-  vnet_name = "${var.vnet_name}"
-
-  address_space   = "${var.address_space}"
-  subnet_prefixes = ["${var.subnet_prefix}"]
-
+  vnet_name               = "${var.vnet_name}"
+  address_space           = "${var.address_space}"
   resource_group_name     = "${var.resource_group_name}"
   resource_group_location = "${var.resource_group_location}"
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
