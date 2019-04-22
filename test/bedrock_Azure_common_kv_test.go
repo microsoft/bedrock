@@ -33,6 +33,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
+		TerraformDir: "../cluster/environments/azure-common-infra",
 		BackendConfig: map[string]interface{}{
 			"storage_account_name":	backendName,
 			"access_key": backendKey,
@@ -75,6 +76,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	//Specify the test case folder and "-var" option mapping for the environment backend
 	k8s_backend_tfOptions := &terraform.Options{
+		TerraformDir: "../cluster/environments/azure-single-keyvault",
 		BackendConfig: map[string]interface{}{
 			"storage_account_name": backendName,
 			"access_key": backendKey,
