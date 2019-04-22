@@ -1,6 +1,6 @@
 # Service Principals and Terraform Deployment
 
-Deploying Bedrock on Azure makes use of Service Princiapals.  Depending on the environment deployed, the Service Principal may require different permission levels or role assignments.  If the service principal being used has `Owner` privileges on the subscription, nothing special needs to be done.  For more inormation about Service Principals, RBAC and roles check [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview).
+Deploying Bedrock on Azure makes use of Service Princiapals.  Depending on the environment deployed, the Service Principal may require different permission levels or role assignments.  If the service principal being used has `Owner` privileges on the subscription, nothing special needs to be done.  For more information about Service Principals, RBAC and roles check [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview).
 
 This document describes a set of tools and requirements necessary to deploy infrastructure in various environments.  Cases addressed include:
 
@@ -51,7 +51,7 @@ A frequent scenario will be that a user does not have `Owner` privileges on a su
 
 ### Deploying to a Single Resource Group
 
-A typical enterprise deployment will grant a service principal with access to a restricted set of resources to an individual.  The [azure-simple](../../environments/azure-simple) environment deploys itself to a single resource group.  To set up a service principal addressing this situation, simply create a reosurce group and provision a service principal with `contributor` access on that service principal.
+A typical enterprise deployment will grant a service principal with access to a restricted set of resources to an individual.  The [azure-simple](../../environments/azure-simple) environment deploys itself to a single resource group.  To set up a service principal addressing this situation, simply create a resource group and provision a service principal with `contributor` access on that service principal.
 
 Assuming a resource group named `bedrockrg1`, the steps to create the resource group and service principal with the proper privileges are as follows:
 
