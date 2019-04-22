@@ -1,11 +1,18 @@
 #--------------------------------------------------------------
 # Cluster common
 #--------------------------------------------------------------
-cluster_name = "spincluster"
 
 agent_vm_count = "3"
 
+agent_vm_size = ""
+
+cluster_name = "spincluster"
+
 dns_prefix = "spindns"
+
+keyvault_name = ""
+
+keyvault_resource_group = ""
 
 service_principal_id = ""
 

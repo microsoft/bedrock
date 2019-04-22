@@ -81,3 +81,9 @@ variable "docker_cidr" {
   default = "172.17.0.1/16"
   description = "IP address (in CIDR notation) used as the Docker bridge IP address on nodes. Default of 172.17.0.1/16."
 }
+
+variable "kubeconfig_filename" {
+    description = "Name of the kube config file saved to disk."
+    type = "string"
+    default = "bedrock_kube_config"
+}

@@ -34,12 +34,44 @@ func addIPtoYAML(input string, ipaddress string) {
 func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	t.Parallel()
 
-	//Generate a random cluster name to prevent a naming conflict and map variables to tfvars
+	// Generate a common infra resources for integration use with azure multicluster environment
 	uniqueID := strings.ToLower(random.UniqueId())
 	k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
-	tmName := k8sName + "-tm"
 
+	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+	tenantid := os.Getenv("ARM_TENANT_ID")
+
+	addressSpace := "10.39.0.0/16"
+	subnetName := k8sName + "-subnet"
+	vnetName := k8sName + "-vnet"
+
+	kvName := k8sName + "-kv"
+	kvRG := kvName + "-rg"
+
+	// Specify the test case folder and "-var" options
+    common_tfOptions := &terraform.Options{
+        TerraformDir: "../cluster/environments/azure-common-infra",
+        Upgrade:      true,
+        Vars: map[string]interface{}{
+            "address_space":                    addressSpace,
+            "keyvault_name":                    kvName,
+            "global_resource_group_name":       kvRG,
+            "global_resource_group_location":   location,
+            "service_principal_id":             clientid,
+            "subnet_name":                      subnetName,
+            "subnet_prefix":                    addressSpace,
+            "tenant_id":                        tenantid,
+            "vnet_name":                        vnetName,
+        },
+    }
+
+    // Terraform init, apply, output, and destroy
+    defer terraform.Destroy(t, common_tfOptions)
+    terraform.InitAndApply(t, common_tfOptions)
+
+	// Multicluster & keyvault deployment vars
+	tmName := k8sName + "-tm"
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 
 	dnsprefix := k8sName + "-dns"
@@ -50,7 +82,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	k8s_centralRG := k8sName + "-central-rg"
 	k8s_globalRG := k8sName + "-global-rg"
 
-	location := os.Getenv("DATACENTER_LOCATION")
 	cluster_location1 :="westus2"
 	cluster_location2 :="eastus2"
 	cluster_location3 :="centralus"
@@ -58,19 +89,25 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
 
+	agent_vm_count := "3"
+	agent_vm_size := "Standard_D2s_v3"
+
 	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-multiple-clusters",
 		Vars: map[string]interface{}{
-			"cluster_name":	k8sName,
-			"agent_vm_count":	3,
-			"dns_prefix":	dnsprefix,
+			"cluster_name": k8sName,
+			"agent_vm_count": agent_vm_count,
+			"agent_vm_size": agent_vm_size,
+			"dns_prefix": dnsprefix,
 			"service_principal_id":	clientid,
 			"service_principal_secret":	clientsecret,
 			"ssh_public_key":	publickey,
 			"gitops_ssh_url":	"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":	sshkey,
 			"gitops_poll_interval":	"5m",
+			"keyvault_name": kvName,
+			"keyvault_resource_group": kvRG,
 
 			"traffic_manager_profile_name":	tmName,
 			"traffic_manager_dns_name":	tm_dnsprefix,
@@ -95,14 +132,14 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	westCluster_out	:=	cluster_location1 + "-" + k8sName + "_kube_config"
-	eastCluster_out	:=	cluster_location2 + "-" + k8sName + "_kube_config"
-	centralCluster_out:=	cluster_location3 + "-" + k8sName + "_kube_config"
+	westCluster_out	:=	cluster_location1 + "_" + k8sName + "_kube_config"
+	eastCluster_out	:=	cluster_location2 + "_" + k8sName + "_kube_config"
+	centralCluster_out:=	cluster_location3 + "_" + k8sName + "_kube_config"
 	
 	//Obtain Kube_config file from module outputs of each cluster region
-	os.Setenv("WEST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+westCluster_out)
-	os.Setenv("EAST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+eastCluster_out)
-	os.Setenv("CENTRAL_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+centralCluster_out)
+	os.Setenv("WEST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ westCluster_out)
+	os.Setenv("EAST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ eastCluster_out)
+	os.Setenv("CENTRAL_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ centralCluster_out)
 
 	//Test Case 1: Verify Flux namespace in West Region
 	kubeConfig := os.Getenv("WEST_KUBECONFIG")

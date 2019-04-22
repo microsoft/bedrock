@@ -13,5 +13,5 @@ output "kubeconfig_done" {
 }
 
 output "cluster_derived_resource_group" {
-  value = "MC_${var.resource_group_name}_${var.cluster_name}_${var.resource_group_location}"
+  value = "${azurerm_kubernetes_cluster.cluster.node_resource_group}"
 }
