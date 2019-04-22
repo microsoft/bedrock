@@ -23,38 +23,38 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	subnetName := k8sName + "-subnet"
 	tenantid := os.Getenv("ARM_TENANT_ID")
-	vnetName := k8sName + "-vnet"
+	vnetName :=	k8sName + "-vnet"
 
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
-	backendName:=		os.Getenv("ARM_BACKEND_STORAGE_NAME")
-	backendKey:=		os.Getenv("ARM_BACKEND_STORAGE_KEY")
-	backendContainer:=	os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendName:= os.Getenv("ARM_BACKEND_STORAGE_NAME")
+	backendKey:= os.Getenv("ARM_BACKEND_STORAGE_KEY")
+	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
 	backendTfstatekey:=	k8sName +"-tfstatekey"
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
 		BackendConfig: map[string]interface{}{
-			"storage_account_name": backendName,
-			"access_key":	backendKey,
-			"container_name":	backendContainer,
-			"key":	"common_"+backendTfstatekey,
+			"storage_account_name":	backendName,
+			"access_key": backendKey,
+			"container_name": backendContainer,
+			"key": "common_"+backendTfstatekey,
 		},
 	}
 
 	//Specify the test case folder and "-var" option mapping
 	common_tfOptions := &terraform.Options{
 		TerraformDir: "../cluster/environments/azure-common-infra",
-		Upgrade:      true,
+		Upgrade: true,
 		Vars: map[string]interface{}{
-			"address_space":	addressSpace,
-			"keyvault_name":	kvName,
-			"global_resource_group_name":	kvRG,
-			"global_resource_group_location":	location,
-			"service_principal_id":	clientid,
-			"subnet_name":	subnetName,
-			"subnet_prefix":	addressSpace,
-			"tenant_id":	tenantid,
-			"vnet_name":	vnetName,
+			"address_space": addressSpace,
+			"keyvault_name": kvName,
+			"global_resource_group_name": kvRG,
+			"global_resource_group_location": location,
+			"service_principal_id": clientid,
+			"subnet_name": subnetName,
+			"subnet_prefix": addressSpace,
+			"tenant_id": tenantid,
+			"vnet_name": vnetName,
 		},
 	}
 
@@ -77,9 +77,9 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	k8s_backend_tfOptions := &terraform.Options{
 		BackendConfig: map[string]interface{}{
 			"storage_account_name": backendName,
-			"access_key":	backendKey,
-			"container_name":	backendContainer,
-			"key":	backendTfstatekey,
+			"access_key": backendKey,
+			"container_name": backendContainer,
+			"key": backendTfstatekey,
 		},
 	}
 

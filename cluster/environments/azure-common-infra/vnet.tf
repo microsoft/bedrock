@@ -11,7 +11,7 @@ module "vnet" {
   subnet_names            = ["${var.subnet_name}"]
 }
 
-//Used for intergration test to automate providing vnet_subnet_ids to separate environments for aks clusters
+//Used for integration test to automate providing vnet_subnet_ids to separate environments for aks clusters
 output "vnet_subnet_id" {
   description = "The ids of subnets created inside the vNet"
   value       = "${module.vnet.vnet_subnet_ids[0]}"
