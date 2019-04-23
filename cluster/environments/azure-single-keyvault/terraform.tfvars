@@ -4,8 +4,8 @@ keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
-vnet_name = "tim-vnet"
-vnet_subnet_id = "/subscriptions/1d3bc944-c31f-41a9-a1ac-cafea961eba5/resourceGroups/tim-global-rg/providers/Microsoft.Network/virtualNetworks/tim-vnet/subnets/tim-subnet"
+vnet_name = "my-vnet"
+vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
 
 # cluster variables
 agent_vm_count = "3"

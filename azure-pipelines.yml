@@ -8,8 +8,11 @@ trigger:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
-    - gitops/*
+    - /cluster/environments/azure-single-keyvault/*
+    - /cluster/environments/azure-common-infra/*
+    - /cluster/environments/azure-multiple-clusters/*
     exclude:
+    - gitops/*
     - README.md
 pr:
   autoCancel: false
@@ -21,6 +24,9 @@ pr:
     - /cluster/azure/*
     - /cluster/common/*
     - /cluster/environments/azure-simple/*
+    - /cluster/environments/azure-single-keyvault/*
+    - /cluster/environments/azure-common-infra/*
+    - /cluster/environments/azure-multiple-clusters/*
     - /test/*
     - gitops/*
     exclude:
@@ -83,5 +89,8 @@ steps:
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
     ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
+    ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
+    ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
   workingDirectory: '$(modulePath)/test'
   displayName: 'Create ssh keys, get deps, then test'
