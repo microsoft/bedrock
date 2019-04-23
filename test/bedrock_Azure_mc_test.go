@@ -13,6 +13,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/gruntwork-io/terratest/modules/http-helper"
+	"github.com/otiai10/copy"
 )
 
 func addIPandRGtoYAML(input string, ipaddress string, resourceGroup string) {
@@ -54,12 +55,16 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
 	backendName:= os.Getenv("ARM_BACKEND_STORAGE_NAME")
 	backendKey:= os.Getenv("ARM_BACKEND_STORAGE_KEY")
-	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER") + "-2"
 	backendTfstatekey:=	k8sName +"-tfstatekey"
+
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
+	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-common-infra",
+		TerraformDir: azureCommonInfraFolder,
 		BackendConfig: map[string]interface{}{
 			"storage_account_name":	backendName,
 			"access_key": backendKey,
@@ -70,7 +75,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 
 	// Specify the test case folder and "-var" options
     common_tfOptions := &terraform.Options{
-        TerraformDir: "../cluster/environments/azure-common-infra",
+        TerraformDir: azureCommonInfraFolder,
         Upgrade:      true,
         Vars: map[string]interface{}{
             "address_space":                    addressSpace,
@@ -112,9 +117,13 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	agent_vm_count := "3"
 	agent_vm_size := "Standard_D2s_v3"
 
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureMultipleClustersFolder := "../cluster/test-temp-envs/azure-multiple-clusters-" + k8sName
+	copy.Copy("../cluster/environments/azure-multiple-clusters", azureMultipleClustersFolder)
+
 	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-multiple-clusters",
+		TerraformDir: azureMultipleClustersFolder,
 		Vars: map[string]interface{}{
 			"cluster_name": k8sName,
 			"agent_vm_count": agent_vm_count,
@@ -157,9 +166,9 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	centralCluster_out:=	cluster_location3 + "_" + k8sName + "_kube_config"
 	
 	//Obtain Kube_config file from module outputs of each cluster region
-	os.Setenv("WEST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ westCluster_out)
-	os.Setenv("EAST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ eastCluster_out)
-	os.Setenv("CENTRAL_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+ centralCluster_out)
+	os.Setenv("WEST_KUBECONFIG", azureMultipleClustersFolder + "/output/"+ westCluster_out)
+	os.Setenv("EAST_KUBECONFIG", azureMultipleClustersFolder + "/output/"+ eastCluster_out)
+	os.Setenv("CENTRAL_KUBECONFIG", azureMultipleClustersFolder + "/output/"+ centralCluster_out)
 
 	//Test Case 1: Verify Flux namespace in West Region
 	kubeConfig := os.Getenv("WEST_KUBECONFIG")
@@ -200,15 +209,15 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	eastIP_address_file := terraform.Output(t, tfOptions, "east_publicIP")
 	centralIP_address_file := terraform.Output(t, tfOptions, "central_publicIP")
 
-	westIP, err := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+westIP_address_file)
+	westIP, err := ioutil.ReadFile(azureMultipleClustersFolder + "/output/"+westIP_address_file)
 	if err != nil {
         panic(err)
 	}
-	eastIP, err2 := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+eastIP_address_file)
+	eastIP, err2 := ioutil.ReadFile(azureMultipleClustersFolder + "/output/"+eastIP_address_file)
 	if err2 != nil {
         panic(err2)
 	}
-	centralIP, err3 := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+centralIP_address_file)
+	centralIP, err3 := ioutil.ReadFile(azureMultipleClustersFolder + "/output/"+centralIP_address_file)
 	if err3 != nil {
         panic(err3)
 	}
