@@ -55,7 +55,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
 	backendName:= os.Getenv("ARM_BACKEND_STORAGE_NAME")
 	backendKey:= os.Getenv("ARM_BACKEND_STORAGE_KEY")
-	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER") + "-2"
+	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
 	backendTfstatekey:=	k8sName +"-tfstatekey"
 
 	//Copy env directories as needed to avoid conflicting with other running tests
