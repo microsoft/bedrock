@@ -41,7 +41,7 @@ variable "gitops_ssh_key" {
 
 variable "aks_client_role_assignment_role" {
   type    = "string"
-  default = "Owner"
+  default = "Contributor"
 }
 
 variable "flux_recreate" {

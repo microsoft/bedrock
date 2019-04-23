@@ -51,6 +51,23 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
 
+	//Generate common-infra backend for tf.state files to be persisted in azure storage account
+	backendName:= os.Getenv("ARM_BACKEND_STORAGE_NAME")
+	backendKey:= os.Getenv("ARM_BACKEND_STORAGE_KEY")
+	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendTfstatekey:=	k8sName +"-tfstatekey"
+
+	//Specify the test case folder and "-var" option mapping for the backend
+	common_backend_tfOptions := &terraform.Options{
+		TerraformDir: "../cluster/environments/azure-common-infra",
+		BackendConfig: map[string]interface{}{
+			"storage_account_name":	backendName,
+			"access_key": backendKey,
+			"container_name": backendContainer,
+			"key": "common_"+backendTfstatekey,
+		},
+	}
+
 	// Specify the test case folder and "-var" options
     common_tfOptions := &terraform.Options{
         TerraformDir: "../cluster/environments/azure-common-infra",
@@ -69,8 +86,9 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
     }
 
     // Terraform init, apply, output, and destroy
-    defer terraform.Destroy(t, common_tfOptions)
-    terraform.InitAndApply(t, common_tfOptions)
+	defer terraform.Destroy(t, common_tfOptions)
+	terraform.Init(t, common_backend_tfOptions)
+    terraform.Apply(t, common_tfOptions)
 
 	// Multicluster & keyvault deployment vars
 	tmName := k8sName + "-tm"
