@@ -15,7 +15,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/http-helper"
 )
 
-func addIPtoYAML(input string, ipaddress string) {
+func addIPandRGtoYAML(input string, ipaddress string, resourceGroup string) {
 	file, err := ioutil.ReadFile(input)
 
 	if err != nil {
@@ -25,6 +25,8 @@ func addIPtoYAML(input string, ipaddress string) {
 	for i, line := range lines{
 		if strings.Contains(line, "loadBalancerIP"){
 			lines[i] = "  loadBalancerIP: " + ipaddress
+		} else if strings.Contains(line, "service.beta.kubernetes.io/azure-load-balancer-resource-group"){
+			lines[i] = "    service.beta.kubernetes.io/azure-load-balancer-resource-group: " + resourceGroup
 		}
 	}
 	output := strings.Join(lines, "\n")
@@ -200,11 +202,11 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	//Deploy app to all 3 clusters
 	configFile := "azure-vote.yaml"
 
-	addIPtoYAML(configFile, string(westIP))	
+	addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
 	k8s.KubectlApply(t, options, configFile)
-	addIPtoYAML(configFile, string(eastIP))	
+	addIPandRGtoYAML(configFile, string(eastIP), k8s_eastRG)
 	k8s.KubectlApply(t, options2, configFile)
-	addIPtoYAML(configFile, string(centralIP))	
+	addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
 	k8s.KubectlApply(t, options3, configFile)
 
 	//Test Case 4: Validate Traffic Manager
