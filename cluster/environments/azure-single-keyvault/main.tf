@@ -10,7 +10,8 @@ resource "azurerm_resource_group" "cluster_rg" {
 }
 
 module "aks-gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -32,8 +33,7 @@ module "aks-gitops" {
 }
 
 module "flex_volume" {
-  # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
-  source = "../../azure/aks-gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
