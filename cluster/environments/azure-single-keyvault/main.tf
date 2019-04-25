@@ -32,7 +32,8 @@ module "aks-gitops" {
 }
 
 module "flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  # source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
