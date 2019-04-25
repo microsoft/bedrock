@@ -22,6 +22,7 @@ module "west_vnet" {
   subnet_names            = ["${var.cluster_name}-aks-subnet"]
   address_space           = "${var.west_address_space}"
   subnet_prefixes         = "${var.west_subnet_prefixes}"
+
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -51,14 +52,16 @@ module "west_aks" {
 module "west_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = "${var.flux_recreate}"
-  kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.west_kubeconfig_filename}"
-  flux_clone_dir      = "${local.west_flux_clone_dir}"
-  gitops_path         = "${var.gitops_west_path}"
-  gitops_poll_interval = "${var.gitops_poll_interval}"
+  gitops_ssh_url        = "${var.gitops_ssh_url}"
+  gitops_ssh_key        = "${var.gitops_ssh_key}"
+  flux_recreate         = "${var.flux_recreate}"
+  kubeconfig_complete   = "${module.west_aks.kubeconfig_done}"
+  kubeconfig_filename   = "${local.west_kubeconfig_filename}"
+  flux_clone_dir        = "${local.west_flux_clone_dir}"
+  gitops_path           = "${var.gitops_west_path}"
+  gitops_poll_interval  = "${var.gitops_poll_interval}"
+  flux_image_repository = "${var.flux_image_repository}"
+  flux_image_tag        = "${var.flux_image_tag}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
@@ -75,7 +78,7 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters - ${local.west_prefix} - public ip"
-    kubedone = "${module.west_aks.kubeconfig_done}"
+    kubedone    = "${module.west_aks.kubeconfig_done}"
   }
 }
 

@@ -23,7 +23,8 @@ module "vnet" {
 }
 
 module "aks-gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -31,6 +32,8 @@ module "aks-gitops" {
   cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
   flux_recreate            = "${var.flux_recreate}"
+  flux_image_repository    = "${var.flux_image_repository}"
+  flux_image_tag           = "${var.flux_image_tag}"
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_path}"

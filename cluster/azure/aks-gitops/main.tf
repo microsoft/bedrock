@@ -20,14 +20,16 @@ module "aks" {
 module "flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url       = "${var.gitops_ssh_url}"
-  gitops_ssh_key       = "${var.gitops_ssh_key}"
-  gitops_path          = "${var.gitops_path}"
-  gitops_poll_interval = "${var.gitops_poll_interval}"
-  flux_recreate        = "${var.flux_recreate}"
-  kubeconfig_complete  = "${module.aks.kubeconfig_done}"
-  flux_clone_dir       = "${var.cluster_name}-flux"
-  acr_enabled          = "${var.acr_enabled}"
+  gitops_ssh_url        = "${var.gitops_ssh_url}"
+  gitops_ssh_key        = "${var.gitops_ssh_key}"
+  gitops_path           = "${var.gitops_path}"
+  gitops_poll_interval  = "${var.gitops_poll_interval}"
+  flux_recreate         = "${var.flux_recreate}"
+  kubeconfig_complete   = "${module.aks.kubeconfig_done}"
+  flux_clone_dir        = "${var.cluster_name}-flux"
+  acr_enabled           = "${var.acr_enabled}"
+  flux_image_repository = "${var.flux_image_repository}"
+  flux_image_tag        = "${var.flux_image_tag}"
 }
 
 module "kubediff" {

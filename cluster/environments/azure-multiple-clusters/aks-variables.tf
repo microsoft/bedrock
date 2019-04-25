@@ -50,3 +50,15 @@ variable "flux_recreate" {
   type        = "string"
   default     = ""
 }
+
+# container registry to download flux image
+variable "flux_image_repository" {
+  type = "string"
+  default = "docker.io/weaveworks/flux"
+}
+
+# flux version to download source from git repo and container image from the registry
+variable "flux_image_tag" {
+  type = "string"
+  default = "1.12.1"
+}
