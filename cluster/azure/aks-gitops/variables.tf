@@ -41,6 +41,10 @@ variable "gitops_poll_interval" {
   default = "5m"
 }
 
+variable "gitops_url_branch" {
+  type = "string"
+}
+
 variable "resource_group_name" {
   type = "string"
 }

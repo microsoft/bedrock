@@ -51,13 +51,14 @@ module "central_aks" {
 module "central_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = ""
-  kubeconfig_complete = "${module.central_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.central_kubeconfig_filename}"
-  flux_clone_dir      = "${local.central_flux_clone_dir}"
-  gitops_path         = "${var.gitops_central_path}"
+  gitops_ssh_url       = "${var.gitops_ssh_url}"
+  gitops_ssh_key       = "${var.gitops_ssh_key}"
+  flux_recreate        = ""
+  kubeconfig_complete  = "${module.central_aks.kubeconfig_done}"
+  kubeconfig_filename  = "${local.central_kubeconfig_filename}"
+  flux_clone_dir       = "${local.central_flux_clone_dir}"
+  gitops_path          = "${var.gitops_central_path}"
+  gitops_url_branch    = "${var.gitops_central_url_branch}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 

@@ -10,6 +10,10 @@ variable "gitops_west_path" {
   type = "string"
 }
 
+variable "gitops_west_url_branch" {
+  type = "string"
+}
+
 variable "west_address_space" {
   description = "The address space that is used by the virtual network."
   default     = "172.24.0.0/16"

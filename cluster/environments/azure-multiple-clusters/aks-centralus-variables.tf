@@ -10,6 +10,10 @@ variable "gitops_central_path" {
   type = "string"
 }
 
+variable "gitops_central_url_branch" {
+  type = "string"
+}
+
 variable "central_address_space" {
   description = "The address space that is used by the virtual network."
   default     = "172.20.0.0/16"

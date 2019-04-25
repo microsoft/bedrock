@@ -10,6 +10,10 @@ variable "gitops_east_path" {
   type = "string"
 }
 
+variable "gitops_east_url_branch" {
+  type = "string"
+}
+
 variable "east_address_space" {
   description = "The address space that is used by the virtual network."
   default     = "172.22.0.0/16"
