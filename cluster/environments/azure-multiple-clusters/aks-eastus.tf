@@ -52,16 +52,14 @@ module "east_aks" {
 module "east_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url        = "${var.gitops_ssh_url}"
-  gitops_ssh_key        = "${var.gitops_ssh_key}"
-  flux_recreate         = "${var.flux_recreate}"
-  kubeconfig_complete   = "${module.east_aks.kubeconfig_done}"
-  kubeconfig_filename   = "${local.east_kubeconfig_filename}"
-  flux_clone_dir        = "${local.east_flux_clone_dir}"
-  gitops_path           = "${var.gitops_east_path}"
-  gitops_poll_interval  = "${var.gitops_poll_interval}"
-  flux_image_repository = "${var.flux_image_repository}"
-  flux_image_tag        = "${var.flux_image_tag}"
+  gitops_ssh_url       = "${var.gitops_ssh_url}"
+  gitops_ssh_key       = "${var.gitops_ssh_key}"
+  flux_recreate        = "${var.flux_recreate}"
+  kubeconfig_complete  = "${module.east_aks.kubeconfig_done}"
+  kubeconfig_filename  = "${local.east_kubeconfig_filename}"
+  flux_clone_dir       = "${local.east_flux_clone_dir}"
+  gitops_path          = "${var.gitops_east_path}"
+  gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
 # create a static public ip and associate with traffic manger endpoint

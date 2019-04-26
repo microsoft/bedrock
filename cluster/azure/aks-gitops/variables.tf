@@ -19,16 +19,6 @@ variable "dns_prefix" {
   type = "string"
 }
 
-# container registry to download flux image
-variable "flux_image_repository" {
-  type = "string"
-}
-
-# flux version to download source from git repo and container image from the registry
-variable "flux_image_tag" {
-  type = "string"
-}
-
 variable "flux_recreate" {
   type = "string"
 }
