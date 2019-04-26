@@ -399,7 +399,7 @@ DEPLOY
   # these key-value pairs are passed into the ARM Template's `parameters` block
   parameters {
     "prm_traffic_manager_url" = "${var.traffic_manager_url}"
-    "service_cust_option1apim_name" = "${var.service_cust_option1apim_name}"
+    "service_cust_option1apim_name" = "${var.service_option1apim_name}"
 
   }
 
