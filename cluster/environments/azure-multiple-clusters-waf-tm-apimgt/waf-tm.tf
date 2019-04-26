@@ -290,7 +290,7 @@ resource "azurerm_traffic_manager_profile" "profile" {
 resource "azurerm_traffic_manager_endpoint" "eastusep" {
   name                = "eastusep"
   resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${azurerm_traffic_manager_profile.profile.name}"
+  profile_name        = "${var.traffic_manager_profile_name}"
   target              = "${azurerm_public_ip.wafipeast.ip_address}"
   type                = "externalEndpoints"
   weight              = 100
@@ -299,7 +299,7 @@ resource "azurerm_traffic_manager_endpoint" "eastusep" {
 resource "azurerm_traffic_manager_endpoint" "westusep" {
   name                = "westusep"
   resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${azurerm_traffic_manager_profile.profile.name}"
+  profile_name        = "${var.traffic_manager_profile_name}"
   target              = "${azurerm_public_ip.wafipwest.ip_address}"
   type                = "externalEndpoints"
   weight              = 200
@@ -308,7 +308,7 @@ resource "azurerm_traffic_manager_endpoint" "westusep" {
 resource "azurerm_traffic_manager_endpoint" "centralusep" {
   name                = "centralusep"
   resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${azurerm_traffic_manager_profile.profile.name}"
+  profile_name        = "${var.traffic_manager_profile_name}"
   target              = "${azurerm_public_ip.wafipcentral.ip_address}"
   type                = "externalEndpoints"
   weight              = 300

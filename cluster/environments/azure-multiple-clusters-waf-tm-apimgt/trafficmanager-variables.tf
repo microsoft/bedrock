@@ -1,5 +1,7 @@
+
 variable "traffic_manager_resource_group_name" {
   type = "string"
+  # default="terraformtest"
 }
 
 variable "traffic_manager_resource_group_location" {
