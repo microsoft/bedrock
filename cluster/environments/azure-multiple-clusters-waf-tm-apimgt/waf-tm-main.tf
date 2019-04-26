@@ -1,6 +1,6 @@
-# provider "azurerm" {
-#     version = "~>1.18"
-# }
+provider "azurerm" {
+    version = "~>1.18"
+}
 
 # Create virtual network
 data "azurerm_virtual_network" "tfvneteast" {
@@ -12,7 +12,7 @@ resource "azurerm_subnet" "tfwafneteast" {
   name                 = "wafneteast"
   virtual_network_name = "${data.azurerm_virtual_network.tfvneteast.name}"
   resource_group_name          = "${var.resource_group_name_east}"
-  address_prefix       = "10.0.10.0/24"
+  address_prefix       = "10.0.30.0/24"
 }
 
 
@@ -26,7 +26,7 @@ resource "azurerm_subnet" "tfwafnetwest" {
   name                 = "wafnetwest"
   virtual_network_name = "${data.azurerm_virtual_network.tfvnetwest.name}"
   resource_group_name  = "${var.resource_group_name_west}"
-  address_prefix       = "10.0.10.0/24"
+  address_prefix       = "10.0.30.0/24"
 }
 
 
@@ -39,7 +39,7 @@ resource "azurerm_subnet" "tfwafnetcentral" {
   name                 = "wafnetcentral"
   virtual_network_name = "${data.azurerm_virtual_network.tfvnetcentral.name}"
   resource_group_name          = "${var.resource_group_name_central}"
-  address_prefix       = "10.0.10.0/24"
+  address_prefix       = "10.0.30.0/24"
 }
 
 

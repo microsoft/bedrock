@@ -1,3 +1,5 @@
+
+
 # create public IP east
 resource "azurerm_public_ip" "wafipeast" {
   name                         = "${var.prefix}-wafipeast"
@@ -81,7 +83,10 @@ resource "azurerm_application_gateway" "appgweast" {
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 
-  
+depends_on = [
+     "azurerm_public_ip.wafipeast","azurerm_subnet.tfwafneteast"
+
+  ]
 }
 
 ################### westUS
@@ -256,6 +261,10 @@ resource "azurerm_application_gateway" "appgwcentral" {
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 
+depends_on = 
+     ["azurerm_public_ip.wafipcentral","azurerm_subnet.tfwafnetcentral"]
+
+  
   
 }
 
@@ -294,6 +303,11 @@ resource "azurerm_traffic_manager_endpoint" "eastusep" {
   target              = "${azurerm_public_ip.wafipeast.ip_address}"
   type                = "externalEndpoints"
   weight              = 100
+
+  depends_on = 
+     ["azurerm_public_ip.wafipeast"]
+
+  
 }
 
 resource "azurerm_traffic_manager_endpoint" "westusep" {
@@ -303,6 +317,10 @@ resource "azurerm_traffic_manager_endpoint" "westusep" {
   target              = "${azurerm_public_ip.wafipwest.ip_address}"
   type                = "externalEndpoints"
   weight              = 200
+   depends_on = 
+     ["azurerm_public_ip.wafipwest"]
+
+  
 }
 
 resource "azurerm_traffic_manager_endpoint" "centralusep" {
@@ -312,4 +330,8 @@ resource "azurerm_traffic_manager_endpoint" "centralusep" {
   target              = "${azurerm_public_ip.wafipcentral.ip_address}"
   type                = "externalEndpoints"
   weight              = 300
+ depends_on = 
+     ["azurerm_public_ip.wafipcentral"]
+
+  
 }
