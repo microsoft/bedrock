@@ -34,6 +34,7 @@ variable "gitops_ssh_url" {
 
 variable "gitops_poll_interval" {
   type = "string"
+  default = "5m"
 }
 
 variable "gitops_ssh_key" {

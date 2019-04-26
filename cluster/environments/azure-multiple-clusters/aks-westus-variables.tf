@@ -12,6 +12,7 @@ variable "gitops_west_path" {
 
 variable "gitops_west_url_branch" {
   type = "string"
+  default = "master"
 }
 
 variable "west_address_space" {

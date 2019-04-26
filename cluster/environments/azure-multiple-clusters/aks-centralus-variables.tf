@@ -12,6 +12,7 @@ variable "gitops_central_path" {
 
 variable "gitops_central_url_branch" {
   type = "string"
+  default = "master"
 }
 
 variable "central_address_space" {

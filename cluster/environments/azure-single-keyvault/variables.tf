@@ -40,6 +40,7 @@ variable "gitops_ssh_url" {
 
 variable "gitops_url_branch" {
   type = "string"
+  default = "master"
 }
 
 variable "gitops_ssh_key" {

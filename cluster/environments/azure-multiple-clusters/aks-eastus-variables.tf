@@ -12,6 +12,7 @@ variable "gitops_east_path" {
 
 variable "gitops_east_url_branch" {
   type = "string"
+  default = "master"
 }
 
 variable "east_address_space" {

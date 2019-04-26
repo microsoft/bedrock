@@ -42,6 +42,7 @@ variable "gitops_path" {
 
 variable "gitops_url_branch" {
   type = "string"
+  default = "master"
 }
 
 variable "resource_group_name" {
