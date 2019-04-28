@@ -1,6 +1,6 @@
 # GitOps CI/CD with Azure Devops
 
-This section describes how to configure Azure Devops as the CI/CD system for your GitOps Workflow.
+This section describes how to configure Azure Devops to be your CI/CD orchestrator for your GitOps Workflow.
 
 ## Prerequisites
 
