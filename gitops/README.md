@@ -29,6 +29,10 @@ We provide instructions and automation for deploying a GitOps CI/CD pipeline for
 
 Pull requests would be gratefully accepted for other CI/CD platforms.
 
+## Additional Questions?
+
+Check out the [wiki](https://github.com/Microsoft/bedrock/wiki/FAQ#gitops) or [gitops best practices](BestPractices.md) pages. 
+
 ### Additional Resources
 + https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/use-git-microsoft
 + https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/release-flow
