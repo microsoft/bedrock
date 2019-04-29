@@ -11,7 +11,3 @@ output "kube_config" {
 output "kubeconfig_done" {
   value = "${join("",null_resource.cluster_credentials.*.id)}"
 }
-
-output "cluster_derived_resource_group" {
-  value = "${azurerm_kubernetes_cluster.cluster.node_resource_group}"
-}
