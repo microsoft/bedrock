@@ -19,6 +19,11 @@ variable "dns_prefix" {
   type = "string"
 }
 
+variable "enable_flux" {
+  type = "string"
+  default = "true"
+}
+
 variable "flux_recreate" {
   type = "string"
 }
