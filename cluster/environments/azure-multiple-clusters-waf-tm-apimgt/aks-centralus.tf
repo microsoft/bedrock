@@ -1,3 +1,4 @@
+
 resource "azurerm_resource_group" "centralrg" {
   name     = "${var.central_resource_group_name}"
   location = "${var.central_resource_group_location}"
@@ -62,22 +63,22 @@ module "central_flux" {
 }
 
 # create a static public ip and associate with traffic manger endpoint
-module "central_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
+# module "central_tm_endpoint" {
+#   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
-  resource_location                   = "${local.central_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.central_rg_location}-${var.cluster_name}"
-  public_ip_name                      = "${var.cluster_name}"
-  ip_address_out_filename             = "${local.central_ip_address_out_filename}"
+#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
+#   resource_location                   = "${local.central_rg_location}"
+#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+#   endpoint_name                       = "${local.central_rg_location}-${var.cluster_name}"
+#   public_ip_name                      = "${var.cluster_name}"
+#   ip_address_out_filename             = "${local.central_ip_address_out_filename}"
 
-  tags = {
-    environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.central_aks.kubeconfig_done}"
-  }
-}
+#   tags = {
+#     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
+#     kubedone = "${module.central_aks.kubeconfig_done}"
+#   }
+# }
 
 # Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller

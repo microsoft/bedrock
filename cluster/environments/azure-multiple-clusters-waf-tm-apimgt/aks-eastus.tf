@@ -62,23 +62,23 @@ module "east_flux" {
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
-# create a static public ip and associate with traffic manger endpoint
-module "east_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
+# # create a static public ip and associate with traffic manger endpoint
+# module "east_tm_endpoint" {
+#   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
-  resource_location                   = "${local.east_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.east_rg_location}-${var.cluster_name}"
-  public_ip_name                      = "${var.cluster_name}"
-  ip_address_out_filename             = "${local.east_ip_address_out_filename}"
+#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
+#   resource_location                   = "${local.east_rg_location}"
+#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+#   endpoint_name                       = "${local.east_rg_location}-${var.cluster_name}"
+#   public_ip_name                      = "${var.cluster_name}"
+#   ip_address_out_filename             = "${local.east_ip_address_out_filename}"
 
-  tags = {
-    environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-    kubedone    = "${module.east_aks.kubeconfig_done}"
-  }
-}
+#   tags = {
+#     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
+#     kubedone    = "${module.east_aks.kubeconfig_done}"
+#   }
+# }
 
 # Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller
