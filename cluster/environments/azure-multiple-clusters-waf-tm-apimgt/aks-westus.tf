@@ -19,7 +19,7 @@ module "west_vnet" {
 
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
-  subnet_names            = ["${var.cluster_name}-aks-subnet"]
+  subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
   address_space           = "${var.west_address_space}"
   subnet_prefixes         = "${var.west_subnet_prefixes}"
   tags = {

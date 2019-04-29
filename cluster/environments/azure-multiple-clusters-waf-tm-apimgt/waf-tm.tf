@@ -12,19 +12,30 @@
 #   }
 # }
 
-locals {
-  east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
-  east_rg_location             = "${azurerm_resource_group.eastrg.location}"
+# locals {
+#   east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
+#   east_rg_location             = "${azurerm_resource_group.eastrg.location}"
 
-  west_rg_name                 = "${azurerm_resource_group.westrg.name}"
-  west_rg_location             = "${azurerm_resource_group.westrg.location}"
+#   west_rg_name                 = "${azurerm_resource_group.westrg.name}"
+#   west_rg_location             = "${azurerm_resource_group.westrg.location}"
   
-  central_rg_name                 = "${azurerm_resource_group.centralrg.name}"
-  central_rg_location             = "${azurerm_resource_group.centralrg.location}"
+#   central_rg_name                 = "${azurerm_resource_group.centralrg.name}"
+#   central_rg_location             = "${azurerm_resource_group.centralrg.location}"
 
 
-}
+# }
+# module "east_vnet_subnet" {
+#   source = "../../azure/vnet"
 
+#   resource_group_name     = "${local.east_rg_name }"
+#   resource_group_location = "${local.east_rg_location}"
+#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
+#   address_space           = "${var.east_address_space}"
+#   subnet_prefixes         = "${var.east_waf_subnet_prefixes}"
+#   tags = {
+#     environment = "azure-multiple-clusters"
+#   }
+# }
 
 module "east_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
@@ -46,7 +57,7 @@ module "east_tm_endpoint" {
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgweast" {
   name                = "${var.prefix}appgweast"
-  resource_group_name = "${var.resource_group_name_east}"
+  resource_group_name = "${local.east_rg_location}"
   location            = "eastus"
 
   # WAF configuration
@@ -81,7 +92,7 @@ resource "azurerm_application_gateway" "appgweast" {
 
   frontend_ip_configuration {
     name                 = "${var.prefix}-feip"
-    public_ip_address_id = "${module.east_tm_endpoint.pip.id}"
+    public_ip_address_id = "${module.east_tm_endpoint.public_ip_id}"
   }
 
   backend_address_pool {
@@ -115,10 +126,10 @@ resource "azurerm_application_gateway" "appgweast" {
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 
-depends_on = [
-     "azurerm_public_ip.wafipeast"
+# depends_on = [
+#      "azurerm_public_ip.wafipeast"
 
-  ]
+#   ]
 }
 
 ################### westUS
@@ -135,6 +146,18 @@ depends_on = [
 #   }
 # }
 
+# module "west_vnet_subnet" {
+#   source = "../../azure/vnet"
+
+#   resource_group_name     = "${local.west_rg_name }"
+#   resource_group_location = "${local.west_rg_location}"
+#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
+#   address_space           = "${var.west_address_space}"
+#   subnet_prefixes         = "${var.west_waf_subnet_prefixes}"
+#   tags = {
+#     environment = "azure-multiple-clusters"
+#   }
+# }
 
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
@@ -156,7 +179,7 @@ module "west_tm_endpoint" {
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwwest" {
   name                = "${var.prefix}appgwwest"
-  resource_group_name = "${var.resource_group_name_west}"
+  resource_group_name = "${local.west_rg_location}"
   location            = "westus"
 
   # WAF configuration
@@ -191,7 +214,7 @@ resource "azurerm_application_gateway" "appgwwest" {
   frontend_ip_configuration {
     name                 = "${var.prefix}-feip"
     # public_ip_address_id = "${azurerm_public_ip.wafipwest.id}" module.east_tm_endpoint.pip.id
-    public_ip_address_id = "${module.west_tm_endpoint.pip.id}"
+    public_ip_address_id = "${module.west_tm_endpoint.public_ip_id}"
   }
 
   backend_address_pool {
@@ -241,6 +264,18 @@ resource "azurerm_application_gateway" "appgwwest" {
 #   }
 # }
 
+# module "central_vnet_subnet" {
+#   source = "../../azure/vnet"
+
+#   resource_group_name     = "${local.central_rg_name }"
+#   resource_group_location = "${local.central_rg_location}"
+#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
+#   address_space           = "${var.central_address_space}"
+#   subnet_prefixes         = "${var.central_waf_subnet_prefixes}"
+#   tags = {
+#     environment = "azure-multiple-clusters"
+#   }
+# }
 
 module "central_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
@@ -262,7 +297,7 @@ module "central_tm_endpoint" {
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwcentral" {
   name                = "${var.prefix}appgwcentral"
-  resource_group_name = "${var.resource_group_name_central}"
+  resource_group_name = "${local.central_rg_location}"
   location            = "centralus"
 
   # WAF configuration
@@ -296,7 +331,7 @@ resource "azurerm_application_gateway" "appgwcentral" {
 
   frontend_ip_configuration {
     name                 = "${var.prefix}-feip"
-    public_ip_address_id = "${module.central_tm_endpoint.pip.id}"
+    public_ip_address_id = "${module.central_tm_endpoint.public_ip_id}"
   }
 
   backend_address_pool {
@@ -330,8 +365,8 @@ resource "azurerm_application_gateway" "appgwcentral" {
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 
-depends_on = 
-     ["azurerm_public_ip.wafipcentral","azurerm_subnet.tfwafnetcentral"]
+# depends_on = 
+#      ["azurerm_public_ip.wafipcentral","azurerm_subnet.tfwafnetcentral"]
 
   
   
