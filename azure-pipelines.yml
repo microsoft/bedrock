@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
     - master
+    - azure-pipelines
   paths:
     include:
     - /cluster/azure/*
