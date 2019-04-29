@@ -52,36 +52,36 @@ resource "azurerm_application_gateway" "appgweast" {
     public_ip_address_id = "${azurerm_public_ip.wafipeast.id}"
   }
 
-  backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-    ip_address_list = ["10.0.1.4"]
-  }
+  # backend_address_pool {
+  #   name            = "${var.prefix}-beappool1"
+  #   ip_address_list = ["10.0.1.4"]
+  # }
 
-  backend_http_settings {
-    name                  = "${var.prefix}-httpsetting1"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 20
-    # cookie_based_affinity = "Enabled"                    // "Disabled"
-  }
+  # backend_http_settings {
+  #   name                  = "${var.prefix}-httpsetting1"
+  #   cookie_based_affinity = "Disabled"
+  #   port                  = 80
+  #   protocol              = "Http"
+  #   request_timeout       = 20
+  #   # cookie_based_affinity = "Enabled"                    // "Disabled"
+  # }
 
-  http_listener {
-    name                           = "${var.prefix}-httplstn1"
-    frontend_ip_configuration_name = "${var.prefix}-feip"
-    frontend_port_name             = "${var.prefix}-feport"
-    protocol                       = "Http"
+  # http_listener {
+  #   name                           = "${var.prefix}-httplstn1"
+  #   frontend_ip_configuration_name = "${var.prefix}-feip"
+  #   frontend_port_name             = "${var.prefix}-feport"
+  #   protocol                       = "Http"
   
-  }
+  # }
 
 
-  request_routing_rule {
-    name                       = "${var.prefix}-rule1"
-    rule_type                  = "Basic"
-    http_listener_name         = "${var.prefix}-httplstn1"
-    backend_address_pool_name  = "${var.prefix}-beappool1"
-    backend_http_settings_name = "${var.prefix}-httpsetting1"
-  }
+  # request_routing_rule {
+  #   name                       = "${var.prefix}-rule1"
+  #   rule_type                  = "Basic"
+  #   http_listener_name         = "${var.prefix}-httplstn1"
+  #   backend_address_pool_name  = "${var.prefix}-beappool1"
+  #   backend_http_settings_name = "${var.prefix}-httpsetting1"
+  # }
 
 depends_on = [
      "azurerm_public_ip.wafipeast","azurerm_subnet.tfwafneteast"
@@ -143,35 +143,35 @@ resource "azurerm_application_gateway" "appgwwest" {
     public_ip_address_id = "${azurerm_public_ip.wafipwest.id}"
   }
 
-  backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-    ip_address_list = ["10.0.1.4"]
-  }
+  # backend_address_pool {
+  #   name            = "${var.prefix}-beappool1"
+  #   ip_address_list = ["10.0.1.4"]
+  # }
 
-  backend_http_settings {
-    name                  = "${var.prefix}-httpsetting1"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 20
-  }
+  # backend_http_settings {
+  #   name                  = "${var.prefix}-httpsetting1"
+  #   cookie_based_affinity = "Disabled"
+  #   port                  = 80
+  #   protocol              = "Http"
+  #   request_timeout       = 20
+  # }
 
-  http_listener {
-    name                           = "${var.prefix}-httplstn1"
-    frontend_ip_configuration_name = "${var.prefix}-feip"
-    frontend_port_name             = "${var.prefix}-feport"
-    protocol                       = "Http"
+  # http_listener {
+  #   name                           = "${var.prefix}-httplstn1"
+  #   frontend_ip_configuration_name = "${var.prefix}-feip"
+  #   frontend_port_name             = "${var.prefix}-feport"
+  #   protocol                       = "Http"
   
-  }
+  # }
 
 
-  request_routing_rule {
-    name                       = "${var.prefix}-rule1"
-    rule_type                  = "Basic"
-    http_listener_name         = "${var.prefix}-httplstn1"
-    backend_address_pool_name  = "${var.prefix}-beappool1"
-    backend_http_settings_name = "${var.prefix}-httpsetting1"
-  }
+  # request_routing_rule {
+  #   name                       = "${var.prefix}-rule1"
+  #   rule_type                  = "Basic"
+  #   http_listener_name         = "${var.prefix}-httplstn1"
+  #   backend_address_pool_name  = "${var.prefix}-beappool1"
+  #   backend_http_settings_name = "${var.prefix}-httpsetting1"
+  # }
 
   
 }
@@ -230,36 +230,36 @@ resource "azurerm_application_gateway" "appgwcentral" {
     public_ip_address_id = "${azurerm_public_ip.wafipcentral.id}"
   }
 
-  backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-    ip_address_list = ["10.0.1.4"]
-  }
+  # backend_address_pool {
+  #   name            = "${var.prefix}-beappool1"
+  #   ip_address_list = ["10.0.1.4"]
+  # }
 
-  backend_http_settings {
-    name                  = "${var.prefix}-httpsetting1"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 20
-    # cookie_based_affinity = "Enabled"                    // "Disabled"
-  }
+  # backend_http_settings {
+  #   name                  = "${var.prefix}-httpsetting1"
+  #   cookie_based_affinity = "Disabled"
+  #   port                  = 80
+  #   protocol              = "Http"
+  #   request_timeout       = 20
+  #   # cookie_based_affinity = "Enabled"                    // "Disabled"
+  # }
 
-  http_listener {
-    name                           = "${var.prefix}-httplstn1"
-    frontend_ip_configuration_name = "${var.prefix}-feip"
-    frontend_port_name             = "${var.prefix}-feport"
-    protocol                       = "Http"
+  # http_listener {
+  #   name                           = "${var.prefix}-httplstn1"
+  #   frontend_ip_configuration_name = "${var.prefix}-feip"
+  #   frontend_port_name             = "${var.prefix}-feport"
+  #   protocol                       = "Http"
   
-  }
+  # }
 
 
-  request_routing_rule {
-    name                       = "${var.prefix}-rule1"
-    rule_type                  = "Basic"
-    http_listener_name         = "${var.prefix}-httplstn1"
-    backend_address_pool_name  = "${var.prefix}-beappool1"
-    backend_http_settings_name = "${var.prefix}-httpsetting1"
-  }
+  # request_routing_rule {
+  #   name                       = "${var.prefix}-rule1"
+  #   rule_type                  = "Basic"
+  #   http_listener_name         = "${var.prefix}-httplstn1"
+  #   backend_address_pool_name  = "${var.prefix}-beappool1"
+  #   backend_http_settings_name = "${var.prefix}-httpsetting1"
+  # }
 
 depends_on = 
      ["azurerm_public_ip.wafipcentral","azurerm_subnet.tfwafnetcentral"]
@@ -271,67 +271,67 @@ depends_on =
 ################ Traffic manager
 
 
-resource "azurerm_resource_group" "tmrg" {
-  name     = "${var.traffic_manager_resource_group_name}"
-  location = "${var.traffic_manager_resource_group_location}"
-}
+# resource "azurerm_resource_group" "tmrg" {
+#   name     = "${var.traffic_manager_resource_group_name}"
+#   location = "${var.traffic_manager_resource_group_location}"
+# }
 
-# Creates Azure Traffic Manager Profile
-resource "azurerm_traffic_manager_profile" "profile" {
-  name                   = "${var.traffic_manager_profile_name}"
-  resource_group_name    = "${var.traffic_manager_resource_group_name}"
-  traffic_routing_method = "Weighted"
+# # Creates Azure Traffic Manager Profile
+# resource "azurerm_traffic_manager_profile" "profile" {
+#   name                   = "${var.traffic_manager_profile_name}"
+#   resource_group_name    = "${var.traffic_manager_resource_group_name}"
+#   traffic_routing_method = "Weighted"
 
-  dns_config {
-    relative_name = "${var.traffic_manager_dns_name}"
-    ttl           = 30
-  }
+#   dns_config {
+#     relative_name = "${var.traffic_manager_dns_name}"
+#     ttl           = 30
+#   }
 
-  monitor_config {
-    protocol = "${var.traffic_manager_monitor_protocol}"
-    port     = "${var.traffic_manager_monitor_port}"
-    path     = "/"
-  }
+#   monitor_config {
+#     protocol = "${var.traffic_manager_monitor_protocol}"
+#     port     = "${var.traffic_manager_monitor_port}"
+#     path     = "/"
+#   }
 
-  tags = "${var.tags}"
-}
+#   tags = "${var.tags}"
+# }
 
-resource "azurerm_traffic_manager_endpoint" "eastusep" {
-  name                = "eastusep"
-  resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${var.traffic_manager_profile_name}"
-  target              = "${azurerm_public_ip.wafipeast.ip_address}"
-  type                = "externalEndpoints"
-  weight              = 100
+# resource "azurerm_traffic_manager_endpoint" "eastusep" {
+#   name                = "eastusep"
+#   resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   profile_name        = "${var.traffic_manager_profile_name}"
+#   target              = "${azurerm_public_ip.wafipeast.ip_address}"
+#   type                = "externalEndpoints"
+#   weight              = 100
 
-  depends_on = 
-     ["azurerm_public_ip.wafipeast"]
-
-  
-}
-
-resource "azurerm_traffic_manager_endpoint" "westusep" {
-  name                = "westusep"
-  resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${var.traffic_manager_profile_name}"
-  target              = "${azurerm_public_ip.wafipwest.ip_address}"
-  type                = "externalEndpoints"
-  weight              = 200
-   depends_on = 
-     ["azurerm_public_ip.wafipwest"]
+#   depends_on = 
+#      ["azurerm_public_ip.wafipeast"]
 
   
-}
+# }
 
-resource "azurerm_traffic_manager_endpoint" "centralusep" {
-  name                = "centralusep"
-  resource_group_name = "${var.traffic_manager_resource_group_name}"
-  profile_name        = "${var.traffic_manager_profile_name}"
-  target              = "${azurerm_public_ip.wafipcentral.ip_address}"
-  type                = "externalEndpoints"
-  weight              = 300
- depends_on = 
-     ["azurerm_public_ip.wafipcentral"]
+# resource "azurerm_traffic_manager_endpoint" "westusep" {
+#   name                = "westusep"
+#   resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   profile_name        = "${var.traffic_manager_profile_name}"
+#   target              = "${azurerm_public_ip.wafipwest.ip_address}"
+#   type                = "externalEndpoints"
+#   weight              = 200
+#    depends_on = 
+#      ["azurerm_public_ip.wafipwest"]
 
   
-}
+# }
+
+# resource "azurerm_traffic_manager_endpoint" "centralusep" {
+#   name                = "centralusep"
+#   resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   profile_name        = "${var.traffic_manager_profile_name}"
+#   target              = "${azurerm_public_ip.wafipcentral.ip_address}"
+#   type                = "externalEndpoints"
+#   weight              = 300
+#  depends_on = 
+#      ["azurerm_public_ip.wafipcentral"]
+
+  
+# }
