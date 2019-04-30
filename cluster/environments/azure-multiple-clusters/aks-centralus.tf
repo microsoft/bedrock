@@ -22,6 +22,7 @@ module "central_vnet" {
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.central_address_space}"
   subnet_prefixes         = "${var.central_subnet_prefixes}"
+
   tags = {
     environment = "azure_multiple_clusters"
   }
