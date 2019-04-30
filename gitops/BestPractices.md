@@ -1,15 +1,15 @@
 # Best Practices with Bedrock and GitOps
 
-Consider these best practices a work in progress as we learn more about high repeatable deployments in Kubernetes.
+Consider these best practices a work in progress as we learn more about highly repeatable deployments in Kubernetes.
 
 ## TLDR
-+ Use high-level definition repo as application configuration as code
++ Use the high-level definition repo as application configuration as code
 + Use Bedrock deployment templates as your declarative infrastructure as code.
 + All operational changes are made by pull request
 + Don't publish changes to the cluster by hand or via CI tools (helm/tiller)
 + Practice container image promotion. 
- + Build once and promote to environments via testing gates
-+ Promotion is logged in high level definition
+    + Build once and promote to environments via testing gates
++ Promotion is configured in high level definition
 
 ## Securing the Bedrock GitOps Workflow
 In a production scenario it can be tempting to modify Kubernetes resource directly on the cluster via `kubectl`, kubernetes dashboard, or helm via tiller. Some thoughts running through an operator's head may include:
