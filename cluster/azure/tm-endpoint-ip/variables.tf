@@ -18,6 +18,11 @@ variable "resource_group_name" {
   type = "string"
 }
 
+variable "allocation_method" {
+  type = "string"
+  default = "Static"
+}
+
 variable "resource_location" {
   type = "string"
 }

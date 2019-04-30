@@ -62,24 +62,6 @@ module "central_flux" {
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
-# create a static public ip and associate with traffic manger endpoint
-# module "central_tm_endpoint" {
-#   source = "../../azure/tm-endpoint-ip"
-
-#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
-#   resource_location                   = "${local.central_rg_location}"
-#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-#   endpoint_name                       = "${local.central_rg_location}-${var.cluster_name}"
-#   public_ip_name                      = "${var.cluster_name}"
-#   ip_address_out_filename             = "${local.central_ip_address_out_filename}"
-
-#   tags = {
-#     environment = "azure-multiple-clusters - ${var.cluster_name} - public ip"
-#     kubedone = "${module.central_aks.kubeconfig_done}"
-#   }
-# }
-
 
 module "central_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
@@ -91,7 +73,7 @@ module "central_tm_endpoint" {
   endpoint_name                       = "${local.central_rg_location}-waf-ipcentral"
   public_ip_name                      = "${var.cluster_name}-waf-ipcentral"
   ip_address_out_filename             = "${local.central_ip_address_out_filename}"
-  # allocation_method                   = "dynamic"
+  allocation_method                   = "Dynamic"
 
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgt - ${var.cluster_name} - public ip"

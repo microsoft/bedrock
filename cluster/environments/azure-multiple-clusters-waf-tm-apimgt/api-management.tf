@@ -333,7 +333,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "apiVersion": "2018-01-01",
             "scale": null,
             "properties": {
-                "displayName": "[concat(parameters('apis_traffic_manager_name'),'Titles', parameters('apis_traffic_manager_name'))]",
+                "displayName": "Voting",
                 "apiRevision": "1",
                 "description": "",
                 "serviceUrl": "[concat('http://', parameters('primary_region_waf_url'))]",
@@ -352,9 +352,9 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "apiVersion": "2018-01-01",
             "scale": null,
             "properties": {
-                "displayName": "[concat(parameters('operations_gettitles_name'),'getTitles', parameters('operations_gettitles_name'))]",
+                "displayName": "getcount",
                 "method": "GET",
-                "urlTemplate": "/titles",
+                "urlTemplate": "/counts",
                 "templateParameters": [],
                 "description": "",
                 "responses": []
