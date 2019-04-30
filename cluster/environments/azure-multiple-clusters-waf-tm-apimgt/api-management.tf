@@ -21,7 +21,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "type": "string"
         },
         "apis_traffic_manager_name": {
-            "defaultValue": "titles",
+            "defaultValue": "Voting",
             "type": "string"
         },
         "apis_echo_api_name": {
@@ -70,7 +70,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "type": "string"
         },
         "apis_titles_name": {
-            "defaultValue": "titles",
+            "defaultValue": "voting",
             "type": "string"
         },
         "users_1_name_2": {
