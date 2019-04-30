@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
     - master
+    - azure-pipelines
   paths:
     include:
     - /cluster/azure/*
@@ -11,9 +12,11 @@ trigger:
     - /cluster/environments/azure-single-keyvault/*
     - /cluster/environments/azure-common-infra/*
     - /cluster/environments/azure-multiple-clusters/*
+    - azure-pipelines.yml
     exclude:
     - gitops/*
     - README.md
+    - /*.md
 pr:
   autoCancel: false
   branches:
@@ -29,8 +32,10 @@ pr:
     - /cluster/environments/azure-multiple-clusters/*
     - /test/*
     - gitops/*
+    - azure-pipelines.yml
     exclude:
     - README.md
+    - /*.md
 
 pool:
   vmImage: 'Ubuntu-16.04'
