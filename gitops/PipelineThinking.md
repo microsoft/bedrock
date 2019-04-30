@@ -47,5 +47,5 @@ These steps can be repeated for N amount of promotions depending on the number o
 <p align="center"><i>Inside container promotion CD from pre-production to production</i></p>
 
 ## Next Steps
-Augmentation and release pipelines expose new complexity to the original manifest yaml generation pipeline. Try a simple example of building a release pipelines:
-* [Automated Container Image Tag Release Pipeline](ImageTagRelease.md) 
+Try creating some examples of pipelines for the in following platforms:
+* [Azure Devops](./azure-devops)
