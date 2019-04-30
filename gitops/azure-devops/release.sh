@@ -14,9 +14,6 @@ download_fab
 # Clone HLD repo
 git_connect
 
-# Fabrikate (Part 2)
-install_fab
-
 echo "FAB SET"
 fab set --environment $(Release.EnvironmentName) --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
 
