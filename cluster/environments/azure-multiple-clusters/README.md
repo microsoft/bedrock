@@ -42,7 +42,7 @@ As mentioned in [common steps](../../azure/), the deployment of an AKS cluster g
 
 ### Public IP Address
 
-In order to route traffic through Traffic Manager to each AKS cluster, this template creates a Public IP Address resource for each cluster. The Public IP Address will be provisioned within the Resource Group created by the Azure AKS Provider.
+In order to route traffic through Traffic Manager to each AKS cluster, this template creates a Public IP Address resource for each cluster. The Public IP for each AKS cluster will be provisioned in the Resource Group for each region.
 
 In addition to creating the Public IP Address for each cluster, a Traffic Manager Rule will be created for each Public IP Address so that the Traffic Manager knows about and can route traffic accordingly.
 
