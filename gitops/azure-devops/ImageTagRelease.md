@@ -1,4 +1,4 @@
-# Guide: Automated Container Image Tag Augmentation Pipeline
+# Guide: Automated Container Image Tag Release Pipeline (Azure DevOps)
 
 This section describes an example of how to extend your [manifest generation pipeline](PipelineThinking.md) by pre-prending a pipeline to automate incrementing your container image tag names in your high-level defintion using. Morever we cover a rudimentary way to perform container promotion with Azure DevOps.
 

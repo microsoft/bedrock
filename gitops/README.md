@@ -23,6 +23,10 @@ At a high level, the steps for an operator of a Kubernetes cluster to make an op
 
 ## Getting Started
 
+Learning about how we think about designing GitOps Pipelines:
+
+* [GitOps Pipeline Design](./PipelineThinking.md)
+
 We provide instructions and automation for deploying a GitOps CI/CD pipeline for the following platforms:
 
 * [Azure Devops](./azure-devops)
