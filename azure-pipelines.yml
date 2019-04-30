@@ -12,6 +12,7 @@ trigger:
     - /cluster/environments/azure-single-keyvault/*
     - /cluster/environments/azure-common-infra/*
     - /cluster/environments/azure-multiple-clusters/*
+    - azure-pipelines.yml
     exclude:
     - gitops/*
     - README.md
@@ -31,6 +32,7 @@ pr:
     - /cluster/environments/azure-multiple-clusters/*
     - /test/*
     - gitops/*
+    - azure-pipelines.yml
     exclude:
     - README.md
     - /*.md
