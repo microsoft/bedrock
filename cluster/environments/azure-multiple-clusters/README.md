@@ -14,7 +14,7 @@ This deployment creates the following:
     - [Public IP Address](#public-ip-address)
     - [Traffic Manager Deployment](#traffic-manager-deployment)
 
-You can deploy the `azure-multiple-cluster` using a Service Principal that has `Owner` privileges on the Azure Subscription. The Public IP for each AKS cluster will be deployed to the appropriate, non-derived resource group. 
+You can deploy the `azure-multiple-cluster` using a Service Principal that has `Owner` privileges on the Azure Subscription. The Public IP for each AKS cluster will be provisioned in the Resource Group for each region.
 
 To deploy this environment, follow the [common steps](../../azure/) for deploying a cluster with the following modifications:
 
