@@ -79,3 +79,19 @@ resource "azurerm_role_assignment" "west_spra" {
   role_definition_name = "${var.aks_client_role_assignment_role}"
   scope                = "${azurerm_resource_group.westrg.id}"
 }
+
+# Deploy west keyvault flexvolume
+module "west_flex_volume" {
+  source = "../../azure/keyvault_flexvol"
+
+  resource_group_name        = "${var.keyvault_resource_group}"
+  service_principal_id       = "${var.service_principal_id}"
+  service_principal_secret   = "${var.service_principal_secret}"
+  service_principal_is_owner = "${var.service_principal_is_owner}"
+  tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
+  subscription_id            = "${data.azurerm_client_config.current.subscription_id}"
+  keyvault_name              = "${var.keyvault_name}"
+  kubeconfig_filename        = "${local.west_kubeconfig_filename}"
+
+  kubeconfig_complete = "${module.west_aks_gitops.kubeconfig_done}"
+}

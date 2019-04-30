@@ -10,6 +10,11 @@ variable "service_principal_secret" {
     type = "string"
 }
 
+variable "service_principal_is_owner" {
+  type = "string"
+  default = "false"
+}
+
 variable "tenant_id" {
     type = "string"
 }

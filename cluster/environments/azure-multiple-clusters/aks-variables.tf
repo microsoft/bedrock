@@ -27,6 +27,11 @@ variable "service_principal_secret" {
   type = "string"
 }
 
+variable "service_principal_is_owner" {
+  type = "string"
+  default = "true"
+}
+
 variable "gitops_ssh_url" {
   type = "string"
 }
@@ -54,4 +59,12 @@ variable "flux_recreate" {
 variable "acr_enabled" {
   type    = "string"
   default = "true"
+}
+
+variable "keyvault_name" {
+  type = "string"
+}
+
+variable "keyvault_resource_group" {
+  type = "string"
 }
