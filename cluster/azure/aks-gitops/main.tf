@@ -15,6 +15,7 @@ module "aks" {
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
   kubeconfig_recreate      = ""
+  kubeconfig_filename      = "${var.kubeconfig_filename}"
 }
 
 module "flux" {
@@ -28,6 +29,7 @@ module "flux" {
   enable_flux          = "${var.enable_flux}"
   flux_recreate        = "${var.flux_recreate}"
   kubeconfig_complete  = "${module.aks.kubeconfig_done}"
+  kubeconfig_filename  = "${var.kubeconfig_filename}"
   flux_clone_dir       = "${var.cluster_name}-flux"
   acr_enabled          = "${var.acr_enabled}"
 }
