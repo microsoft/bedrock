@@ -9,7 +9,7 @@ Our main GitOps pipeline is a manifest yaml generation pipeline. It is the essen
 Both the input and output are backed by git repositories that provide an audit trail. The input git repo can follow a branch, commit, pull request model. This sort of pipeline is also easy to rollback.
 
 ## Extending the Manifest YAML Generation Pipeline
-Any other pipeline that we place before this pipeline can be called an _augmentation pipeline_. These augmentations usual have the goal of helping automate changes to the high-level definition repository.
+Any other pipeline that we place before this pipeline can be called a release or _augmentation_ pipeline. These augmentations usual have the goal of helping automate changes to the high-level definition repository.
 
 Bedrock GitOps pipelines can use polyglot pipeline orchestrators. For instance, a Jenkins augmentation pipeline can be the prefix to an Azure DevOps manifest generation pipeline. Consequently, pipeline orchestrators can be mixed and matched to support the needs of development and operation teams.
 
@@ -47,5 +47,5 @@ These steps can be repeated for N amount of promotions depending on the number o
 <center><i>Inside container promotion CD from pre-production to production</i></center>
 
 ## Next Steps
-Augmentation pipelines do expose new complexity to the original manifest yaml generation pipeline. Try a simple example of building an augmentation pipelines.
-* [Guide: Automated Container Image Tag Augmentation Pipeline](BuildAppImage_ADOReleases.md) 
+Augmentation and release pipelines expose new complexity to the original manifest yaml generation pipeline. Try a simple example of building a release pipelines:
+* [Automated Container Image Tag Release Pipeline](ImageTagRelease.md) 

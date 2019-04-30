@@ -1,6 +1,6 @@
 # GitOps CI/CD with Azure Devops
 
-This section describes how to configure Azure Devops to be your CI/CD orchestrator for your GitOps Workflow.
+This section describes how to configure Azure Devops to be your CI/CD orchestrator for your GitOps Workflow. You will create a manifest generation pipeline using Fabrikate.
 
 ## Prerequisites
 
@@ -171,6 +171,11 @@ $ kubediff ./cloned-resource-manifest-repo
 ```
 
 3. Finally, you should watch your normal operational metrics to make sure the change was successful.
+
+## Next Steps
+Try augmenting this pipeline by adding a release pipeline in front of it.
+* [Automated Container Image Tag Release Pipeline](ImageTagRelease.md)  
+
 
 ### Reference
 
