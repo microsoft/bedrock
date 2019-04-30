@@ -8,6 +8,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/otiai10/copy"
 )
 
 func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
@@ -31,9 +32,13 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
 	backendTfstatekey:=	k8sName +"-tfstatekey"
 
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
+	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
+
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-common-infra",
+		TerraformDir: azureCommonInfraFolder,
 		BackendConfig: map[string]interface{}{
 			"storage_account_name":	backendName,
 			"access_key": backendKey,
@@ -44,7 +49,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	//Specify the test case folder and "-var" option mapping
 	common_tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-common-infra",
+		TerraformDir: azureCommonInfraFolder,
 		Upgrade: true,
 		Vars: map[string]interface{}{
 			"address_space": addressSpace,
@@ -74,9 +79,13 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
 
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureSingleKeyvaultFolder := "../cluster/test-temp-envs/azure-single-keyvault-" + k8sName
+	copy.Copy("../cluster/environments/azure-single-keyvault", azureSingleKeyvaultFolder)
+
 	//Specify the test case folder and "-var" option mapping for the environment backend
 	k8s_backend_tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-single-keyvault",
+		TerraformDir: azureSingleKeyvaultFolder,
 		BackendConfig: map[string]interface{}{
 			"storage_account_name": backendName,
 			"access_key": backendKey,
@@ -87,7 +96,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	// Specify the test case folder and "-var" options
 	k8s_tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-single-keyvault",
+		TerraformDir: azureSingleKeyvaultFolder,
 		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":			addressSpace,
@@ -115,7 +124,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	terraform.Apply(t, k8s_tfOptions)
 
 	//Obtain Kube_config file from module output
-	os.Setenv("KUBECONFIG", "../cluster/environments/azure-single-keyvault/output/bedrock_kube_config")
+	os.Setenv("KUBECONFIG", azureSingleKeyvaultFolder + "/output/bedrock_kube_config")
 	kubeConfig := os.Getenv("KUBECONFIG")
 	options := k8s.NewKubectlOptions("", kubeConfig)
 

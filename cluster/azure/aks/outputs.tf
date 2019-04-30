@@ -11,7 +11,3 @@ output "kube_config" {
 output "kubeconfig_done" {
   value = "${join("",null_resource.cluster_credentials.*.id)}"
 }
-
-output "cluster_derived_resource_group" {
-  value = "MC_${var.resource_group_name}_${var.cluster_name}_${var.resource_group_location}"
-}
