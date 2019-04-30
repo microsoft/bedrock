@@ -20,7 +20,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "defaultValue": "1",
             "type": "string"
         },
-        "apis_titles_name": {
+        "apis_traffic_manager_name": {
             "defaultValue": "titles",
             "type": "string"
         },
@@ -69,7 +69,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "defaultValue": "1",
             "type": "string"
         },
-        "apis_titles_name_1": {
+        "apis_titles_name": {
             "defaultValue": "titles",
             "type": "string"
         },
@@ -250,22 +250,15 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "defaultValue": "policy",
             "type": "string"
         },
-        "prm_traffic_manager_url": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "secondary_region_waf_url": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "tertiary_region_waf_url": {
+        "primary_region_waf_url": {
             "type": "string",
             "defaultValue": ""
         }
 
+
     },
     "variables": {
-        "traffic_manager_fqdn": "[replace(parameters('prm_traffic_manager_url'),'http://','')]"
+        "primary_region_waf_fqdn": "[replace(parameters('primary_region_waf_url'),'http://','')]"
 
     },
     "resources": [
@@ -281,7 +274,7 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
             "tags": {},
             "scale": null,
             "properties": {
-                "publisherEmail": "publisher@email.com",
+                "publisherEmail": "apisample@microsoft.com",
                 "publisherName": "Microsoft",
                 "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
                 "hostnameConfigurations": [],
@@ -336,31 +329,18 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
         },
         {
             "type": "Microsoft.ApiManagement/service/apis",
-            "name": "[concat(parameters('service_cust_option1apim_name'), '/', parameters('apis_titles_name'))]",
+            "name": "[concat(parameters('service_cust_option1apim_name'), '/', parameters('apis_traffic_manager_name'))]",
             "apiVersion": "2018-01-01",
             "scale": null,
             "properties": {
-                "displayName": "[concat(parameters('apis_titles_name'),'Titles', parameters('apis_titles_name'))]",
+                "displayName": "[concat(parameters('apis_traffic_manager_name'),'Titles', parameters('apis_traffic_manager_name'))]",
                 "apiRevision": "1",
                 "description": "",
-                "serviceUrl": "[parameters('prm_traffic_manager_url')]",
+                "serviceUrl": "[concat('http://', parameters('primary_region_waf_url'))]",
                 "path": "",
                 "protocols": [
                     "http"
                 ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('service_cust_option1apim_name'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/policies",
-            "name": "[concat(parameters('service_cust_option1apim_name'), '/', parameters('policies_policy_name'))]",
-            "apiVersion": "2018-01-01",
-            "scale": null,
-            "properties": {
-                "policyContent": "[concat('<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> ', parameters('policies_policy_name'),' element can appear within the <backend> section element.\r\n    - To apply a ', parameters('policies_policy_name'),' to the incoming request (before it is forwarded to the backend service), place a corresponding ', parameters('policies_policy_name'),' element within the <inbound> section element.\r\n    - To apply a ', parameters('policies_policy_name'),' to the outgoing response (before it is sent back to the caller), place a corresponding ', parameters('policies_policy_name'),' element within the <outbound> section element.\r\n    - To add a ', parameters('policies_policy_name'),' position the cursor at the desired insertion point and click on the round button associated with the ', parameters('policies_policy_name'),'.\r\n    - To remove a ', parameters('policies_policy_name'),', delete the corresponding ', parameters('policies_policy_name'),' statement from the ', parameters('policies_policy_name'),' document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>')]",
-                "contentFormat": "xml"
             },
             "dependsOn": [
                 "[resourceId('Microsoft.ApiManagement/service', parameters('service_cust_option1apim_name'))]"
@@ -383,8 +363,9 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
                 "[resourceId('Microsoft.ApiManagement/service', parameters('service_cust_option1apim_name'))]",
                 "[resourceId('Microsoft.ApiManagement/service/apis', parameters('service_cust_option1apim_name'), parameters('apis_titles_name'))]"
             ]
-        },
-                
+        }
+        
+        
         
     ],
     "outputs": {
@@ -398,9 +379,12 @@ DEPLOY
 
   # these key-value pairs are passed into the ARM Template's `parameters` block
   parameters {
-    "prm_traffic_manager_url" = "${var.traffic_manager_url}"
+    # "prm_traffic_manager_url" = "${var.traffic_manager_url}"
+    # "service_cust_option1apim_name" = "${var.service_option1apim_name}"
+    "primary_region_waf_url" = "${module.trafficmanager.traffic_manager_fqdn}"#"${var.primary_region_waf_url}"
+    # "secondary_region_waf_url" = "${var.secondary_region_waf_url}"
+    # "tertiary_region_waf_url" = "${var.tertiary_region_waf_url}"
     "service_cust_option1apim_name" = "${var.service_option1apim_name}"
-
   }
 
   deployment_mode = "Incremental"

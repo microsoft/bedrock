@@ -81,6 +81,24 @@ module "west_flux" {
 
 # Create a role assignment with Contributor role for AKS client service principal object
 #   to join vnet/subnet/ip for load balancer/ingress controller
+
+
+module "west_tm_endpoint" {
+  source = "../../azure/tm-endpoint-ip"
+
+  resource_group_name                 = "${azurerm_resource_group.westrg.name}"# "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}" #"${azurerm_resource_group.westtakscluster.name}"
+  resource_location                   = "${local.west_rg_location}"
+  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+  endpoint_name                       = "${local.west_rg_location}-waf-ipwest"
+  public_ip_name                      = "${var.cluster_name}-waf-ipwest"
+  ip_address_out_filename             = "${local.west_ip_address_out_filename}"
+  # allocation_method                   = "dynamic"
+  tags = {
+    environment = "azure-multiple-clusters-waf-tm-apimgt west- ${var.cluster_name} - public ip"
+    # kubedone    = "${module.east_aks.kubeconfig_done}"
+  }
+}
 resource "azurerm_role_assignment" "west_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
   principal_id         = "${data.azuread_service_principal.sp.id}"

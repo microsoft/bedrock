@@ -1,63 +1,30 @@
 
-
-# # create public IP east
-# resource "azurerm_public_ip" "wafipeast" {
-#   name                         = "${var.prefix}-wafipeast"
-#   location                     = "eastus"
-#   resource_group_name          = "${var.resource_group_name_east}"
-#   public_ip_address_allocation = "dynamic"
-
-#   tags {
-#     environment = "${var.tag}"
-#   }
+# resource "azurerm_resource_group" "eastakscluster" {
+#   name     = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
+#   location = "${local.east_rg_location}"
 # }
+# module "east_tm_endpoint" {
+#   source = "../../azure/tm-endpoint-ip"
 
-# locals {
-#   east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
-#   east_rg_location             = "${azurerm_resource_group.eastrg.location}"
+#   # resource_group_name                 = "${azurerm_resource_group.eastakscluster.name}"
+#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
+#   resource_location                   = "${local.east_rg_location}"
+#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+#   endpoint_name                       = "${local.east_rg_location}-waf-ipeast"
+#   public_ip_name                      = "${var.cluster_name}-waf-ipeast"
+#   ip_address_out_filename             = "${local.east_ip_address_out_filename}"
 
-#   west_rg_name                 = "${azurerm_resource_group.westrg.name}"
-#   west_rg_location             = "${azurerm_resource_group.westrg.location}"
-  
-#   central_rg_name                 = "${azurerm_resource_group.centralrg.name}"
-#   central_rg_location             = "${azurerm_resource_group.centralrg.location}"
-
-
-# }
-# module "east_vnet_subnet" {
-#   source = "../../azure/vnet"
-
-#   resource_group_name     = "${local.east_rg_name }"
-#   resource_group_location = "${local.east_rg_location}"
-#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
-#   address_space           = "${var.east_address_space}"
-#   subnet_prefixes         = "${var.east_waf_subnet_prefixes}"
 #   tags = {
-#     environment = "azure-multiple-clusters"
+#     environment = "azure-multiple-clusters-waf-tm-apimgt east - ${var.cluster_name} - public ip"
+#     # kubedone    = "${module.east_aks.kubeconfig_done}"
 #   }
 # }
-
-module "east_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
-
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
-  resource_location                   = "${local.east_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.east_rg_location}-wafipeast"
-  public_ip_name                      = "${var.cluster_name}-wafipeast"
-  ip_address_out_filename             = "${local.east_ip_address_out_filename}"
-
-  tags = {
-    environment = "azure-multiple-clusters-waf-tm-apimgt east - ${var.cluster_name} - public ip"
-    # kubedone    = "${module.east_aks.kubeconfig_done}"
-  }
-}
 
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgweast" {
   name                = "${var.prefix}appgweast"
-  resource_group_name = "${local.east_rg_location}"
+  resource_group_name = "${azurerm_resource_group.eastrg.name}"
   location            = "eastus"
 
   # WAF configuration
@@ -132,54 +99,33 @@ resource "azurerm_application_gateway" "appgweast" {
 #   ]
 }
 
-################### westUS
 
-# # create public IP west
-# resource "azurerm_public_ip" "wafipwest" {
-#   name                         = "${var.prefix}-wafipwest"
-#   location                     = "westus"
-#   resource_group_name          = "${var.resource_group_name_west}"
-#   public_ip_address_allocation = "dynamic"
-
-#   tags {
-#     environment = "${var.tag}"
-#   }
+# resource "azurerm_resource_group" "westtakscluster" {
+#   name     = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}"
+#   location = "${local.west_rg_location}"
 # }
 
-# module "west_vnet_subnet" {
-#   source = "../../azure/vnet"
+# module "west_tm_endpoint" {
+#   source = "../../azure/tm-endpoint-ip"
 
-#   resource_group_name     = "${local.west_rg_name }"
-#   resource_group_location = "${local.west_rg_location}"
-#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
-#   address_space           = "${var.west_address_space}"
-#   subnet_prefixes         = "${var.west_waf_subnet_prefixes}"
+#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}" #"${azurerm_resource_group.westtakscluster.name}"
+#   resource_location                   = "${local.west_rg_location}"
+#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+#   endpoint_name                       = "${local.west_rg_location}-waf-ipwest"
+#   public_ip_name                      = "${var.cluster_name}-waf-ipwest"
+#   ip_address_out_filename             = "${local.west_ip_address_out_filename}"
+
 #   tags = {
-#     environment = "azure-multiple-clusters"
+#     environment = "azure-multiple-clusters-waf-tm-apimgt west- ${var.cluster_name} - public ip"
+#     # kubedone    = "${module.east_aks.kubeconfig_done}"
 #   }
 # }
-
-module "west_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
-
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}"
-  resource_location                   = "${local.west_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.west_rg_location}-wafipwest"
-  public_ip_name                      = "${var.cluster_name}-wafipwest"
-  ip_address_out_filename             = "${local.west_ip_address_out_filename}"
-
-  tags = {
-    environment = "azure-multiple-clusters-waf-tm-apimgt west- ${var.cluster_name} - public ip"
-    # kubedone    = "${module.east_aks.kubeconfig_done}"
-  }
-}
 
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwwest" {
   name                = "${var.prefix}appgwwest"
-  resource_group_name = "${local.west_rg_location}"
+  resource_group_name = "${azurerm_resource_group.westrg.name}"
   location            = "westus"
 
   # WAF configuration
@@ -250,54 +196,33 @@ resource "azurerm_application_gateway" "appgwwest" {
   
 }
 
-####################### Central US
 
-# create public IP Central
-# resource "azurerm_public_ip" "wafipcentral" {
-#   name                         = "${var.prefix}-wafipcentral"
-#   location                     = "centralus"
-#   resource_group_name          = "${var.resource_group_name_central}"
-#   public_ip_address_allocation = "dynamic"
-
-#   tags {
-#     environment = "${var.tag}"
-#   }
+# resource "azurerm_resource_group" "centralakscluster" {
+#   name     = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
+#   location = "${local.central_rg_location}"
 # }
 
-# module "central_vnet_subnet" {
-#   source = "../../azure/vnet"
+# module "central_tm_endpoint" {
+#   source = "../../azure/tm-endpoint-ip"
 
-#   resource_group_name     = "${local.central_rg_name }"
-#   resource_group_location = "${local.central_rg_location}"
-#   subnet_names            = ["${var.cluster_name}-waf-subnet"]
-#   address_space           = "${var.central_address_space}"
-#   subnet_prefixes         = "${var.central_waf_subnet_prefixes}"
+#   resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"#"${azurerm_resource_group.centralakscluster.name}"
+#   resource_location                   = "${local.central_rg_location}"
+#   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+#   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+#   endpoint_name                       = "${local.central_rg_location}-waf-ipcentral"
+#   public_ip_name                      = "${var.cluster_name}-waf-ipcentral"
+#   ip_address_out_filename             = "${local.central_ip_address_out_filename}"
+
 #   tags = {
-#     environment = "azure-multiple-clusters"
+#     environment = "azure-multiple-clusters-waf-tm-apimgt - ${var.cluster_name} - public ip"
+#     # kubedone    = "${module.east_aks.kubeconfig_done}"
 #   }
 # }
-
-module "central_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
-
-  resource_group_name                 = "${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"
-  resource_location                   = "${local.central_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
-  endpoint_name                       = "${local.central_rg_location}-wafipeast"
-  public_ip_name                      = "${var.cluster_name}-wafipeast"
-  ip_address_out_filename             = "${local.central_ip_address_out_filename}"
-
-  tags = {
-    environment = "azure-multiple-clusters-waf-tm-apimgt - ${var.cluster_name} - public ip"
-    # kubedone    = "${module.east_aks.kubeconfig_done}"
-  }
-}
 
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwcentral" {
   name                = "${var.prefix}appgwcentral"
-  resource_group_name = "${local.central_rg_location}"
+  resource_group_name = "${azurerm_resource_group.centralrg.name}"
   location            = "centralus"
 
   # WAF configuration
@@ -365,77 +290,4 @@ resource "azurerm_application_gateway" "appgwcentral" {
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 
-# depends_on = 
-#      ["azurerm_public_ip.wafipcentral","azurerm_subnet.tfwafnetcentral"]
-
-  
-  
 }
-
-################ Traffic manager
-
-
-# resource "azurerm_resource_group" "tmrg" {
-#   name     = "${var.traffic_manager_resource_group_name}"
-#   location = "${var.traffic_manager_resource_group_location}"
-# }
-
-# # Creates Azure Traffic Manager Profile
-# resource "azurerm_traffic_manager_profile" "profile" {
-#   name                   = "${var.traffic_manager_profile_name}"
-#   resource_group_name    = "${var.traffic_manager_resource_group_name}"
-#   traffic_routing_method = "Weighted"
-
-#   dns_config {
-#     relative_name = "${var.traffic_manager_dns_name}"
-#     ttl           = 30
-#   }
-
-#   monitor_config {
-#     protocol = "${var.traffic_manager_monitor_protocol}"
-#     port     = "${var.traffic_manager_monitor_port}"
-#     path     = "/"
-#   }
-
-#   tags = "${var.tags}"
-# }
-
-# resource "azurerm_traffic_manager_endpoint" "eastusep" {
-#   name                = "eastusep"
-#   resource_group_name = "${var.traffic_manager_resource_group_name}"
-#   profile_name        = "${var.traffic_manager_profile_name}"
-#   target              = "${azurerm_public_ip.wafipeast.ip_address}"
-#   type                = "externalEndpoints"
-#   weight              = 100
-
-#   depends_on = 
-#      ["azurerm_public_ip.wafipeast"]
-
-  
-# }
-
-# resource "azurerm_traffic_manager_endpoint" "westusep" {
-#   name                = "westusep"
-#   resource_group_name = "${var.traffic_manager_resource_group_name}"
-#   profile_name        = "${var.traffic_manager_profile_name}"
-#   target              = "${azurerm_public_ip.wafipwest.ip_address}"
-#   type                = "externalEndpoints"
-#   weight              = 200
-#    depends_on = 
-#      ["azurerm_public_ip.wafipwest"]
-
-  
-# }
-
-# resource "azurerm_traffic_manager_endpoint" "centralusep" {
-#   name                = "centralusep"
-#   resource_group_name = "${var.traffic_manager_resource_group_name}"
-#   profile_name        = "${var.traffic_manager_profile_name}"
-#   target              = "${azurerm_public_ip.wafipcentral.ip_address}"
-#   type                = "externalEndpoints"
-#   weight              = 300
-#  depends_on = 
-#      ["azurerm_public_ip.wafipcentral"]
-
-  
-# }

@@ -11,12 +11,12 @@ variable "traffic_manager_resource_group_location" {
 
 variable "traffic_manager_profile_name" {
   type = "string"
-  default="glocaltf"
+  default="globaltf"
 }
 
 variable "traffic_manager_dns_name" {
   type = "string"
-   default="glocaltf"
+   default="globaltf"
 }
 
 variable "traffic_manager_monitor_protocol" {
