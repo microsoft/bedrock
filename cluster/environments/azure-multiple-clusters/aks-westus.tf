@@ -87,9 +87,7 @@ module "west_flex_volume" {
   resource_group_name        = "${var.keyvault_resource_group}"
   service_principal_id       = "${var.service_principal_id}"
   service_principal_secret   = "${var.service_principal_secret}"
-  service_principal_is_owner = "${var.service_principal_is_owner}"
   tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
-  subscription_id            = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name              = "${var.keyvault_name}"
   kubeconfig_filename        = "${local.west_kubeconfig_filename}"
 

@@ -8,3 +8,13 @@ data "azuread_service_principal" "sp" {
 }
 
 data "azurerm_client_config" "current" {}
+
+# Create Azure Key Vault role for SP
+module "keyvault_flexvolume_role" {
+  source = "../../azure/keyvault_flexvol_role"
+
+  resource_group_name        = "${var.keyvault_resource_group}"
+  service_principal_id       = "${var.service_principal_id}"
+  subscription_id            = "${data.azurerm_client_config.current.subscription_id}"
+  keyvault_name              = "${var.keyvault_name}"
+}
