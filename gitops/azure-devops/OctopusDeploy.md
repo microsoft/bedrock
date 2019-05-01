@@ -1,6 +1,6 @@
 # Octopus Deploy
 
-Octopus Deploy, an automated deployment and release management tool, has been tested against the Bedrock GitOps workflow. There are many differences between using Octopus Deploy as opposed to Azure DevOps. This README will assist in getting you started on installing, configuring, and deploying a release on an Octopus Server hosted in Azure.
+Octopus Deploy, an automated deployment and release management tool, has been tested against the Bedrock GitOps workflow. There are many differences between using Octopus Deploy as opposed to Azure DevOps. This README will assist in getting you started on installing, configuring, and deploying a Release on an Octopus Server hosted in Azure.
 
 ## Getting Started
 
@@ -154,6 +154,10 @@ After your Release is finished running, you can view the results and logs of the
 
 **NOTE**: The Fabrikate logs along with other logs from `build.sh` will show up as error logs in Octopus Deploy. This is miscontrued.
 
+## Caveats
+
+- You will need to "reset" your Linux VM to remove all Fabrikate remnants before deploying the next release. This will conflict with an existing Fabrikate executable that exists from a previous run. This is because the `build.sh` currently assumes that each build/release will run on a clean slate. This is **not** the case when using Octopus Deploy.
+
 ## Disadvantages
 
 - There is **less automation** when using Octopus Deploy in place of Azure DevOps.
@@ -161,5 +165,6 @@ After your Release is finished running, you can view the results and logs of the
 - There is no support for GitHub triggers.
     - This is the reason why cloning your HLD repo in advance was required as part of preparing your Deployment Targets.
     - In Azure DevOps, the ability to link your build and release pipelines to git repositories allow them to have access to the the resources without needing to clone them.
-- Octoupus currently does not allow users to build custom plugins or extensions.
+    - This also becomes problematic when automating a build or release when there are new commits made to the source repo. The closest thing to triggered releases is configuring scheduled releases in Octopus.
+- Octopus currently does not allow users to build custom plugins or extensions.
     - This makes it difficult for users or organizations who want to have a more custom CI/CD workflow.
