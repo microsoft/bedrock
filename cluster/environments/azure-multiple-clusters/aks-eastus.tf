@@ -40,6 +40,7 @@ module "east_aks_gitops" {
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_east_path}"
+  gitops_url_branch        = "${var.gitops_east_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   resource_group_location  = "${var.east_resource_group_location}"
   resource_group_name      = "${azurerm_resource_group.eastrg.name}"

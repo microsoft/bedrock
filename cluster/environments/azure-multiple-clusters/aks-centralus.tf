@@ -41,6 +41,7 @@ module "central_aks_gitops" {
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_central_path}"
+  gitops_url_branch        = "${var.gitops_central_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   resource_group_location  = "${var.central_resource_group_location}"
   resource_group_name      = "${azurerm_resource_group.centralrg.name}"
