@@ -6,7 +6,7 @@ Octopus Deploy, an automated deployment and release management tool, has been te
 
 Octopus Deploy is supported in the [Azure Marketplace] (https://azuremarketplace.microsoft.com/en-us/marketplace/apps/octopus.octopusdeploy) with a free 45-day trial. This guide will demonstrate how it would be possible to recreate the following workflow:
 
-[insert image here]
+![GitOps Workflow using Octopus Deploy](images/gitops-octopus-deploy.png)
 
 ### 1. Launch an Octopus Deploy Server in Azure Portal
 
@@ -115,7 +115,7 @@ COMMIT_MESSAGE=$(get_octopusvariable "COMMIT MESSAGE")
 
 Under `Variables`, be sure to define the variables as shown:
 
-![Define Project Variables](image/octo-env-variables.png)
+![Define Project Variables](images/octo-env-variables.png)
 
 ### 5. Deploy
 
