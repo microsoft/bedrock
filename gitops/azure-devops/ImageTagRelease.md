@@ -1,6 +1,7 @@
-# GitOps CI/CD with Azure Devops
+# Guide: Container Image Tag Release Pipeline
+This section describes an example of how to extend your [manifest generation pipeline](PipelineThinking.md) by pre-prending a pipeline to automate incrementing your container image tag names in your high-level defintion using. Morever we cover a rudimentary way to perform container promotion with Azure DevOps.
 
-This section describes how to configure Azure Devops as the CI/CD system for your GitOps Workflow.
+We recommend following the guide to create a [manifest generation pipeline](README.md) with Azure DevOps first before attempting this scenario. 
 
 ## Prerequisites
 
@@ -11,12 +12,14 @@ This section describes how to configure Azure Devops as the CI/CD system for you
 
 The GitOps workflow can be split into two components:
 
-1. Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
-2. High Level Definition (HLD) -> K8s Manifests
+1. Application Pipeline -> High-Level Definition Image Tag Pipeline
+2. Manifest Generation Pipeline
+
+We will be focusing on the first step in this example.
 
 ![ADO Two Components](images/ado-two-processes-diagram.png)
 
-## Application (Docker) Image -> Azure Container Registry (ACR) -> High Level Definition (HLD)
+## Application Pipeline -> High-Level Definition Image Tag Pipeline
 
 ### 1. Create Repositories and Personal Access Tokens
 
@@ -24,9 +27,9 @@ Create both high level definition (HLD) and resource manifest repos and the pers
 * [Azure DevOps](ADORepos.md)
 * [GitHub](GitHubRepos.md)
 
-### 2. Create Azure Pipeline Build YAML
+### 2. Create Application Code Pipeline
 
-The Azure Pipeline Build YAML will build and deploy Docker images to Azure Container Registry (ACR). Below is a sample YAML file:
+Using Azure DevOps we created an Azure Pipelines YAML file that describes the build and Docker images publish to Azure Container Registry (ACR). Below is an example of this yaml pipelines.
 
 ```
 trigger:
@@ -67,9 +70,27 @@ steps:
   displayName: 'Get dependencies, build image, then publish to ACR'
 ```
 
-This Azure Pipeline Build YAML file will be based on the application code that you are trying to build and deploy. The YAML shown is an example from: https://github.com/andrebriggs/go-docker-k8s-demo
+This Azure Pipeline Build YAML file will be based on the application code that you are trying to build and deploy. The YAML shown is an example from: https://github.com/andrebriggs/go-docker-k8s-demo. You should create your own application that pushes your own container registry.
 
-### 3. Create Azure Pipeline Release
+### 3. Add Environments to High Level Definition Repo 
+Most Kubernetes deployments will utilize multiple _environments_. Our Bedrock GitOps process allows you to configure values for multiple environments. We can do this by adding (ENV_NAME).yaml files to the `config` directory of your high-level definition repository. 
+
+<pre>
+High-Level-Definition-Repo
+├── azure-pipelines.yaml
+├── config
+│   ├── common.yaml
+│   └── <b>DEV</b>.yaml
+│   └── <b>QA</b>.yaml
+│   └── <b>PROD</b>.yaml
+│   └── <b>STAGING</b>.yaml
+├── manifests
+│   ├── ...
+└── README.md
+</pre>
+In the example above notice we have a configuration for environments we have container promotion to occur on. You can see an example on a HLD repo [here](https://github.com/andrebriggs/fabrikate-go-server/tree/master/config). The environment names (**bolded**) match the names of Azure DevOps release pipeline stage we will cover next.
+
+### 4. Create Azure Pipeline Release
 
 The Azure Pipeline Release will be triggered off of the Azure Pipeline Build that was created in Step 2, and will accomplish the following objectives:
 
@@ -112,4 +133,39 @@ YAML_PATH_VALUE: the value to the subkey
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
-## [High Level Definition (HLD) -> K8s Manifests](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/README.md)
+### 5. Update Manifest Generation Pipeline To Be Environment Aware
+
+Now that we have created a release pipeline with environment specific configurations we need to make sure that manifest generation pipeline knows to generate yaml for these environments. Below is a snippet from an example [azure-pipeline.yaml](https://github.com/andrebriggs/fabrikate-go-server/blob/master/azure-pipelines.yml) build file in a high-level definition repo. 
+
+<pre>
+ - task: ShellScript@2
+    displayName: Transform fabrikate definitions and publish to YAML manifests to repo
+    inputs:
+      scriptPath: build.sh
+    condition: 'ne(variables[''Build.Reason''], ''PullRequest'')'
+    env:
+      ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+      COMMIT_MESSAGE: $(Build.SourceVersionMessage)
+      REPO: $(MANIFEST_REPO)
+      <b>FAB_ENVS: 'DEV,QA,STAGING WEST,STAGING EAST,STAGING CENTRAL,PROD WEST,PROD EAST,PROD CENTRAL'</b>
+</pre>
+
+The **bolded** key and values represent specific environments we want Fabrikate to generate yaml for. Notice that the comma delimited values contain a subset of the environment names we configured as Azure DevOps release pipeline stages and HLD repo configuration. 
+
+Once we add the appropriate `FAB_ENVS` values the manifest generation pipeline will produce resource manifests for each directory
+
+<pre>
+Resource-Manifest-Repo
+├── <b>DEV</b>
+│   ├── ...
+├── <b>QA</b>
+│   ├── ...
+├── <b>PROD</b>
+│   ├── ...
+├── <b>STAGE</b>
+│   ├── ...
+</pre>
+
+Further reference:
++ [GitOps Pipeline Thinking](PipelineThinking.md)
++ [Manifest Generation Pipeline](README.md)
