@@ -7,14 +7,14 @@ Octopus Deploy, an automated deployment and release management tool, has been te
 Octopus Deploy is supported in the [Azure Marketplace] (https://azuremarketplace.microsoft.com/en-us/marketplace/apps/octopus.octopusdeploy) with a free 45-day trial. This guide is modeled after the following example of manifest yaml generation pipeline:
 
 
-![GitOps Workflow using Octopus Deploy](./images/gitops-octopus-deploy.png)
+![GitOps Workflow using Octopus Deploy](../images/gitops-octopus-deploy.png)
 
 
 ### 1. Launch an Octopus Deploy Server in Azure Portal
 
 1. Create an Octopus Deploy instance in Azure Portal
 
-![Octopus Deploy in Azure Portal](./images/create-octopus-deploy.png)
+![Octopus Deploy in Azure Portal](../images/create-octopus-deploy.png)
 
 ![Configure Infrastructure Requirements for Octopus Deploy](images/create-octopus-deploy-2.png)
 
