@@ -99,7 +99,7 @@ The Azure Pipeline Release will be triggered off of the Azure Pipeline Build tha
 - Execute `fab set` to manipulate HLDs
 - Git commit and push to HLD repo
 
-To start off, you can create the first stage (e.g. `Dev`) using an Empty Job template.
+To start off, you can create the first stage (e.g. `Dev`) using an Empty Job template. For this example, the different stages in the pipeline resemble environments in your DevOps workflow.
 
 ![Create Stages in Release](images/releases-empty-job.png)
 
@@ -107,15 +107,13 @@ If the stages succeeding `Dev` are the same as the `Dev` stage, you can highligh
 
 ![Cloning Stages](images/releases-clone-stages.png)
 
-![Create Stages in Release](images/releases-add-final-stage.png)
-
 The artifact that is used can be an ACR resource or an Azure Pipeline Build. Here, we are triggering the Release off of another Azure Pipeline Build, and enabling continuous deployment trigger.
 
 ![Artifacts](images/artifact-build.png)
 
 ![Enable Continuous Deployment](images/releases-continuous-dep.png)
 
-The Release should look similar to the following, where updates to the build artifact will automatically trigger the execution of tasks within the stages. Here, the different stages in the pipeline resemble environments in your DevOps workflow.
+The Release should look similar to the following, where updates to the build artifact will automatically trigger the execution of tasks within the stages.
 
 ![Release Environments](images/releases-env.png)
 
@@ -127,7 +125,7 @@ Moving on to `Tasks` and highlighting `Agent Job` will bring up a side panel tha
 
 ![Agent Pool](images/releases-agent-pool.png)
 
-The stages each involve two tasks: `Download scripts`, and `Run release.sh`. The `Download scripts` task downloads the [build.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh) and [release.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/release.sh) from the Microsoft/Bedrock repo. The inline script for `Download scripts` will download both scripts with the following commands:
+The stages each involve two tasks: `Download scripts`, and `Run release.sh`. The `Download scripts` task downloads the [build.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh) and [release.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/release.sh) from the Microsoft/Bedrock repo. The inline script for `Download scripts` is as follows:
 
 ```
 # Download build.sh
@@ -139,7 +137,6 @@ chmod +x ./release.sh
 ```
 
 ![Release Task 1](images/release-task1.png)
-
 
 The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`, which is sourced in the `release.sh`. As described before, the `ACCESS_TOKEN` is the Personal Access Token that grants access to your git account. In this case, the `REPO` variable is set to be the HLD repo. You will need to add these variables as Pipeline Variables under the `Variables` tab.
 
@@ -158,6 +155,8 @@ YAML_PATH_VALUE: the value to the subkey
 ![Release Task 2](images/release-task2.png)
 
 When this is all complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create Release`.
+
+![Create a Release](images/create-release.png)
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
