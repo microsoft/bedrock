@@ -75,10 +75,19 @@ chmod +x ./build.sh
 - `ACCESS_TOKEN_SECRET`: Get an access token from GitHub/Azure DevOps where your repo is hosted, so that the script can have access to push to the remote manifest yaml repository. You may make this a hidden variable to protect it.
 - `COMMIT_MESSAGE`: Since TeamCity does not have a variable that can provide the exact commit message, enter something valuable, such as "Auto-generated yaml files"
 - `REPO`: Set this to the manifest repo, such as `https://github.com/samiyaakhtar/jackson-manifest`
-- `BRANCH_NAME` Set this to `branch%teamcity.build.branch%`
 
 ![](./images/variables.png)
 
-18. Click on `Run` to do a test run for this configuration! 
+18.  Click on `Run` to do a test run for this configuration! 
+
+## Disadvantages
+
+- Upgrading from one version to another is a task with TeamCity 
+- Not free if you need more than 3 agents and over 100 builds
+- Unintuitive user interface, less customizability, fewer hooks, less variables available as part of build processes (such as commit messages can't be fetched from a repo that triggered it)
+
+
+
+
 
 
