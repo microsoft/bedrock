@@ -1,5 +1,5 @@
 # Guide: Container Image Tag Release Pipeline
-This section describes an example of how to extend your [manifest generation pipeline](PipelineThinking.md) by pre-prending a pipeline to automate incrementing your container image tag names in your high-level defintion using. Morever we cover a rudimentary way to perform container promotion with Azure DevOps.
+This section describes an example of how to extend your [manifest generation pipeline](ManifestGeneration.md) by pre-prending a pipeline to automate incrementing your container image tag names in your high-level defintion using. Morever we cover a rudimentary way to perform container promotion with Azure DevOps.
 
 We recommend following the guide to create a [manifest generation pipeline](README.md) with Azure DevOps first before attempting this scenario.
 
@@ -99,15 +99,15 @@ The Azure Pipeline Release will be triggered off of the Azure Pipeline Build tha
 - Execute `fab set` to manipulate HLDs
 - Git commit and push to HLD repo
 
-To start off, you can create the first stage (e.g. Dev) using an Empty Job template.
+To start off, you can create the first stage (e.g. `Dev`) using an Empty Job template.
 
-![Create Stages in Release](images/release-empty-job.png)
+![Create Stages in Release](images/releases-empty-job.png)
 
 If the stages succeeding `Dev` are the same as the `Dev` stage, you can highlight the `Dev` stage and click `Add` > `Clone Stage`.
 
 ![Cloning Stages](images/releases-clone-stages.png)
 
-![Create Stages in Release](images/release-add-final-stage.png)
+![Create Stages in Release](images/releases-add-final-stage.png)
 
 The artifact that is used can be an ACR resource or an Azure Pipeline Build. Here, we are triggering the Release off of another Azure Pipeline Build, and enabling continuous deployment trigger.
 
@@ -123,11 +123,11 @@ Each stage should require manual approval from a specific user in order to proce
 
 ![Pre-Deployment Approvals](images/deployment-approvals.png)
 
-Moving on to `Tasks` and highlighting `Agent Job` will bring up a side panel that allows you to select an Agent Pool that is appropriate for the task. Because the scripts will uses Fabrikate, an Ubuntu 1604 Agent Pool is recommended.
+Moving on to `Tasks` and highlighting `Agent Job` will bring up a side panel that allows you to select an Agent Pool that is appropriate for the task. Because the scripts will use Fabrikate, an Ubuntu 1604 Agent Pool is recommended.
 
 ![Agent Pool](images/releases-agent-pool.png)
 
-The stages each involve two tasks: `Download scripts`, and `Run release.sh`. The `Download scripts` task downloads the [build.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh) and [release.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/release.sh) from the Microsoft/Bedrock repo. The inline script for `Download scripts` task is as follows:
+The stages each involve two tasks: `Download scripts`, and `Run release.sh`. The `Download scripts` task downloads the [build.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh) and [release.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/release.sh) from the Microsoft/Bedrock repo. The inline script for `Download scripts` will download both scripts with the following commands:
 
 ```
 # Download build.sh
@@ -141,7 +141,7 @@ chmod +x ./release.sh
 ![Release Task 1](images/release-task1.png)
 
 
-The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`, which is sourced in the `release.sh`. As described before, the `ACCESS_TOKEN` is the Personal Access Token that grants access to your git account. In this case, the `REPO` variable is set to be the HLD repo.
+The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`, which is sourced in the `release.sh`. As described before, the `ACCESS_TOKEN` is the Personal Access Token that grants access to your git account. In this case, the `REPO` variable is set to be the HLD repo. You will need to add these variables as Pipeline Variables under the `Variables` tab.
 
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
 
@@ -157,9 +157,13 @@ YAML_PATH_VALUE: the value to the subkey
 
 ![Release Task 2](images/release-task2.png)
 
-When this is complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create Release`.
+When this is all complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create Release`.
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
+
+Often, it might be useful to reuse an existing Release, than have to reconfigure a new one. You can clone a Release by selecting a Release in the left panel, clicking on the elipsis at the top right, and then selecting `Clone`.
+
+![Clone a Release](images/releases-clone.png)
 
 ### 5. Update Manifest Generation Pipeline To Be Environment Aware
 
