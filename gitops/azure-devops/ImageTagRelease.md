@@ -142,8 +142,9 @@ The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`,
 
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
 
-Additionally, add the following environment variables to the `Run releash.sh` task:
+Additionally, add the following environment variables and the inline script to the `Run releash.sh` task:
 
+Environment Variables:
 ```
 ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
 COMMIT_MESSAGE: custom message used when committing and pushing to git
@@ -151,20 +152,27 @@ SUBCOMPONENT: the subcomponent within your Fabrikate HLD that should be manipula
 YAML_PATH: the yaml path to the subkey to set (e.g. data.replicas)
 YAML_PATH_VALUE: the value to the subkey
 ```
+Inline Script:
+```
+# Execute release.sh
+. release.sh
+```
 
 ![Release Task 2](images/release-task2.png)
 
-When this is all complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create Release`.
+When this is all complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create release`.
 
 ![Create a Release](images/create-release.png)
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
+### 5. Clone a Release
+
 Often, it might be useful to reuse an existing Release, than have to reconfigure a new one. You can clone a Release by selecting a Release in the left panel, clicking on the elipsis at the top right, and then selecting `Clone`.
 
 ![Clone a Release](images/releases-clone.png)
 
-### 5. Update Manifest Generation Pipeline To Be Environment Aware
+### 6. Update Manifest Generation Pipeline To Be Environment Aware
 
 Now that we have created a release pipeline with environment specific configurations we need to make sure that manifest generation pipeline knows to generate yaml for these environments. Below is a snippet from an example [azure-pipeline.yaml](https://github.com/andrebriggs/fabrikate-go-server/blob/master/azure-pipelines.yml) build file in a high-level definition repo.
 
