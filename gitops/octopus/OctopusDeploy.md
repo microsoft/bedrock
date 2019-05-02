@@ -7,28 +7,28 @@ Octopus Deploy, an automated deployment and release management tool, has been te
 Octopus Deploy is supported in the [Azure Marketplace] (https://azuremarketplace.microsoft.com/en-us/marketplace/apps/octopus.octopusdeploy) with a free 45-day trial. This guide is modeled after the following example of manifest yaml generation pipeline:
 
 
-![GitOps Workflow using Octopus Deploy](../images/gitops-octopus-deploy.png)
+![GitOps Workflow using Octopus Deploy](images/gitops-octopus-deploy.png)
 
 
 ### 1. Launch an Octopus Deploy Server in Azure Portal
 
 1. Create an Octopus Deploy instance in Azure Portal
 
-![Octopus Deploy in Azure Portal](../images/create-octopus-deploy.png)
+![Octopus Deploy in Azure Portal](images/create-octopus-deploy.png)
 
-![Configure Infrastructure Requirements for Octopus Deploy](../images/create-octopus-deploy-2.png)
+![Configure Infrastructure Requirements for Octopus Deploy](images/create-octopus-deploy-2.png)
 
-![Configure Octopus Deploy](../images/create-octopus-deploy-3.png)
+![Configure Octopus Deploy](images/create-octopus-deploy-3.png)
 
 The following resources should populate in the resource group when Octopus Deploy is successfully deployed in Azure.
 
-![Octopus Deploy Resources in Azure](../images/octopus-deploy-resources.png)
+![Octopus Deploy Resources in Azure](images/octopus-deploy-resources.png)
 
 ### 2. Login to your Octopus account
 
 1. To access the Octopus Deploy server, you will need to find the DNS name of of the `octopus-publicip` resource.
 
-![Octopus Public IP](../images/octopus-public-ip.png)
+![Octopus Public IP](images/octopus-public-ip.png)
 
 You can access the Octopus Server via browser using the DNS name. Once there, login with the credentials that were used upon creation of the Octopus server (e.g. Octopus Deploy Administrator Credentials).
 
@@ -82,38 +82,38 @@ Clone your HLD git repo to the $HOME directory of your VM by running `git clone 
 
 1. Create an environment(s) for your Release (e.g. `dev`, `qa`, `prod`).
 
-![Create a `dev` environment](../images/octopus-create-env.png)
+![Create a `dev` environment](images/octopus-create-env.png)
 
 2. Add Deployment Targets to your Infrastructure.
 
-![Add an SSH connection for Linux Deployment Target](../images/add-deployment-target.png)
+![Add an SSH connection for Linux Deployment Target](images/add-deployment-target.png)
 
 Specify the public IP address of the Linux VM.
 
-![SSH Connection](../images/ssh-connection.png)
+![SSH Connection](images/ssh-connection.png)
 
 If you have never added an account before, click on the option to add a new account and select "Username/Password". You may also use SSH Key Pair if an SSH Key was used to create the VM as opposed to a username and password.
 
-![Add Account to use during deployment](../images/octopus-add-account.png)
+![Add Account to use during deployment](images/octopus-add-account.png)
 
 Enter the credentials for the VM username and password and choose the appropriate environment for it to be used in.
 
-![Create account for the Linus VM](../images/octo-create-account.png)
+![Create account for the Linus VM](images/octo-create-account.png)
 
 Select the environment that was created in Step 1, and create a new Target role (e.g. `octo-admin`). If a target role does not already exist, add a new role.
 
-![Choose environment and target role](../images/octo-choose-env-role.png)
+![Choose environment and target role](images/octo-choose-env-role.png)
 
 Be sure to select the name of the Username/Password account that was created earlier.
-![Deployment Target Communication Section](../images/octo-deploy-target-communication.png)
+![Deployment Target Communication Section](images/octo-deploy-target-communication.png)
 
 3. Check the health of the Deployment Target(s)
 
 Under Connectivity, there is the option to see the connection health of your VM.
-![Check Health of Deployment Target](../images/octo-deploy-target-health1.png)
+![Check Health of Deployment Target](images/octo-deploy-target-health1.png)
 
 Be sure that the connection health is in good standing before deploying your Release.
-![Check Health of Deployment Target Connectivity](../images/octo-deploy-target-health2.png)
+![Check Health of Deployment Target Connectivity](images/octo-deploy-target-health2.png)
 
 4. Define your deployment process.
 
@@ -130,27 +130,27 @@ COMMIT_MESSAGE=$(get_octopusvariable "COMMIT MESSAGE")
 
 Under `Variables`, be sure to define the variables as shown:
 
-![Define Project Variables](../images/octo-env-variables.png)
+![Define Project Variables](images/octo-env-variables.png)
 
 ### 5. Deploy
 
 Create a Release for deployment!
 
-![Create a new Release](../images/octo-release1.png)
+![Create a new Release](images/octo-release1.png)
 
-![Specify version and release notes](../images/octo-release2.png)
+![Specify version and release notes](images/octo-release2.png)
 
-![Deploy to specific environment](../images/octo-release3.png)
+![Deploy to specific environment](images/octo-release3.png)
 
-![Deploy!](../images/octo-release4.png)
+![Deploy!](images/octo-release4.png)
 
 ### Check Octopus Deploy Logs
 
 After your Release is finished running, you can view the results and logs of the Release.
 
-![A Successful Octopus Deployment](../images/octo-successful-deploy.png)
+![A Successful Octopus Deployment](images/octo-successful-deploy.png)
 
-![Octopus Deploy Release Logs](../images/octo-release-logs.png)
+![Octopus Deploy Release Logs](images/octo-release-logs.png)
 
 **NOTE**: The Fabrikate logs along with other logs from `build.sh` will show up as error logs in Octopus Deploy. This is miscontrued.
 
