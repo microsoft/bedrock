@@ -88,7 +88,7 @@ High-Level-Definition-Repo
 │   ├── ...
 └── README.md
 </pre>
-In the example above notice we have a configuration for environments we have container promotion to occur on. You can see an example on a HLD repo [here](https://github.com/andrebriggs/fabrikate-go-server/tree/master/config). The environment names (**bolded**) match the names of Azure DevOps release pipeline stage we will cover next.
+In the example above, notice we have a configuration for environments we have container promotion to occur on. You can see an example on a HLD repo [here](https://github.com/andrebriggs/fabrikate-go-server/tree/master/config). The environment names (**bolded**) match the names of Azure DevOps release pipeline stage we will cover next.
 
 ### 4. Create Azure Pipeline Release
 
@@ -99,27 +99,53 @@ The Azure Pipeline Release will be triggered off of the Azure Pipeline Build tha
 - Execute `fab set` to manipulate HLDs
 - Git commit and push to HLD repo
 
-The Release should look similar to the following, where updates to the build artifact will automatically trigger the execution of tasks within the stages. Here, the different stages in the pipeline resemble environments in your DevOps workflow.
+To start off, you can create the first stage (e.g. Dev) using an Empty Job template.
 
-![Release Environments](images/releases-env.png)
+![Create Stages in Release](images/release-empty-job.png)
+
+If the stages succeeding `Dev` are the same as the `Dev` stage, you can highlight the `Dev` stage and click `Add` > `Clone Stage`.
+
+![Cloning Stages](images/releases-clone-stages.png)
+
+![Create Stages in Release](images/release-add-final-stage.png)
+
+The artifact that is used can be an ACR resource or an Azure Pipeline Build. Here, we are triggering the Release off of another Azure Pipeline Build, and enabling continuous deployment trigger.
 
 ![Artifacts](images/artifact-build.png)
 
 ![Enable Continuous Deployment](images/releases-continuous-dep.png)
 
+The Release should look similar to the following, where updates to the build artifact will automatically trigger the execution of tasks within the stages. Here, the different stages in the pipeline resemble environments in your DevOps workflow.
+
+![Release Environments](images/releases-env.png)
+
 Each stage should require manual approval from a specific user in order to proceed to the next stage.
 
 ![Pre-Deployment Approvals](images/deployment-approvals.png)
+
+Moving on to `Tasks` and highlighting `Agent Job` will bring up a side panel that allows you to select an Agent Pool that is appropriate for the task. Because the scripts will uses Fabrikate, an Ubuntu 1604 Agent Pool is recommended.
+
+![Agent Pool](images/releases-agent-pool.png)
+
+The stages each involve two tasks: `Download scripts`, and `Run release.sh`. The `Download scripts` task downloads the [build.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh) and [release.sh](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/release.sh) from the Microsoft/Bedrock repo. The inline script for `Download scripts` task is as follows:
+
+```
+# Download build.sh
+curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
+chmod +x ./build.sh
+
+curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/release.sh > release.sh
+chmod +x ./release.sh
+```
+
+![Release Task 1](images/release-task1.png)
+
 
 The `ACCESS_TOKEN` and `REPO` variables are specifically used in the `build.sh`, which is sourced in the `release.sh`. As described before, the `ACCESS_TOKEN` is the Personal Access Token that grants access to your git account. In this case, the `REPO` variable is set to be the HLD repo.
 
 ![Release Pipeline Variable](images/releases-pipeline-var.png)
 
-The stages each involve two tasks: `Download scripts`, and `release.sh`. The `Download scripts` task downloads the `build.sh` and `release.sh` from the Microsoft/Bedrock repo.
-
-![Release Task 1](images/release-task1.png)
-
-The `Run release.sh` task will execute `release.sh` with the following environment variables:
+Additionally, add the following environment variables to the `Run releash.sh` task:
 
 ```
 ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
@@ -130,6 +156,8 @@ YAML_PATH_VALUE: the value to the subkey
 ```
 
 ![Release Task 2](images/release-task2.png)
+
+When this is complete, click `Save`, and run your first Release! You can do this by navigating to the `Release` drop down at the top right, and then selecting `Create Release`.
 
 After the Release runs successfully, the new application image that was generated in the Pipeline Build (Step #2) should now be referenced appropriately in the HLD.
 
