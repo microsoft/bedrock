@@ -58,7 +58,7 @@ Click on `TeamCity` > `Create`
 15. Select `Command Line` from the dropdown for `Runner Type`. Enter a step name and select `Custom script` for `Run`. Enter the following commands for `Custom script`: 
 
 ```
-curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
+curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/teamcity/build.sh > build.sh
 chmod +x build.sh
 ./build.sh
 ```
