@@ -1,7 +1,7 @@
 # Guide: Container Image Tag Release Pipeline
 This section describes an example of how to extend your [manifest generation pipeline](PipelineThinking.md) by pre-prending a pipeline to automate incrementing your container image tag names in your high-level defintion using. Morever we cover a rudimentary way to perform container promotion with Azure DevOps.
 
-We recommend following the guide to create a [manifest generation pipeline](README.md) with Azure DevOps first before attempting this scenario. 
+We recommend following the guide to create a [manifest generation pipeline](README.md) with Azure DevOps first before attempting this scenario.
 
 ## Prerequisites
 
@@ -72,8 +72,8 @@ steps:
 
 This Azure Pipeline Build YAML file will be based on the application code that you are trying to build and deploy. The YAML shown is an example from: https://github.com/andrebriggs/go-docker-k8s-demo. You should create your own application that pushes your own container registry.
 
-### 3. Add Environments to High Level Definition Repo 
-Most Kubernetes deployments will utilize multiple _environments_. Our Bedrock GitOps process allows you to configure values for multiple environments. We can do this by adding (ENV_NAME).yaml files to the `config` directory of your high-level definition repository. 
+### 3. Add Environments to High Level Definition Repo
+Most Kubernetes deployments will utilize multiple _environments_. Our Bedrock GitOps process allows you to configure values for multiple environments. We can do this by adding (ENV_NAME).yaml files to the `config` directory of your high-level definition repository.
 
 <pre>
 High-Level-Definition-Repo
@@ -135,7 +135,7 @@ After the Release runs successfully, the new application image that was generate
 
 ### 5. Update Manifest Generation Pipeline To Be Environment Aware
 
-Now that we have created a release pipeline with environment specific configurations we need to make sure that manifest generation pipeline knows to generate yaml for these environments. Below is a snippet from an example [azure-pipeline.yaml](https://github.com/andrebriggs/fabrikate-go-server/blob/master/azure-pipelines.yml) build file in a high-level definition repo. 
+Now that we have created a release pipeline with environment specific configurations we need to make sure that manifest generation pipeline knows to generate yaml for these environments. Below is a snippet from an example [azure-pipeline.yaml](https://github.com/andrebriggs/fabrikate-go-server/blob/master/azure-pipelines.yml) build file in a high-level definition repo.
 
 <pre>
  - task: ShellScript@2
@@ -150,7 +150,7 @@ Now that we have created a release pipeline with environment specific configurat
       <b>FAB_ENVS: 'DEV,QA,STAGING WEST,STAGING EAST,STAGING CENTRAL,PROD WEST,PROD EAST,PROD CENTRAL'</b>
 </pre>
 
-The **bolded** key and values represent specific environments we want Fabrikate to generate yaml for. Notice that the comma delimited values contain a subset of the environment names we configured as Azure DevOps release pipeline stages and HLD repo configuration. 
+The **bolded** key and values represent specific environments we want Fabrikate to generate yaml for. Notice that the comma delimited values contain a subset of the environment names we configured as Azure DevOps release pipeline stages and HLD repo configuration.
 
 Once we add the appropriate `FAB_ENVS` values the manifest generation pipeline will produce resource manifests for each directory
 
