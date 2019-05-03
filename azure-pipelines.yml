@@ -101,7 +101,6 @@ steps:
   displayName: 'Integration Test: Bedrock_Azure-Simple '
 
 - script: |
-    ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     export ssh_key=$(readlink -f id_rsa.pub)
     export public_key=$(cat id_rsa.pub)
     go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
@@ -117,7 +116,6 @@ steps:
   displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
 
 - script: |
-    ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     export ssh_key=$(readlink -f id_rsa.pub)
     export public_key=$(cat id_rsa.pub)
     go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
