@@ -86,30 +86,14 @@ steps:
 
 - script: |
     ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
-    echo '##vso[task.setvariable variable=ssh_key;isOutput=true]TEST!!'
-    echo '##vso[task.setvariable variable=public_key;isOutput=true]cat id_rsa.pub'
-    echo $ssh_key
-    echo $public_key
-    echo $(SSH_KEY)
-    echo $(public_key)
-    export ssh_key=$(readlink -f id_rsa.pub)
-    export public_key=$(cat id_rsa.pub)
-    echo $ssh_key
-    echo $public_key
-    echo '##vso[task.setvariable variable=ssh_key2]$(ssh_key)'
-    echo "##vso[task.setvariable variable=public_key2]$(cat id_rsa.pub)"
-    echo $ssh_key2
-    echo $(public_key2)
+    echo '##vso[task.setvariable variable=ssh_key]$(readlink -f id_rsa.pub)'
+    echo '##vso[task.setvariable variable=public_key]$(cat id_rsa.pub)'
     echo '##vso[task.setvariable variable=sauce]crushed tomatoes'
   workingDirectory: '$(modulePath)/test'
   displayName: 'Generate ssh keys'
 
 - script: |
     echo my pipeline variable is $(sauce)
-    echo $ssh_key
-    echo $public_key
-    echo $SSH_KEY
-    echo $(public_key2)
     echo $(ssh_key)
     echo $(public_key)
   env:
