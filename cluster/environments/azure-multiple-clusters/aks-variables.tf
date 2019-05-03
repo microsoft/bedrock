@@ -55,3 +55,11 @@ variable "acr_enabled" {
   type    = "string"
   default = "true"
 }
+
+variable "keyvault_name" {
+  type = "string"
+}
+
+variable "keyvault_resource_group" {
+  type = "string"
+}

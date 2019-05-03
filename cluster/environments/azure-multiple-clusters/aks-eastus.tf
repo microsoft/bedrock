@@ -15,7 +15,7 @@ locals {
 
 # Creates east vnet
 module "east_vnet" {
-  source = "../../azure/vnet"
+  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
 
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
@@ -29,7 +29,7 @@ module "east_vnet" {
 
 # Creates east aks cluster, flux, kubediff
 module "east_aks_gitops" {
-  source = "../../azure/aks-gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -56,7 +56,7 @@ module "east_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "east_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
+  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.east_rg_name}"
   resource_location                   = "${local.east_rg_location}"
@@ -78,4 +78,18 @@ resource "azurerm_role_assignment" "east_spra" {
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
   scope                = "${azurerm_resource_group.eastrg.id}"
+}
+
+# Deploy east keyvault flexvolume
+module "east_flex_volume" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+
+  resource_group_name        = "${var.keyvault_resource_group}"
+  service_principal_id       = "${var.service_principal_id}"
+  service_principal_secret   = "${var.service_principal_secret}"
+  tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
+  keyvault_name              = "${var.keyvault_name}"
+  kubeconfig_filename        = "${local.east_kubeconfig_filename}"
+
+  kubeconfig_complete = "${module.east_aks_gitops.kubeconfig_done}"
 }

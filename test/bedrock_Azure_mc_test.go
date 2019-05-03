@@ -204,6 +204,33 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 		fmt.Println("Flux verification for Central Cluster complete")
 	}
 
+	//Test Case 4: Verify keyvault namespace flex in West Region
+		fmt.Println("Test case 4: Verifying flexvolume and kv namespace in West Region")
+		_flex, flexErr := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=kv")
+		if flexErr != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+			t.Fatal(flexErr)
+		} else {
+			fmt.Println("Flexvolume verification for West Region complete")
+		}
+
+	//Test Case 5: Verify keyvault namespace flex in East Region
+	fmt.Println("Test case 5: Verifying flexvolume and kv namespace in East Region")
+	_flex, flexErr2 := k8s.RunKubectlAndGetOutputE(t, options2, "get", "po", "--namespace=kv")
+	if flexErr2 != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+		t.Fatal(flexErr2)
+	} else {
+		fmt.Println("Flexvolume verification East Region complete")
+	}
+
+	//Test Case 6: Verify keyvault namespace flex in Central Region
+	fmt.Println("Test case 6: Verifying flexvolume and kv namespace in Central Region")
+	_flex, flexErr3 := k8s.RunKubectlAndGetOutputE(t, options3, "get", "po", "--namespace=kv")
+	if flexErr3 != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+		t.Fatal(flexErr3)
+	} else {
+		fmt.Println("Flexvolume verification Central Region complete")
+	}
+
 	//Obtain public IP addresses for all 3 clusters
 	westIP_address_file := terraform.Output(t, tfOptions, "west_publicIP")
 	eastIP_address_file := terraform.Output(t, tfOptions, "east_publicIP")
@@ -236,7 +263,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
 	k8s.KubectlApply(t, options3, configFile)
 
-	//Test Case 4: Validate Traffic Manager
+	//Test Case 7: Validate Traffic Manager
 	testTM_URL := "http://" + tm_dnsprefix + ".trafficmanager.net"
 
 	// It can take several minutes or so for the app to be deployed, so retry a few times

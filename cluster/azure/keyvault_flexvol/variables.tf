@@ -14,16 +14,6 @@ variable "tenant_id" {
     type = "string"
 }
 
-variable "subscription_id" {
-    type = "string"
-}
-
-variable "flexvol_role_assignment_role" {
-    description = "The role to give the AKS service principal to access the keyvault"
-    type = "string"
-    default = "Reader"
-}
-
 variable "flexvol_keyvault_key_permissions" {
     description = "Permissions that the AKS cluster has for accessing keys from KeyVault"
     type = "list"
