@@ -8,8 +8,8 @@ apt-get update
 apt-get install wget
 apt-get install unzip
 
-echo "https://raw.githubusercontent.com/samiyaakhtar/bedrock/teamcity/gitops/azure-devops/build.sh > gitops.sh"
-curl https://raw.githubusercontent.com/samiyaakhtar/bedrock/teamcity/gitops/azure-devops/build.sh > gitops.sh
+echo "https://raw.githubusercontent.com/microsoft/bedrock/master/gitops/azure-devops/build.sh > gitops.sh"
+curl https://raw.githubusercontent.com/microsoft/bedrock/master/gitops/azure-devops/build.sh > gitops.sh
 
 echo "chmod +x ./gitops.sh"
 chmod +x ./gitops.sh
