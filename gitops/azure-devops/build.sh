@@ -89,6 +89,7 @@ function install_fab() {
     # Run this command to make script exit on any failure
     echo "FAB INSTALL"
     set -e
+    
     if [ -z "$HLD_PATH" ]; then 
         echo "HLD path not specified, going to run fab install in current dir"
     else
