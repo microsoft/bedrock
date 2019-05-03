@@ -75,6 +75,10 @@ Click on `TeamCity` > `Create`
 
 18. Click on `Run` to do a test run for this configuration! 
 
+You should be able to see logs from the build that just completed, and in the end it should push manifest files to the repository.
+
+![](./images/build_complete.png)
+
 ## Disadvantages
 
 - Upgrading from one version to another is a time consuming task with TeamCity 
