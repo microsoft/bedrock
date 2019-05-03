@@ -92,10 +92,10 @@ steps:
   displayName: 'Generate ssh keys'
 
 - script: |
-    export ssh_key=$(ssh_key)
-    export public_key=$(public_key)
     go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
   env:
+    ssh_key: $(ssh_key)
+    public_key: $(public_key)
     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
