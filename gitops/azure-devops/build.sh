@@ -140,13 +140,17 @@ function git_connect() {
     repo_url="${repo_url#https://}"
     echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
 
-    git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
+    if ! git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url; then
+        echo "REPO ALREADY CLONED AND EXISTS"
+    fi
     repo_url=$REPO
     repo=${repo_url##*/}
 
     # Extract repo name from url
     repo_name=${repo%.*}
     cd $repo_name
+    echo "git pull origin master"
+    git pull origin master
 }
 
 # Git commit
@@ -169,6 +173,11 @@ function git_commit() {
     #Set git identity
     git config user.email "admin@azuredevops.com"
     git config user.name "Automated Account"
+    # git config --global user.name "Automated Account"
+    # git config --global user.email admin@azuredevops.com
+    export GIT_AUTHOR_NAME="Automated Account"
+    export GIT_COMMITTER_NAME="Automated Account"
+    export EMAIL="admin@azuredevops.com"
 
     if [[ `git status --porcelain` ]]; then
         echo "GIT COMMIT"
