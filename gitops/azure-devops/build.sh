@@ -68,7 +68,6 @@ function download_fab() {
     wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
 
-    set -e
     export PATH=$PATH:$HOME/fab
 }
 
@@ -89,6 +88,7 @@ function install_hld() {
 function install_fab() {
     # Run this command to make script exit on any failure
     echo "FAB INSTALL"
+    set -e
     if [ -z "$HLD_PATH" ]; then 
         echo "HLD path not specified, going to run fab install in current dir"
     else
