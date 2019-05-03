@@ -88,14 +88,20 @@ steps:
     ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     echo '##vso[task.setvariable variable=ssh_key;isOutput=true]TEST!!'
     echo '##vso[task.setvariable variable=public_key;isOutput=true]cat id_rsa.pub'
-    echo $SSH_KEY
-    echo $PUBLIC_KEY
+    echo $ssh_key
+    echo $public_key
     echo $(SSH_KEY)
     echo $(public_key)
+    export ssh_key=$(readlink -f id_rsa.pub)
+    export public_key=$(cat id_rsa.pub)
+    echo $ssh_key
+    echo $public_key
   workingDirectory: '$(modulePath)/test'
   displayName: 'Generate ssh keys'
 
 - script: |
+    echo $ssh_key
+    echo $public_key
     echo $SSH_KEY
     echo $public_key
     echo $(ssh_key)
