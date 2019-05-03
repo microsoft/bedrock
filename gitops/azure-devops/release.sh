@@ -15,7 +15,12 @@ download_fab
 git_connect
 
 echo "FAB SET"
-fab set --environment $(Release.EnvironmentName) --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+if [[ ! -z $FAB_ENV_NAME ]]
+then
+    fab set --environment $FAB_ENV_NAME --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+else
+    fab set --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+fi
 
 echo "GIT STATUS"
 git status
