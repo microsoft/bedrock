@@ -1,6 +1,6 @@
 # Octopus Deploy
 
-Octopus Deploy, an automated deployment and release management tool, has been tested against the Bedrock GitOps workflow. There are many differences between using Octopus Deploy as opposed to Azure DevOps. This README will assist in getting you started on installing, configuring, and deploying a Release on an Octopus Server hosted in Azure.
+Octopus Deploy, an automated deployment and release management tool, has been tested against the [manifest generation pipeline](../azure-devops/ManifestGeneration.md) of the Bedrock GitOps workflow. There are many differences between using Octopus Deploy as opposed to Azure DevOps. This README will assist in getting you started on installing, configuring, and deploying a Release on an Octopus Server hosted in Azure.
 
 ## Getting Started
 
@@ -117,20 +117,32 @@ Be sure that the connection health is in good standing before deploying your Rel
 
 4. Define your deployment process.
 
-Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). Minor additions need to be made to `build.sh` because Octopus Deploy has a unique way of defining and using [environment variables](https://octopus.com/docs/deployment-examples/custom-scripts/using-variables-in-scripts) for different scripting languages.
-
-Append the following lines to the `build.sh`:
+Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). This `Inline Source Code` should do a few things: (1) define Environment Variables that are translatable in Octopus Deploy (2) ensure that the Deployment Target is "reset" for the Release deployment by removing all Fabrikate remnants from previous runs (3) download the `build.sh` and execute it.
 
 ```
-ACCESS_TOKEN_SECRET=$(get_octopusvariable "ACCESS_TOKEN_SECRET")
-REPO=$(get_octopusvariable "REPO")
-BRANCH_NAME=$(get_octopusvariable "BRANCH_NAME")
-COMMIT_MESSAGE=$(get_octopusvariable "COMMIT MESSAGE")
+#!/bin/bash
+
+#Define Environment Variables
+
+ACCESS_TOKEN_SECRET=#{ACCESS_TOKEN_SECRET}
+REPO=#{REPO}
+BRANCH=#{BRANCH}
+COMMIT_MESSAGE=#{COMMIT_MESSAGE}
+
+# Remove Fabrikate
+rm -rf fab*
+
+# Download build.sh
+curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
+chmod +x ./build.sh
+. build.sh
 ```
 
 Under `Variables`, be sure to define the variables as shown:
 
 ![Define Project Variables](images/octo-env-variables.png)
+
+It is important to enable [Raw Octopus](https://octopus.com/blog/trying-raw-octopus), or "Raw Scripting" for this pipeline because it is a default configuration to have deployments run [Calamari](https://octopus.com/docs/api-and-integration/calamari) when using Octopus Deploy, and this will interfere with "resetting" the Deployment Target. For this reason, raw scripting is used to allow the script steps to execute directly through the opened SSH connection without any extra wrapping or bootstrapping that comes naturally with Octopus. To do this, it is important to add the variable `OctopusUseRawScript` and set it to `True`.
 
 ### 5. Deploy
 
@@ -154,11 +166,7 @@ After your Release is finished running, you can view the results and logs of the
 
 **NOTE**: The Fabrikate logs along with other logs from `build.sh` will show up as error logs in Octopus Deploy. This is miscontrued.
 
-## Caveats
-
-- You will need to "reset" your Linux VM to remove all Fabrikate remnants before deploying the next release. This will conflict with an existing Fabrikate executable that exists from a previous run. This is because the `build.sh` currently assumes that each build/release will run on a clean slate. This is **not** the case when using Octopus Deploy.
-
-## Disadvantages
+## Challenges with Octopus Deploy
 
 - There is **less automation** when using Octopus Deploy in place of Azure DevOps.
     - Octopus Deploy requires that users provide their own resources, or Deployment Targets. Even though this could most likely be automated _outside_ of Octopus, this is still an additional step that is mandatory.
