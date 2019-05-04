@@ -1,14 +1,12 @@
 # Octopus Deploy
 
-Octopus Deploy, an automated deployment and release management tool, has been tested against the [manifest generation pipeline](../azure-devops/ManifestGeneration.md) of the Bedrock GitOps workflow. There are many differences between using Octopus Deploy as opposed to Azure DevOps. This README will assist in getting you started on installing, configuring, and deploying a Release on an Octopus Server hosted in Azure.
-
-## Getting Started
-
-Octopus Deploy is supported in the [Azure Marketplace] (https://azuremarketplace.microsoft.com/en-us/marketplace/apps/octopus.octopusdeploy) with a free 45-day trial. This guide is modeled after the following example of manifest yaml generation pipeline:
+Octopus Deploy, an automated deployment and release management tool, has been tested against the Bedrock GitOps workflow. It is supported in the [Azure Marketplace] (https://azuremarketplace.microsoft.com/en-us/marketplace/apps/octopus.octopusdeploy) with a free 45-day trial. This guide will assist in getting you started on installing, configuring, and deploying a Release on an Octopus Server (hosted in Azure) that is modeled after the following example of [manifest generation pipeline](../azure-devops/ManifestGeneration.md)
 
 
 ![GitOps Workflow using Octopus Deploy](images/gitops-octopus-deploy.png)
 
+
+## Getting Started
 
 ### 1. Launch an Octopus Deploy Server in Azure Portal
 
