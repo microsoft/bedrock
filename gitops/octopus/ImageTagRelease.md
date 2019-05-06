@@ -179,3 +179,15 @@ Your deployment should be in progress now.
 You can track the progress of your deployment and view logs on the `Task Log` tab.
 
 ![View Tasks Logs](images/octo-task-logs.png)
+
+### 4. Promotion
+
+When your Release runs successfully, you have the option to promote to the next environment (e.g. qa).
+
+![Deploy to QA](images/octo-deploy-to-qa.png)
+
+![Deploy to QA](images/octo-qa-deploy.png)
+
+**Note**: You will need to prepare your `qa` environment before deploying if you have not already done so. This means that you should have Deployment Targets specified and labeled `qa` if used in your `qa` environment.
+
+![](images/octo-dep-targets-qa.png)
