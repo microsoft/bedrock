@@ -83,7 +83,7 @@ You should be able to see logs from the build that just completed, and in the en
 
 ![](./images/build_complete.png)
 
-## Disadvantages
+## Challenges with TeamCity
 
 - Upgrading from one version to another is a time consuming task with TeamCity 
 - Not free if you need more than 3 agents and over 100 builds
