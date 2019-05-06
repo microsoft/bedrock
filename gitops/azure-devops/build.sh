@@ -172,6 +172,8 @@ function git_commit() {
     #Set git identity
     git config user.email "admin@azuredevops.com"
     git config user.name "Automated Account"
+
+    # Following variables have to be set for TeamCity
     export GIT_AUTHOR_NAME="Automated Account"
     export GIT_COMMITTER_NAME="Automated Account"
     export EMAIL="admin@azuredevops.com"
