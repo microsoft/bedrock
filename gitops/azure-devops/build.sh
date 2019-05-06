@@ -148,7 +148,7 @@ function git_connect() {
     echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
     git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
     cd $repo_name
-    echo "git pull origin master"
+    echo "GIT PULL ORIGIN MASTER"
     git pull origin master
 }
 
