@@ -1,6 +1,10 @@
 # TeamCity
 
-TeamCity is a build management and continuous integration server developed by [JetBrains](https://www.jetbrains.com/teamcity/). TeamCity is available in the [Azure Marketplace](https://azuremarketplace.microsoft.com/en-en/marketplace/apps/jetbrains.teamcity?tab=Overview). Follow the instructions below to deploy an instance of TeamCity on your Azure cloud to run continuous integration builds.
+TeamCity is a build management and continuous integration server developed by [JetBrains](https://www.jetbrains.com/teamcity/). TeamCity is available in the [Azure Marketplace](https://azuremarketplace.microsoft.com/en-en/marketplace/apps/jetbrains.teamcity?tab=Overview). 
+
+The guide below demonstrates how to deploy an instance of TeamCity on your Azure cloud to run continuous integration builds to generate Kubernetes manifest files for a high level definition repo. 
+
+![](./images/gitops-diagram.png)
 
 ## Getting Started
 

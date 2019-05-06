@@ -138,16 +138,15 @@ function git_connect() {
     repo_url=$REPO
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
-    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
 
-    if ! git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url; then
-        echo "REPO ALREADY CLONED AND EXISTS"
-    fi
     repo_url=$REPO
     repo=${repo_url##*/}
 
     # Extract repo name from url
     repo_name=${repo%.*}
+
+    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+    git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
     cd $repo_name
     echo "git pull origin master"
     git pull origin master
