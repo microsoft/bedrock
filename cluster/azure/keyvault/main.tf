@@ -1,5 +1,5 @@
 module "azure-provider" {
-    source = "../provider"
+  source = "../provider"
 }
 
 resource "azurerm_resource_group" "keyvault" {

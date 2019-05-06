@@ -22,6 +22,7 @@ module "east_vnet" {
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.east_address_space}"
   subnet_prefixes         = "${var.east_subnet_prefixes}"
+
   tags = {
     environment = "azure_multiple_clusters"
   }
@@ -68,7 +69,7 @@ module "east_tm_endpoint" {
 
   tags = {
     environment = "azure_multiple_clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.east_aks_gitops.kubeconfig_done}"
+    kubedone    = "${module.east_aks_gitops.kubeconfig_done}"
   }
 }
 
@@ -84,12 +85,12 @@ resource "azurerm_role_assignment" "east_spra" {
 module "east_flex_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
-  resource_group_name        = "${var.keyvault_resource_group}"
-  service_principal_id       = "${var.service_principal_id}"
-  service_principal_secret   = "${var.service_principal_secret}"
-  tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name              = "${var.keyvault_name}"
-  kubeconfig_filename        = "${local.east_kubeconfig_filename}"
+  resource_group_name      = "${var.keyvault_resource_group}"
+  service_principal_id     = "${var.service_principal_id}"
+  service_principal_secret = "${var.service_principal_secret}"
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
+  keyvault_name            = "${var.keyvault_name}"
+  kubeconfig_filename      = "${local.east_kubeconfig_filename}"
 
   kubeconfig_complete = "${module.east_aks_gitops.kubeconfig_done}"
 }
