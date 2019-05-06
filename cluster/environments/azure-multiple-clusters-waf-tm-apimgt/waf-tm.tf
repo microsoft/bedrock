@@ -4,7 +4,7 @@
 resource "azurerm_application_gateway" "appgweast" {
   name                = "${var.prefix}appgweast"
   resource_group_name = "${azurerm_resource_group.eastrg.name}"
-  location            = "eastus"
+  location            = "${azurerm_resource_group.eastrg.location}"
 
   # WAF configuration
   sku {
@@ -79,7 +79,7 @@ resource "azurerm_application_gateway" "appgweast" {
 resource "azurerm_application_gateway" "appgwwest" {
   name                = "${var.prefix}appgwwest"
   resource_group_name = "${azurerm_resource_group.westrg.name}"
-  location            = "westus"
+  location            = "${azurerm_resource_group.westrg.location}"
 
   # WAF configuration
   sku {
@@ -153,7 +153,7 @@ resource "azurerm_application_gateway" "appgwwest" {
 resource "azurerm_application_gateway" "appgwcentral" {
   name                = "${var.prefix}appgwcentral"
   resource_group_name = "${azurerm_resource_group.centralrg.name}"
-  location            = "centralus"
+  location            = "${azurerm_resource_group.centralrg.location}"
 
   # WAF configuration
   sku {

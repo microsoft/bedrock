@@ -1,11 +1,11 @@
-resource "azurerm_resource_group" "api_mgmt_rg" {
-  name     = "${var.api_management_resource_group_name}"
-  location = "${var.region}"
-}
+# resource "azurerm_resource_group" "api_mgmt_rg" {
+#   name     = "${var.api_management_resource_group_name}"
+#   location = "${var.region}"
+# }
 
 resource "azurerm_template_deployment" "api_mgmt_deployment" {
   name                = "apiterraarmdeploy"
-  resource_group_name = "${azurerm_resource_group.api_mgmt_rg.name}"
+  resource_group_name = "${azurerm_resource_group.tmrg.name}"
 
   template_body = <<DEPLOY
 {
