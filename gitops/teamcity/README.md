@@ -2,13 +2,13 @@
 
 TeamCity is a build management and continuous integration server developed by [JetBrains](https://www.jetbrains.com/teamcity/). TeamCity is available in the [Azure Marketplace](https://azuremarketplace.microsoft.com/en-en/marketplace/apps/jetbrains.teamcity?tab=Overview). 
 
-The guide below demonstrates how to deploy an instance of TeamCity on your Azure cloud to run continuous integration builds to generate Kubernetes manifest files for a high level definition repo. 
+The guide below demonstrates how to deploy an instance of TeamCity on your Azure cloud to run continuous integration builds to build an ACR image for a sample application. 
 
-![](./images/gitops-diagram.png)
+If you would like to create a manifest generation pipeline, follow the steps [here](./ManifestGeneration.md).
+
+![](./images/acr-diagram.png)
 
 ## Getting Started
-
-In the instructions below, the goal is to setup a working build pipeline for generating manifest files for a high level definition repo. Make sure to have the high level definition setup correctly, as outlined in other docs [here](../PipelineThinking.md). The pipeline we're about to setup in TeamCity will be triggered by a change that happens in the high level definition repository, and it will generate files which will be committed into the manifest repository. 
 
 1. Login to [Azure Marketplace](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryFeaturedMenuItemBlade/selectedMenuItemId/home) and search for TeamCity. 
 Click on `TeamCity` > `Create`
@@ -50,38 +50,52 @@ Click on `TeamCity` > `Create`
 
     ![](./images/create_project.png)
 
-12. Create the project from the repository URL, and enter credentials if it's not a public repository. Click on `Proceed`. 
-    
-    ![](./images/from_repository.png)
+12. Enter the project details for your application code repository and enter credentials if it's not a public repository. In this example, we're using the app code repository for [Project Jackson](https://github.com/catalystcode/containers-rest-cosmos-appservice-java) which is a simple application with front and back end capabilities. 
 
-13. Enter a name for the build and click on `Proceed`. 
-    
-    ![](./images/build_name.png)
+    ![](./images/create_project_app_code.png)
 
-14. After this step, it will auto-detect build steps and prompt you to configure it, and if none are present you may configure it manually. Click on `configure build steps manually`, since we're planning on using the build script provided by  [`Microsoft` / `Bedrock`](https://github.com/microsoft/bedrock). 
-15. Select `Command Line` from the dropdown for `Runner Type`. Enter a step name and select `Custom script` for `Run`. The script we're using below downloads the Bedrock GitOps build script, which downloads all essential tools needed to convert high level definition files into Kubernetes manifest yaml files, and pushes them into a manifest repo. All you need to use are the following simple commands for `Custom script`: 
+13. Enter an appropriate name for the project build configuration and click `Proceed`. 
+    ![](./images/create_project_from_catalyst_code.png)
+
+14. At this step, it will start auto-detecting build steps found in the repository. If your Dockerfile works standalone without any parameters, select it in the checkboxes. We're going to leave all these unchecked since we will use a custom script and variables for security, to push these to the ACR image. Click on `configure build steps manually`.
+
+    ![](./images/use_none.png)
+
+15. In this step, we will manually add the command line script to build the ACR image. Paste the following lines of code:
+
     ```
-    curl https://raw.githubusercontent.com/microsoft/bedrock/master/gitops/teamcity/build.sh > build.sh
-    chmod +x ./build.sh
-    ./build.sh
+    docker build -t $ACR_SERVER/jackson-api:v$ACR_CONTAINER_TAG .
+    docker login $ACR_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
+    docker push $ACR_SERVER/jackson-api:v$ACR_CONTAINER_TAG
     ```
-    ![](./images/transform_and_publish_step.png)
+
+    ![](./images/docker_api_create_configs.png)
 
 16. Press `Save` and click on `Parameters` on the left column. 
     ![](./images/parameters_find.png)
 
-17. Click on `Add new parameter`, and add the following variables under `Environment Variables`:
-    - `ACCESS_TOKEN_SECRET`: Get an access token from GitHub/Azure DevOps where your repo is hosted, so that the script can have access to push to the remote manifest yaml repository. You should use the password type for this variable for security purposes (as shown below). 
-        ![](./images/password_variable.png)
-    - `COMMIT_MESSAGE`: Since TeamCity does not have a variable that can provide the exact commit message, enter something valuable, such as "Auto-generated yaml files"
-    - `REPO`: Set this to the manifest repo, such as `https://github.com/samiyaakhtar/jackson-manifest`
-        ![](./images/variables.png)
+17. Add the following parameters to the environment variables section:
+    - `env.ACR_CONTAINER_TAG`: This should be set to the tag for the ACR image, such as 0.1
+    - `env.ACR_PASSWORD`: The password for the container registry. Set this to the passwors spec for security purposes.
+    - `env.ACR_SERVER`: URL for the ACR server, for example we are using `saakhtatestregistry.azurecr.io`
+    - `env.ACR_USERNAME`: The username for the container registry
 
-18. Click on `Run` to do a test run for this configuration! 
+    ![](./images/env_variables_acr.png)
 
-You should be able to see logs from the build that just completed, and in the end it should push manifest files to the repository.
+18. Click on `Run` to do a test run for this configuration. You should be able to see a new tag show up in the ACR registry for the newly pushed image! 
+19. If you would like to configure the same for the UI working directory, follow the same steps above but for a new build step, and paste the code below:
 
-![](./images/build_complete.png)
+    ```
+    docker build -t $ACR_SERVER/jackson-ui:v$ACR_CONTAINER_TAG .
+    docker login $ACR_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
+    docker push $ACR_SERVER/jackson-ui:v$ACR_CONTAINER_TAG
+    ```
+
+    Make sure the working directory is set to the UI folder correctly. 
+
+20. Click on `Run` to do a test run for this configuration. You should now see both tags being built (if there are changes) and the new tag should show up in the ACR portal for UI! 
+    ![](./images/acr_published_done.png)
+
 
 ## Challenges with TeamCity
 
