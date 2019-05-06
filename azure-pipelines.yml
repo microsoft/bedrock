@@ -1,3 +1,7 @@
+jobs:
+- job: Build
+  timeoutInMinutes: 80
+  cancelTimeoutInMinutes: 2
 trigger:
   batch: true
   branches:
