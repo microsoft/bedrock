@@ -67,6 +67,8 @@ function download_fab() {
     fi
     wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
+
+    export PATH=$PATH:$HOME/fab
 }
 
 # Install the HLD repo if it's not running as part of the HLD build pipeline
@@ -87,8 +89,7 @@ function install_fab() {
     # Run this command to make script exit on any failure
     echo "FAB INSTALL"
     set -e
-    export PATH=$PATH:$HOME/fab
-
+    
     if [ -z "$HLD_PATH" ]; then 
         echo "HLD path not specified, going to run fab install in current dir"
     else
