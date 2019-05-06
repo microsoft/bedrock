@@ -1,7 +1,3 @@
-jobs:
-- job: Build
-  timeoutInMinutes: 80
-  cancelTimeoutInMinutes: 2
 trigger:
   batch: true
   branches:
@@ -43,6 +39,7 @@ pr:
 
 pool:
   vmImage: 'Ubuntu-16.04'
+  timeoutInMinutes: 80
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
