@@ -39,6 +39,7 @@ pr:
 
 pool:
   vmImage: 'Ubuntu-16.04'
+  timeoutInMinutes: 80
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
@@ -88,7 +89,7 @@ steps:
     ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
     export ssh_key=$(readlink -f id_rsa.pub)
     export public_key=$(cat id_rsa.pub)
-    go test -v -timeout 99999s
+    go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
   env:
     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -98,4 +99,34 @@ steps:
     ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
     ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
   workingDirectory: '$(modulePath)/test'
-  displayName: 'Create ssh keys, get deps, then test'
+  displayName: 'Integration Test: Bedrock_Azure-Simple '
+
+- script: |
+    export ssh_key=$(readlink -f id_rsa.pub)
+    export public_key=$(cat id_rsa.pub)
+    go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
+    ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
+    ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
+  workingDirectory: '$(modulePath)/test'
+  displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
+
+- script: |
+    export ssh_key=$(readlink -f id_rsa.pub)
+    export public_key=$(cat id_rsa.pub)
+    go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
+    ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
+    ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
+  workingDirectory: '$(modulePath)/test'
+  displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
