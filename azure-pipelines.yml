@@ -94,6 +94,7 @@ jobs:
       ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find ./cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -109,6 +110,7 @@ jobs:
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find ./cluster/environments/azure-common-infra -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -124,6 +126,7 @@ jobs:
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find ./cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
