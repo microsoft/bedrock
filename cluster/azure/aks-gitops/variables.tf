@@ -96,3 +96,8 @@ variable "kubeconfig_filename" {
   type        = "string"
   default     = "bedrock_kube_config"
 }
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
+}

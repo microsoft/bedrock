@@ -100,3 +100,8 @@ variable "subnet_prefixes" {
   description = "The address prefix to use for the subnet."
   default     = ["10.10.1.0/24"]
 }
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
+}

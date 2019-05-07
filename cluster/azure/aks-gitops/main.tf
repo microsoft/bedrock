@@ -16,6 +16,7 @@ module "aks" {
   docker_cidr              = "${var.docker_cidr}"
   kubeconfig_recreate      = ""
   kubeconfig_filename      = "${var.kubeconfig_filename}"
+  network_policy           = "${var.network_policy}"
 }
 
 module "flux" {

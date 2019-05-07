@@ -45,4 +45,5 @@ module "aks-gitops" {
   service_cidr             = "${var.service_cidr}"
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
+  network_policy           = "${var.network_policy}"
 }
