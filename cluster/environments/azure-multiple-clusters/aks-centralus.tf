@@ -69,7 +69,7 @@ module "central_tm_endpoint" {
 
   tags = {
     environment = "azure_multiple_clusters - ${var.cluster_name} - public ip"
-    kubedone = "${module.central_aks_gitops.kubeconfig_done}"
+    kubedone    = "${module.central_aks_gitops.kubeconfig_done}"
   }
 }
 
@@ -85,12 +85,12 @@ resource "azurerm_role_assignment" "central_spra" {
 module "central_flex_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
-  resource_group_name        = "${var.keyvault_resource_group}"
-  service_principal_id       = "${var.service_principal_id}"
-  service_principal_secret   = "${var.service_principal_secret}"
-  tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name              = "${var.keyvault_name}"
-  kubeconfig_filename        = "${local.central_kubeconfig_filename}"
+  resource_group_name      = "${var.keyvault_resource_group}"
+  service_principal_id     = "${var.service_principal_id}"
+  service_principal_secret = "${var.service_principal_secret}"
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
+  keyvault_name            = "${var.keyvault_name}"
+  kubeconfig_filename      = "${local.central_kubeconfig_filename}"
 
   kubeconfig_complete = "${module.central_aks_gitops.kubeconfig_done}"
 }

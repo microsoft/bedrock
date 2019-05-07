@@ -22,6 +22,7 @@ module "west_vnet" {
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.west_address_space}"
   subnet_prefixes         = "${var.west_subnet_prefixes}"
+
   tags = {
     environment = "azure_multiple_clusters"
   }
@@ -68,7 +69,7 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure_multiple_clusters - ${local.west_prefix} - public ip"
-    kubedone = "${module.west_aks_gitops.kubeconfig_done}"
+    kubedone    = "${module.west_aks_gitops.kubeconfig_done}"
   }
 }
 
@@ -84,12 +85,12 @@ resource "azurerm_role_assignment" "west_spra" {
 module "west_flex_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
-  resource_group_name        = "${var.keyvault_resource_group}"
-  service_principal_id       = "${var.service_principal_id}"
-  service_principal_secret   = "${var.service_principal_secret}"
-  tenant_id                  = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name              = "${var.keyvault_name}"
-  kubeconfig_filename        = "${local.west_kubeconfig_filename}"
+  resource_group_name      = "${var.keyvault_resource_group}"
+  service_principal_id     = "${var.service_principal_id}"
+  service_principal_secret = "${var.service_principal_secret}"
+  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
+  keyvault_name            = "${var.keyvault_name}"
+  kubeconfig_filename      = "${local.west_kubeconfig_filename}"
 
   kubeconfig_complete = "${module.west_aks_gitops.kubeconfig_done}"
 }

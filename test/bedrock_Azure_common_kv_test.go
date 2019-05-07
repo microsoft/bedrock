@@ -2,13 +2,13 @@ package test
 
 import (
 	"fmt"
-	"os"
-	"strings"
-	"testing"
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/otiai10/copy"
+	"os"
+	"strings"
+	"testing"
 )
 
 func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
@@ -24,13 +24,13 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	subnetName := k8sName + "-subnet"
 	tenantid := os.Getenv("ARM_TENANT_ID")
-	vnetName :=	k8sName + "-vnet"
+	vnetName := k8sName + "-vnet"
 
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
-	backendName:= os.Getenv("ARM_BACKEND_STORAGE_NAME")
-	backendKey:= os.Getenv("ARM_BACKEND_STORAGE_KEY")
-	backendContainer:= os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
-	backendTfstatekey:=	k8sName +"-tfstatekey"
+	backendName := os.Getenv("ARM_BACKEND_STORAGE_NAME")
+	backendKey := os.Getenv("ARM_BACKEND_STORAGE_KEY")
+	backendContainer := os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendTfstatekey := k8sName + "-tfstatekey"
 
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
@@ -40,27 +40,27 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	common_backend_tfOptions := &terraform.Options{
 		TerraformDir: azureCommonInfraFolder,
 		BackendConfig: map[string]interface{}{
-			"storage_account_name":	backendName,
-			"access_key": backendKey,
-			"container_name": backendContainer,
-			"key": "common_"+backendTfstatekey,
+			"storage_account_name": backendName,
+			"access_key":           backendKey,
+			"container_name":       backendContainer,
+			"key":                  "common_" + backendTfstatekey,
 		},
 	}
 
 	//Specify the test case folder and "-var" option mapping
 	common_tfOptions := &terraform.Options{
 		TerraformDir: azureCommonInfraFolder,
-		Upgrade: true,
+		Upgrade:      true,
 		Vars: map[string]interface{}{
-			"address_space": addressSpace,
-			"keyvault_name": kvName,
-			"global_resource_group_name": kvRG,
+			"address_space":                  addressSpace,
+			"keyvault_name":                  kvName,
+			"global_resource_group_name":     kvRG,
 			"global_resource_group_location": location,
-			"service_principal_id": clientid,
-			"subnet_name": subnetName,
-			"subnet_prefix": addressSpace,
-			"tenant_id": tenantid,
-			"vnet_name": vnetName,
+			"service_principal_id":           clientid,
+			"subnet_name":                    subnetName,
+			"subnet_prefix":                  addressSpace,
+			"tenant_id":                      tenantid,
+			"vnet_name":                      vnetName,
 		},
 	}
 
@@ -88,9 +88,9 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 		TerraformDir: azureSingleKeyvaultFolder,
 		BackendConfig: map[string]interface{}{
 			"storage_account_name": backendName,
-			"access_key": backendKey,
-			"container_name": backendContainer,
-			"key": backendTfstatekey,
+			"access_key":           backendKey,
+			"container_name":       backendContainer,
+			"key":                  backendTfstatekey,
 		},
 	}
 
@@ -99,22 +99,22 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 		TerraformDir: azureSingleKeyvaultFolder,
 		Upgrade:      true,
 		Vars: map[string]interface{}{
-			"address_space":			addressSpace,
-			"agent_vm_count":			"3",
-			"agent_vm_size":			"Standard_D2s_v3",  
-			"cluster_name":				k8sName,
-			"dns_prefix":				dnsprefix,
-			"gitops_ssh_url":			"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-			"gitops_ssh_key":			sshkey,
-			"keyvault_name":			kvName,
-			"keyvault_resource_group":	kvRG,
-			"resource_group_name":		k8sRG,
-			"resource_group_location":	location,
-			"ssh_public_key":			publickey,
-			"service_principal_id":		clientid,
-			"service_principal_secret":	clientsecret,
-			"subnet_prefixes":			"10.39.0.0/16",
-			"vnet_subnet_id":			commonInfra_subnetID,
+			"address_space":            addressSpace,
+			"agent_vm_count":           "3",
+			"agent_vm_size":            "Standard_D2s_v3",
+			"cluster_name":             k8sName,
+			"dns_prefix":               dnsprefix,
+			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
+			"gitops_ssh_key":           sshkey,
+			"keyvault_name":            kvName,
+			"keyvault_resource_group":  kvRG,
+			"resource_group_name":      k8sRG,
+			"resource_group_location":  location,
+			"ssh_public_key":           publickey,
+			"service_principal_id":     clientid,
+			"service_principal_secret": clientsecret,
+			"subnet_prefixes":          "10.39.0.0/16",
+			"vnet_subnet_id":           commonInfra_subnetID,
 		},
 	}
 
@@ -124,7 +124,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	terraform.Apply(t, k8s_tfOptions)
 
 	//Obtain Kube_config file from module output
-	os.Setenv("KUBECONFIG", azureSingleKeyvaultFolder + "/output/bedrock_kube_config")
+	os.Setenv("KUBECONFIG", azureSingleKeyvaultFolder+"/output/bedrock_kube_config")
 	kubeConfig := os.Getenv("KUBECONFIG")
 	options := k8s.NewKubectlOptions("", kubeConfig)
 
