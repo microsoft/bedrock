@@ -97,6 +97,11 @@ variable "kubeconfig_filename" {
   default     = "bedrock_kube_config"
 }
 
+variable "kubeconfig_recreate" {
+  description = "Any change to this variable will recreate the kube config file to local disk."
+  type        = "string"
+  default     = ""
+}
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
