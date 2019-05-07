@@ -60,4 +60,6 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
 
 ## Test Setup CI/CD
 
+**Linting** is done for code style on terraform and golang files prior to commits using a git hook. Validate your modified changes are formatted prior to commits. The cript also verifies trailing whitespace is removed. Be sure to convert files to unix format before committing.
+
 For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts. Be sure to add the environment path your test is leveraging to the CI yml. For example `paths/include:` section in the `azure-pipelines.yml`.

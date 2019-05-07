@@ -31,6 +31,17 @@ module "aks-gitops" {
   vnet_subnet_id           = "${var.vnet_subnet_id}"
 }
 
+# Create Azure Key Vault role for SP
+module "keyvault_flexvolume_role" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
+
+  resource_group_name  = "${var.keyvault_resource_group}"
+  service_principal_id = "${var.service_principal_id}"
+  subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
+  keyvault_name        = "${var.keyvault_name}"
+}
+
+# Deploy central keyvault flexvolume
 module "flex_volume" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
@@ -38,7 +49,6 @@ module "flex_volume" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
-  subscription_id          = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name            = "${var.keyvault_name}"
 
   kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"

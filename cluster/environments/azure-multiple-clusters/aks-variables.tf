@@ -32,7 +32,7 @@ variable "gitops_ssh_url" {
 }
 
 variable "gitops_poll_interval" {
-  type = "string"
+  type    = "string"
   default = "5m"
 }
 
@@ -54,4 +54,12 @@ variable "flux_recreate" {
 variable "acr_enabled" {
   type    = "string"
   default = "true"
+}
+
+variable "keyvault_name" {
+  type = "string"
+}
+
+variable "keyvault_resource_group" {
+  type = "string"
 }
