@@ -30,6 +30,7 @@ module "aks-gitops" {
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
   vnet_subnet_id           = "${var.vnet_subnet_id}"
+  network_policy           = "${var.network_policy}"
 }
 
 # Create Azure Key Vault role for SP

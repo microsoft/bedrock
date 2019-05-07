@@ -93,3 +93,8 @@ variable "subnet_prefixes" {
 variable "vnet_subnet_id" {
   type = "string"
 }
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
