@@ -1,4 +1,4 @@
 # service variables
 variable "prefix" {
-  default = "azure-multiple-clusters-waf-tm-apimgmt Terraform"
+  default = "azure-multiple-clusters-waf-tm-apimgmt"
 }
