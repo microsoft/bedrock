@@ -1,5 +1,6 @@
 ## Manifest Generation pipeline
 
+![](./images/gitops-diagram.png)
 
 In the instructions below, the goal is to setup a working build pipeline for generating manifest files for a high level definition repo. Make sure to have the high level definition setup correctly, as outlined in other docs [here](../PipelineThinking.md). The pipeline we're about to setup in TeamCity will be triggered by a change that happens in the high level definition repository, and it will generate files which will be committed into the manifest repository. 
 
