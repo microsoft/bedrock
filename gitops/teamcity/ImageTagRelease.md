@@ -69,8 +69,8 @@ Click on `TeamCity` > `Create`
     ![](./images/parameters_find.png)
 
 17. Add the following parameters to the environment variables section:
-    - `env.ACR_CONTAINER_TAG`: This should be set to the tag for the ACR image, such as 0.1
-    - `env.ACR_PASSWORD`: The password for the container registry. Set this to the passwors spec for security purposes.
+    - `env.ACR_CONTAINER_TAG`: This is just an incremental tag for the container image; for our purposes we're using the build number so it's always unique and incremental. 
+    - `env.ACR_PASSWORD`: The password for the container registry. Set this to the password spec for security purposes.
     - `env.ACR_SERVER`: URL for the ACR server, for example we are using `saakhtatestregistry.azurecr.io`
     - `env.ACR_USERNAME`: The username for the container registry
 
