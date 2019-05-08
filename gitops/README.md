@@ -30,6 +30,8 @@ Learning about how we think about designing GitOps Pipelines:
 We provide instructions and automation for deploying a GitOps CI/CD pipeline for the following platforms:
 
 * [Azure Devops](./azure-devops)
+* [Octopus Deploy](./octopus)
+* [TeamCity](./teamcity)
 
 Pull requests would be gratefully accepted for other CI/CD platforms.
 
