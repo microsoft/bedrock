@@ -38,12 +38,14 @@ You can access the Octopus Server via browser using the DNS name. Once there, lo
 az vm create \
   --resource-group "myResourceGroup" \
   --name "otco-vm" \
-  --image "UbuntuLTS" \
+  --image "Debian" \
   --admin-username "yradsmik" \
   --admin-password "U$e@StrongPassword" \
   --location local
 ```
 Change the arguments to something that is appropriate for your environment.
+
+**NOTE**: It is common to use an Ubuntu image, and this is indeed possible, but has proven to have a few hurdles. There are differences between how Debian and Ubuntu handle administration and package management, and this affects the commands that are executed as part of the `build.sh`. For example, the `fab` commands do require that the user is running as root, or can execute `sudo` commands (e.g. part of the `sudo` user group). However, because running `sudo` during the Release prompts for user password, this will throw the error `sudo: no tty present and no askpass program specified`. For more information on how to resolve this, visit [here](https://octopus.com/docs/infrastructure/deployment-targets/linux/sudo-commands).
 
 2. Use SSH to connect to the virtual machine
 
@@ -69,12 +71,6 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 helm init
 ```
-
-5. Clone HLD repository
-
-Clone your HLD git repo to the $HOME directory of your VM by running `git clone <Link to HLD Repo>`. Depending on how your HLD repo is structured, you may need to copy the contents of your HLD repo to the $HOME directory. You can do this by
-
-   `cp -r <name of HLD repo>/* .`
 
 ### 4. Create your Octopus Release
 
@@ -115,22 +111,31 @@ Be sure that the connection health is in good standing before deploying your Rel
 
 4. Define your deployment process.
 
-Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). This `Inline Source Code` should do a few things: (1) define Environment Variables that are translatable in Octopus Deploy (2) ensure that the Deployment Target is "reset" for the Release deployment by removing all Fabrikate remnants from previous runs (3) download the `build.sh` and execute it.
+Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). This `Inline Source Code` should do a few things: (1) ensure that the Deployment Target is "reset" for the Release deployment by removing all Fabrikate remnants and content from previous runs (2) define Environment Variables that are translatable in Octopus Deploy (3) Clone the HLD repo and extract content from it, and (4) download the `build.sh` and execute it.
 
 ```
 #!/bin/bash
 
-#Define Environment Variables
+# Reset VM
+rm -rf *
 
+# Define Environment Variables
 ACCESS_TOKEN_SECRET=#{ACCESS_TOKEN_SECRET}
 REPO=#{REPO}
+HLD_REPO=#{HLD_REPO}
 BRANCH=#{BRANCH}
 COMMIT_MESSAGE=#{COMMIT_MESSAGE}
 
-# Remove Fabrikate
-rm -rf fab*
+# Clone HLD Repo
+git clone $HLD_REPO
+hld_repo_url=$HLD_REPO
+hld_repo=${hld_repo_url##*/}
 
-# Download build.sh
+# Extract repo name and copy content from it
+hld_repo_name=${hld_repo%.*}
+cp -r $hld_repo_name/* .
+
+# Download and execute build.sh
 curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
 chmod +x ./build.sh
 . build.sh
