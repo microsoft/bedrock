@@ -140,14 +140,14 @@ function git_connect() {
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
 
-    repo_url=$REPO
-    repo=${repo_url##*/}
-
-    # Extract repo name from url
-    repo_name=${repo%.*}
-
     echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
     git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
+
+    # Extract repo name from url
+    repo_url=$REPO
+    repo=${repo_url##*/}
+    repo_name=${repo%.*}
+
     cd $repo_name
     echo "GIT PULL ORIGIN MASTER"
     git pull origin master
