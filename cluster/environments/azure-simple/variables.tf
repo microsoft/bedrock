@@ -27,6 +27,12 @@ variable "flux_recreate" {
   default     = ""
 }
 
+variable "kubeconfig_recreate" {
+  description = "Any change to this variable will recreate the kube config file to local disk."
+  type        = "string"
+  default     = ""
+}
+
 variable "gitops_ssh_url" {
   type = "string"
 }
@@ -99,4 +105,9 @@ variable "address_space" {
 variable "subnet_prefixes" {
   description = "The address prefix to use for the subnet."
   default     = ["10.10.1.0/24"]
+}
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
 }
