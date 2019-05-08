@@ -57,7 +57,7 @@ func TestIT_Bedrock_AzureMC_APIM_Test(t *testing.T) {
         k8s_centralRG := k8sName + "-central-rg"
         k8s_globalRG := k8sName + "-global-rg"
         // update based on Terraform variable
-        resourcegroupname := "apimgmtresgrp5"
+        resourcegroupname := k8s_globalRG //"apimgmtresgrp5"
         apiname := "Voting"
         apiservicename := "apimgmt-tm"
 
