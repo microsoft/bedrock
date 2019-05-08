@@ -1,5 +1,5 @@
 resource "null_resource" "cluster_credentials" {
-  count  = "${var.kubeconfig_to_disk ? 1 : 0}"
+  count = "${var.kubeconfig_to_disk ? 1 : 0}"
 
   provisioner "local-exec" {
     command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo \"${azurerm_kubernetes_cluster.cluster.kube_config_raw}\" > ${var.output_directory}/${var.kubeconfig_filename}"
@@ -11,5 +11,4 @@ resource "null_resource" "cluster_credentials" {
   }
 
   depends_on = ["azurerm_kubernetes_cluster.cluster"]
-
 }

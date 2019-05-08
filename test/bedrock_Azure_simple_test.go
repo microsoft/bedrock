@@ -65,7 +65,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	terraform.InitAndApply(t, tfOptions)
 
 	// Obtain Kube_config file from module output
-	os.Setenv("KUBECONFIG", azureSimpleInfraFolder + "/output/bedrock_kube_config")
+	os.Setenv("KUBECONFIG", azureSimpleInfraFolder+"/output/bedrock_kube_config")
 	kubeConfig := os.Getenv("KUBECONFIG")
 
 	options := k8s.NewKubectlOptions("", kubeConfig)
