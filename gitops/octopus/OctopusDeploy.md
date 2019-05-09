@@ -32,7 +32,7 @@ You can access the Octopus Server via browser using the DNS name. Once there, lo
 
 ### 3. Create your Deployment Target resources
 
-1. Create a Linux Virtual Machine in Azure. You can do this via the Azure CLI or in Azure Portal. If you do not already have an ssh keypair to use, you should generate one beforehand by running `ssh-keygen`. To create a VM using Azure CLI, run the following command:
+1. Create a Linux Virtual Machine in Azure. You can do this via the Azure CLI or in Azure Portal. If you do not already have an SSH key pair to use, you should generate one beforehand by running `ssh-keygen`. To create a VM using Azure CLI, run the following command:
 
 ```
 az vm create \
@@ -71,7 +71,7 @@ Navigate back to the Deployment Targets page. Select the environment that was cr
 
 ![Choose environment and target role](images/octo-choose-env-role.png)
 
-Be sure to select the name of the SSH Key Pair account that was created earlier. Hit `Save`.
+Be sure to select the name of the SSH key pair account that was created earlier. Hit `Save`.
 
 ![Deployment Target Communication Section](images/octo-deploy-target-communication.png)
 
@@ -145,7 +145,7 @@ Create a Release for deployment!
 
 ![Deploy!](images/octo-release4.png)
 
-### Check Octopus Deploy Logs
+### 6. Check Octopus Deploy Logs
 
 After your Release is finished running, you can view the results and logs of the Release.
 
@@ -165,3 +165,7 @@ After your Release is finished running, you can view the results and logs of the
     - This also becomes problematic when automating a build or release when there are new commits made to the source repo. The closest thing to triggered releases is configuring scheduled releases in Octopus.
 - Octopus currently does not allow users to build custom plugins or extensions.
     - This makes it difficult for users or organizations who want to have a more custom CI/CD workflow.
+
+## TeamCity
+
+[TeamCity](https://www.jetbrains.com/teamcity/) from JetBrains is a popular CI tool, often used with Octopus Deploy, which behaves more as a CD tool. We have put together documentation on how to setup a pipeline around [Image Tag Release](https://github.com/samiyaakhtar/bedrock/blob/teamcity/gitops/teamcity/ImageTagRelease.md) in TeamCity, and this works in conjunction with the [Image Tag Release Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/octopus/ImageTagRelease.md) in Octopus Deploy and the manifest generation pipeline described above. Altogether, the entire GitOps CI/CD workflow, as explained in our [Pipeline Thinking](https://github.com/microsoft/bedrock/blob/master/gitops/PipelineThinking.md), can be assembled.
