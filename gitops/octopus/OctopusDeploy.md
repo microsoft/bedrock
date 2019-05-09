@@ -30,47 +30,20 @@ The following resources should populate in the resource group when Octopus Deplo
 
 You can access the Octopus Server via browser using the DNS name. Once there, login with the credentials that were used upon creation of the Octopus server (e.g. Octopus Deploy Administrator Credentials).
 
-### 3. Create and prepare your Deployment Target resources
+### 3. Create your Deployment Target resources
 
-1. Create a Linux Virtual Machine in Azure. You can do this via the Azure CLI or in Azure Portal. To use Azure CLI, run the following command:
+1. Create a Linux Virtual Machine in Azure. You can do this via the Azure CLI or in Azure Portal. If you do not already have an ssh keypair to use, you should generate one beforehand by running `ssh-keygen`. To create a VM using Azure CLI, run the following command:
 
 ```
 az vm create \
   --resource-group "myResourceGroup" \
   --name "otco-vm" \
   --image "Debian" \
-  --admin-username "yradsmik" \
-  --admin-password "U$e@StrongPassword" \
-  --location local
+  --admin-username "octo-admin" \
+  --ssh-key-value "path/to/ssh/keypair"
 ```
+
 Change the arguments to something that is appropriate for your environment.
-
-**NOTE**: It is common to use an Ubuntu image, and this is indeed possible, but has proven to have a few hurdles. There are differences between how Debian and Ubuntu handle administration and package management, and this affects the commands that are executed as part of the `build.sh`. For example, the `fab` commands do require that the user is running as root, or can execute `sudo` commands (e.g. part of the `sudo` user group). However, because running `sudo` during the Release prompts for user password, this will throw the error `sudo: no tty present and no askpass program specified`. For more information on how to resolve this, visit [here](https://octopus.com/docs/infrastructure/deployment-targets/linux/sudo-commands).
-
-2. Use SSH to connect to the virtual machine
-
-    `ssh admin-username@publc-ip-address`
-
-You may be prompted to enter the admin password.
-
-3. Run shell as a target user by executing the command `sudo -s`.
-
-This will allow you to run as the `root` user which will give you the appropriate permissions to download packages that are required for the pipeline.
-
-4. Install necessary components for GitOps workflow:
-
-You will need to install git, zip, and libunwind-dev. In addition, you will also need to download, install, and initialize Helm. You can do this by running the following commands:
-
-```
-apt-get update
-apt-get install -y git zip libunwind-dev
-
-# Helm
-curl -LO https://git.io/get_helm.sh
-chmod 700 get_helm.sh
-./get_helm.sh
-helm init
-```
 
 ### 4. Create your Octopus Release
 
@@ -86,38 +59,51 @@ Specify the public IP address of the Linux VM.
 
 ![SSH Connection](images/ssh-connection.png)
 
-If you have never added an account before, click on the option to add a new account and select "Username/Password". You may also use SSH Key Pair if an SSH Key was used to create the VM as opposed to a username and password.
+If you have never added an account before, click on the option to add a new account and select "SSH Key Pair".
 
 ![Add Account to use during deployment](images/octopus-add-account.png)
 
-Enter the credentials for the VM username and password and choose the appropriate environment for it to be used in.
+Enter the name of the username that was specified to create the VM (e.g. "octo-admin"). Then, upload the private key file that was generated when creating the SSH key. If there is a passphrase for the SSH Key, please include that as well. Finally, choose the appropriate environment for it to be used in and hit `Save`.
 
-![Create account for the Linus VM](images/octo-create-account.png)
+![Create account for the Linux VM](images/octopus-create-account.png)
 
-Select the environment that was created in Step 1, and create a new Target role (e.g. `octo-admin`). If a target role does not already exist, add a new role.
+Navigate back to the Deployment Targets page. Select the environment that was created in Step 1, and create a new Target role (e.g. `octo-admin`). If a target role does not already exist, add a new role.
 
 ![Choose environment and target role](images/octo-choose-env-role.png)
 
-Be sure to select the name of the Username/Password account that was created earlier.
+Be sure to select the name of the SSH Key Pair account that was created earlier. Hit `Save`.
+
 ![Deployment Target Communication Section](images/octo-deploy-target-communication.png)
 
 3. Check the health of the Deployment Target(s)
 
 Under Connectivity, there is the option to see the connection health of your VM.
+
 ![Check Health of Deployment Target](images/octo-deploy-target-health1.png)
 
 Be sure that the connection health is in good standing before deploying your Release.
+
 ![Check Health of Deployment Target Connectivity](images/octo-deploy-target-health2.png)
 
 4. Define your deployment process.
 
-Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). This `Inline Source Code` should do a few things: (1) ensure that the Deployment Target is "reset" for the Release deployment by removing all Fabrikate remnants and content from previous runs (2) define Environment Variables that are translatable in Octopus Deploy (3) Clone the HLD repo and extract content from it, and (4) download the `build.sh` and execute it.
+Add a new step that will call a bash script. In this section, you will use the `build.sh` script from [Microsoft/Bedrock](https://github.com/Microsoft/bedrock/blob/master/gitops/azure-devops/build.sh). This `Inline Source Code` should do a few things: (1) ensure that the Deployment Target is "reset" for the Release deployment by removing all Fabrikate remnants and content from previous runs (2) install prerequisites like git, helm, etc. (3) define Environment Variables that are translatable in Octopus Deploy (4) Clone the HLD repo and extract content from it, and (5) download the `build.sh` and execute it.
 
 ```
 #!/bin/bash
 
 # Reset VM
 rm -rf *
+
+# Install Prerequisites
+sudo apt-get update
+sudo apt-get install -y curl git unzip libunwind-dev
+
+# Install and Initialize Helm
+curl -LO https://git.io/get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+helm init
 
 # Define Environment Variables
 ACCESS_TOKEN_SECRET=#{ACCESS_TOKEN_SECRET}
