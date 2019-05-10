@@ -1,4 +1,4 @@
-A common CD tool to use with TeamCity is Octopus Deploy, which this guide explains how the two can be tied up where TeamCity provides Continuous Integration and Octopus provides Continuous Delivery. 
+A common CD tool to use with TeamCity is Octopus Deploy. In this guide we're attempting to trigger a release pipeline in Octopus Deploy from an image tag release pipeline in TeamCity. 
 
 ## Pre-requisite
 
