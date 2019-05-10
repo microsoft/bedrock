@@ -140,7 +140,7 @@ OCTOPUS_SERVER: the Octopus Server's API endpoint
 
 OCTOPUS_ENVIRONMENT: the environment to create the release in (must exist for the other project)
 
-OCTOPUS SPACE: the name of the space that the project resides in
+OCTOPUS_SPACE: the name of the space that the project resides in
 
 OctopusUseRawScript: parameter that allows raw scripting to be used in the Deployment Target
 
