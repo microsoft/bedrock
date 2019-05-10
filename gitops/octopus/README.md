@@ -1,6 +1,6 @@
-# GitOps CI/CD with Octopus Deploy
+# GitOps CD with Octopus Deploy
 
-This section provides examples of how to configure Octopus Deploy to be your CI/CD orchestrator for your GitOps Workflow. To learn more, please visit [How We Think About Designing GitOps Pipelines](https://github.com/microsoft/bedrock/blob/master/gitops/PipelineThinking.md).
+This section provides examples of how to configure Octopus Deploy to be your CD orchestrator for your GitOps Workflow. To learn more, please visit [How We Think About Designing GitOps Pipelines](https://github.com/microsoft/bedrock/blob/master/gitops/PipelineThinking.md).
 
 Examples:
 
