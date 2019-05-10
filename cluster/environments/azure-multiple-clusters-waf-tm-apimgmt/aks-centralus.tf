@@ -20,7 +20,8 @@ module "central_vnet" {
 
   resource_group_name     = "${local.central_rg_name }"
   resource_group_location = "${local.central_rg_location}"
-  subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
+  //subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
+  subnet_names            = ["${var.cluster_name}-aks-subnet"]
   address_space           = "${var.central_address_space}"
   subnet_prefixes         = "${var.central_subnet_prefixes}"
   tags = {
