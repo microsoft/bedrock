@@ -230,4 +230,4 @@ When your Release runs successfully, you have the option to promote to the next 
 
 ## TeamCity
 
-The TeamCity [image tag release](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity/ImageTagRelease.md) pipeline works hand in hand with this Octopus pipeline. With the [manifest generation pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/octopus/OctopusDeploy.md), you should be able to complete the entire GitOps CI/CD workflow using TeamCity and Octopus Deploy.
+The TeamCity [image tag release](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity/ImageTagRelease.md) pipeline works hand in hand with this Octopus pipeline. When you do have a TeamCity pipeline setup, it is worth visting how to [trigger Octopus from TeamCity](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity/ConnectToOctopus.md). With the [manifest generation pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/octopus/OctopusDeploy.md), you should be able to complete the entire GitOps CI/CD workflow using TeamCity and Octopus Deploy.
