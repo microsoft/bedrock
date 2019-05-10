@@ -35,7 +35,7 @@ This step assumes the following variables are set up in TeamCity:
 
 - `OCTO_API_KEY`: Obtain an API key for your Octopus server by going into your profile settings. It should be in the format `API-XXXXXXXXXXXXXXXXXX`
 - `OCTO_SERVER`: URL for the Octopus server
-- `ACR_CONTAINER_TAG`: In order to set an ACR tag that contains build number, branch name and commit hash, follow steps here. Otherwise, If you would like to skip creating a complex ACR tag for simplicity, set this to any constant image tag which is stable in your ACR. 
+- `ACR_CONTAINER_TAG`: In order to set an ACR tag that contains build number, branch name and commit hash, follow steps [here](./ImageTagRelease.md#creating-an-acr-container-tag-with-branch-name-commit-hash-and-build-number). Otherwise, If you would like to skip creating a complex ACR tag for simplicity, set this to any constant image tag which is stable in your ACR. 
 - `ENV_NAME`: This should be set to the environment you would like to create a release for. For example `DEV`.
 - `PROJECT_NAME`: The name of the project you're creating a release for
 - `SPACE`: The project space in which the release resides under. If it's under default, you may skip this parameter. 

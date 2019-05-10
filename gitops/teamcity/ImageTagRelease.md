@@ -71,7 +71,7 @@ Click on `TeamCity` > `Create`
     ![](./images/parameters_find.png)
 
 17. Add the following parameters to the environment variables section:
-    - `env.ACR_CONTAINER_TAG`: This is the tag for the ACR image, ideally it should contain useful information about the image, such as the build number, commit and branch name. Follow guide below to create a tag containing this metadata, for simplicity you may set this to any number. 
+    - `env.ACR_CONTAINER_TAG`: This is the tag for the ACR image, ideally it should contain useful information about the image, such as the build number, commit and branch name. Follow guide [below](#creating-an-acr-container-tag-with-branch-name-commit-hash-and-build-number) to create a tag containing this metadata, for simplicity you may set this to any number. 
     - `env.ACR_PASSWORD`: The password for the container registry. Set this to the password spec for security purposes.
     - `env.ACR_SERVER`: URL for the ACR server, for example we are using `saakhtatestregistry.azurecr.io`
     - `env.ACR_USERNAME`: The username for the container registry
@@ -95,7 +95,7 @@ Click on `TeamCity` > `Create`
 21. (*Optional*) If you would like to trigger Octopus Deploy from this image tag release in TeamCity, follow the guide [here](./ConnectToOctopus.md). 
 
 
-## Creating an ACR Container tag containing branch name, commit hash and build number
+## Creating an ACR Container tag with branch name, commit hash and build number
 
 It's a good practice to capture details about the commit and branch in the container tag, so we would like to use a tag with format `build_number-branch_name-short_commit_hash`, for example `24-master-3fb425c`. To achieve this, set this variable `ACR_CONTAINER_TAG` to `%env.BUILD_NUMBER%-%env.BRANCH_NAME%-%env.GIT_HASH%`. This assumes the following variables are defined:
 - `BUILD_NUMBER`: This env variable should be set to `%build.number%`
