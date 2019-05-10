@@ -7,6 +7,8 @@ Follow any of the following guides to run builds on TeamCity:
 1. [Image Tag Release Pipeline](./ImageTagRelease.md)
 2. [Manifest Generation Pipeline](./ManifestGeneration.md)
 
+If you would like to trigger Octopus Deploy from TeamCity, follow the guide [here](./ConnectToOctopus.md). 
+
 ## Challenges with TeamCity
 
 - Upgrading from one version to another is a time consuming task with TeamCity 

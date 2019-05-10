@@ -4,6 +4,8 @@ The guide below demonstrates how to deploy an instance of TeamCity on your Azure
 
 ![](./images/acr-diagram.png)
 
+In order to connect this CI pipeline with a CD pipeline in Octopus Deploy, follow the steps [here](./ConnectToOctopus.md).
+
 1. Login to [Azure Marketplace](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryFeaturedMenuItemBlade/selectedMenuItemId/home) and search for TeamCity. 
 Click on `TeamCity` > `Create`
 
@@ -69,7 +71,7 @@ Click on `TeamCity` > `Create`
     ![](./images/parameters_find.png)
 
 17. Add the following parameters to the environment variables section:
-    - `env.ACR_CONTAINER_TAG`: This is just an incremental tag for the container image; for our purposes we're using the build number so it's always unique and incremental. 
+    - `env.ACR_CONTAINER_TAG`: This is the tag for the ACR image, ideally it should contain useful information about the image, such as the build number, commit and branch name. Follow guide [below](#creating-an-acr-container-tag-with-branch-name-commit-hash-and-build-number) to create a tag containing this metadata, for simplicity you may set this to any number. 
     - `env.ACR_PASSWORD`: The password for the container registry. Set this to the password spec for security purposes.
     - `env.ACR_SERVER`: URL for the ACR server, for example we are using `saakhtatestregistry.azurecr.io`
     - `env.ACR_USERNAME`: The username for the container registry
@@ -89,3 +91,25 @@ Click on `TeamCity` > `Create`
 
 20. Click on `Run` to do a test run for this configuration. You should now see both tags being built (if there are changes) and the new tag should show up in the ACR portal for UI! 
     ![](./images/acr_published_done.png)
+
+21. (*Optional*) If you would like to trigger Octopus Deploy from this image tag release in TeamCity, follow the guide [here](./ConnectToOctopus.md). 
+
+
+## Creating an ACR Container tag with branch name, commit hash and build number
+
+It's a good practice to capture details about the commit and branch in the container tag, so we would like to use a tag with format `build_number-branch_name-short_commit_hash`, for example `24-master-3fb425c`. To achieve this, set this variable `ACR_CONTAINER_TAG` to `%env.BUILD_NUMBER%-%env.BRANCH_NAME%-%env.GIT_HASH%`. This assumes the following variables are defined:
+- `BUILD_NUMBER`: This env variable should be set to `%build.number%`
+- `BRANCH_NAME`: This env variable should be set to `%teamcity.build.branch%`, note that in order for this variable to work, you need to have the VCS build specification include at least one branch, read more [here](https://stackoverflow.com/a/27829516). 
+- `GIT_HASH`: For now, set this variable to `%build.vcs.number%` which is the full commit hash, in a later step we will extract the short commit hash from the full hash. 
+
+Next, we need to extract short hash from full commit hash. Create a new build step, set it to Custom script and add the code below:
+
+```
+shorthash="$(echo $GIT_HASH | cut -b 1-7 )"
+echo "##teamcity[setParameter name='env.GIT_HASH' value='$shorthash']"
+echo "Updating Git hash to $shorthash"
+```
+
+![](./images/git_hash_step.png)
+
+This script gets a substring of the git hash and updates the environment variable in TeamCity for the next build steps to use. **Important**: Make sure this step is bumped to be the first step in the pipeline. 
