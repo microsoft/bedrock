@@ -253,6 +253,8 @@ Click `Save`.
 
 Now your project should automatically create a release **and** deploy when a new version of the "Test.App" package is uploaded to the built-in Octopus repository by an external CI process like TeamCity.
 
+**NOTE:** If this is your first time setting up automatic release creation, you may need to **manually** create a release first after the new step has been added and configured.
+
 ## TeamCity
 
 The TeamCity [image tag release](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity/ImageTagRelease.md) pipeline works hand in hand with this Octopus pipeline. When you do have a TeamCity pipeline setup, it is worth visting how to [trigger Octopus from TeamCity](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity/ConnectToOctopus.md). With the [manifest generation pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/octopus/OctopusDeploy.md), you should be able to complete the entire GitOps CI/CD workflow using TeamCity and Octopus Deploy.
