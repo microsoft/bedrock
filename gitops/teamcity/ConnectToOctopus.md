@@ -36,6 +36,8 @@ Make sure this build step executes after all other build steps are complete. Do 
 
 ![](./images/nuget_logs.png)
 
+Next, you've to setup Automatic Release Creation in Octopus, follow the guide [here](../octopus/ImageTagRelease.md#enable-automatic-release-creation-and-auto-deploy).
+
 ### Trigger Octopus by creating new explicit release
 
 This guide sets a build step for triggering Octopus CD for an Image Tag Release pipeline that we set up for the GitOps workflow. It builds an ACR image and publishes it, then triggers Octopus Deploy with the tag of the newly built image. 
