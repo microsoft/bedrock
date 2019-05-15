@@ -12,6 +12,8 @@ do
  s) ACR_ENABLED=${OPTARG};;
  r) FLUX_IMAGE_REPOSITORY=${OPTARG};;
  t) FLUX_IMAGE_TAG=${OPTARG};;
+ *) echo "Please refer to usage guide on GitHub" >&2
+    exit 1 ;;
  esac
 done
 
