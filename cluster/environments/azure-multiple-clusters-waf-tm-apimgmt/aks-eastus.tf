@@ -19,11 +19,12 @@ module "east_vnet" {
 
   resource_group_name     = "${local.east_rg_name }"
   resource_group_location = "${local.east_rg_location}"
+
   //subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
-  subnet_names            = ["${var.cluster_name}-aks-subnet"]
-  
-  address_space           = "${var.east_address_space}"
-  subnet_prefixes         = "${var.east_subnet_prefixes}"
+  subnet_names = ["${var.cluster_name}-aks-subnet"]
+
+  address_space   = "${var.east_address_space}"
+  subnet_prefixes = "${var.east_subnet_prefixes}"
 
   tags = {
     environment = "azure-multiple-clusters"
@@ -70,7 +71,7 @@ module "east_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
   # resource_group_name                 = "${azurerm_resource_group.eastakscluster.name}"
-  resource_group_name                 = "${azurerm_resource_group.eastrg.name}"#"${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
+  resource_group_name                 = "${azurerm_resource_group.eastrg.name}"      #"${var.service_principal_is_owner == "1" ? local.east_rg_name : module.east_aks.cluster_derived_resource_group}"
   resource_location                   = "${local.east_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -78,8 +79,10 @@ module "east_tm_endpoint" {
   public_ip_name                      = "${var.cluster_name}-waf-ipeast"
   ip_address_out_filename             = "${local.east_ip_address_out_filename}"
   allocation_method                   = "Dynamic"
+
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgmt east - ${var.cluster_name} - public ip"
+
     # kubedone    = "${module.east_aks.kubeconfig_done}"
   }
 }
