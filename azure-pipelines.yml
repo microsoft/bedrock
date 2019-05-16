@@ -91,9 +91,22 @@ jobs:
     displayName: 'Install terraform, kubectl, helm'
 
   - script: |
+      terraform fmt -check=true -write=false -list=true > /dev/null
+      if [ $? -eq 0 ]
+      then
+        echo "terraform lint valid."
+      else
+        echo "Invalid lint. Please run terraform fmt."
+        exit 1
+      fi
+    workingDirectory: '$(modulePath)/cluster'
+    displayName: 'Terraform lint check'
+
+  - script: |
       ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -109,6 +122,7 @@ jobs:
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -124,6 +138,7 @@ jobs:
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
+      find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
       go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
