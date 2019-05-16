@@ -38,9 +38,8 @@ variable "output_directory" {
   default = "./output"
 }
 
-
 variable "allocation_method" {
-  type = "string"
+  type    = "string"
   default = "Static"
 }
 

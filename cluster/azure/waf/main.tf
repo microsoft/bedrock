@@ -18,14 +18,13 @@ resource "azurerm_application_gateway" "waf" {
   waf_configuration {
     firewall_mode    = "Detection"
     rule_set_type    = "OWASP"
-    rule_set_version = "3.0"      
+    rule_set_version = "3.0"
     enabled          = true
   }
 
   gateway_ip_configuration {
     name      = "ip-configuration"
-    subnet_id = "${var.subnet_id}" 
-   
+    subnet_id = "${var.subnet_id}"
   }
 
   frontend_port {
@@ -44,8 +43,7 @@ resource "azurerm_application_gateway" "waf" {
   }
 
   backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-  
+    name = "${var.prefix}-beappool1"
   }
 
   backend_http_settings {
@@ -54,7 +52,6 @@ resource "azurerm_application_gateway" "waf" {
     port                  = 80
     protocol              = "Http"
     request_timeout       = 20
-    
   }
 
   http_listener {
@@ -62,9 +59,7 @@ resource "azurerm_application_gateway" "waf" {
     frontend_ip_configuration_name = "${var.prefix}-feip"
     frontend_port_name             = "${var.prefix}-feport"
     protocol                       = "Http"
-  
   }
-
 
   request_routing_rule {
     name                       = "${var.prefix}-rule1"
@@ -73,5 +68,4 @@ resource "azurerm_application_gateway" "waf" {
     backend_address_pool_name  = "${var.prefix}-beappool1"
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
-
 }

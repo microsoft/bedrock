@@ -19,11 +19,13 @@ module "west_vnet" {
 
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
+
   //subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
-  subnet_names            = ["${var.cluster_name}-aks-subnet"]
-  
-  address_space           = "${var.west_address_space}"
-  subnet_prefixes         = "${var.west_subnet_prefixes}"
+  subnet_names = ["${var.cluster_name}-aks-subnet"]
+
+  address_space   = "${var.west_address_space}"
+  subnet_prefixes = "${var.west_subnet_prefixes}"
+
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -53,13 +55,13 @@ module "west_aks" {
 module "west_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = "${var.flux_recreate}"
-  kubeconfig_complete = "${module.west_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.west_kubeconfig_filename}"
-  flux_clone_dir      = "${local.west_flux_clone_dir}"
-  gitops_path         = "${var.gitops_west_path}"
+  gitops_ssh_url       = "${var.gitops_ssh_url}"
+  gitops_ssh_key       = "${var.gitops_ssh_key}"
+  flux_recreate        = "${var.flux_recreate}"
+  kubeconfig_complete  = "${module.west_aks.kubeconfig_done}"
+  kubeconfig_filename  = "${local.west_kubeconfig_filename}"
+  flux_clone_dir       = "${local.west_flux_clone_dir}"
+  gitops_path          = "${var.gitops_west_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
 
@@ -68,7 +70,7 @@ module "west_flux" {
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.westrg.name}"# "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}" #"${azurerm_resource_group.westtakscluster.name}"
+  resource_group_name                 = "${azurerm_resource_group.westrg.name}"      # "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}" #"${azurerm_resource_group.westtakscluster.name}"
   resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -76,11 +78,14 @@ module "west_tm_endpoint" {
   public_ip_name                      = "${var.cluster_name}-waf-ipwest"
   ip_address_out_filename             = "${local.west_ip_address_out_filename}"
   allocation_method                   = "Dynamic"
+
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgmt west- ${var.cluster_name} - public ip"
+
     # kubedone    = "${module.east_aks.kubeconfig_done}"
   }
 }
+
 resource "azurerm_role_assignment" "west_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
   principal_id         = "${data.azuread_service_principal.sp.id}"
