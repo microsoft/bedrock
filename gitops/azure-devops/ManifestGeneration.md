@@ -22,6 +22,9 @@ If you are using your own high level description, add the following `azure-pipel
 trigger:
 - master
 
+pr:
+- master
+
 pool:
   vmImage: 'Ubuntu-16.04'
 
@@ -70,6 +73,8 @@ __Note__: If you would like to trigger a build from a pipeline not linked to the
 
 #### Create Build for your Definition Repo
 
+If you are using an Azure DevOps repo and commmited the 'azure-pipelines.yaml' file to the root of your repo, then Azure Pipelines will create a Build automatically for you based on this file.  You can skip to the 'Configure Build' step. 
+
 In Azure DevOps:
 1. Click on "Pipelines" on the left side to expand a submenu
 2. Click on "Builds" from the submenu
@@ -83,18 +88,35 @@ In Azure DevOps:
   ![SELECT REPO TYPE](images/select-git-repo.png)
 
 6. Choose your high level definition repo:
-    1. Azure DevOps Repo Example: ![SELECT REPO NAME](images/select-ado-repo.png)
-    1. GitHub Repo Example:![SELECT REPO NAME](images/select-github-repo.png)
+    1. Azure DevOps Repo Example: 
 
-7. Select the "Configuration as Code" template
+    ![SELECT REPO NAME](images/select-ado-repo.png)
+    
+    1. GitHub Repo Example:
+
+    ![SELECT REPO NAME](images/select-github-repo.png)
+
+7. Select the "Existing Azure Pipelines YAML file" template
 
   ![SELECT REPO TYPE](images/configuration-as-code.png)
 
-8. Name the build and choose the `azure-pipeline.yml` file in the root of your high level definition repo.
+8. Choose the yaml file from your repository and click "Continue"
+
+  ![Select Yaml File](images/select-an-existing-yaml-file.png)
+
+9. Click Run, then click Cancel (The build fails until we configure variables)
+
+  ![Review Yaml File](images/review-pipeline-yaml.png)
 
 #### Configure Build
 
-1. Click the "Variables" tab.
+1. In the Builds view, click Edit to edit your pipeline
+
+  ![Edit the Build Pipeline](images/edit-build-pipeline.png)
+
+1. In the elipsis menu, click "Variables"
+
+  ![Edit the Build Variables](images/edit-variables.png)
 
 5. Add two variables that are used by the `build.sh` script referenced in `azure_pipeline.yml`:
     ![set variables](images/set-variables.png)
@@ -106,6 +128,24 @@ In Azure DevOps:
 
 7. You should now see the build run and complete successfully.
   ![ADO Build](images/azure-pipelines-yaml.png)
+
+#### Configure Branch Policy
+
+If you are using an Azure DevOps repo, you can configure a policy to trigger a build on a Pull Request and verify your HLD.
+
+1. In Azure DevOps, click "Repos" and "Branches".
+
+2. In the elipsis menu, click "Branch policies"
+
+  ![Edit Branch Policies](images/edit-branch-policies-for-master.png)
+
+3. Under "Build validation", click "Add build policy"
+
+4. Choose a "Build pipeline" and "Display name" for your new policy.  
+
+  ![Add Branch Policy](images/add-build-policy.png)
+
+5. Click "Save"
 
 ### 3. Configure Flux
 
