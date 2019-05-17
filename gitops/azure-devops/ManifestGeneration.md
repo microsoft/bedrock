@@ -96,7 +96,7 @@ In Azure DevOps:
 
     ![SELECT REPO NAME](images/select-github-repo.png)
 
-7. Select the "Existing Azure Pipelines YAML file" template
+7. If Azure DevOps detects your azure-pipelines.yaml, then skip to step #9. Otherwise, select the "Existing Azure Pipelines YAML file" template
 
   ![SELECT REPO TYPE](images/configuration-as-code.png)
 
@@ -127,7 +127,6 @@ In Azure DevOps:
 6. Click "Save & Queue".
 
 7. You should now see the build run and complete successfully.
-  ![ADO Build](images/azure-pipelines-yaml.png)
 
 #### Configure Branch Policy
 
