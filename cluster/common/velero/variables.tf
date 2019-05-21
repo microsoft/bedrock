@@ -51,13 +51,5 @@ variable "velero_backup_name" {
 variable "velero_restore_name" {
   description = "The name of the restore you would like to set."
   type        = "string"
-  default     = "disaster_recovery_restore"
+  default     = "disasterrecoveryrestore"
 }
-
-variable "velero_restore_flags" {
-  description = "Extra restore flags to pass."
-  type        = "string"
-  default     = ""
-}
-
-

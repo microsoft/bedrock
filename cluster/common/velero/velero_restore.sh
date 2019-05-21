@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-while getopts :b:p:s:l:v:n:r:f: option
+while getopts :b:p:s:l:v:n:r: option
 do
  case "${option}" in
  b) VELERO_BUCKET=${OPTARG};;
@@ -10,7 +10,6 @@ do
  v) VELERO_VOLUME_SNAPSHOT_LOCATION_CONFIG=${OPTARG};;
  n) VELERO_BACKUP_NAME=${OPTARG};;
  r) VELERO_RESTORE_NAME=${OPTARG};;
- f) VELERO_RESTORE_FLAGS=${OPTARG};;
  *) echo "ERROR: Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -73,7 +72,8 @@ if ! velero backup describe "$VELERO_BACKUP_NAME"; then
     exit 1
 fi
 
-velero restore create "$VELERO_RESTORE_NAME" --from-backup "$VELERO_BACKUP_NAME" --wait "$VELERO_RESTORE_FLAGS"
+echo "Attempting to restore from $VELERO_BACKUP_NAME with restore name: $VELERO_RESTORE_NAME."
+velero restore create "$VELERO_RESTORE_NAME" --from-backup "$VELERO_BACKUP_NAME" --wait
 
 velero_restore_result=$?
 if [ $velero_restore_result -ne 0 ]; then
@@ -82,5 +82,5 @@ if [ $velero_restore_result -ne 0 ]; then
 fi
 
 # Velero restore is complete so let's remove it from the cluster. Flux will re-add if we want it in the cluster desired state.
-kubectl delete namespace/velero clusterrolebinding/velero
-kubectl delete crds -l component=velero
+#kubectl delete namespace/velero clusterrolebinding/velero
+#kubectl delete crds -l component=velero
