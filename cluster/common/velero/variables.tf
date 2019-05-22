@@ -10,7 +10,7 @@ variable "kubeconfig_filename" {
 }
 
 variable "kubeconfig_complete" {
-  description = "Allows flux to wait for the kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
+  description = "Allows velero to wait for the kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
   type        = "string"
 }
 
