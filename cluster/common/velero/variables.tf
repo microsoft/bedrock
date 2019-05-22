@@ -53,3 +53,13 @@ variable "velero_restore_name" {
   type        = "string"
   default     = "disasterrecoveryrestore"
 }
+
+variable "velero_uninstall" {
+  description = "Uninstall velero after restore is complete. You may want to do this if you don't want velero to be part of your cluster."
+  default     = "false"
+}
+
+variable "velero_delete_pod" {
+  description = "Remove the created velero pod but do not uninstall velero. You may want to do this if your backup contains a Velero resource. Setting this to true makes sure you don't have an extra velero pod running."
+  default     = "false"
+}

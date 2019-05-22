@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-while getopts :b:p:s:l:v:n:r: option
+while getopts :b:p:s:l:v:n:r:u:d: option
 do
  case "${option}" in
  b) VELERO_BUCKET=${OPTARG};;
@@ -10,6 +10,8 @@ do
  v) VELERO_VOLUME_SNAPSHOT_LOCATION_CONFIG=${OPTARG};;
  n) VELERO_BACKUP_NAME=${OPTARG};;
  r) VELERO_RESTORE_NAME=${OPTARG};;
+ u) VELERO_UNINSTALL=${OPTARG};;
+ d) VELERO_DELETE_POD=${OPTARG};;
  *) echo "ERROR: Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -67,6 +69,8 @@ fi
 echo "Waiting for Velero resources to be synchronized. Default is 1min."
 sleep 1m
 
+VELERO_POD_NAME=$(kubectl get pods -n velero -o jsonpath="{.items[].metadata.name}")
+
 if ! velero backup describe "$VELERO_BACKUP_NAME"; then
     echo "ERROR: Failed to find backup with name $VELERO_BACKUP_NAME."
     exit 1
@@ -81,6 +85,13 @@ if [ $velero_restore_result -ne 0 ]; then
     exit 1
 fi
 
-# Velero restore is complete so let's remove it from the cluster. Flux will re-add if we want it in the cluster desired state.
-#kubectl delete namespace/velero clusterrolebinding/velero
-#kubectl delete crds -l component=velero
+echo "Velero delete pod set to $VELERO_DELETE_POD"
+if [ "$VELERO_DELETE_POD" == "true" ]; then
+    kubectl delete -n velero "$VELERO_POD_NAME"
+fi
+
+echo "Velero uninstall set to $VELERO_UNINSTALL"
+if [ "$VELERO_UNINSTALL" == "true" ]; then
+    kubectl delete namespace/velero clusterrolebinding/velero
+    kubectl delete crds -l component=velero
+fi
