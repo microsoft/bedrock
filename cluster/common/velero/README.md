@@ -8,6 +8,7 @@ Requirements:
 
 * Kubectl
 * Bash-compatible shell
+* [jq](https://stedolan.github.io/jq/)
 * Velero CLI (minimum >1.0)
 
 ## Install Velero CLI
@@ -18,18 +19,19 @@ There is a dependency on CLI commands that are only available in >v1.0 so please
 
 ## Cluster Migration: How Restore Works
 
-The module implements restore for disaster recovery or cluster migration using a Terraform resource `velero_restore` that locally executes a bash script with the following process:
+The module implements restore for a cluster migration using a Terraform resource `velero_restore` that locally executes a bash script with the following process:
 
 1. Velero (server-side) is installed to the Kubernetes cluster with the provided secrets and configuration. Velero is installed in restore-only mode. If Velero is already installed in the cluster, the bash script may override it.
-2. Once Velero is installed. The Bash script sleeps for at least the backup sync interval (1m) so that the Velero backup resource objects are synchronized from the storage provider. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
+2. Once Velero is installed. The bash script sleeps for at least the backup sync interval (1m) so that the Velero backup resource objects are synchronized from the storage provider. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
 3. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
-4. If the `velero_delete_pod` or `velero_uninstall` terraform variables are set to `true`, the Bash script will either remove the Velero pod or uninstall Velero completely. See the section below on why you may want to do one of these things.
+4. If `velero_install` is set to `true` (which is the default), the bash script will apply an updated Deployment Resource that removes the --restore-only flag.
+5. If the `velero_delete_pod` or `velero_uninstall` terraform variables are set to `true`, the bash script will either remove the Velero pod or uninstall Velero completely. See the section below on why you may want to do one of these things.
 
-For an Cluster Migration Scenario where:
+For an Cluster Migration cenario where:
 
 * You are using Azure.
 * You are using Bedrock's Terraform scripts.
-* Velero was previously installed in the cluster and is available in the backup
+* Velero was previously installed in the cluster and is available in the backup.
 
 You must have the following Terraform variables set:
 
@@ -42,7 +44,22 @@ You must have the following Terraform variables set:
 
 ## Disaster Recovery: How Restore Works
 
-TODO: COMING SOON...
+The module implements restore for disaster recovery using a Terraform resource `velero_restore`. For disaster recovery, we assume that the cluster still has a functioning Velero pod and a restore will be performed on the same cluster.
+
+1. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
+2. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
+
+For a Disaster Recovery scenario where:
+
+* You are using Azure.
+* You are using Bedrock's Terraform scripts.
+* Velero was previously installed in the cluster and is available in the backup
+
+You must have the following Terraform variables set:
+
+* velero_backup_name
+* velero_install="false"
+* kubeconfig_complete="${module.aks.kubeconfig_done}"
 
 ## Terraform Variables
 

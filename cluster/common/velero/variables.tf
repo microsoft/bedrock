@@ -23,6 +23,7 @@ variable "velero_provider" {
 variable "velero_bucket" {
   description = "Set the backup storage location bucket"
   type        = "string"
+  default     = ""
 }
 
 variable "velero_secrets" {
@@ -52,6 +53,11 @@ variable "velero_restore_name" {
   description = "The name of the restore you would like to set."
   type        = "string"
   default     = "disasterrecoveryrestore"
+}
+
+variable "velero_install" {
+  description = "Install velero, should be set to true in a Cluster Migration Scenario but not Disaster Recovery."
+  default     = "true"
 }
 
 variable "velero_uninstall" {
