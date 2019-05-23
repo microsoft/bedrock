@@ -12,6 +12,7 @@ trigger:
     - /cluster/environments/azure-single-keyvault/*
     - /cluster/environments/azure-common-infra/*
     - /cluster/environments/azure-multiple-clusters/*
+    - /cluster/environments/azure-multiple-clusters-waf-tm-apimgmt/*
     - azure-pipelines.yml
     exclude:
     - gitops/*
@@ -30,6 +31,7 @@ pr:
     - /cluster/environments/azure-single-keyvault/*
     - /cluster/environments/azure-common-infra/*
     - /cluster/environments/azure-multiple-clusters/*
+    - /cluster/environments/azure-multiple-clusters-waf-tm-apimgmt/*
     - /test/*
     - gitops/*
     - azure-pipelines.yml
