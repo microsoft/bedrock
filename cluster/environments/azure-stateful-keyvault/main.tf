@@ -62,12 +62,12 @@ module "flex_volume" {
 module "velero" {
   source = "github.com/Microsoft/bedrock/cluster/common/velero"
 
-  velero_bucket="${var.velero_bucket}"
-  velero_backup_location_config="${var.velero_backup_location_config}"
-  velero_volume_snapshot_location_config="${var.velero_volume_snapshot_location_config}"
-  velero_backup_name="${var.velero_backup_name}"
-  velero_delete_pod="${var.velero_delete_pod}"
-  velero_uninstall="${var.velero_uninstall}"
+  velero_bucket                          = "${var.velero_bucket}"
+  velero_backup_location_config          = "${var.velero_backup_location_config}"
+  velero_volume_snapshot_location_config = "${var.velero_volume_snapshot_location_config}"
+  velero_backup_name                     = "${var.velero_backup_name}"
+  velero_delete_pod                      = "${var.velero_delete_pod}"
+  velero_uninstall                       = "${var.velero_uninstall}"
 
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
 }
