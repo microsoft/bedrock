@@ -385,7 +385,7 @@ DEPLOY
 
     # "secondary_region_waf_url" = "${var.secondary_region_waf_url}"
     # "tertiary_region_waf_url" = "${var.tertiary_region_waf_url}"
-    "service_cust_option1apim_name" = "${var.service_option1apim_name}"
+    "service_cust_option1apim_name" = "${var.service_apim_name}"
   }
 
   deployment_mode = "Incremental"
