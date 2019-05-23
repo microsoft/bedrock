@@ -72,7 +72,7 @@ if [ "$VELERO_INSTALL" == "true" ]; then
     fi
 
     echo "Waiting for Velero resources to be synchronized. Default is 1min."
-    sleep 1m
+    sleep 90
 
     VELERO_POD_NAME=$(kubectl get pods -n velero -o jsonpath="{.items[].metadata.name}")
 
