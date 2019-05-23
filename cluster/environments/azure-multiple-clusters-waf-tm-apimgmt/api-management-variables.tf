@@ -22,7 +22,7 @@ variable "region" {
   default = "eastus"
 }
 
-variable "service_option1apim_name" {
+variable "service_apim_name" {
   default = "apimgmt-tm"
 }
 
