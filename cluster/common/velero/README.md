@@ -46,8 +46,9 @@ You must have the following Terraform variables set:
 
 The module implements restore for disaster recovery using a Terraform resource `velero_restore`. For disaster recovery, we assume that the cluster still has a functioning Velero pod and a restore will be performed on the same cluster.
 
-1. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
-2. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
+1. You should disable active scheduled backups to prevent backups during the restore process.
+2. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
+3. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
 
 For a Disaster Recovery scenario where:
 
