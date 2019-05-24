@@ -183,4 +183,4 @@ jobs:
       ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
       ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
     workingDirectory: '$(modulePath)/test'
-    displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
