@@ -27,7 +27,7 @@ The module implements restore for a cluster migration using a Terraform resource
 4. If `velero_install` is set to `true` (which is the default), the bash script will apply an updated Deployment Resource that removes the --restore-only flag.
 5. If the `velero_delete_pod` or `velero_uninstall` terraform variables are set to `true`, the bash script will either remove the Velero pod or uninstall Velero completely. See the section below on why you may want to do one of these things.
 
-For an Cluster Migration cenario where:
+For a Cluster Migration scenario where:
 
 * You are using Azure.
 * You are using Bedrock's Terraform scripts.
