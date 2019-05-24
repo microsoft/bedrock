@@ -17,6 +17,10 @@ There are multiple ways to install the Velero CLI. We strongly recommend that yo
 
 There is a dependency on CLI commands that are only available in >v1.0 so please be sure to install >v1.0 or above.
 
+## Scenarios
+
+The Terraform module makes an assumption that you are using Bedrock's Terraform scripts OR have at least set `output_directory` & `kubeconfig_filename` to point to a kubeconfig file saved to disk and have set `kubeconfig_complete`.
+
 ## Cluster Migration: How Restore Works
 
 The module implements restore for a cluster migration using a Terraform resource `velero_restore` that locally executes a bash script with the following process:
@@ -25,13 +29,7 @@ The module implements restore for a cluster migration using a Terraform resource
 2. Once Velero is installed. The bash script sleeps for at least the backup sync interval (1m) so that the Velero backup resource objects are synchronized from the storage provider. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
 3. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
 4. If `velero_install` is set to `true` (which is the default), the bash script will apply an updated Deployment Resource that removes the --restore-only flag.
-5. If the `velero_delete_pod` or `velero_uninstall` terraform variables are set to `true`, the bash script will either remove the Velero pod or uninstall Velero completely. See the section below on why you may want to do one of these things.
-
-For a Cluster Migration scenario where:
-
-* You are using Azure.
-* You are using Bedrock's Terraform scripts.
-* Velero was previously installed in the cluster and is available in the backup.
+5. If the `velero_delete_pod` or `velero_uninstall` terraform variables are set to `true`, the bash script will either remove the Velero pod or uninstall Velero completely. See the section below on why you may want to do one of these things (e.g. Velero is present in the backup).
 
 You must have the following Terraform variables set:
 
@@ -50,12 +48,6 @@ The module implements restore for disaster recovery using a Terraform resource `
 2. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
 3. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
 
-For a Disaster Recovery scenario where:
-
-* You are using Azure.
-* You are using Bedrock's Terraform scripts.
-* Velero was previously installed in the cluster and is available in the backup
-
 You must have the following Terraform variables set:
 
 * velero_backup_name
@@ -64,7 +56,7 @@ You must have the following Terraform variables set:
 
 ## Terraform Variables
 
-* `output_directory`: Tath to the kubeconfig for the Kubernetes cluster.
+* `output_directory`: Path to the kubeconfig for the Kubernetes cluster.
 * `kubeconfig_filename`: Name of the kubeconfig file saved to disk.
 * `kubeconfig_complete`: Variable used to wait for the Kubernetes cluster to be ready.
 * `velero_provider`: Set the provider (Azure, AWS, etc.).
