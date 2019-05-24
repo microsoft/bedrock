@@ -15,8 +15,7 @@ trigger:
     - azure-pipelines.yml
     exclude:
     - gitops/*
-    - README.md
-    - /*.md
+    - '**/*.md'
 pr:
   autoCancel: false
   branches:
@@ -34,8 +33,7 @@ pr:
     - gitops/*
     - azure-pipelines.yml
     exclude:
-    - README.md
-    - /*.md
+    - '**/*.md'
 
 
 jobs:
