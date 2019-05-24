@@ -154,7 +154,7 @@ jobs:
     displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
 
     
-- script: |
+  - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
       find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
@@ -168,4 +168,4 @@ jobs:
       ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
       ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
     workingDirectory: '$(modulePath)/test'
-    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt'
+    displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
