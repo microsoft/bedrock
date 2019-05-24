@@ -119,6 +119,7 @@ jobs:
     workingDirectory: '$(modulePath)/cluster'
     displayName: 'Terraform lint check'
   - script: |
+      ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
       find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
@@ -135,7 +136,7 @@ jobs:
     displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
 
   - script: |
-      ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
+      
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
       find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
