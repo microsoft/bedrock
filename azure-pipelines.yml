@@ -103,6 +103,21 @@ jobs:
       fi
     workingDirectory: '$(modulePath)/cluster'
     displayName: 'Terraform lint check'
+  - script: |
+      export ssh_key=$(readlink -f id_rsa.pub)
+      export public_key=$(cat id_rsa.pub)
+      find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
+      go test -v -run TestIT_Bedrock_AzureMC_APIM_Test -timeout 99999s
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
+      ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
+      ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
+      ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
+    workingDirectory: '$(modulePath)/test'
+    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
 
   - script: |
       ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
@@ -154,18 +169,3 @@ jobs:
     displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
 
     
-  - script: |
-      export ssh_key=$(readlink -f id_rsa.pub)
-      export public_key=$(cat id_rsa.pub)
-      find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-      go test -v -run TestIT_Bedrock_AzureMC_APIM_Test -timeout 99999s
-    env:
-      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-      ARM_TENANT_ID: $(ARM_TENANT_ID)
-      ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
-      ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
-      ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
-    workingDirectory: '$(modulePath)/test'
-    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
