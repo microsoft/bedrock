@@ -59,7 +59,7 @@ func TestIT_Bedrock_AzureMC_APIM_Test(t *testing.T) {
         // update based on Terraform variable
         resourcegroupname := k8s_globalRG //"apimgmtresgrp5"
         apiname := "Voting"
-        apiservicename := "apimgmt-tm"
+        apiservicename := k8sName + "apimgmt-tm"
 
         location := os.Getenv("DATACENTER_LOCATION")
         cluster_location1 :="westus"
