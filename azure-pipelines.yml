@@ -41,10 +41,10 @@ pr:
 jobs:
 - job: Bedrock_Test_Harness
   displayName: Bedrock_Build_Tests
-  timeoutInMinutes: 90
+  timeoutInMinutes: 360
   pool:
     vmImage: 'Ubuntu-16.04'
-    timeoutInMinutes: 90
+    timeoutInMinutes: 360
 
   variables:
     GOBIN:  '$(GOPATH)/bin' # Go binaries path
