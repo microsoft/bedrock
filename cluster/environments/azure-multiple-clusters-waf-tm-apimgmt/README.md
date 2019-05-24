@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Multiple AKS Clusters Deployment with Azure Traffic Manager
 
 ## Summary
@@ -276,5 +275,3 @@ The configuration variables required for API Management are:
 
 - `service_apim_name`: The profile name (general name) of the api management to be provisioned.
 
-
->>>>>>> 97590d70e78cb66420a10bcb742868c4a878f946
