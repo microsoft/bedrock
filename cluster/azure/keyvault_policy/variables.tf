@@ -1,8 +1,4 @@
-variable "vault_name" {
-  type = "string"
-}
-
-variable "resource_group_name" {
+variable "vault_id" {
   type = "string"
 }
 

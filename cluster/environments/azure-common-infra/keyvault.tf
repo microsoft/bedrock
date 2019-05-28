@@ -8,22 +8,20 @@ module "keyvault" "keyvault" {
   location            = "${var.global_resource_group_location}"
 }
 
-module "keyvault_access_policy_default" "default" {
+module "keyvault_access_policy_default" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_policy"
 
-  vault_name          = "${module.keyvault.keyvault_name}"
-  resource_group_name = "${var.global_resource_group_name}"
-  tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
-  object_id           = "${data.azurerm_client_config.current.service_principal_object_id}"
+  vault_id  = "${module.keyvault.keyvault_id}"
+  tenant_id = "${data.azurerm_client_config.current.tenant_id}"
+  object_id = "${data.azurerm_client_config.current.service_principal_object_id}"
 }
 
-module "keyvault_access_policy_aks" "aks" {
+module "keyvault_access_policy_aks" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_policy"
 
-  vault_name          = "${module.keyvault.keyvault_name}"
-  resource_group_name = "${var.global_resource_group_name}"
-  tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
-  object_id           = "${var.service_principal_id}"
-  key_permissions     = ["get"]
-  secret_permissions  = ["get"]
+  vault_id           = "${module.keyvault.keyvault_id}"
+  tenant_id          = "${data.azurerm_client_config.current.tenant_id}"
+  object_id          = "${var.service_principal_id}"
+  key_permissions    = ["get"]
+  secret_permissions = ["get"]
 }
