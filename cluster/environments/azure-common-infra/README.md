@@ -4,12 +4,12 @@ The `azure-common-infra` environment is a production ready template to setup com
 
 ## Getting Started
 
-1. Follow the instructions on the [main Azure page](../../azure) in this repo to create a [Service Principal](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#create-an-azure-service-principal) and to [Configure Terraform CLI for Azure](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#configure-terraform-cli-for-azure)
+1. Follow the instructions on the [main Azure page](../../azure) in this repo to create a [Service Principal](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#create-an-azure-service-principal) and to [Configure Terraform CLI for Azure](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#configure-terraform-cli-for-azure).
 2. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo:
 
-`cp -r cluster/environments/azure-simple cluster/environments/<your new cluster name>`
+    `cp -r cluster/environments/azure-common-infra cluster/environments/<your new cluster name>`
 
-Then, proceed with the following steps to complete the `azure-common-infra` deployment.
+When this is complete, proceed with the following steps to complete the `azure-common-infra` deployment.
 
 ### Create Storage Account in Azure
 
@@ -50,19 +50,13 @@ Create a container for storing blobs with the az storage container create comman
 
 ### Deploy the Environment
 
-The azure-common-infra environment comes as a dependency for the azure-single-keyvault environment, which is why it is the environment to deploy first. Before deploying this environment in Terraform, you will need to create a storage account in Azure. To do this:
-
-This environment should do the following in Azure using Terraform:
+The `azure-common-infra` environment should do the following in Azure using Terraform:
 
 1. Create a resource group for your deployment
-2. Create a VNET, with subnet(s)
+2. Create a VNET, and subnet(s)
 3. Create an Azure Key Vault with the appropriate access policies
 
-To get started, create a new cluster configuration by copying an existing Terraform template. (if you have not already cloned the microsoft/Bedrock repository, you should do that first. You can do this by executing the following command:
-
-`$ cp -r cluster/environments/azure-common-infra cluster/environments/<your new cluster name>`
-
-Edit the configuration values for backend.tfvars.The backend.tfvars should include the configuration for the Azure Storage Account that was created earlier. For example,
+Edit the configuration values for `backend.tfvars`.The `backend.tfvars` should include the configuration for the Azure Storage Account that was created earlier. For example,
 
 ```
 storage_account_name="myStorageAccount"
