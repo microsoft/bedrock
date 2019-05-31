@@ -16,7 +16,7 @@ The `azure-single-keyvault` uses the `backend.tfvars` and requires that you crea
 ```
 storage_account_name="myStorageAccount"
 
-access_key="gmnNFIa/LyKgbC5CZn9Io8jbngSW+Isa5vTZfKsIgkz/8EG2YPn4CV42hMDXmQ73zDu5Y7puFkAoWPHLtE6/w=="
+access_key="<storage account access key>"
 
 container_name="myContainer"
 
@@ -32,17 +32,17 @@ If there is not a `terraform.tfvars`, create one that looks like this:
 
 #--------------------------------------------------------------
 
-keyvault_name = "yradsmikvault"
+keyvault_name = "myVault"
 
-keyvault_resource_group = "yradsmik-rg"
+keyvault_resource_group = "myResourceGroup"
 
 address_space = "10.39.0.0/16"
 
 subnet_prefixes = "10.39.0.0/24"
 
-vnet_name = "yradsmikvnet"
+vnet_name = "myVnet"
 
-vnet_subnet_id = "/subscriptions/7060bca0-7a3c-44bd-b54c-4bb1e9facfac/resourceGroups/yradsmik-rg/providers/Microsoft.Network/virtualNetworks/spinvnet/subnets/spinsubnet"
+vnet_subnet_id = "/subscriptions/<subscriptionId>/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/mySubnet"
 
 #--------------------------------------------------------------
 
@@ -74,9 +74,9 @@ service_principal_id = "<appId>"
 
 service_principal_secret = "<password>"
 
-subscription_id = "<subscription id>"
+subscription_id = "<subscriptionId>"
 
-tenant_id = "<tenant id>"
+tenant_id = "<tenantId>"
 
 #--------------------------------------------------------------
 
