@@ -61,7 +61,7 @@ Edit the configuration values for `backend.tfvars`.The `backend.tfvars` should i
 ```
 storage_account_name="myStorageAccount"
 
-access_key="gmnNFIa/LyKgbC7CZn9Io8jbngSW+Isa5vTZfKsIgkz/8EG2YPn4CV42hMDXmQ34zDu5Y7puFkAoWPHLtE6/mw=="
+access_key="<storage account access key>"
 
 container_name="myContainer"
 
@@ -85,9 +85,9 @@ global_resource_group_name = "my-rg"
 
 global_resource_group_location = "westus2"
 
-service_principal_id = "dd6c3524-0f34-4b69-8c18-546e63a6a83f"
+service_principal_id = "<appId"
 
-tenant_id = "72f988bf-86f1-41af-91ab-2d7cd011db47"
+tenant_id = "<tenantId>"
 ```
 
 Execute `terraform init -backend-config=./backend.tfvars`.
