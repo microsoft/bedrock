@@ -170,7 +170,7 @@ terraform {
 }
 ```
 
-In order to setup an Azure backend, you need an Azure Storage account.  If you need to create one, navigate to the [backend state](/azure/backend-state) directory and issue the following command:
+In order to setup an Azure backend, you need an Azure Storage account.  If you need to create one, navigate to the [backend state](backend-state) directory and issue the following command:
 
 ```bash
 > terraform apply -var 'name=<storage account name>' -var 'location=<storage account location>' -var 'resource_group_name=<storage account resource group>'
