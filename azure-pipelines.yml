@@ -90,7 +90,7 @@ jobs:
 
   - bash: |
       # Fail if any of these files have warnings
-      find . -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
+      find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
         while IFS="" read -r file
         do
           shellcheck "$file"
