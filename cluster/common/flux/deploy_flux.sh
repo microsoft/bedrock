@@ -35,7 +35,7 @@ if ! mkdir "$REPO_ROOT_DIR"; then
     exit 1
 fi
 
-cd "$REPO_ROOT_DIR"
+cd "$REPO_ROOT_DIR" || exit 1
 
 echo "cloning $FLUX_REPO_URL"
 
@@ -44,7 +44,7 @@ if ! git clone -b "$FLUX_IMAGE_TAG" "$FLUX_REPO_URL"; then
     exit 1
 fi
 
-cd "$CLONE_DIR/$FLUX_CHART_DIR"
+cd "$CLONE_DIR/$FLUX_CHART_DIR" || exit 1
 
 echo "creating $FLUX_MANIFESTS directory"
 if ! mkdir "$FLUX_MANIFESTS"; then
@@ -63,7 +63,7 @@ if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --valu
 fi
 
 # back to the root dir
-cd ../../../../
+cd ../../../../ || exit 1
 
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE if needed"
@@ -85,7 +85,7 @@ if kubectl get secret $KUBE_SECRET_NAME -n $KUBE_NAMESPACE > /dev/null 2>&1; the
         exit 1
     fi
 
-    secret=$(cat "$GITOPS_SSH_KEY" | base64)
+    secret=$(< "$GITOPS_SSH_KEY" base64)
     if ! kubectl patch secret $KUBE_SECRET_NAME -n $KUBE_NAMESPACE -p="{\"data\":{\"identity\": \"$secret\"}}"; then
         echo "ERROR: failed to patch existing flux secret: $KUBE_SECRET_NAME "
         exit 1
