@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC1091
 . build.sh --source-only
 
 # Initialization

@@ -9,6 +9,7 @@ function verify_access_token() {
 }
 function verify_repo() {
     echo "CHECKING HLD/MANIFEST REPO URL"
+    # shellcheck disable=SC2153
     if [[ -z "$REPO" ]]; then
         echo "HLD/MANIFEST REPO URL not specified in variable $REPO"
         exit 1
@@ -29,6 +30,7 @@ function helm_init() {
 # Obtain version for Fabrikate
 # If the version number is not provided, then download the latest
 function get_fab_version() {
+    # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
         VERSIONS=$(curl -s https://api.github.com/repos/Microsoft/fabrikate/tags)
