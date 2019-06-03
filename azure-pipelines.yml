@@ -88,9 +88,13 @@ jobs:
       ./get_helm.sh
     displayName: 'Install terraform, kubectl, helm'
 
-  - script: |
+  - bash: |
       # Fail if any of these files have warnings
-      shellcheck **/*.sh
+      find . -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
+        while IFS="" read -r file
+        do
+          shellcheck "$file"
+        done
     displayName: 'Run Shell Linting (ShellCheck)'
 
   - script: |
