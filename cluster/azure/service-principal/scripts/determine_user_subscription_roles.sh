@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Check for dependencies
-if ! jq -v > /dev/null
+if ! jq --version > /dev/null
 then
     echo "This script requires 'jq', please install it."
     exit 1
