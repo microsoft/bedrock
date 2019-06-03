@@ -45,7 +45,6 @@
    #!/bin/bash
 
     sudo -s
-    whoami
 
     # Reset VM
     rm -rf *
@@ -83,6 +82,8 @@
    ![](./images/console_output.png)
 9. The build should clone the HLD repo, run the Fabrikate commands, and push the generated manifest files to your manifest repo. Head over to your manifest repository to see the changes that were pushed in!
    ![](./images/test_from_jenkins.png)
+
+At this stage the manifest generation pipeline is complete!
 
 ## Execute sudo commands from Jenkins build
 
