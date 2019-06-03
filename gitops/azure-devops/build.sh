@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function verify_access_token() {
     echo "VERIFYING PERSONAL ACCESS TOKEN"
@@ -10,14 +10,14 @@ function verify_access_token() {
 function verify_repo() {
     echo "CHECKING HLD/MANIFEST REPO URL"
     if [[ -z "$REPO" ]]; then
-        echo 'HLD/MANIFEST REPO URL not specified in variable $REPO'
+        echo "HLD/MANIFEST REPO URL not specified in variable $REPO"
         exit 1
     fi
 }
 
 function init() {
-    cp -r * $HOME/
-    cd $HOME
+    cp -r ./* "$HOME/"
+    cd "$HOME"
 }
 
 # Initialize Helm
@@ -32,8 +32,8 @@ function get_fab_version() {
     if [ -z "$VERSION" ]
     then
         VERSIONS=$(curl -s https://api.github.com/repos/Microsoft/fabrikate/tags)
-        LATEST_RELEASE=$(echo $VERSIONS | grep "name" | head -1)
-        VERSION_TO_DOWNLOAD=`echo "$LATEST_RELEASE" | cut -d'"' -f 4`
+        LATEST_RELEASE=$(echo "$VERSIONS" | grep "name" | head -1)
+        VERSION_TO_DOWNLOAD=$(echo "$LATEST_RELEASE" | cut -d'"' -f 4)
     else
         echo "Fabrikate Version: $VERSION"
         VERSION_TO_DOWNLOAD=$VERSION
@@ -59,14 +59,14 @@ function download_fab() {
     echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
     os=''
     get_os os
-    fab_wget=$(wget -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | egrep -i "302")
+    fab_wget=$(wget -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | grep -E -i "302")
     if [[ $fab_wget == *"302 Found"* ]]; then
        echo "Fabrikate $VERSION_TO_DOWNLOAD downloaded successfully."
     else
         echo "There was an error when downloading Fabrikate. Please check version number and try again."
     fi
     wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
-    unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
+    unzip "fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" -d fab
 
     export PATH=$PATH:$HOME/fab
 }
@@ -75,12 +75,12 @@ function download_fab() {
 function install_hld() {
     echo "DOWNLOADING HLD REPO"
     echo "git clone $HLD_PATH"
-    git clone $HLD_PATH
+    git clone "$HLD_PATH"
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
     echo "Setting HLD path to $repo_name"
-    cd $repo_name
+    cd "$repo_name"
     echo "HLD DOWNLOADED SUCCESSFULLY"
 }
 
@@ -114,7 +114,7 @@ function fab_generate() {
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"; do
             echo "FAB GENERATE $i"
-            fab generate $i
+            fab generate "$i"
         done
     fi
 
@@ -134,21 +134,21 @@ function fab_generate() {
 
 # Authenticate with Git
 function git_connect() {
-    cd $HOME
+    cd "$HOME"
     # Remove http(s):// protocol from URL so we can insert PA token
     repo_url=$REPO
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
 
     echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
-    git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
+    git clone "https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
 
     # Extract repo name from url
     repo_url=$REPO
     repo=${repo_url##*/}
     repo_name=${repo%.*}
 
-    cd $repo_name
+    cd "$repo_name"
     echo "GIT PULL ORIGIN MASTER"
     git pull origin master
 }
@@ -156,17 +156,17 @@ function git_connect() {
 # Git commit
 function git_commit() {
     echo "GIT CHECKOUT $BRANCH_NAME"
-    if ! git checkout $BRANCH_NAME ; then
-        git checkout -b $BRANCH_NAME
+    if ! git checkout "$BRANCH_NAME" ; then
+        git checkout -b "$BRANCH_NAME"
     fi
 
     echo "GIT STATUS"
     git status
     echo "GIT REMOVE"
     rm -rf ./*/
-    git rm -rf */
+    git rm -rf ./*/
     echo "COPY YAML FILES TO REPO DIRECTORY..."
-    cp -r $HOME/generated/* .
+    cp -r "$HOME/generated/*" .
     echo "GIT ADD"
     git add -A
 
@@ -179,7 +179,7 @@ function git_commit() {
     export GIT_COMMITTER_NAME="Automated Account"
     export EMAIL="admin@azuredevops.com"
 
-    if [[ `git status --porcelain` ]]; then
+    if [[ $(git status --porcelain) ]]; then
         echo "GIT COMMIT"
         git commit -m "Updated k8s manifest files post commit: $COMMIT_MESSAGE"
         retVal=$? && [ $retVal -ne 0 ] && exit $retVal
@@ -188,7 +188,7 @@ function git_commit() {
     fi
 
     echo "GIT PULL origin $BRANCH_NAME"
-    git pull origin $BRANCH_NAME
+    git pull origin "$BRANCH_NAME"
 }
 
 # Perform a Git push
@@ -199,7 +199,7 @@ function git_push() {
     repo_url="${repo_url#https://}"
 
     echo "GIT PUSH: https://$ACCESS_TOKEN_SECRET@$repo_url"
-    git push https://$ACCESS_TOKEN_SECRET@$repo_url
+    git push "https://$ACCESS_TOKEN_SECRET@$repo_url"
     retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     echo "GIT STATUS"
     git status
