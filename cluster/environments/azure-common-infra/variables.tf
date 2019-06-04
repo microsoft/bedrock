@@ -26,10 +26,6 @@ variable "subnet_prefix" {
   type = "string"
 }
 
-variable "tenant_id" {
-  type = "string"
-}
-
 variable "vnet_name" {
   type = "string"
 }
