@@ -32,6 +32,7 @@ We provide instructions and automation for deploying a GitOps CI/CD pipeline for
 * [Azure Devops](./azure-devops)
 * [Octopus Deploy](./octopus)
 * [TeamCity](./teamcity)
+* [Jenkins](./jenkins)
 
 Pull requests would be gratefully accepted for other CI/CD platforms.
 
