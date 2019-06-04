@@ -17,8 +17,8 @@ Please [install bedrock required tools](/cluster/README.md/#required-tools) in a
 - [Golang](https://golang.org/doc/install) 1.11 or later
 - [Dep](https://github.com/golang/go/wiki/PackageManagementTools) Optional, but required for now in order for VSCode intellisense and linting to work. [See issue 2317](https://github.com/Microsoft/vscode-go/issues/2317#issuecomment-479106825).
 - An Azure subscription
-- A [service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
-- An azure storage account for tracking terraform remote backend state.
+- A [service principal with `owner` role status](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
+- An [azure storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal) for tracking terraform remote backend state.
 - [git](https://www.atlassian.com/git/tutorials/install-git)
 
 ## Test Setup Option: Local Machine
@@ -79,6 +79,8 @@ Our test harness uses a base docker image to pre-package dependencies like Terra
 ./test-harness/build-base-image.sh -g "<go_version>" -t "<terraform_version>"
 ```
 
+> Note: Bedrock currently expects terraform version 0.11.x or newer.
+
 ##### Script Arguments
 
 - `-g` | `--go_version`: Golang version specification. This argument drives the version of the `golang` stretch base image. **Defaults** to `1.11`.
@@ -107,6 +109,6 @@ Run the test runner by calling the below script from the project's root director
 
 ## Test Setup CI/CD
 
-**Linting** can be done for code style on terraform and golang files prior to commits using a git hook. Validate your modified changes are formatted prior to commits. A script can also verify trailing whitespaces are removed. Bedrock confirms that these changes have been made as a step in our CI pipeline. This is done as a step in `azure-pipelines.yml`.
+**Linting** can be done for code style on terraform and golang files prior to commits using a git hook. Validate your modified changes are formatted prior to commits. A script can also verify that trailing whitespaces are removed. Bedrock confirms that these changes have been made as a step in our CI pipeline. This is done as a step in `azure-pipelines.yml`.
 
 For test setup using a continuous integration pipeline, refer to the [azure-pipelines.yml](../azure-pipelines.yml) for how to configure your agent, setup script for installing prerequisites and executing scripts. Be sure to add the environment path your test is leveraging to the CI yml. For example `paths/include:` section in the `azure-pipelines.yml`.
