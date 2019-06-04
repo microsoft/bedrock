@@ -1,19 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check for dependencies
-which jq > /dev/null
-if [ "$?" -ne "0" ]; then
+if ! jq --version > /dev/null
+then
     echo "This script requires 'jq', please install it."
     exit 1
 fi
 
 # Retrieve account information
-AZ_ACCOUNT_INFO=`az account show`
-AZ_CLI_USER=`echo $AZ_ACCOUNT_INFO | jq -r '.user.name'`
-AZ_CLI_SUBSCRIPTION=`echo $AZ_ACCOUNT_INFO | jq -r '.id'`
+AZ_ACCOUNT_INFO=$(az account show)
+AZ_CLI_USER=$(echo "$AZ_ACCOUNT_INFO" | jq -r '.user.name')
+AZ_CLI_SUBSCRIPTION=$(echo "$AZ_ACCOUNT_INFO" | jq -r '.id')
 
 # Retrieve role information for user on the subscription
-ACCOUNT_SUBSCRIPTION_ROLES=`az role assignment list --assignee $AZ_CLI_USER | jq -c ".[] | select( .scope == \"/subscriptions/$AZ_CLI_SUBSCRIPTION\" )" | jq -r '.roleDefinitionName'`
+ACCOUNT_SUBSCRIPTION_ROLES=$(az role assignment list --assignee "$AZ_CLI_USER" | jq -c ".[] | select( .scope == \"/subscriptions/$AZ_CLI_SUBSCRIPTION\" )" | jq -r '.roleDefinitionName')
 
 echo "User roles for $AZ_CLI_USER on subscription $AZ_CLI_SUBSCRIPTION: "
 for role in $ACCOUNT_SUBSCRIPTION_ROLES; do
