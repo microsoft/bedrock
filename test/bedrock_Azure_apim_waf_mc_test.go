@@ -62,7 +62,7 @@ func TestIT_Bedrock_AzureMC_APIM_Test(t *testing.T) {
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	cluster_location1 := "westus"
-	cluster_location2 := "eastus"
+	cluster_location2 := "eastus2"
 	cluster_location3 := "centralus"
 
 	publickey := os.Getenv("public_key")
@@ -83,16 +83,16 @@ func TestIT_Bedrock_AzureMC_APIM_Test(t *testing.T) {
 			"traffic_manager_profile_name":            tmName,
 			"traffic_manager_dns_name":                tm_dnsprefix,
 			"traffic_manager_resource_group_name":     k8s_globalRG,
-                        "traffic_manager_resource_group_location": location,
-                        
-                        "service_apim_name":            apiservicename,
+			"traffic_manager_resource_group_location": location,
+
+			"service_apim_name": apiservicename,
 
 			"west_resource_group_name":     k8s_westRG,
 			"west_resource_group_location": "westus",
 			"gitops_west_path":             "",
 
 			"east_resource_group_name":     k8s_eastRG,
-			"east_resource_group_location": "eastus",
+			"east_resource_group_location": "eastus2",
 			"gitops_east_path":             "",
 
 			"central_resource_group_name":     k8s_centralRG,
