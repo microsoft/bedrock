@@ -2,7 +2,7 @@
 
 This Terraform module implements Velero restore for a cluster migration scenario. You can use this Terraform module as part of any Terraform plan. It only depends on the existence of a Kubernetes cluster.
 
-Note: This module does not implement Velero backup, contributions are welcome.
+This module focuses on restoring a new cluster from a backup; you can use this [fabrikate definition](https://github.com/microsoft/fabrikate-definitions/tree/master/definitions/fabrikate-velero) to add Velero to an existing cluster and schedule backups.
 
 Requirements:
 
@@ -45,6 +45,7 @@ You must have the following Terraform variables set:
 The module implements restore for disaster recovery using a Terraform resource `velero_restore`. For disaster recovery, we assume that the cluster still has a functioning Velero pod and a restore will be performed on the same cluster.
 
 1. You should disable active scheduled backups to prevent backups during the restore process.
+    > You can use `velero schedule get` to get all schedules. Unfortunately, you will have to delete enabled schedules using `velero schedule delete <NAME>` as there isn't a way to disable schedules.
 2. The bash script will attempt to describe the backup using the backup name provided to verify it's existence.
 3. If no error is returned, the bash script will create a Velero Restore object with a name from the provided backup.
 
