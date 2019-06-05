@@ -116,7 +116,10 @@ function fab_generate() {
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"; do
             echo "FAB GENERATE $i"
-            fab generate "$i"
+            # In this case, we do want to split the string by unquoting $i so that the fab generate command 
+            # recognizes multiple environments as separate strings.
+            # shellcheck disable=SC2086
+            fab generate $i
         done
     fi
 
