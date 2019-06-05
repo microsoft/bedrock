@@ -71,15 +71,22 @@ if [ "$VELERO_INSTALL" == "true" ]; then
         exit 1
     fi
 
-    echo "Waiting for Velero resources to be synchronized. Default is 1min."
-    sleep 90
-
     VELERO_POD_NAME=$(kubectl get pods -n velero -o jsonpath="{.items[].metadata.name}")
 
     echo "Velero Pod Name: $VELERO_POD_NAME"
 fi
 
-if ! velero backup describe "$VELERO_BACKUP_NAME"; then
+echo "Waiting for Velero resources to be synchronized. Default Velero server sync time is 1m."
+n=0
+until [ $n -ge 5 ]
+do
+    velero backup describe "$VELERO_BACKUP_NAME" >/dev/null 2>&1 && break
+    n=$((n + 1))
+    echo "Attempt $n: Could not find backup with name $VELERO_BACKUP_NAME trying again in 20s..."
+    sleep 20s
+done
+
+if [ $n -ge 5 ]; then
     echo "ERROR: Failed to find backup with name $VELERO_BACKUP_NAME."
     exit 1
 fi
