@@ -1,9 +1,12 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
 while getopts :f:g: option
 do
  case "${option}" in
  f) KUBEDIFF_REPO_URL=${OPTARG};;
- g) GITOPS_SSH_URL=${OPTARG};; 
+ g) GITOPS_SSH_URL=${OPTARG};;
+  *) echo "Please refer to usage guide on GitHub" >&2
+    exit 1 ;;
  esac
 done
  
@@ -12,12 +15,12 @@ REPO_DIR="kubediff"
 
 rm -rf $REPO_DIR
 echo "Cloning Kubediff $KUBEDIFF_REPO_URL"
-if ! git clone $KUBEDIFF_REPO_URL $REPO_DIR; then
+if ! git clone "$KUBEDIFF_REPO_URL" $REPO_DIR; then
     echo "ERROR: failed to clone $KUBEDIFF_REPO_URL"
     exit 1
 fi
 
-cd $REPO_DIR/k8s
+cd "$REPO_DIR/k8s" || exit 1
 
 re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
 if [[ $GITOPS_SSH_URL =~ $re ]]; then
@@ -45,7 +48,7 @@ fi
 echo "Updated with gitops url $GITOPS_SSH_URL"
 sed '23q;d' ./kubediff-rc.yaml
 
-cd ../../ 
+cd ../../ || exit 1
 
 echo "creating kubernetes namespace $KUBEDIFF_NAMESPACE if needed"
 if ! kubectl describe namespace $KUBEDIFF_NAMESPACE > /dev/null 2>&1; then  
