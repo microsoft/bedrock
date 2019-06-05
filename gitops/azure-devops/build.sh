@@ -168,7 +168,7 @@ function git_commit() {
     rm -rf ./*/
     git rm -rf ./*/
     echo "COPY YAML FILES TO REPO DIRECTORY..."
-    cp -r "$HOME/generated/*" .
+    cp -r "$HOME/generated/"* .
     echo "GIT ADD"
     git add -A
 
