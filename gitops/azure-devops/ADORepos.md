@@ -31,7 +31,7 @@ $ az repos create --name $MANIFEST_REPO_NAME
 
 2. (optionally) If you are using our [sample HLD repo](https://github.com/andrebriggs/fabrikate-sample-app), import it with the following command:
 ```
-$ az repos import create --git-source-url $SAMPLE_HLD_REPO_PATH --repository HLD_REPO_NAME
+$ az repos import create --git-source-url $SAMPLE_HLD_REPO_PATH --repository $HLD_REPO_NAME
 ```
 
 Make sure you have an [azure-pipelines.yml](README.md#azure-pipelines-build-yaml) file at the root of your repository, as we will use this later to setup the build rules in Azure Devops.
