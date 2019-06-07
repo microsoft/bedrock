@@ -20,8 +20,7 @@ resource "null_resource" "cloud_credentials" {
 }
 
 module "aks" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/aks"
-  source = "../../azure/aks"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
 
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
@@ -39,8 +38,7 @@ module "aks" {
 
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
-  source = "../../azure/keyvault_flexvol_role"
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
 
   resource_group_name  = "${var.keyvault_resource_group}"
   service_principal_id = "${var.service_principal_id}"
@@ -50,8 +48,7 @@ module "keyvault_flexvolume_role" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
-  source = "../../azure/keyvault_flexvol"
+  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
