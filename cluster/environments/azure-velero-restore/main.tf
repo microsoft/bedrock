@@ -4,8 +4,8 @@
 
 data "azurerm_client_config" "current" {}
 
-provider "null" {
-  version = "~>2.0.0"
+module "common-provider" {
+  source = "../../common/provider"
 }
 
 resource "azurerm_resource_group" "cluster_rg" {
@@ -60,7 +60,7 @@ module "flex_volume" {
 }
 
 module "velero" {
-  source = "github.com/Microsoft/bedrock/cluster/common/velero"
+  source = "../../common/velero"
 
   velero_bucket                          = "${var.velero_bucket}"
   velero_backup_location_config          = "${var.velero_backup_location_config}"

@@ -30,7 +30,7 @@ variable "ip_address_out_filename" {
 variable "ipaddress_to_disk" {
   description = "This disables or enables the ip address output file from being written to disk."
   type        = "string"
-  default     = "True"
+  default     = "true"
 }
 
 variable "output_directory" {

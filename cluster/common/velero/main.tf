@@ -1,5 +1,5 @@
-provider "null" {
-  version = "~>2.0.0"
+module "common-provider" {
+  source = "../provider"
 }
 
 resource "null_resource" "velero_restore" {

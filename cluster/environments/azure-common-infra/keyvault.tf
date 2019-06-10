@@ -1,6 +1,6 @@
 data "azurerm_client_config" "current" {}
 
-module "keyvault" "keyvault" {
+module "keyvault" {
   source = "github.com/Microsoft/bedrock/cluster/azure/keyvault"
 
   keyvault_name       = "${var.keyvault_name}"

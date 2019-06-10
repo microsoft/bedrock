@@ -24,7 +24,7 @@ resource "null_resource" "ip_address" {
     command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo ${azurerm_public_ip.pip.ip_address} > ${var.output_directory}/${var.ip_address_out_filename}"
   }
 
-  triggers {
+  triggers = {
     ipaddress_to_disk = "${var.ipaddress_to_disk}"
   }
 
