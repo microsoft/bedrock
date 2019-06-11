@@ -101,9 +101,17 @@ jobs:
       terraform fmt -check=true -write=false -list=true > /dev/null
       if [ $? -eq 0 ]
       then
-        echo "terraform lint valid."
+        echo "Bedrock_Linting: All terraform files are valid."
       else
-        echo "Invalid lint. Please run terraform fmt."
+        echo "Bedrock_Linting: Terraform files invalid format, submit new commit with changes (run terraform fmt)."
+        exit 1
+      fi
+      gofmt -d ../bedrock/test/ | grep "^@@.*@@" > /dev/null
+      if [ "$?" -eq "1" ]; then
+        echo "Bedrock_Linting: All golang files are valid."
+      else
+        go fmt ../bedrock/test/
+        echo "Bedrock_Linting: Golang files invalid format, submit new commit with changes (run gofmt in /test/ directory)."
         exit 1
       fi
     workingDirectory: '$(modulePath)/cluster'
