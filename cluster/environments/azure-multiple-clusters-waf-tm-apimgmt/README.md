@@ -54,6 +54,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `gitops_east_path`: Path to a subdirectory, or folder in a git repo
 3. Configure Terraform backend. It is optional, but a best practice for production environment
 * Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
+
     - `storage account name`: Name of the storage account to store the Terraform state.
     - `storage account location`: Location of the storage account.
     - `storage account resource group`: Name of the resource group to create the storage account in.
