@@ -38,7 +38,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `service_principal_secret`: The secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
     - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group. 
     - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
-    - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
+    - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key`.
     - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
