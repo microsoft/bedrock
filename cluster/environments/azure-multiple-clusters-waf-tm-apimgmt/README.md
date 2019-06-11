@@ -6,6 +6,9 @@ The `azure-multiple-cluster-waf-tm-apimgmt` deploys 3 AKS clusters in 3 configur
 
 The template also creates an API management service which is an enterprise grade API management service that provides several features such as throttling requests, managing dev subscriptions, header transformations and more. Visit the Microsoft docs [link](https://docs.microsoft.com/en-us/azure/api-management/api-management-key-concepts) for more details.
 
+You can deploy the `azure-multiple-cluster-waf-tm-apimgmt` using a Service Principal that has Owner privileges on the Azure Subscription. 
+To deploy this environment, follow the [common steps](https://github.com/microsoft/bedrock/blob/master/cluster/azure) for deploying a cluster with the following modifications:
+
 
 # Getting Started
 
