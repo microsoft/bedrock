@@ -1,11 +1,18 @@
 #--------------------------------------------------------------
 # Cluster common
 #--------------------------------------------------------------
-cluster_name = "spincluster"
 
 agent_vm_count = "3"
 
+agent_vm_size = ""
+
+cluster_name = "spincluster"
+
 dns_prefix = "spindns"
+
+keyvault_name = ""
+
+keyvault_resource_group = ""
 
 service_principal_id = ""
 
@@ -19,8 +26,6 @@ ssh_public_key = ""
 gitops_ssh_url = "git@github.com:sarath-p/vote-flux.git"
 
 gitops_ssh_key = ""
-
-gitops_poll_interval = "5m"
 
 #--------------------------------------------------------------
 # Traffic Manager
@@ -59,3 +64,11 @@ central_resource_group_name = ""
 central_resource_group_location = ""
 
 gitops_central_path = ""
+
+#--------------------------------------------------------------
+# Optional variables - Uncomment to use
+#--------------------------------------------------------------
+# gitops_central_url_branch = "master"
+# gitops_east_url_branch = "master"
+# gitops_west_url_branch = "master"
+# gitops_poll_interval = "30s"

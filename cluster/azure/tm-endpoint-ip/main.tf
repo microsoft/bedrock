@@ -25,7 +25,7 @@ resource "null_resource" "ip_address" {
   }
 
   triggers {
-    ipaddress_to_disk  = "${var.ipaddress_to_disk}"
+    ipaddress_to_disk = "${var.ipaddress_to_disk}"
   }
 
   depends_on = ["azurerm_public_ip.pip"]

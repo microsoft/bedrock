@@ -1,3 +1,3 @@
 module "azure-provider" {
-    source = "../provider"
+  source = "../provider"
 }

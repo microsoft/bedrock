@@ -70,8 +70,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: azure-vote-front
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: gtestk8s-xv2phv-central-rg
 spec:
-  loadBalancerIP: 40.122.114.77
+  loadBalancerIP: 40.113.235.85
   type: LoadBalancer
   ports:
   - port: 80

@@ -2,29 +2,32 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"testing"
 	"time"
-	"io/ioutil"
-	"log"
 
+	"github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/gruntwork-io/terratest/modules/http-helper"
+	"github.com/otiai10/copy"
 )
 
-func addIPtoYAML(input string, ipaddress string) {
+func addIPandRGtoYAML(input string, ipaddress string, resourceGroup string) {
 	file, err := ioutil.ReadFile(input)
 
 	if err != nil {
 		log.Fatalf("failed opening file: %s", err)
 	}
 	lines := strings.Split(string(file), "\n")
-	for i, line := range lines{
-		if strings.Contains(line, "loadBalancerIP"){
+	for i, line := range lines {
+		if strings.Contains(line, "loadBalancerIP") {
 			lines[i] = "  loadBalancerIP: " + ipaddress
+		} else if strings.Contains(line, "service.beta.kubernetes.io/azure-load-balancer-resource-group") {
+			lines[i] = "    service.beta.kubernetes.io/azure-load-balancer-resource-group: " + resourceGroup
 		}
 	}
 	output := strings.Join(lines, "\n")
@@ -34,12 +37,66 @@ func addIPtoYAML(input string, ipaddress string) {
 func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	t.Parallel()
 
-	//Generate a random cluster name to prevent a naming conflict and map variables to tfvars
+	// Generate a common infra resources for integration use with azure multicluster environment
 	uniqueID := strings.ToLower(random.UniqueId())
 	k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
-	tmName := k8sName + "-tm"
 
+	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+	tenantid := os.Getenv("ARM_TENANT_ID")
+
+	addressSpace := "10.39.0.0/16"
+	subnetName := k8sName + "-subnet"
+	vnetName := k8sName + "-vnet"
+
+	kvName := k8sName + "-kv"
+	kvRG := kvName + "-rg"
+
+	//Generate common-infra backend for tf.state files to be persisted in azure storage account
+	backendName := os.Getenv("ARM_BACKEND_STORAGE_NAME")
+	backendKey := os.Getenv("ARM_BACKEND_STORAGE_KEY")
+	backendContainer := os.Getenv("ARM_BACKEND_STORAGE_CONTAINER")
+	backendTfstatekey := k8sName + "-tfstatekey"
+
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
+	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
+
+	//Specify the test case folder and "-var" option mapping for the backend
+	common_backend_tfOptions := &terraform.Options{
+		TerraformDir: azureCommonInfraFolder,
+		BackendConfig: map[string]interface{}{
+			"storage_account_name": backendName,
+			"access_key":           backendKey,
+			"container_name":       backendContainer,
+			"key":                  "common_" + backendTfstatekey,
+		},
+	}
+
+	// Specify the test case folder and "-var" options
+	common_tfOptions := &terraform.Options{
+		TerraformDir: azureCommonInfraFolder,
+		Upgrade:      true,
+		Vars: map[string]interface{}{
+			"address_space":                  addressSpace,
+			"keyvault_name":                  kvName,
+			"global_resource_group_name":     kvRG,
+			"global_resource_group_location": location,
+			"service_principal_id":           clientid,
+			"subnet_name":                    subnetName,
+			"subnet_prefix":                  addressSpace,
+			"tenant_id":                      tenantid,
+			"vnet_name":                      vnetName,
+		},
+	}
+
+	// Terraform init, apply, output, and destroy
+	defer terraform.Destroy(t, common_tfOptions)
+	terraform.Init(t, common_backend_tfOptions)
+	terraform.Apply(t, common_tfOptions)
+
+	// Multicluster & keyvault deployment vars
+	tmName := k8sName + "-tm"
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 
 	dnsprefix := k8sName + "-dns"
@@ -50,44 +107,53 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	k8s_centralRG := k8sName + "-central-rg"
 	k8s_globalRG := k8sName + "-global-rg"
 
-	location := os.Getenv("DATACENTER_LOCATION")
-	cluster_location1 :="westus2"
-	cluster_location2 :="eastus2"
-	cluster_location3 :="centralus"
+	cluster_location1 := "westus2"
+	cluster_location2 := "eastus2"
+	cluster_location3 := "centralus"
 
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
 
+	agent_vm_count := "3"
+	agent_vm_size := "Standard_D2s_v3"
+
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureMultipleClustersFolder := "../cluster/test-temp-envs/azure-multiple-clusters-" + k8sName
+	copy.Copy("../cluster/environments/azure-multiple-clusters", azureMultipleClustersFolder)
+
 	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-multiple-clusters",
+		TerraformDir: azureMultipleClustersFolder,
 		Vars: map[string]interface{}{
-			"cluster_name":	k8sName,
-			"agent_vm_count":	3,
-			"dns_prefix":	dnsprefix,
-			"service_principal_id":	clientid,
-			"service_principal_secret":	clientsecret,
-			"ssh_public_key":	publickey,
-			"gitops_ssh_url":	"git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-			"gitops_ssh_key":	sshkey,
-			"gitops_poll_interval":	"5m",
+			"cluster_name":             k8sName,
+			"agent_vm_count":           agent_vm_count,
+			"agent_vm_size":            agent_vm_size,
+			"dns_prefix":               dnsprefix,
+			"service_principal_id":     clientid,
+			"service_principal_secret": clientsecret,
+			"ssh_public_key":           publickey,
+			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
+			"gitops_ssh_key":           sshkey,
+			"gitops_poll_interval":     "5m",
+			"keyvault_name":            kvName,
+			"keyvault_resource_group":  kvRG,
 
-			"traffic_manager_profile_name":	tmName,
-			"traffic_manager_dns_name":	tm_dnsprefix,
-			"traffic_manager_resource_group_name":	k8s_globalRG,
-			"traffic_manager_resource_group_location":	location,
+			"traffic_manager_profile_name":            tmName,
+			"traffic_manager_dns_name":                tm_dnsprefix,
+			"traffic_manager_resource_group_name":     k8s_globalRG,
+			"traffic_manager_resource_group_location": location,
 
-			"west_resource_group_name":	k8s_westRG,
-			"west_resource_group_location":	"westus2",
-			"gitops_west_path":	"",
+			"west_resource_group_name":     k8s_westRG,
+			"west_resource_group_location": "westus2",
+			"gitops_west_path":             "",
 
-			"east_resource_group_name":	k8s_eastRG,
-			"east_resource_group_location":	"eastus2",
-			"gitops_east_path":	"",
+			"east_resource_group_name":     k8s_eastRG,
+			"east_resource_group_location": "eastus2",
+			"gitops_east_path":             "",
 
-			"central_resource_group_name":	k8s_centralRG,
-			"central_resource_group_location":	"centralus",
-			"gitops_central_path":	"",
+			"central_resource_group_name":     k8s_centralRG,
+			"central_resource_group_location": "centralus",
+			"gitops_central_path":             "",
 		},
 	}
 
@@ -95,14 +161,14 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
-	westCluster_out	:=	cluster_location1 + "-" + k8sName + "_kube_config"
-	eastCluster_out	:=	cluster_location2 + "-" + k8sName + "_kube_config"
-	centralCluster_out:=	cluster_location3 + "-" + k8sName + "_kube_config"
-	
+	westCluster_out := cluster_location1 + "_" + k8sName + "_kube_config"
+	eastCluster_out := cluster_location2 + "_" + k8sName + "_kube_config"
+	centralCluster_out := cluster_location3 + "_" + k8sName + "_kube_config"
+
 	//Obtain Kube_config file from module outputs of each cluster region
-	os.Setenv("WEST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+westCluster_out)
-	os.Setenv("EAST_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+eastCluster_out)
-	os.Setenv("CENTRAL_KUBECONFIG", "../cluster/environments/azure-multiple-clusters/output/"+centralCluster_out)
+	os.Setenv("WEST_KUBECONFIG", azureMultipleClustersFolder+"/output/"+westCluster_out)
+	os.Setenv("EAST_KUBECONFIG", azureMultipleClustersFolder+"/output/"+eastCluster_out)
+	os.Setenv("CENTRAL_KUBECONFIG", azureMultipleClustersFolder+"/output/"+centralCluster_out)
 
 	//Test Case 1: Verify Flux namespace in West Region
 	kubeConfig := os.Getenv("WEST_KUBECONFIG")
@@ -138,39 +204,66 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 		fmt.Println("Flux verification for Central Cluster complete")
 	}
 
+	//Test Case 4: Verify keyvault namespace flex in West Region
+	fmt.Println("Test case 4: Verifying flexvolume and kv namespace in West Region")
+	_flex, flexErr := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=kv")
+	if flexErr != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+		t.Fatal(flexErr)
+	} else {
+		fmt.Println("Flexvolume verification for West Region complete")
+	}
+
+	//Test Case 5: Verify keyvault namespace flex in East Region
+	fmt.Println("Test case 5: Verifying flexvolume and kv namespace in East Region")
+	_flex, flexErr2 := k8s.RunKubectlAndGetOutputE(t, options2, "get", "po", "--namespace=kv")
+	if flexErr2 != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+		t.Fatal(flexErr2)
+	} else {
+		fmt.Println("Flexvolume verification East Region complete")
+	}
+
+	//Test Case 6: Verify keyvault namespace flex in Central Region
+	fmt.Println("Test case 6: Verifying flexvolume and kv namespace in Central Region")
+	_flex, flexErr3 := k8s.RunKubectlAndGetOutputE(t, options3, "get", "po", "--namespace=kv")
+	if flexErr3 != nil || !strings.Contains(_flex, "keyvault-flexvolume") {
+		t.Fatal(flexErr3)
+	} else {
+		fmt.Println("Flexvolume verification Central Region complete")
+	}
+
 	//Obtain public IP addresses for all 3 clusters
 	westIP_address_file := terraform.Output(t, tfOptions, "west_publicIP")
 	eastIP_address_file := terraform.Output(t, tfOptions, "east_publicIP")
 	centralIP_address_file := terraform.Output(t, tfOptions, "central_publicIP")
 
-	westIP, err := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+westIP_address_file)
+	westIP, err := ioutil.ReadFile(azureMultipleClustersFolder + "/output/" + westIP_address_file)
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
-	eastIP, err2 := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+eastIP_address_file)
+	eastIP, err2 := ioutil.ReadFile(azureMultipleClustersFolder + "/output/" + eastIP_address_file)
 	if err2 != nil {
-        panic(err2)
+		panic(err2)
 	}
-	centralIP, err3 := ioutil.ReadFile("../cluster/environments/azure-multiple-clusters/output/"+centralIP_address_file)
+	centralIP, err3 := ioutil.ReadFile(azureMultipleClustersFolder + "/output/" + centralIP_address_file)
 	if err3 != nil {
-        panic(err3)
+		panic(err3)
 	}
 
-	fmt.Println("West Cluster IP: "+string(westIP))
-	fmt.Println("East Cluster IP: "+string(eastIP))
-	fmt.Println("Central Cluster IP: "+string(centralIP))
+	fmt.Println("West Cluster IP: " + string(westIP))
+	fmt.Println("East Cluster IP: " + string(eastIP))
+	fmt.Println("Central Cluster IP: " + string(centralIP))
 
 	//Deploy app to all 3 clusters
 	configFile := "azure-vote.yaml"
 
-	addIPtoYAML(configFile, string(westIP))	
+	addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
 	k8s.KubectlApply(t, options, configFile)
-	addIPtoYAML(configFile, string(eastIP))	
+	addIPandRGtoYAML(configFile, string(eastIP), k8s_eastRG)
 	k8s.KubectlApply(t, options2, configFile)
-	addIPtoYAML(configFile, string(centralIP))	
+	addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
 	k8s.KubectlApply(t, options3, configFile)
 
-	//Test Case 4: Validate Traffic Manager
+	//Test Case 7: Validate Traffic Manager
 	testTM_URL := "http://" + tm_dnsprefix + ".trafficmanager.net"
 
 	// It can take several minutes or so for the app to be deployed, so retry a few times

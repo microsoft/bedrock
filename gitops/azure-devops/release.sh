@@ -14,18 +14,19 @@ download_fab
 # Clone HLD repo
 git_connect
 
-# Fabrikate (Part 2)
-install_fab
-
 echo "FAB SET"
-fab set --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+if [[ ! -z $FAB_ENV_NAME ]]
+then
+    fab set --environment $FAB_ENV_NAME --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+else
+    fab set --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+fi
 
 echo "GIT STATUS"
 git status
 
 echo "GIT ADD"
-#git add config/common.yaml
-git add .
+git add -A
 
 # Set git identity
 git config user.email "admin@azuredevops.com"

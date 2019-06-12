@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
+title: ""
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
 **As a:**
@@ -18,3 +17,5 @@ assignees: ''
 **Describe alternatives you've considered:**
 
 **Additional context:**
+
+**Does this require updates to documentation?:**

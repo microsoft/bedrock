@@ -43,6 +43,11 @@ variable "output_directory" {
   default = "./output"
 }
 
+variable "allocation_method" {
+  type    = "string"
+  default = "Static"
+}
+
 variable "tags" {
   description = "The tags to associate with the public ip address."
   type        = "map"

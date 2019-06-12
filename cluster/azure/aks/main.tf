@@ -1,5 +1,5 @@
 module "azure-provider" {
-    source = "../provider"
+  source = "../provider"
 }
 
 resource "azurerm_resource_group" "cluster" {
@@ -32,9 +32,10 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   network_profile {
-    network_plugin = "azure"
-    service_cidr = "${var.service_cidr}"
-    dns_service_ip = "${var.dns_ip}"
+    network_plugin     = "azure"
+    network_policy     = "${var.network_policy}"
+    service_cidr       = "${var.service_cidr}"
+    dns_service_ip     = "${var.dns_ip}"
     docker_bridge_cidr = "${var.docker_cidr}"
   }
 

@@ -29,6 +29,12 @@ variable "flux_recreate" {
   default     = ""
 }
 
+variable "kubeconfig_recreate" {
+  description = "Any change to this variable will recreate the kube config file to local disk."
+  type        = "string"
+  default     = ""
+}
+
 variable "gitops_poll_interval" {
   type    = "string"
   default = "5m"
@@ -36,6 +42,11 @@ variable "gitops_poll_interval" {
 
 variable "gitops_ssh_url" {
   type = "string"
+}
+
+variable "gitops_url_branch" {
+  type    = "string"
+  default = "master"
 }
 
 variable "gitops_ssh_key" {
@@ -81,4 +92,9 @@ variable "subnet_prefixes" {
 
 variable "vnet_subnet_id" {
   type = "string"
+}
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
 }

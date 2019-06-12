@@ -67,6 +67,8 @@ function download_fab() {
     fi
     wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
     unzip fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip -d fab
+
+    export PATH=$PATH:$HOME/fab
 }
 
 # Install the HLD repo if it's not running as part of the HLD build pipeline
@@ -87,8 +89,7 @@ function install_fab() {
     # Run this command to make script exit on any failure
     echo "FAB INSTALL"
     set -e
-    export PATH=$PATH:$HOME/fab
-
+    
     if [ -z "$HLD_PATH" ]; then 
         echo "HLD path not specified, going to run fab install in current dir"
     else
@@ -138,15 +139,18 @@ function git_connect() {
     repo_url=$REPO
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
-    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
 
+    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
     git clone https://automated:$ACCESS_TOKEN_SECRET@$repo_url
-    repo_url=$REPO
-    repo=${repo_url##*/}
 
     # Extract repo name from url
+    repo_url=$REPO
+    repo=${repo_url##*/}
     repo_name=${repo%.*}
+
     cd $repo_name
+    echo "GIT PULL ORIGIN MASTER"
+    git pull origin master
 }
 
 # Git commit
@@ -169,6 +173,11 @@ function git_commit() {
     #Set git identity
     git config user.email "admin@azuredevops.com"
     git config user.name "Automated Account"
+
+    # Following variables have to be set for TeamCity
+    export GIT_AUTHOR_NAME="Automated Account"
+    export GIT_COMMITTER_NAME="Automated Account"
+    export EMAIL="admin@azuredevops.com"
 
     if [[ `git status --porcelain` ]]; then
         echo "GIT COMMIT"
