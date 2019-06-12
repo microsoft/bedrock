@@ -1,4 +1,4 @@
-module "central_vnet" {
+module "api-mgmt" {
   source = "../../azure/api-mgmt"
 
   api_mgmt_name     = "apiterraarmdeploy"
