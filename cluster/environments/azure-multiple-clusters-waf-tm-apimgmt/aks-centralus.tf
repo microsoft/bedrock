@@ -26,7 +26,7 @@ module "central_vnet" {
   subnet_prefixes = "${var.central_subnet_prefixes}"
 
   tags = {
-    environment = "azure-multiple-clusters"
+    environment = "azure-multiple-clusters-waf-tm-apimgmt"
   }
 }
 
