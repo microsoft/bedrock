@@ -381,7 +381,8 @@ DEPLOY
   parameters {
     # "prm_traffic_manager_url" = "${var.traffic_manager_url}"
     # "service_cust_option1apim_name" = "${var.service_option1apim_name}"
-    "primary_region_waf_url" = "${module.trafficmanager.traffic_manager_fqdn}"#"${var.primary_region_waf_url}"
+    "primary_region_waf_url" = "${module.trafficmanager.traffic_manager_fqdn}" #"${var.primary_region_waf_url}"
+
     # "secondary_region_waf_url" = "${var.secondary_region_waf_url}"
     # "tertiary_region_waf_url" = "${var.tertiary_region_waf_url}"
     "service_cust_option1apim_name" = "${var.service_option1apim_name}"
@@ -391,6 +392,7 @@ DEPLOY
 }
 
 output "gatewayurl" {
-    value = "${lookup(azurerm_template_deployment.api_mgmt_deployment.outputs, "gatewayurl")}"
-#   value = "${lookup(azurerm_template_deployment.test.outputs, "storageAccountName")}"
+  value = "${lookup(azurerm_template_deployment.api_mgmt_deployment.outputs, "gatewayurl")}"
+
+  #   value = "${lookup(azurerm_template_deployment.test.outputs, "storageAccountName")}"
 }

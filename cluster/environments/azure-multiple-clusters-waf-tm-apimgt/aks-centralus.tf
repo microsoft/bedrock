@@ -1,4 +1,3 @@
-
 resource "azurerm_resource_group" "centralrg" {
   name     = "${var.central_resource_group_name}"
   location = "${var.central_resource_group_location}"
@@ -20,9 +19,10 @@ module "central_vnet" {
 
   resource_group_name     = "${local.central_rg_name }"
   resource_group_location = "${local.central_rg_location}"
-  subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
+  subnet_names            = ["${var.cluster_name}-aks-subnet", "${var.cluster_name}-waf-subnet"]
   address_space           = "${var.central_address_space}"
   subnet_prefixes         = "${var.central_subnet_prefixes}"
+
   tags = {
     environment = "azure-multiple-clusters"
   }
@@ -52,21 +52,20 @@ module "central_aks" {
 module "central_flux" {
   source = "../../common/flux"
 
-  gitops_ssh_url      = "${var.gitops_ssh_url}"
-  gitops_ssh_key      = "${var.gitops_ssh_key}"
-  flux_recreate       = ""
-  kubeconfig_complete = "${module.central_aks.kubeconfig_done}"
-  kubeconfig_filename = "${local.central_kubeconfig_filename}"
-  flux_clone_dir      = "${local.central_flux_clone_dir}"
-  gitops_path         = "${var.gitops_central_path}"
+  gitops_ssh_url       = "${var.gitops_ssh_url}"
+  gitops_ssh_key       = "${var.gitops_ssh_key}"
+  flux_recreate        = ""
+  kubeconfig_complete  = "${module.central_aks.kubeconfig_done}"
+  kubeconfig_filename  = "${local.central_kubeconfig_filename}"
+  flux_clone_dir       = "${local.central_flux_clone_dir}"
+  gitops_path          = "${var.gitops_central_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
 }
-
 
 module "central_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.centralrg.name}"#"${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"#"${azurerm_resource_group.centralakscluster.name}"
+  resource_group_name                 = "${azurerm_resource_group.centralrg.name}"   #"${var.service_principal_is_owner == "1" ? local.central_rg_name : module.central_aks.cluster_derived_resource_group}"#"${azurerm_resource_group.centralakscluster.name}"
   resource_location                   = "${local.central_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -77,6 +76,7 @@ module "central_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgt - ${var.cluster_name} - public ip"
+
     # kubedone    = "${module.east_aks.kubeconfig_done}"
   }
 }

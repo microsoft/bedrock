@@ -1,5 +1,3 @@
-
-
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgweast" {
   name                = "${var.prefix}appgweast"
@@ -22,8 +20,7 @@ resource "azurerm_application_gateway" "appgweast" {
 
   gateway_ip_configuration {
     name      = "ip-configuration"
-    subnet_id = "${module.east_vnet.vnet_subnet_ids[1]}" 
-   
+    subnet_id = "${module.east_vnet.vnet_subnet_ids[1]}"
   }
 
   frontend_port {
@@ -42,7 +39,8 @@ resource "azurerm_application_gateway" "appgweast" {
   }
 
   backend_address_pool {
-    name            = "${var.prefix}-beappool1"
+    name = "${var.prefix}-beappool1"
+
     # ip_address_list = ["10.0.1.4"]
   }
 
@@ -52,6 +50,7 @@ resource "azurerm_application_gateway" "appgweast" {
     port                  = 80
     protocol              = "Http"
     request_timeout       = 20
+
     # cookie_based_affinity = "Enabled"                    // "Disabled"
   }
 
@@ -60,9 +59,7 @@ resource "azurerm_application_gateway" "appgweast" {
     frontend_ip_configuration_name = "${var.prefix}-feip"
     frontend_port_name             = "${var.prefix}-feport"
     protocol                       = "Http"
-  
   }
-
 
   request_routing_rule {
     name                       = "${var.prefix}-rule1"
@@ -71,9 +68,7 @@ resource "azurerm_application_gateway" "appgweast" {
     backend_address_pool_name  = "${var.prefix}-beappool1"
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
-
 }
-
 
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwwest" {
@@ -89,9 +84,9 @@ resource "azurerm_application_gateway" "appgwwest" {
   }
 
   waf_configuration {
-    firewall_mode    = "Detection" 
+    firewall_mode    = "Detection"
     rule_set_type    = "OWASP"
-    rule_set_version = "3.0"       
+    rule_set_version = "3.0"
     enabled          = true
   }
 
@@ -116,8 +111,7 @@ resource "azurerm_application_gateway" "appgwwest" {
   }
 
   backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-    
+    name = "${var.prefix}-beappool1"
   }
 
   backend_http_settings {
@@ -133,9 +127,7 @@ resource "azurerm_application_gateway" "appgwwest" {
     frontend_ip_configuration_name = "${var.prefix}-feip"
     frontend_port_name             = "${var.prefix}-feport"
     protocol                       = "Http"
-  
   }
-
 
   request_routing_rule {
     name                       = "${var.prefix}-rule1"
@@ -144,10 +136,7 @@ resource "azurerm_application_gateway" "appgwwest" {
     backend_address_pool_name  = "${var.prefix}-beappool1"
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
-
-  
 }
-
 
 # Create an application gateway east
 resource "azurerm_application_gateway" "appgwcentral" {
@@ -163,9 +152,9 @@ resource "azurerm_application_gateway" "appgwcentral" {
   }
 
   waf_configuration {
-    firewall_mode    = "Detection" 
+    firewall_mode    = "Detection"
     rule_set_type    = "OWASP"
-    rule_set_version = "3.0"      
+    rule_set_version = "3.0"
     enabled          = true
   }
 
@@ -190,8 +179,7 @@ resource "azurerm_application_gateway" "appgwcentral" {
   }
 
   backend_address_pool {
-    name            = "${var.prefix}-beappool1"
-    
+    name = "${var.prefix}-beappool1"
   }
 
   backend_http_settings {
@@ -200,7 +188,6 @@ resource "azurerm_application_gateway" "appgwcentral" {
     port                  = 80
     protocol              = "Http"
     request_timeout       = 20
-    
   }
 
   http_listener {
@@ -208,9 +195,7 @@ resource "azurerm_application_gateway" "appgwcentral" {
     frontend_ip_configuration_name = "${var.prefix}-feip"
     frontend_port_name             = "${var.prefix}-feport"
     protocol                       = "Http"
-  
   }
-
 
   request_routing_rule {
     name                       = "${var.prefix}-rule1"
@@ -219,5 +204,4 @@ resource "azurerm_application_gateway" "appgwcentral" {
     backend_address_pool_name  = "${var.prefix}-beappool1"
     backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
-
 }
