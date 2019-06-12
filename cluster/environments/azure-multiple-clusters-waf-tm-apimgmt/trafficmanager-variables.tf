@@ -22,8 +22,8 @@ variable "traffic_manager_dns_name" {
 variable "traffic_manager_monitor_protocol" {
   type    = "string"
   default = "http"
-}
-
+} 
+ 
 variable "traffic_manager_monitor_port" {
   type    = "string"
   default = "80"
