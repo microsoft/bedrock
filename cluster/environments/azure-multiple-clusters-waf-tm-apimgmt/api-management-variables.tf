@@ -25,12 +25,3 @@ variable "region" {
 variable "service_apim_name" {
   default = "apimgmt-tm"
 }
-
-<<<<<<< HEAD
-# variable "location" {
-#   description = "The location/region where the api management service will be deployed. The full list of Azure regions can be found at https://azure.microsoft.com/regions"
-#   type = "string"
-# }
-=======
->>>>>>> bedrockpull-sg
-

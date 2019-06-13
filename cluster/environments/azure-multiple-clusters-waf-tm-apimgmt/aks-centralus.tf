@@ -26,11 +26,7 @@ module "central_vnet" {
   subnet_prefixes = "${var.central_subnet_prefixes}"
 
   tags = {
-<<<<<<< HEAD
-    environment = "azure-multiple-clusters"
-=======
     environment = "azure-multiple-clusters-waf-tm-apimgmt"
->>>>>>> bedrockpull-sg
   }
 }
 

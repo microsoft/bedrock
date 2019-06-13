@@ -2,81 +2,6 @@
 
 ## Summary
 
-<<<<<<< HEAD
-This section describes how to deploy multiple AKS clusters by copying terraform scripts in this directory to a new directory.
-
-There are two methods to deploying the clusters.  One method requires that the service principal you are using to deploy a cluster has `Owner` level permissions on the Azure subscription being used.  The second method does not require the same level of permissions.
-
-This environment creates:
-
-1. Deploys three AKS clusters in three different configurable Azure regions.
-2. Creates three static public IP's to use in kubernetes loadbalancer service.
-   
-And, depending on how one is deploying the clusters, the environment may also create:
-
-3. Creates a Azure Role Assignment for each AKS cluster Service Principal with `Network Contributor` role on each Public IP resource. 
-
-    _If one deploys clusters using the `Owner` level permissions, the Azure Role Assignment will be created.  To do this, the service principal used by the AKS cluster must have delegated permissions to the other resource group to modify network resources when kubernetes loadbalancer service is deployed. More information is available [here](https://docs.microsoft.com/en-us/azure/aks/static-ip#use-a-static-ip-address-outside-of-the-node-resource-group)._
-
-
-3. Deploy public IP's to use in Web application firewall service.
-4. Creates a subnet under AKS cluster to host Application Gateway.
-5. Deploys three web application firewall service connecting to services deloyed in AKS cluster.
-6. Deploys Azure Traffic Manager profile with three different endpoint connecting to web application firewall IPs to route traffic based on a configured routing method.
-7. Create Application management API service, which is configured with traffic manager url in APIs
- 
-When clusters are deployed *without* `Owner` level permissions, the public IP addresses will be created within the node resource group where the AKS cluster resources are created.
-
-## Prerequisites
-Please [install required tools](/cluster/README.md/#required-tools) as well as [setup GitOps repo for Flux](/cluster/azure/readme.md/#set-up-gitops-repository-for-flux) before continuing to the next section if you have not already.
-
-### 1. Azure Authentication
-You can authenticate to Azure with user account in Azure CLI (`az login`). If you are using a Service Principal for authentication, the client id and client secret needs to be [configured with Terrafrom Azure provider](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html#configuring-the-service-principal-in-terraform).
-
----
-**NOTE**
-
-The Service Principal that is configured for authentication must have a Owner role in Azure Subscription. 
-
----
-
-### 2. Service Principals
-#### Authentication Service Principal
-If you want to deploy a cluster with a Service Principal having `Owner` level permissions, create a Azure service principal for authentication with Azure subscription with the [`Owner`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in the subscription with the following [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command:
-
-```bash
-$ az ad sp create-for-rbac --role "Owner" --subscription <id | name>
-```
-
-Otherwise, one can simply create a normal Service Principal as follows:
-
-```bash
-$ az ad sp create-for-rbac --role "Contributor" --subscription <id | name>
-```
-
-#### AKS Cluster Service Principal
-To allow an AKS cluster to interact with other Azure resources, an Azure Active Directory service principal is used. Create a service principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
-
-```bash
-$ az ad sp create-for-rbac --skip-assignment --subscription <id | name>
-```
-
-The output of the above commands are similar to the following example:
-
-```bash
-{
-"appId": "50d65587-abcd-4619-1234-a1232ac0987",
-"displayName": "azure-cli-2019-01-23-20-27-37",
-"name": "http://azure-cli-2019-01-23-20-27-37",
-"password": "3ac38e00-aaaa-bbbb-bb87-7222bc4b1f11",
-"tenant": "72abc123-86ab-21cd-91ab-72123456"
-}
-```
-Make a note of the _appId_ and _password_. These values are used in the following steps.
-## Deployment
-
-### Step 1: Terraform Configuration
-=======
 The `azure-multiple-cluster-waf-tm-apimgmt` deploys 3 AKS clusters in 3 configurable regions, each of them behind an Application Gateway configured as a Web Application Firewall. A traffic manager as the front end to redirect traffic across the three regions.
 
 The template also creates an API management service which is an enterprise grade service that provides several features to manage API access both within and outside an enterprise. Please visit the Microsoft docs [link](https://docs.microsoft.com/en-us/azure/api-management/api-management-key-concepts) for more details.
@@ -86,17 +11,12 @@ To deploy this environment, follow the [common steps](https://github.com/microso
 
 
 # Getting Started
->>>>>>> bedrockpull-sg
 
 1. Copy [azure-multiple-clusters](../environments/azure-multiple-clusters) folder to a new sub directory
     ```
     $ cp -r cluster/environments/azure-multiple-clusters cluster/environments/<environment name>
     ```
 2. Configure your clusters by updating following variables in `environments/azure/<environment name>/terraform.tfvars`:
-<<<<<<< HEAD
-=======
-
->>>>>>> bedrockpull-sg
 * Terraform Azure Provider authentication configuration
     - `subscription_id`: Azure subscription id
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
@@ -104,12 +24,8 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `Prefix`: prefix to be added in web application firewall name service.
     - `location`: Azure Region for web application firewall 
     - `resource_group_name_<region>`: Name of the resource group for the Web application firewall.
-<<<<<<< HEAD
-    - `vnet_<region>`: virtual network details for Web application firewall.
-=======
     - `vnet_<region>`: virtual network location for Web application firewall.
 
->>>>>>> bedrockpull-sg
 * Traffic Manager configuration
     - `traffic_manager_profile_name`: Name of the Azure Traffic Manager Profile.
     - `traffic_manager_dns_name`: DNS name for accessing the traffic manager url from the internet. For ex: `http://<dnsname>.trafficmanager.net`.
@@ -119,19 +35,11 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `cluster_name`: The name of the Kubernetes cluster. The location will be added as a suffix.
     - `agent_vm_count`: The number of agents VMs in the the node pool.
     - `dns_prefix`: DNS name for accessing the cluster from the internet.
-<<<<<<< HEAD
-    - `service_principal_id`: The id of the service principal used by the AKS cluster. The creation of service principal described above in [Service Principals](#AKS-Cluster-Service-Principal) section.
-    - `service_principal_secret`: The secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
-    - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group. 
-    - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
-    - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
-=======
     - `service_principal_id`: The id of the service principal to be used by the AKS cluster. 
     - `service_principal_secret`: The secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
     - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group. 
     - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
     - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key`.
->>>>>>> bedrockpull-sg
     - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
@@ -145,15 +53,10 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `east_resource_group_name`:  Name of the resource group for the cluster.
     - `east_resource_group_locatio`: Location of the Azure region. For ex: `eastus2`.
     - `gitops_east_path`: Path to a subdirectory, or folder in a git repo
-<<<<<<< HEAD
-3. Configure Terraform backend. It is optional, but a best practice for production environment
-* Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is avaialble in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
-=======
 3. Configure Terraform backend. It is optional, but a best practice for production environments
 
 * Navigate to the [backend state](/Azure/backend-state) directory and issue the following command. More information is available in [Terraform docs](https://www.terraform.io/docs/backends/) and [Azure docs](https://docs.microsoft.com/en-us/azure/terraform/terraform-backend).
 
->>>>>>> bedrockpull-sg
     - `storage account name`: Name of the storage account to store the Terraform state.
     - `storage account location`: Location of the storage account.
     - `storage account resource group`: Name of the resource group to create the storage account in.
@@ -171,11 +74,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     ```bash
     > terraform init -backend-config=./backend.tfvars
     ````
-<<<<<<< HEAD
-### Step 2: Deploy the environment using Terraform
-=======
 # Deploy the environment using Terraform
->>>>>>> bedrockpull-sg
 1. From the directory of the cluster you defined above (eg. `environments/azure/<environment name>`), run:
 
     ```
@@ -184,19 +83,11 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     > terraform apply
     ```
 2. Enter _yes_ when Terraform prompts with a plan that will be deployed in Azure subscription.
-<<<<<<< HEAD
-3. Make sure no errors.
-
-### Step 3: Configure `Kubectl` to connect to AKS clusters
-1. Each cluster credentials will be placed in the specified `output_directory` which defaults to `./output`. 
-2. One kube config file will be created for each cluster with unique file name with `location` and `cluster-name` prefix that you can copy to your `~/.kube/config` directory or directly use the file in the shell.
-=======
 3. Make sure there are no errors.
 
 # Configure `Kubectl` to connect to AKS clusters
 1. Each cluster's credentials will be placed in the specified `output_directory` which defaults to `./output`. 
 2. One kube config file will be created for each of clusters with unique file name with `location` and `cluster-name` prefix that you can copy to your `~/.kube/config` directory or directly use the file in the shell.
->>>>>>> bedrockpull-sg
 * `location`: list of locations from the above configuration
     - `west_resource_group_location`
     - `central_resource_group_location`
@@ -214,11 +105,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     ```
     $ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux` 
     ```
-<<<<<<< HEAD
-### Step 4: Verify clusters in the environment
-=======
 # Verify clusters in the environment
->>>>>>> bedrockpull-sg
 
 1. Enter the following command to view the pods running in your cluster:
 
@@ -234,11 +121,6 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     flux-memcached-59947476d9-d6kqw   1/1     Running   0          8m07s
     ```
 
-<<<<<<< HEAD
-If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors in [step 2 above](#Step-2-Deploy-the-environment-using-Terraform).
-
-#### You're done!
-=======
 # azure-multiple-cluster-waf-tm-apimgmt
 
 The `azure-multiple-cluster-waf-tm-apimgmt` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment), each behind [Application Gateway](https://docs.microsoft.com/en-us/azure/application-gateway/overview). Application Gateway deployed on a specific cluster will get traffic via  [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three Apppplication gateways. On top of Traffic Manager  [API Management] (https://azure.microsoft.com/en-in/services/api-management/) is deployed, which is configured to manage and secure api. This act as point of communication for all request. 
@@ -329,5 +211,4 @@ The configuration variables required for API Management are:
 - `service_apim_name`: The profile name (general name) of the api management to be provisioned.
 =======
 If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors.
->>>>>>> bedrockpull-sg
 
