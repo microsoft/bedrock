@@ -109,7 +109,7 @@ In Azure DevOps:
 
 ### 3. Configure Flux
 
-Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/README.md).
+Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/common/flux/README.md).
 
 1. Copy the SSH key to your clipboard.
 
