@@ -7,7 +7,6 @@ keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
-vnet_name = "my-vnet"
 vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
 
 #--------------------------------------------------------------
@@ -29,8 +28,6 @@ ssh_public_key = "<ssh public key>"
 
 service_principal_id = "<service principal id>"
 service_principal_secret = "<service principal secret>"
-subscription_id = "<subscription id>"
-tenant_id = "<tenant id>"
 
 #--------------------------------------------------------------
 # Optional variables - Uncomment to use

@@ -1,6 +1,8 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
+# shellcheck disable=SC1091
 . ../build.sh --source-only
+# shellcheck disable=SC1091
 . ./environment.properties
 
 oneTimeSetUp() {
@@ -9,7 +11,7 @@ oneTimeSetUp() {
     HELM_CHART_REPO=$HELM_CHART_REPO
     HELM_CHART_REPO_URL=$HELM_CHART_REPO_URL
     AKS_MANIFEST_REPO=$AKS_MANIFEST_REPO
-    VERSION_TO_DOWNLOAD=$VERSION
+    # VERSION_TO_DOWNLOAD=$VERSION
     PAT=$PAT
 }
 
@@ -24,7 +26,7 @@ testHelmInit() {
 
 testFabDownload() {
     ORIGINAL_PWD=$PWD
-    cd $HOME
+    cd "$HOME" || exit 1
 
     # Download Fabrikate example 
     cmd=" git clone https://github.com/Microsoft/fabrikate "
@@ -43,7 +45,7 @@ testFabDownload() {
     else
         assertTrue 1
     fi
-    cd fabrikate/examples/getting-started
+    cd fabrikate/examples/getting-started || exit 1
     export PATH=$PATH:$HOME/fab
 }
 
@@ -69,7 +71,7 @@ testFabGenerate() {
     else    
         assertTrue 1
     fi
-    cd $ORIGINAL_PWD
+    cd "$ORIGINAL_PWD" || exit 1
 }
 
 testGitConnection() {
@@ -101,15 +103,16 @@ testGitConnection() {
     repo_url=https://github.com/$AKS_MANIFEST_REPO.git
     repo=${repo_url##*/}
     repo_name=${repo%.*}
-    cd $repo_name
+    cd "$repo_name" || exit 1
 }
 
 # Tear down temporary resources
 oneTimeTearDown() {
     rm -rf fab*
-    rm -rf $HOME/fab*
-    rm -rf $ORIGINAL_PWD/$repo_name
+    rm -rf "$HOME/fab*"
+    rm -rf "${ORIGINAL_PWD:?}/$repo_name" # Avoids deleting / if ORIGINAL_PWD is empty.
 }
 
 # Execute shunit2 to run the tests
+# shellcheck disable=SC1091
 . ./shunit2/shunit2
