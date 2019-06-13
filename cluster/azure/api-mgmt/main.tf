@@ -1,7 +1,6 @@
-
 resource "azurerm_template_deployment" "api_mgmt_deployment" {
-  name                = "${var.api_mgmt_name}" #"apiterraarmdeploy"
-  resource_group_name = "${var.resource_group_name}" #"${azurerm_resource_group.tmrg.name}"
+  name                = "${var.api_mgmt_name}"
+  resource_group_name = "${var.resource_group_name}"
 
   template_body = <<DEPLOY
 {
@@ -375,11 +374,10 @@ DEPLOY
 
   # these key-value pairs are passed into the ARM Template's `parameters` block
   parameters {
-    "primary_region_waf_url" = "${var.traffic_manager_fqdn}" 
+    "primary_region_waf_url" = "${var.traffic_manager_fqdn}"
 
     "service_cust_option1apim_name" = "${var.service_apim_name}"
   }
 
   deployment_mode = "Incremental"
 }
-

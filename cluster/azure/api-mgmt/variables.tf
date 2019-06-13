@@ -1,4 +1,3 @@
-
 variable "traffic_manager_fqdn" {
   default = ""
 }
@@ -14,5 +13,3 @@ variable "api_mgmt_name" {
 variable "service_apim_name" {
   default = "apimgmt-tm"
 }
-
-
