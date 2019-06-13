@@ -130,9 +130,10 @@ function fab_generate() {
     # In the case that all components are removed from the source hld,
     # generated folder should still not be empty
     if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
-        echo "Manifest files have been generated."
+        export manifest_files_location=$(pwd)
+        echo "Manifest files have been generated in `pwd`."
     else
-        echo "Manifest files could not be generated, quitting..."
+        echo "Manifest files could not be generated in `pwd`, quitting..."
         exit 1
     fi
 }
@@ -170,8 +171,8 @@ function git_commit() {
     echo "GIT REMOVE"
     rm -rf ./*/
     git rm -rf ./*/
-    echo "COPY YAML FILES TO REPO DIRECTORY..."
-    cp -r "$HOME/generated/"* .
+    echo "COPY YAML FILES FROM $manifest_files_location/generated/ TO REPO DIRECTORY..."
+    cp -r "$manifest_files_location/generated/"* .
     echo "GIT ADD"
     git add -A
 
