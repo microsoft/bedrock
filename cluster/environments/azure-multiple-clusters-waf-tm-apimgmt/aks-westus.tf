@@ -20,7 +20,6 @@ module "west_vnet" {
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
 
-  //subnet_names            = ["${var.cluster_name}-aks-subnet","${var.cluster_name}-waf-subnet"]
   subnet_names = ["${var.cluster_name}-aks-subnet"]
 
   address_space   = "${var.west_address_space}"
@@ -70,7 +69,7 @@ module "west_flux" {
 module "west_tm_endpoint" {
   source = "../../azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.westrg.name}"      # "${var.service_principal_is_owner == "1" ? local.west_rg_name : module.west_aks.cluster_derived_resource_group}" #"${azurerm_resource_group.westtakscluster.name}"
+  resource_group_name                 = "${azurerm_resource_group.westrg.name}"
   resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
@@ -81,8 +80,6 @@ module "west_tm_endpoint" {
 
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgmt west- ${var.cluster_name} - public ip"
-
-    # kubedone    = "${module.east_aks.kubeconfig_done}"
   }
 }
 

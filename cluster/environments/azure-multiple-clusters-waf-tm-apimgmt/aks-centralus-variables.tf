@@ -17,9 +17,7 @@ variable "central_address_space" {
 
 variable "central_subnet_prefixes" {
   description = "The address prefix to use for the subnet."
-
-  # default     = ["172.20.0.0/20"]
-  default = ["172.20.1.0/24", "172.20.2.0/24"]
+  default     = ["172.20.1.0/24", "172.20.2.0/24"]
 }
 
 variable "central_service_cidr" {

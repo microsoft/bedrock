@@ -18,7 +18,6 @@ variable "east_address_space" {
 variable "east_subnet_prefixes" {
   description = "The address prefix to use for the subnet."
 
-  # default     = ["172.22.0.0/20"]
   default = ["172.22.1.0/24", "172.22.2.0/24"]
 }
 

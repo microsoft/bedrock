@@ -18,7 +18,6 @@ variable "west_address_space" {
 variable "west_subnet_prefixes" {
   description = "The address prefix to use for the subnet."
 
-  # default     = ["172.24.0.0/20"]
   default = ["172.24.1.0/24", "172.24.2.0/24"]
 }
 
