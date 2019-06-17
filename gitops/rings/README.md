@@ -82,6 +82,8 @@ The ring.yaml is consumed by a custom resource controller, which we call the Rin
 
 ## Creating a New Ring for a Service
 
+This section will assist in understanding the order of operations of a Ringed Model. However, if you want a step-by-step guide on implementing Rings, please visit the [Rings Implementation Guide](./RingsImplementation.md)
+
 ### 1. Create a New Branch
 
 To create a revision of the microservice that can deploy alongside existing instances of the microservice, and any other microservices, a developer will need to create a new git branch on the microservice source repository. The git branch could reflect a bug fix or a new feature for the service, but regardless, should be a revision of some kind with a unique ring definition (e.g. branch name, ring.yaml).
