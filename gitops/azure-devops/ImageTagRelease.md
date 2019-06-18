@@ -208,3 +208,36 @@ Resource-Manifest-Repo
 Further reference:
 + [GitOps Pipeline Thinking](PipelineThinking.md)
 + [Manifest Generation Pipeline](README.md)
+
+
+## Create a service connection to ACR
+
+In order to add the ACR as an artifact or reference it in azure-pipelines.yml for a Docker build task, it's a good idea to add a service connection. 
+
+First, we will create a docker registry service connection which will help you in referencing the ACR in the build pipeline (`azure-pipelines.yml`) without specifying credentials.
+
+1. Go to `Project Settings` and click on `Service connections` under `Pipelines`. 
+2. Add `New service connection` of type `Dockerregistry`
+3. Enter details for your connection name, select the appropriate subscription and the ACR name. 
+    ![](./images/service_conn.png)
+4. You may now use a task of the kind below, to reference this newly created service connection:
+    ```
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'helloringsazure_connection'
+        repository: 'hellorings'
+        command: 'buildAndPush'
+        Dockerfile: '**/src/Dockerfile'
+        tags: 'hello-rings-$(Build.SourceBranchName)-$(Build.BuildId)'
+    ```
+
+Next, you need to add a connection for the resource group that the ACR is created on, which will help in adding an artifact to the release pipeline. 
+
+1. Go to `Project Settings` and click on `Service connections` under `Pipelines`. 
+2. Add `New service connection` of type `Azure Resource Manager`
+3. Enter the details for the resource group which your ACR lives in.
+   ![](./images/service_conn_rg.png)
+4. You should now be able to link this ACR in your release pipeline by adding an artifact. 
+   ![](./images/artifact_acr.png)
+5. Make sure to turn on the `Continuous Deployment Trigger` if you would like the release to be triggered automatically when a new build is pushed to ACR. 
+   ![](./images/continuous_deployment_trigger.png)
