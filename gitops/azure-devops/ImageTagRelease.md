@@ -107,7 +107,7 @@ If the stages succeeding `Dev` are the same as the `Dev` stage, you can highligh
 
 ![Cloning Stages](images/releases-clone-stages.png)
 
-The artifact that is used can be an ACR resource or an Azure Pipeline Build. Here, we are triggering the Release off of another Azure Pipeline Build, and enabling continuous deployment trigger.
+The artifact that is used can be an ACR resource or an Azure Pipeline Build. If you would like to set it up using an ACR, there are some detailed instructions available [here](#Create-a-service-connection-to-ACR). Here, we are triggering the Release off of another Azure Pipeline Build, and enabling continuous deployment trigger.
 
 ![Artifacts](images/artifact-build.png)
 
