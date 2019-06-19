@@ -164,16 +164,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
         # Download az CLI
         sudo apt-get update
         sudo apt-get install azure-cli
-        echo "az --version"
-        az --version
-
-        #sudo apt-get update
-        #sudo apt-get install curl apt-transport-https lsb-release gnupg
-
-        #curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
         az extension add --name azure-devops
-        az --help
         ```
 
         For the second build step:
