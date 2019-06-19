@@ -211,7 +211,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
         # extract branch name from the full subcomponent
         branch_name=$(echo ${subcomponent##*-})
         # Execute fab add to add this branch to the service HLD
-        fab add $subcomponent --source "https://github.com/bnookala/hello-rings" --branch $branch_name --method git --path chart --type helm
+        fab add $subcomponent --source $SOURCE_REPO --branch $branch_name --method git --path $CHART_PATH --type helm
 
 
         echo "GIT ADD"
@@ -248,7 +248,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
    - `YAML_PATH_2`: Set this to the second field updating in this step, in this case, the image repository `image.repository`
    - `YAML_PATH_VALUE_2`: Set this to the value for the image repository, such as `hellorings.azurecr.io/hellorings`
    - `CHART_PATH`: Set this to the folder in the source repository where the charts are located, in this example they're in `chart`
-   - (*GitHub only*) `SOURCE_REPO`: Set this to the URL for the source code repository, in this case `https://github.com/bnookala/hello-rings`
+   - `SOURCE_REPO`: Set this to the URL for the source code repository, in this case `https://github.com/bnookala/hello-rings`
    - (*Azure DevOps only*) `ORG_NAME`: Set this to the organization URL in the format `https://dev.azure.com/org_name/`
    - (*Azure DevOps only*) `PROJECT_NAME`: Set this to the name of the project in your organization where the repository is hosted.
    - (*Azure DevOps only*) `REPO_NAME`: Set this to the name of the repository
