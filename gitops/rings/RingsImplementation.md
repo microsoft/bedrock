@@ -4,11 +4,11 @@ This guide intends to implement Rings on Kubernetes without a Service Mesh using
 
 ## Pre-requisites
 
-Make sure you have the Azure Container Registry setup before we can proceed. You will also need to add [a service connection](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR) that this pipeline can use to access this ACR. 
+Make sure you have the Azure Container Registry setup before proceeding. You will also need to add a [service connection](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR) that this pipeline can use to access the ACR.
 
 ## SRC to ACR
 
-This is the first pipeline in the process which builds the source repository, runs any required tests, and pushes the built image to the container registry. You may refer to our [sample hello world rings](https://github.com/bnookala/hello-rings) repository located here. 
+This is the first pipeline in the process which builds the source repository, runs any required tests, and pushes the built image to the container registry. You may refer to our [sample hello world rings](https://github.com/bnookala/hello-rings) repository located here.
 
 Create a new `azure-pipelines.yml` file in the source repository and add the following code to it:
 ```
@@ -50,23 +50,23 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 - Git commit and push to service HLD repo in a new branch
 - Open a pull request from this new branch into the service HLD using Hub
 
-1. To start off, you can create the first environment (e.g. Dev) using an Empty Job template. 
+1. To start off, you can create the first environment (e.g. Dev) using an Empty Job template.
 
     ![](./images/new_release_pipeline.png)
 
-2. Add a new stage to the pipeline, for eg. Dev
+2. Add a new stage to the pipeline (e.g. Dev)
 
     ![](./images/new_stage.png)
 
-3. Add a new artifact by selecting Azure Container Registry that we're pushing to, in the previous step. If you haven't already setup the connections necessary to add this in your project settings, follow instructions [here](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR). 
+3. Add a new artifact by selecting Azure Container Registry that we're pushing to, in the previous step. If you haven't already setup the connections necessary to add this in your project settings, follow instructions [here](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR).
 
     ![](./images/artifact_acr.png)
 
-4. Add two build steps to this pipeline, one downloads the necessary pre-requisites and the second runs the release pipeline. 
+4. Add two build steps to this pipeline, one downloads the necessary pre-requisites and the second runs the release pipeline.
 
-    - **GitHub** 
+    - **GitHub**
 
-        If you're using GitHub repositories, follow the steps below. 
+        If you're using GitHub repositories, follow the steps below.
 
         For the first build step, copy the following lines of code:
 
@@ -232,7 +232,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
 5. Add the following environment variables to the second build step:
 
-   - `ACCESS_TOKEN_SECRET`: Set this to the personal access token from GitHub/Azure DevOps 
+   - `ACCESS_TOKEN_SECRET`: Set this to the personal access token from GitHub/Azure DevOps
    - `YAML_PATH_VALUE`: Set this to `$(Build.BuildId)` so that it can be used to update the image tag built in the previous pipeline
    - `YAML_PATH`: Set this to the field which needs to be updated in the HLD, in this case `image.tag`
    - `SUBCOMPONENT`: Set this to the name of the subcomponent that you're trying to update in the HLD
@@ -248,17 +248,17 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
 6. Run these steps from the very beginning, from the SRC to ACR pipeline, and shortly you should see a new release kicked off for the newly built ACR image. Check the pull requests page to see if a new PR is opened against the service HLD!
 
-When you push a new branch, a pull request should be open for that ring against the service HLD. Make sure that the SRC to ACR pipeline is triggered for all branches (not just master) to allow new rings to be pull requested. 
+When you push a new branch, a pull request should be open for that ring against the service HLD. Make sure that the SRC to ACR pipeline is triggered for all branches (not just master) to allow new rings to be pull requested.
 
 ### Service HLD to Materialized Manifest
 
 The Service HLD to Materialized Manifest pipeline resembles the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) with the **requirements** to specify the following environment variables:
 
 ```
-HLD_PATH= the git url to the Flatpack HLD repo
+HLD_PATH = the git url to the Flatpack HLD repo
 (e.g. https://github.com/bnookala/hello-rings-flatpack)
 
-MANIFEST_REPO= the git url to the materialized manifest repo
+MANIFEST_REPO = the git url to the materialized manifest repo
 (e.g. https://github.com/bnookala/hello-rings-flatpack-materialized)
 ```
 
