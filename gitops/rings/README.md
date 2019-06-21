@@ -34,7 +34,7 @@ As a ring is considered to be strictly a revision of a microservice, we need a w
 
 An example of ring.yaml:
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Ring
 metadata:
@@ -92,7 +92,7 @@ To create a revision of the microservice that can deploy alongside existing inst
 
 The [Image Tag Release Pipeline](https://github.com/microsoft/bedrock/blob/rings/gitops/azure-devops/ImageTagRelease.md), which is a core component of the Bedrock CI/CD workflow, will acknowledge the creation of a new Ring when a git branch is created. Like any other commit, it will trigger the build for the Image Tag Release Pipeline. Recall that the pipeline will execute a build to build and push a Docker image using a new image tag. Then, it will initiate the Release pipeline, where a Pull Request will be created to have Fabrikate  update the image tag in the Fabrikate definitions for the Service HLD repo, __in addition to__ to adding a new subcomponent (via `fab add` command) to the `component.yaml` (shown below) for the new git branch, if it does not already exists. In the `component.yaml`, we use a path based selector to identify where in the source code repository the Helm chart exists.
 
-```
+```yaml
 name: hello-rings
 type: component
 subcomponents:
@@ -120,7 +120,7 @@ When the pull request merged by another developer into the `master` branch of th
 
 An example of the `component.yaml` in the Flatpack HLD repo:
 
-```
+```yaml
 name: hello-rings-flatpack
 subcomponents:
 - name: hello-rings
