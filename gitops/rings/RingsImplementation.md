@@ -11,7 +11,7 @@ Make sure you have the Azure Container Registry setup before proceeding. You wil
 This is the first pipeline in the process which builds the source repository, runs any required tests, and pushes the built image to the container registry. You may refer to our [sample hello world rings](https://github.com/bnookala/hello-rings) repository located here.
 
 Create a new `azure-pipelines.yml` file in the source repository and add the following code to it:
-```
+```yaml
 trigger:
 branches:
     include:
@@ -71,7 +71,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
         For the first build step, copy the following lines of code:
 
 
-        ```
+        ```sh
         # Download build.sh
         curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
         chmod +x ./build.sh
@@ -89,7 +89,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
         For the second step, copy the following lines of code:
 
-        ```
+        ```sh
         # Source build.sh
         . build.sh --source-only
 
@@ -153,7 +153,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
         If you're using Azure DevOps repos, follow the steps below. For the first build step, copy the following lines of code:
 
-        ```
+        ```sh
         # Download build.sh
         curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
         chmod +x ./build.sh
@@ -169,7 +169,7 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
         For the second build step:
 
-        ```
+        ```sh
         # Source build.sh
         . build.sh --source-only
 
@@ -270,7 +270,7 @@ As described in the [Rings Model](./README.md) documentation, the idea of using 
 
 It is important to note that the Flatpack HLD to manifest pipeline build does *not* run every time the CI/CD process is invoked. The FlatPack HLD is a unique HLD that is **only** deployed when a new Ring is to be added to the cluster. The following example is a Flatpack HLD that consists of two services, the `hello-rings` and the `ring-operator`, each service with its own ring.
 
-```
+```yaml
 name: hello-rings-flatpack
 subcomponents:
 - name: hello-rings
