@@ -1,5 +1,7 @@
 # Rings
 
+Ring deployment is a configuration on top of a service deployment that allows you to deploy *revisions* of the service alongside any existing instances of *that* service, and any other services. It is a variation of canary deployments where new feature releases are gradually deployed to production without the risk of affecting all end users.
+
 This README serves to explain a Ring based deployment using Fabrikate and Bedrock without using a Service Mesh.
 
 The Ring workflow is shown in the following diagram, where you will see that it represents an extension to the [Bedrock CI/CD](https://github.com/microsoft/bedrock/tree/master/gitops).
