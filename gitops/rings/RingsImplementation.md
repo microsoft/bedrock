@@ -1,10 +1,11 @@
 # Rings Implementation
 
-This guide intends to implement Rings on Kubernetes without a Service Mesh using Azure DevOps. We recommend you review the [Rings Model](./README.md) to understand the design of this ringed model before attempting to implement it.
+This guide intends to implement Rings on Kubernetes without a Service Mesh using Azure DevOps. We recommend you review the [Rings](./README.md) documentation to understand the design of this ringed model before attempting to implement it.
 
 ## Pre-requisites
 
-Make sure you have the Azure Container Registry setup before proceeding. You will also need to add a [service connection](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR) that this pipeline can use to access the ACR.
+1. An Azure Container Registry (ACR)
+2. A [Service Connection](../azure-devops/ImageTagRelease.md#Create-a-service-connection-to-ACR) established in Azure DevOps to access the ACR.
 
 ## SRC to ACR
 
