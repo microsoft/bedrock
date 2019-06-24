@@ -77,10 +77,12 @@ The `ring.yaml` pairs with a `deployment.yaml` within the helm chart of your `sr
    * ..
  * azure-pipelines.yaml
 
-The `selector` field of your `ring.yaml` should match the `spec.selector.matchLabels` of the `deployment.yaml` file. This is because the Ring Operator will create the service that matches the labels on the `deployment.yaml`, and once the Ring is created, it knows to map to a specific version of a service and ingress routes based on these `selector` labels, and will control access control to the service.
+The `selector` field of your `ring.yaml` should match the `spec.selector.matchLabels` of the `deployment.yaml` file. This is because a "Ring Operator" will create the service that matches the labels on the `deployment.yaml`, and once the Ring is created, it knows to map to a specific version of a service and ingress routes based on these `selector` labels, and will control access control to the service.
 
 ### Ring Operator
 The ring.yaml is consumed by a custom resource controller, which we call the Ring Controller. The Ring Controller sets up two resources on the cluster that map traffic to the proper service revision: a Traefik Ingress Route that maps path and headers to a Kubernetes service, and a Kubernetes service that maps to the microservice deployment.
+
+**DISCLAIMER:** Currently, Bedrock does *not* provide an open-sourced "Ring Operator", or any tool that can manage ingress routes to a specific service.
 
 ## Creating a New Ring for a Service
 
