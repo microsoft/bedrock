@@ -10,14 +10,14 @@ The Ring workflow is shown in the following diagram, where you will see that it 
 
 In summary, there are two additions made to the Bedrock CI/CD to account for this Rings implementation:
 
-1. Flatpack HLD Repo
+1. Cluster HLD Repo
 2. Ring.yaml
 
 ## Components of the Ringed Model
 
 ### Git Repositories
 
-Recall that in the official Bedrock CI/CD (without Rings), there exists three repositories: (1) Service Source Code (2) Service HLD and (3) the Materialized Manifest. The concept of Rings introduces a *new* repository to the workflow, the Flatpack HLD. Altogether, the following exists in the Rings workflow:
+Recall that in the official Bedrock CI/CD (without Rings), there exists three repositories: (1) Service Source Code (2) Service HLD and (3) the Materialized Manifest. The concept of Rings introduces a *new* repository to the workflow, the Cluster HLD. Altogether, the following exists in the Rings workflow:
 
 For every independent service we assume 2 git repositories exist:
 
@@ -27,9 +27,9 @@ For every independent service we assume 2 git repositories exist:
 
 For all services represented by the above 2 git repositories, we assume two more repositories exist:
 
-**“Flatpack” HLD Repository**: A git repository that maintains a High Level Definition for all Services and Revisions that are intended to be run on the Cluster.
+**Cluster HLD Repository**: A git repository that maintains a High Level Definition for all Services and Revisions that are intended to be run on the Cluster.
 
-**“Materialized” Manifest Repository**: this git repository acts as our canonical source of truth for Flux – the in-cluster component that pulls and applies Kubernetes manifests rendered from the Flatpack HLD repository.
+**“Materialized” Manifest Repository**: this git repository acts as our canonical source of truth for Flux – the in-cluster component that pulls and applies Kubernetes manifests rendered from the Cluster HLD repository.
 
 ### Ring.yaml
 As a ring is considered to be strictly a revision of a microservice, we need a way to configure the ingress controller to route to the microservice revision a user belongs to. We achieve this by providing a `ring.yaml` file in our helm chart, which is an abstraction on Kubernetes and Traefik primitives.
@@ -120,12 +120,12 @@ A developer on a project must manually engage a Pull Request merge in order to g
 
 ### 4. Manifest Generation Pipeline
 
-When the pull request merged by another developer into the `master` branch of the Service HLD repository, the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) initiates. The difference in this Manifest Generation pipeline is that it will execute the build using the Flatpack HLD repo as opposed to the Service HLD repo. The Flatpack HLD repo sources all known services that are intended to be run on a cluster via their representative HLD repositories.
+When the pull request merged by another developer into the `master` branch of the Service HLD repository, the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) initiates. The difference in this Manifest Generation pipeline is that it will execute the build using the Cluster HLD repo as opposed to the Service HLD repo. The Cluster HLD repo sources all known services that are intended to be run on a cluster via their representative HLD repositories.
 
-An example of the `component.yaml` in the Flatpack HLD repo:
+An example of the `component.yaml` in the Cluster HLD repo:
 
 ```yaml
-name: hello-rings-flatpack
+name: hello-rings-cluster
 subcomponents:
 - name: hello-rings
   type: component
@@ -144,5 +144,5 @@ subcomponents:
 
 - Service Source Repo: https://github.com/bnookala/hello-rings
 - Service HLD Repo: https://github.com/bnookala/hello-rings-hld
-- Flatpack HLD Repo: https://github.com/bnookala/hello-rings-flatpack
-- Materialized Manifest Repo: https://github.com/bnookala/hello-rings-flatpack-materialized
+- Cluster HLD Repo: https://github.com/bnookala/hello-rings-cluster
+- Materialized Manifest Repo: https://github.com/bnookala/hello-rings-cluster-materialized
