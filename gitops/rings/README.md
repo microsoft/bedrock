@@ -17,7 +17,7 @@ In summary, there are two additions made to the Bedrock CI/CD to account for thi
 
 ### Git Repositories
 
-Recall that in the official Bedrock CI/CD (without Rings), there exists three repositories: (1) Service Source Code (2) Service HLD and (3) the Materialized Manifest. The concept of Rings introduces a *new* repository to the workflow, the Cluster HLD. Altogether, the following exists in the Rings workflow:
+Recall that in the official Bedrock CI/CD (without Rings), there exists three types of repositories: (1) Service Source Code (2) HLD (Service and Cluster) and (3) the Materialized. In a Ringed Model, the same repositories exists as well. The following repositories are required in the Rings workflow:
 
 For every independent service we assume 2 git repositories exist:
 
