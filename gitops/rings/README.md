@@ -1,6 +1,6 @@
 # Rings
 
-Ring deployment is a configuration on top of a service deployment that allows you to deploy *revisions* of the service alongside any existing instances of *that* service, and any other services. It is a variation of canary deployments where new feature releases are gradually deployed to production without the risk of affecting all end users.
+Ring deployment is a configuration on top of a service deployment that allows you to deploy *revisions* of the service alongside any existing instances of *that* service, and any other services. It allows you to control the "blast radius" of a change to a service by gradually rolling out new revisions of a microservice to production without the risk of affecting all end users.
 
 This README serves to explain a Ring based deployment using Fabrikate and Bedrock without using a Service Mesh.
 
@@ -37,41 +37,32 @@ As a ring is considered to be strictly a revision of a microservice, we need a w
 An example of ring.yaml:
 
 ```yaml
-apiVersion: apps/v1
-kind: Ring
-metadata:
- name: myBranch
- deployable: true or false
-spec:
- # Turnstile data (Custom Claims)
- claim: edge-users
- entryPoints:
- # Source of traffic (eg: 80 or 443)
- - web
- - web-secured
- routes:
- - PathPrefix(`/query/v1`) && Headers(`x-ring`, `myBranch`)
- selector:
-   # Target deployment instances
-   # name of microservice
-   name: publish
-   # Major version of microservice
-   version: v1
-   # Branch name
-   ring: myBranch
+serviceName: "languages"
+majorVersion: "v1"
+ringName: "48883-add-search"
+group: "CMS-CORE"
+contact: cms-core-dl@contoso.com
+branch: feature/48883-add-search
+initialUsers:
+  - bill@contoso.com
+  - ted@contoso.com
+deploy: true
+
+application:
+  replicaCount: 10
+  ports:
+    - 8080
 ```
 
 The `ring.yaml` pairs with a `deployment.yaml` within the helm chart of your `src` repository as follows:
 
 **Source Repository**:
- * chart
-   * templates
-       * ring.yaml
-       * deployment.yaml
+ * ring
+   * config
+       * common.yaml
+   * component.yaml
    * Chart.yaml
    * values.yaml
- * config
-   * common.yaml
  * src
    * Dockerfile
    * ..
@@ -82,7 +73,7 @@ The `selector` field of your `ring.yaml` should match the `spec.selector.matchLa
 ### Ring Operator
 The ring.yaml is consumed by a custom resource controller, which we call the Ring Controller. The Ring Controller sets up two resources on the cluster that map traffic to the proper service revision: a Traefik Ingress Route that maps path and headers to a Kubernetes service, and a Kubernetes service that maps to the microservice deployment.
 
-**DISCLAIMER:** Currently, Bedrock does *not* provide an open-sourced "Ring Operator", or any tool that can manage ingress routes to a specific service.
+**DISCLAIMER:** Bedrock does *not* provide an open-sourced "Ring Operator", or any tool that can manage ingress routes to a specific service. We are in the process of developing and open-sourcing a "Ring Operator" soon.
 
 ## Creating a New Ring for a Service
 
