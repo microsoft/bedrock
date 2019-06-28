@@ -5,3 +5,4 @@ This section provides examples of how to configure Azure Devops to be your CI/CD
 Examples (in order):
 1. [Manifest Generation Pipeline](./ManifestGeneration.md)
 2. [Image Tag Release Pipeline](./ImageTagRelease.md)
+3. [Orchestrating Multiple Services](./MultipleServices.md)
