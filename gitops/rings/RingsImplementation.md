@@ -26,13 +26,19 @@ pool:
 vmImage: 'ubuntu-latest'
 
 steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
+  
 - task: Docker@2
-inputs:
+  inputs:
     containerRegistry: '<name_of_the_service_connection_to_ACR_registry>'
     repository: '<name_of_the_repository>'
     command: 'buildAndPush'
     Dockerfile: '**/src/Dockerfile' # Path to the Dockerfile
     tags: 'hello-rings-$(Build.SourceBranchName)-$(Build.BuildId)' # Use this format to have the tag name audit information forward for the next pipelines
+  condition: ne(variables['Build.Reason'], 'PullRequest')
+
 
 ```
 
