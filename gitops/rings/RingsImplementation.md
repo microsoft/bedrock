@@ -257,19 +257,72 @@ This Azure pipeline is meant to be a Release pipeline which is triggered by the 
 
 When you push a new branch, a pull request should be open for that ring against the service HLD. Make sure that the SRC to ACR pipeline is triggered for all branches (not just master) to allow new rings to be pull requested.
 
-### Service HLD to Materialized Manifest
+### Service HLD to Cluster HLD
 
-The Service HLD to Materialized Manifest pipeline resembles the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) with the **requirements** to specify the following environment variables:
+The Service HLD to Cluster HLD pipeline is intended to modify some config settings in the cluster HLD such as build ID, build time etc. which will be propagated into the materialized manifest via the next pipeline. You can configure what variables you'd like to modify in the cluster HLD, depending on if the helm charts are configured to take some very specific ones.
 
+Add a new build pipeline for the service HLD and place in it the following code: 
+
+```yaml
+trigger:
+- master
+- '*'
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
+
+- bash: |
+    curl $BEDROCK_BUILD_SCRIPT > build.sh
+    chmod +x ./build.sh
+  displayName: Download script
+  env:
+    BEDROCK_BUILD_SCRIPT: https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh
+
+- bash: |
+    . build.sh --source-only
+    init
+    get_fab_version
+    download_fab
+    git_connect
+    
+    if ! git checkout $BRANCH_NAME; then
+      git checkout -b $BRANCH_NAME
+    fi
+    
+    fab set --subcomponent $SERVICE_NAME.$SERVICE_NAME-$BRANCH_NAME buildId=$NUMBER
+
+    git add -A
+    git config --global user.email "admin@azuredevops.com"
+    git config --global user.name "Azure DevOps Bot"
+    git commit -m "Fab setting buildId"
+
+    repo_url=$REPO
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+
+    git push https://$ACCESS_TOKEN@$repo_url
+  displayName: Update the build version
+  env:
+    BRANCH_NAME: $(Build.SourceBranchName)
+    ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+    REPO: $(CLUSTER_REPO)
+    NUMBER: $(Build.BuildId)
+    SERVICE_NAME: $(SERVICE_NAME)
 ```
-HLD_PATH = the git url to the Cluster HLD repo
-(e.g. https://github.com/bnookala/hello-rings-cluster)
 
-MANIFEST_REPO = the git url to the materialized manifest repo
-(e.g. https://github.com/bnookala/hello-rings-cluster-materialized)
-```
+It requires you have the following pipeline variables set: 
 
-The Service HLD to Materialized Manifest repo pipeline is initiated by a pull request that the Image Tag Release pipeline will create. A user will need to merge the pull request in order to cause this pipeline to build.
+- `ACCESS_TOKEN`: Set this to a personal access token that has write access to your repository
+- `CLUSTER_REPO`: Set this to the cluster HLD URL, such as https://github.com/bnookala/hello-rings-cluster
+- `SERVICE_NAME`: Set this to the name of the service that is modified by this HLD, in this example, `hello-rings`
+
+Try running the build and you should be able to see a build ID modified in the cluster HLD repo for this particular service. This should kick off the next pipeline, the cluster to materialized manifest, which is described in detail below. 
+
 
 ### Cluster HLD to Materialized Manifest
 
