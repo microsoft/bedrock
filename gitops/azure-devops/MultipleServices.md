@@ -1,6 +1,6 @@
 # Operating Multiple Services
 
-> *Please first overview the [Pipeline Thinking](./PipelineThinking.md) document before continuing through this document.*
+> *Please first overview the [Pipeline Thinking](../PipelineThinking.md) document before continuing through this document.*
 
 ## Overview: GitOps
 
@@ -8,7 +8,7 @@ In our prescribed gitops workflow, you are expected to push changes to your clus
 
 Recall the prescribed workflow that encompasses the manifest yaml generation pipeline:
 
-![Example of manifest yaml generation pipeline](images/manifest-gen.png)
+![Example of manifest yaml generation pipeline](../images/manifest-gen.png)
 <p align="center"><i>Example of manifest yaml generation pipeline</i></p>
 
 In the above diagram, a change (manual or automatic) to the first HLD repository should trigger a CI process, which invokes Fabrikate and composes configuration onto the HLD, transforming it into manifests that a Kubernetes cluster can consume via Flux.
@@ -51,13 +51,13 @@ subcomponents:
 In the above HLD, we declare two subcomponents, `svc-a`, and `svc-b`. Each subcomponent is of type `helm`, meaning the source path references a buildable helm chart for each of the two microservices, `A`, and `B`, that must be able to deploy against a Kubernetes cluster. These helm charts live in a seperate Git repository which provides the added advantage of seperating Kubernetes configuration from the application source
 
 
-![Structure of a Component with multiple microservices](images/hld-svc-a-svc-b.png)
+![Structure of a Component with multiple microservices](../images/hld-svc-a-svc-b.png)
 
 ### Configuring a microservice
 
 The next step would be to configure the subcomponents to configure the helm chart each references. Recall that Fabrikate reads configuration provided in the config directory of a Component, and how [the manifest generation pipeline for a single service](#overview-gitOps), configures the image tag for a built service. Similarly, we can configure the cluster HLD to reference a built container image from a microservice source repository:
 
-![Example of a manifest yaml generation pipeline with multiple microservices](images/svc-a-svc-b.png)
+![Example of a manifest yaml generation pipeline with multiple microservices](../images/svc-a-svc-b.png)
 
 We expect that any changes produced on `A` or `B` will run a pipeline that will:
 
@@ -67,7 +67,7 @@ We expect that any changes produced on `A` or `B` will run a pipeline that will:
 
 ### Complete Deployment
 
-![Example of the complete workflow from committing to a source repository, to generating the k8s yaml](images/src-to-k8s-pipeline.png)
+![Example of the complete workflow from committing to a source repository, to generating the k8s yaml](../images/src-to-k8s-pipeline.png)
 
 The above diagram describes the idealized complete workflow for committing to a microservice repository to congfiguring and generating Kubernetes manifests, taking advantage of multiple microservice source repositories.
 
@@ -93,5 +93,5 @@ total git repositories = N + 3
 
 The following resources identify how one may set up their own pipelines to automatically configure HLD repositories when a new container image is published:
 
-+ [Manifest Generation Pipeline](azure-devops/ManifestGeneration.md)
-+ [Image Tag Release Pipeline](azure-devops/ImageTagRelease.md)
++ [Manifest Generation Pipeline](./ManifestGeneration.md)
++ [Image Tag Release Pipeline](./ImageTagRelease.md)
