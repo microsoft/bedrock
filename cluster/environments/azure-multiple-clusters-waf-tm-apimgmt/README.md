@@ -1,4 +1,4 @@
-# Multiple AKS Clusters Deployment with Azure Traffic Manager
+﻿# Multiple AKS Clusters Deployment with Azure Traffic Manager
 
 ## Summary
 
@@ -91,7 +91,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
 * `location`: list of locations from the above configuration
     - `west_resource_group_location`
     - `central_resource_group_location`
-    - `east_resource_group_locatio`
+    - `east_resource_group_location`
 * `clustername`: cluster-name variable from the above configuration and a suffix
     - `cluster_name`-west
     - `cluster_name`-central
@@ -123,7 +123,7 @@ To deploy this environment, follow the [common steps](https://github.com/microso
 
 # azure-multiple-cluster-waf-tm-apimgmt
 
-The `azure-multiple-cluster-waf-tm-apimgmt` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment), each behind [Application Gateway](https://docs.microsoft.com/en-us/azure/application-gateway/overview). Application Gateway deployed on a specific cluster will get traffic via  [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three Apppplication gateways. On top of Traffic Manager  [API Management] (https://azure.microsoft.com/en-in/services/api-management/) is deployed, which is configured to manage and secure api. This act as point of communication for all request. 
+The `azure-multiple-cluster-waf-tm-apimgmt` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment), each behind [Application Gateway](https://docs.microsoft.com/en-us/azure/application-gateway/overview). Application Gateway deployed on a specific cluster will get traffic via  [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three Application gateways. On top of Traffic Manager  [API Management] (https://azure.microsoft.com/en-in/services/api-management/) is deployed, which is configured to manage and secure api. This act as point of communication for all request. 
 
 ## Getting Started
 
@@ -209,6 +209,6 @@ Azure API management provides turnkey solution for publishing APIs to external a
 The configuration variables required for API Management are:
 
 - `service_apim_name`: The profile name (general name) of the api management to be provisioned.
-=======
+
 If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors.
 
