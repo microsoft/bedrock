@@ -35,6 +35,11 @@ variable "kubeconfig_recreate" {
   default     = ""
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 variable "gitops_poll_interval" {
   type    = "string"
   default = "5m"
