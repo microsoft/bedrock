@@ -6,10 +6,9 @@ import (
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/otiai10/copy"
-
-	"github.com/Azure-Samples/azure-sdk-for-go-samples/cosmosdb"
 	
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 )
@@ -153,47 +152,17 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 		fmt.Println("Flexvolume verification complete")
 	}
 
-	//Test Case 3: Verify Cosmos/MongoDB
+	//Test Case 3: Verify Cosmos/MongoDB	
 	fmt.Println("Test case 3: Verifying Cosmos/MongoDB deployment")
-	cosmos_mongo_db_endpoint := terraform.Output(t, k8s_tfOptions, "azure_cosmos_db_endpoint")
-	cosmos_mongo_db_primary_master_key := terraform.Output(t, k8s_tfOptions, "azure_cosmos_db_primary_master_key")
-	collection := "testcollection"
-	fmt.Printf("cosmos_mongo_db_endpoint: %s\n", cosmos_mongo_db_endpoint)
-	fmt.Printf("cosmos_mongo_db_primary_master_key: %s\n", cosmos_mongo_db_primary_master_key)
+	cosmos_db_key := terraform.Output(t, k8s_tfOptions, "azure_cosmos_db_primary_master_key")
+	cmd := exec.Command("az" ,"cosmosdb", "database", "exists" ,"--name", cosmos_db_name ,"--key", cosmos_db_key, "--db-name", mongo_db_name)
 
-	session, err := mongodb.NewMongoDBClientWithCredentials(cosmos_db_name, cosmos_mongo_db_primary_master_key, cosmos_mongo_db_endpoint)
-	if err != nil {
-		fmt.Printf("cannot get mongoDB session: %v", err)
+    out, cosmosMongoErr := cmd.CombinedOutput()
+    if cosmosMongoErr != nil {
+		t.Fatal(cosmosMongoErr)
+    } else if !strings.Contains(string(out), "true") {
+		t.Fatal(cosmosMongoErr)
+	} else {
+		fmt.Println("CosmosDB with MongoDB verification complete.")
 	}
-	fmt.Printf("got mongoDB session")
-
-	GetCollection(session, cosmos_db_name, collection)
-	fmt.Printf("got collection")
-
-	err = InsertDocument(
-		session,
-		cosmos_db_name,
-		collection,
-		map[string]interface{}{
-			"fullname":      "react",
-			"description":   "A framework for building native apps with React.",
-			"forksCount":    11392,
-			"StarsCount":    48794,
-			"LastUpdatedBy": "shergin",
-		})
-	if err != nil {
-		fmt.Printf("cannot insert document: %v", err)
-	}
-	fmt.Printf("inserted document")
-
-	doc, err := GetDocument(
-		session,
-		cosmos_db_name,
-		collection,
-		bson.M{"fullname": "react"})
-	if err != nil {
-		fmt.Printf("cannot get document: %v", err)
-	}
-	fmt.Printf("got document")
-	fmt.Printf("document description: %s", doc["description"])
 }
