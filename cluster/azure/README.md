@@ -40,7 +40,7 @@ The common steps necessary to deploy a cluster are:
 - [Configure `kubectl` to see your new AKS cluster](#configure-kubectl-to-see-your-new-aks-cluster)
 - [Verify that your AKS cluster is healthy](#verify-that-your-aks-cluster-is-healthy)
 
-**NOTE**, in some cases there may be a need to follow slightly different deployment steps.  For instance, if one wanted to use an existing `resource group`.  These topics are covered [here](../README-deploy-misc.md).
+**NOTE**, in some cases there may be a need to follow slightly different deployment steps.  For instance, if one wanted to use an existing `resource group`.  These topics are covered [here](./README-deploy-misc.md).
 
 ### Create an Azure Service Principal
 
