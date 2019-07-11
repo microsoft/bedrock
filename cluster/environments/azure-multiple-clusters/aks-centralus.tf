@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "centralrg" {
-  count    = "${var.central_resource_group_preallocated ? 0 : 1}"  
+  count    = "${var.central_resource_group_preallocated ? 0 : 1}"
   name     = "${var.central_resource_group_name}"
   location = "${var.central_resource_group_location}"
 }
 
 data "azurerm_resource_group" "centralrg" {
-  name     = "${var.central_resource_group_preallocated ? var.central_resource_group_name : join("", azurerm_resource_group.centralrg.*.name)}"
+  name = "${var.central_resource_group_preallocated ? var.central_resource_group_name : join("", azurerm_resource_group.centralrg.*.name)}"
 }
 
 # local variable with cluster and location specific
@@ -23,10 +23,10 @@ module "central_vnet" {
   #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
-  resource_group_name     = "${local.central_rg_name }"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.central_address_space}"
-  subnet_prefixes         = "${var.central_subnet_prefixes}"
+  resource_group_name = "${local.central_rg_name }"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.central_address_space}"
+  subnet_prefixes     = "${var.central_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"

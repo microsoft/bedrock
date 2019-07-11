@@ -14,5 +14,5 @@ resource "azurerm_resource_group" "global_rg" {
 }
 
 data "azurerm_resource_group" "global_rg" {
-  name     = "${var.global_resource_group_preallocated ? var.global_resource_group_name : join("", azurerm_resource_group.global_rg.*.name)}"
+  name = "${var.global_resource_group_preallocated ? var.global_resource_group_name : join("", azurerm_resource_group.global_rg.*.name)}"
 }

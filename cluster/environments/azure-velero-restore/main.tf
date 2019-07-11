@@ -9,13 +9,13 @@ module "common-provider" {
 }
 
 resource "azurerm_resource_group" "cluster_rg" {
-  count    = "${var.resource_group_preallocated ? 0 : 1}"  
+  count    = "${var.resource_group_preallocated ? 0 : 1}"
   name     = "${var.resource_group_name}"
   location = "${var.resource_group_location}"
 }
 
 data "azurerm_resource_group" "cluster_rg" {
-  name     = "${var.resource_group_preallocated ? var.resource_group_name : join("", azurerm_resource_group.cluster_rg.*.name)}"
+  name = "${var.resource_group_preallocated ? var.resource_group_name : join("", azurerm_resource_group.cluster_rg.*.name)}"
 }
 
 resource "null_resource" "cloud_credentials" {

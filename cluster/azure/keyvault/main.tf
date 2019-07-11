@@ -3,7 +3,7 @@ module "azure-provider" {
 }
 
 data "azurerm_resource_group" "keyvault" {
-  name     = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 data "azurerm_client_config" "current" {}

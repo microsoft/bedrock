@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "vnet" {
-  name     = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 resource "azurerm_virtual_network" "vnet" {

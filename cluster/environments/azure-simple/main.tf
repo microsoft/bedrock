@@ -10,18 +10,18 @@ resource "azurerm_resource_group" "cluster_rg" {
 }
 
 data "azurerm_resource_group" "cluster_rg" {
-  name     = "${var.resource_group_preallocated ? var.resource_group_name : join("", azurerm_resource_group.cluster_rg.*.name)}"
+  name = "${var.resource_group_preallocated ? var.resource_group_name : join("", azurerm_resource_group.cluster_rg.*.name)}"
 }
 
 module "vnet" {
   #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
-  vnet_name               = "${var.vnet_name}"
-  address_space           = "${var.address_space}"
-  resource_group_name     = "${data.azurerm_resource_group.cluster_rg.name}"
-  subnet_names            = ["${var.cluster_name}-aks-subnet"]
-  subnet_prefixes         = "${var.subnet_prefixes}"
+  vnet_name           = "${var.vnet_name}"
+  address_space       = "${var.address_space}"
+  resource_group_name = "${data.azurerm_resource_group.cluster_rg.name}"
+  subnet_names        = ["${var.cluster_name}-aks-subnet"]
+  subnet_prefixes     = "${var.subnet_prefixes}"
 
   tags = {
     environment = "azure-simple"

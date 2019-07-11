@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "tmrg" {
-  count    = "${var.traffic_manager_resource_group_preallocated ? 0 : 1}"  
+  count    = "${var.traffic_manager_resource_group_preallocated ? 0 : 1}"
   name     = "${var.traffic_manager_resource_group_name}"
   location = "${var.traffic_manager_resource_group_location}"
 }
 
 data "azurerm_resource_group" "tmrg" {
-  name     = "${var.traffic_manager_resource_group_preallocated ? var.traffic_manager_resource_group_name : join("", azurerm_resource_group.tmrg.*.name)}"
+  name = "${var.traffic_manager_resource_group_preallocated ? var.traffic_manager_resource_group_name : join("", azurerm_resource_group.tmrg.*.name)}"
 }
 
 module "trafficmanager" {

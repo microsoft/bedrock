@@ -8,7 +8,7 @@ variable "central_resource_group_location" {
 
 variable "central_resource_group_preallocated" {
   description = "boolean value that when set to true, the specified resource group is assumed to exist.  it will not be feleted.  when set to false, the resource group will be 'managed' by Terraform and deleted on a 'terraform destroy'"
-  default = false
+  default     = false
 }
 
 variable "gitops_central_path" {

@@ -3,7 +3,7 @@ module "azure-provider" {
 }
 
 data "azurerm_resource_group" "cluster" {
-  name     = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 resource "azurerm_kubernetes_cluster" "cluster" {

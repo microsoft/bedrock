@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "eastrg" {
-  count    = "${var.east_resource_group_preallocated ? 0 : 1}"  
+  count    = "${var.east_resource_group_preallocated ? 0 : 1}"
   name     = "${var.east_resource_group_name}"
   location = "${var.east_resource_group_location}"
 }
 
 data "azurerm_resource_group" "eastrg" {
-  name     = "${var.east_resource_group_preallocated ? var.east_resource_group_name : join("", azurerm_resource_group.eastrg.*.name)}"
+  name = "${var.east_resource_group_preallocated ? var.east_resource_group_name : join("", azurerm_resource_group.eastrg.*.name)}"
 }
 
 # local variable with cluster and location specific
@@ -23,10 +23,10 @@ module "east_vnet" {
   #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
-  resource_group_name     = "${local.east_rg_name}"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.east_address_space}"
-  subnet_prefixes         = "${var.east_subnet_prefixes}"
+  resource_group_name = "${local.east_rg_name}"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.east_address_space}"
+  subnet_prefixes     = "${var.east_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"

@@ -7,8 +7,8 @@ module "vnet" {
   address_space   = "${var.address_space}"
   subnet_prefixes = ["${var.subnet_prefix}"]
 
-  resource_group_name     = "${data.azurerm_resource_group.global_rg.name}"
-  subnet_names            = ["${var.subnet_name}"]
+  resource_group_name = "${data.azurerm_resource_group.global_rg.name}"
+  subnet_names        = ["${var.subnet_name}"]
 }
 
 //Used for integration test to automate providing vnet_subnet_ids to separate environments for aks clusters

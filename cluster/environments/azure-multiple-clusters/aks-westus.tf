@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "westrg" {
-  count    = "${var.west_resource_group_preallocated ? 0 : 1}"  
+  count    = "${var.west_resource_group_preallocated ? 0 : 1}"
   name     = "${var.west_resource_group_name}"
   location = "${var.west_resource_group_location}"
 }
 
 data "azurerm_resource_group" "westrg" {
-  name     = "${var.west_resource_group_preallocated ? var.west_resource_group_name : join("", azurerm_resource_group.westrg.*.name)}"
+  name = "${var.west_resource_group_preallocated ? var.west_resource_group_name : join("", azurerm_resource_group.westrg.*.name)}"
 }
 
 # local variable with cluster and location specific
@@ -23,10 +23,10 @@ module "west_vnet" {
   #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
   source = "../../azure/vnet"
 
-  resource_group_name     = "${local.west_rg_name}"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.west_address_space}"
-  subnet_prefixes         = "${var.west_subnet_prefixes}"
+  resource_group_name = "${local.west_rg_name}"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.west_address_space}"
+  subnet_prefixes     = "${var.west_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"
