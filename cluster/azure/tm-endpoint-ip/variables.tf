@@ -18,10 +18,6 @@ variable "resource_group_name" {
   type = "string"
 }
 
-variable "resource_location" {
-  type = "string"
-}
-
 variable "ip_address_out_filename" {
   type    = "string"
   default = "bedrock_public_ip_address"

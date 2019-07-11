@@ -9,25 +9,30 @@ module "common-provider" {
 }
 
 resource "azurerm_resource_group" "cluster_rg" {
+  count    = "${var.resource_group_preallocated ? 0 : 1}"  
   name     = "${var.resource_group_name}"
   location = "${var.resource_group_location}"
 }
 
+data "azurerm_resource_group" "cluster_rg" {
+  name     = "${var.resource_group_preallocated ? var.resource_group_name : join("", azurerm_resource_group.cluster_rg.*.name)}"
+}
+
 resource "null_resource" "cloud_credentials" {
   provisioner "local-exec" {
-    command = "echo \"AZURE_SUBSCRIPTION_ID=${var.subscription_id}\nAZURE_TENANT_ID=${var.tenant_id}\nAZURE_CLIENT_ID=${var.service_principal_id}\nAZURE_CLIENT_SECRET=${var.service_principal_secret}\nAZURE_RESOURCE_GROUP=MC_${azurerm_resource_group.cluster_rg.name}_${var.cluster_name}_${var.resource_group_location}\" > ./credentials-velero"
+    command = "echo \"AZURE_SUBSCRIPTION_ID=${var.subscription_id}\nAZURE_TENANT_ID=${var.tenant_id}\nAZURE_CLIENT_ID=${var.service_principal_id}\nAZURE_CLIENT_SECRET=${var.service_principal_secret}\nAZURE_RESOURCE_GROUP=MC_${data.azurerm_resource_group.cluster_rg.name}_${var.cluster_name}_${data.azurerm_resource_group.cluster_rg.location}\" > ./credentials-velero"
   }
 }
 
 module "aks" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  source = "../../azure/aks"
 
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
   cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
-  resource_group_location  = "${var.resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
+  resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
@@ -38,7 +43,8 @@ module "aks" {
 
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
+  source = "../../azure/keyvault_flexvol_role"
 
   resource_group_name  = "${var.keyvault_resource_group}"
   service_principal_id = "${var.service_principal_id}"
@@ -48,7 +54,8 @@ module "keyvault_flexvolume_role" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "../../azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"

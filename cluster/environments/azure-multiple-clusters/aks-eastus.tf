@@ -1,12 +1,17 @@
 resource "azurerm_resource_group" "eastrg" {
+  count    = "${var.east_resource_group_preallocated ? 0 : 1}"  
   name     = "${var.east_resource_group_name}"
   location = "${var.east_resource_group_location}"
 }
 
+data "azurerm_resource_group" "eastrg" {
+  name     = "${var.east_resource_group_preallocated ? var.east_resource_group_name : join("", azurerm_resource_group.eastrg.*.name)}"
+}
+
 # local variable with cluster and location specific
 locals {
-  east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
-  east_rg_location             = "${azurerm_resource_group.eastrg.location}"
+  east_rg_name                 = "${data.azurerm_resource_group.eastrg.name}"
+  east_rg_location             = "${data.azurerm_resource_group.eastrg.location}"
   east_prefix                  = "${local.east_rg_location}_${var.cluster_name}"
   east_flux_clone_dir          = "${local.east_prefix}_flux"
   east_kubeconfig_filename     = "${local.east_prefix}_kube_config"
@@ -15,10 +20,10 @@ locals {
 
 # Creates east vnet
 module "east_vnet" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
+  source = "../../azure/vnet"
 
-  resource_group_name     = "${local.east_rg_name }"
-  resource_group_location = "${local.east_rg_location}"
+  resource_group_name     = "${local.east_rg_name}"
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.east_address_space}"
   subnet_prefixes         = "${var.east_subnet_prefixes}"
@@ -30,7 +35,8 @@ module "east_vnet" {
 
 # Creates east aks cluster, flux, kubediff
 module "east_aks_gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -43,8 +49,7 @@ module "east_aks_gitops" {
   gitops_path              = "${var.gitops_east_path}"
   gitops_url_branch        = "${var.gitops_east_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
-  resource_group_location  = "${var.east_resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.eastrg.name}"
+  resource_group_name      = "${local.east_rg_name}"
   service_cidr             = "${var.east_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
@@ -57,11 +62,11 @@ module "east_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "east_tm_endpoint" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
+  source = "../../azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.east_rg_name}"
-  resource_location                   = "${local.east_rg_location}"
-  traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
+  traffic_manager_resource_group_name = "${data.azurerm_resource_group.tmrg.name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
   endpoint_name                       = "${local.east_rg_location}_${var.cluster_name}"
   public_ip_name                      = "${var.cluster_name}"
@@ -78,12 +83,13 @@ module "east_tm_endpoint" {
 resource "azurerm_role_assignment" "east_spra" {
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
-  scope                = "${azurerm_resource_group.eastrg.id}"
+  scope                = "${data.azurerm_resource_group.eastrg.id}"
 }
 
 # Deploy east keyvault flexvolume
 module "east_flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "../../azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"

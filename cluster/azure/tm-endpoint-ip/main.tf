@@ -1,7 +1,11 @@
+data "azurerm_resource_group" "pip" {
+  name                = "${var.resource_group_name}"
+}
+
 resource "azurerm_public_ip" "pip" {
   name                = "${var.public_ip_name}-ip"
-  location            = "${var.resource_location}"
-  resource_group_name = "${var.resource_group_name}"
+  location            = "${data.azurerm_resource_group.pip.location}"
+  resource_group_name = "${data.azurerm_resource_group.pip.name}"
   allocation_method   = "Static"
   domain_name_label   = "${var.public_ip_name}-dns"
   tags                = "${var.tags}"
