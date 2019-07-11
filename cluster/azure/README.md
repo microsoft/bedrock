@@ -40,6 +40,8 @@ The common steps necessary to deploy a cluster are:
 - [Configure `kubectl` to see your new AKS cluster](#configure-kubectl-to-see-your-new-aks-cluster)
 - [Verify that your AKS cluster is healthy](#verify-that-your-aks-cluster-is-healthy)
 
+**NOTE**, in some cases there may be a need to follow slightly different deployment steps.  For instance, if one wanted to use an existing `resource group`.  These topics are covered [here](../README-deploy-misc.md).
+
 ### Create an Azure Service Principal
 
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
