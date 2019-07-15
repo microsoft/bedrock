@@ -33,9 +33,8 @@ function get_fab_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
-        VERSIONS=$(curl -s https://api.github.com/repos/Microsoft/fabrikate/tags)
-        LATEST_RELEASE=$(echo "$VERSIONS" | grep "name" | head -1)
-        VERSION_TO_DOWNLOAD=$(echo "$LATEST_RELEASE" | cut -d'"' -f 4)
+        # By default, the script will use the most recent non-prerelease, non-draft release Fabrikate
+        VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     else
         echo "Fabrikate Version: $VERSION"
         VERSION_TO_DOWNLOAD=$VERSION
@@ -91,8 +90,8 @@ function install_fab() {
     # Run this command to make script exit on any failure
     echo "FAB INSTALL"
     set -e
-    
-    if [ -z "$HLD_PATH" ]; then 
+
+    if [ -z "$HLD_PATH" ]; then
         echo "HLD path not specified, going to run fab install in current dir"
     else
         echo "HLD repo specified: $HLD_PATH"
@@ -116,7 +115,7 @@ function fab_generate() {
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"; do
             echo "FAB GENERATE $i"
-            # In this case, we do want to split the string by unquoting $i so that the fab generate command 
+            # In this case, we do want to split the string by unquoting $i so that the fab generate command
             # recognizes multiple environments as separate strings.
             # shellcheck disable=SC2086
             fab generate $i
