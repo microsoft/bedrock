@@ -19,15 +19,13 @@ In summary, there are two additions made to the Bedrock CI/CD to account for thi
 
 ### Git Repositories
 
-Recall that in the official Bedrock CI/CD (without Rings), there exists three types of repositories: (1) Service Source Code (2) HLD (Service and Cluster) and (3) the Materialized. In a Ringed Model, the same repositories exists as well. The following repositories are required in the Rings workflow:
-
-For every independent service we assume 2 git repositories exist:
+Recall that in the official Bedrock CI/CD (without Rings), there exists three types of repositories: (1) Service Source Code (2) HLD and (3) the Materialized. In a Ringed Model,the same repositories exists as well. The following repositories are required in the Rings workflow:
 
 **Service Source Repository**: A git repository that maintains the source code of the service, a dockerfile, and a helm chart. Developers will commit regularly to this repository, with revisions and rings being tracked in Git branches.
 
-**Service HLD Repository**: A second git repository that maintains a High Level Definition for the source repository. Commits to this repository are automated, and configuration is performed via AzDo pipelines. Subcomponents in this repository map to the branches in the Service Source Repository
+For all services represented by git repositories, we assume three more repositories exist:
 
-For all services represented by the above 2 git repositories, we assume two more repositories exist:
+**Helm Chart Repository**: A git repository to store Helm packages or charts for the service(s).
 
 **Cluster HLD Repository**: A git repository that maintains a High Level Definition for all Services and Revisions that are intended to be run on the Cluster.
 
@@ -63,8 +61,6 @@ The `ring.yaml` pairs with a `deployment.yaml` within the helm chart of your `sr
    * config
        * common.yaml
    * component.yaml
-   * Chart.yaml
-   * values.yaml
  * src
    * Dockerfile
    * ..
@@ -77,6 +73,59 @@ The ring.yaml is consumed by a custom resource controller, which we call the Rin
 
 **DISCLAIMER:** Bedrock does *not* provide an open-sourced "Ring Operator", or any tool that can manage ingress routes to a specific service. We are in the process of developing and open-sourcing a "Ring Operator" soon.
 
+## Adding a Service
+
+It is very common to manage multiple services or microservices in Bedrock, and in order to account for that in this Ring Models, the Cluster HLD repository is structured in the following way:
+
+**Cluster HLD Repository**:
+ * ServiceA
+   * config
+       * common.yaml
+   * component.yaml
+ * ServiceB
+   * config
+       * common.yaml
+   * component.yaml
+ * azure-pipelines.yaml
+ * component.yaml
+
+ The **root** `component.yaml` file should resemble the following:
+
+ ```yaml
+name: hello-rings-cluster
+subcomponents:
+- name: hello-rings
+  type: component
+  source: hello-rings
+- name: ring-operator
+  type: component
+  source: ring-operator
+```
+
+When adding a new Service to the Rings CI/CD, the developer will need to:
+  1. Add a new path (folder) in the Cluster HLD Repo that corresponds to that service. The path should include a `component.yaml` that sources the serivce and all of its rings (branches):
+
+  ```yaml
+  name: hello-rings
+  type: component
+  subcomponents:
+  - name: hello-rings-featurea
+    type: helm
+    source: https://github.com/bnookala/hello-rings
+    method: git
+    path: ring
+    branch: featurea
+  - name: hello-rings-featureb
+    type: helm
+    source: https://github.com/bnookala/hello-rings
+    method: git
+    path: ring
+    branch: featureb
+  ```
+  In the `component.yaml`, we use a path based selector to identify where in the source code repository the Helm chart exists.
+
+  2. Update the **root** `component.yaml` by adding a new subcomponent for the service.
+
 ## Creating a New Ring for a Service
 
 This section will assist in understanding the order of operations of a Ringed Model. However, if you want a step-by-step guide on implementing Rings, please visit the [Rings Implementation Guide](./RingsImplementation.md)
@@ -87,25 +136,7 @@ To create a revision of the microservice that can deploy alongside existing inst
 
 ### 2. Image Tag Release Pipeline
 
-The [Image Tag Release Pipeline](https://github.com/microsoft/bedrock/blob/rings/gitops/azure-devops/ImageTagRelease.md), which is a core component of the Bedrock CI/CD workflow, will acknowledge the creation of a new Ring when a git branch is created. Like any other commit, it will trigger the build for the Image Tag Release Pipeline. Recall that the pipeline will execute a build to build and push a Docker image using a new image tag. Then, it will initiate the Release pipeline, where a Pull Request will be created to have Fabrikate  update the image tag in the Fabrikate definitions for the Service HLD repo, __in addition to__ to adding a new subcomponent (via `fab add` command) to the `component.yaml` (shown below) for the new git branch, if it does not already exists. In the `component.yaml`, we use a path based selector to identify where in the source code repository the Helm chart exists.
-
-```yaml
-name: hello-rings
-type: component
-subcomponents:
-- name: hello-rings-featurea
-  type: helm
-  source: https://github.com/bnookala/hello-rings
-  method: git
-  path: chart
-  branch: featurea
-- name: hello-rings-featureb
-  type: helm
-  source: https://github.com/bnookala/hello-rings
-  method: git
-  path: chart
-  branch: featureb
-```
+The [Image Tag Release Pipeline](https://github.com/microsoft/bedrock/blob/rings/gitops/azure-devops/ImageTagRelease.md), which is a core component of the Bedrock CI/CD workflow,will acknowledge the creation of a new Ring when a git branch is created. Like any other commit, it will trigger the build for the Image Tag Release process. Recall that this will execute a Build Pipeline to build and push a Docker image using the new image tag. Then, it will initiate the Release pipeline, where a Pull Request will be created to (1) have Fabrikate update the image tag (along with other metadata) in the **service Fabrikate definitions** (e.g. config/common.yaml), (2) add a new subcomponent (via `fab add` command) to the **service** `component.yaml` (shown below).
 
 ### 3. Merge Pull Request against Service HLD Repo
 
@@ -113,29 +144,10 @@ A developer on a project must manually engage a Pull Request merge in order to g
 
 ### 4. Manifest Generation Pipeline
 
-When the pull request merged by another developer into the `master` branch of the Service HLD repository, the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) initiates. The difference in this Manifest Generation pipeline is that it will execute the build using the Cluster HLD repo as opposed to the Service HLD repo. The Cluster HLD repo sources all known services that are intended to be run on a cluster via their representative HLD repositories.
-
-An example of the `component.yaml` in the Cluster HLD repo:
-
-```yaml
-name: hello-rings-cluster
-subcomponents:
-- name: hello-rings
-  type: component
-  source: https://github.com/bnookala/hello-rings-hld
-  method: git
-  branch: master
-- name: ring-operator
-  type: component
-  source: https://github.com/samiyaakhtar/ring-operator
-  method: git
-  branch: master
-```
-
+When the pull request is merged by a developer into the `master` branch of the Cluster HLD repository, the [Manifest Generation Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md) initiates. The Manifest Generation pipeline will source all known services that are intended to be run on a cluster via their representative HLD paths within the Cluster HLD repo.
 
 ## References
 
 - Service Source Repo: https://github.com/bnookala/hello-rings
-- Service HLD Repo: https://github.com/bnookala/hello-rings-hld
-- Cluster HLD Repo: https://github.com/bnookala/hello-rings-cluster
+- Cluster HLD Repo: https://github.com/bnookala/hello-rings-cluster-v2
 - Materialized Manifest Repo: https://github.com/bnookala/hello-rings-cluster-materialized
