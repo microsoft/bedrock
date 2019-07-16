@@ -11,6 +11,10 @@ variable "acr_enabled" {
   type = "string"
 }
 
+variable "gc_enabled" {
+  type = "string"
+}
+
 variable "cluster_name" {
   type = "string"
 }
