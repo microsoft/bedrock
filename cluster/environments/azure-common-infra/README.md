@@ -68,7 +68,7 @@ container_name="myContainer"
 key="tfstate-common-infra"
 ```
 
-Create a `terraform.tfvars` if it does not already exist. It should include the following variables and look something like this:
+Create a `terraform.tfvars` if it does not already exist. It should include the following variables and look something like the below. In addition to these values, environments may have additional variables. Check the `variables.tf` file for your template for specifics. 
 
 ```
 vnet_name = "myvnet"

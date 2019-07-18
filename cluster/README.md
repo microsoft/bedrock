@@ -4,17 +4,17 @@ Bedrock automates Kubernetes cluster deployments with Terraform to provide full 
 
 ## Required Tools
 
-Bedrock uses three tools to automate cluster deployments that you'll need to install if you don't already have them:
+Bedrock assumes that you have a deployment computer or VM running Unix or Linux and a bash shell. Beyond that, it uses three main tools to automate cluster deployments that you'll need to install if you don't already have them:
 
-- [terraform](https://www.terraform.io/intro/getting-started/install.html)
+- [terraform v0.11.14](https://releases.hashicorp.com/terraform/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [helm](https://github.com/helm/helm)
+- [helm](https://helm.sh/docs/using_helm/#installing-helm)
 
-Verify that these tools are added to your system's PATH in order to avoid errors during cluster deployment.  (Note to WSL users: You will need to either move the executables to /usr/local/bin, or modify ~/.bashrc to add them to PATH and persist the new additions across restarts.)
+Terraform v0.12 is not supported yet, so ensure that your environment has v0.11. Please do not install these packages with `snap` or other package installers - they can create issues when using `sudo`. Follow the instructions to use `curl` for all of them. Verify that these tools are added to your deployment system's PATH by printing your path or typing their names in the console in order to avoid errors during cluster deployment.  (Note to WSL users: You may need to either move the executables to /usr/local/bin, or modify ~/.bashrc to add them to PATH and persist the new additions across restarts.)
 
 ## Follow Cloud Provider Guide
 
-Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- but we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider you'd like to create a cluster environment for to get started:
+Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- but we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider on which you'd like to create your cluster environment to get started:
 
 - [Creating a Azure Kubernetes Service (AKS) cluster environment](./azure)
 - [Creating a Minikube cluster environment](./minikube)

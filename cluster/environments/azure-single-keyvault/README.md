@@ -1,10 +1,10 @@
 # azure-single-keyvault
 
-The `azure-single-keyvault` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault.
+The `azure-single-keyvault` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault. The [`azure-common-infra`](../azure-common-infra) template must be deployed first.
 
 ## Getting Started
 
-1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
+1. Copy this template directory to a repo of its own, or one shared with the azure-common-infra. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
 2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure.
 
 ## Deploy the Environment
@@ -23,7 +23,7 @@ container_name="myContainer"
 key="tfstate-single-keyvault"
 ```
 
-If there is not a `terraform.tfvars`, create one that looks like this:
+If there is not a `terraform.tfvars`, create one that looks like the below. In addition to these values, environments may have additional variables. Check the `variables.tf` file for your template for specifics.
 
 ```
 #--------------------------------------------------------------

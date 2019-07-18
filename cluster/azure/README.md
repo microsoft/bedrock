@@ -4,6 +4,7 @@
 
 Follow these steps to create an Azure Kubernetes Service (AKS) cluster using Terraform:
 
+- [Create a Linux VM and shared resource group](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli), if needed 
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](../common/flux/)
 - [Understand Service Principal Requirements](./service-principal)
@@ -15,7 +16,7 @@ For ongoing maintenance of an AKS cluster, take a look [here](./README-maintenan
 
 Make sure you have installed the [common prerequisites](../README.md) on your machine.
 
-Beyond these, you'll only need the Azure `az` command line tool installed (used to create and fetch Azure configuration info):
+Beyond these, you'll only need the Azure `az` command line tool installed (used to create and fetch Azure configuration info). Please again install using `curl` rather than a package manager:
 
 - [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
@@ -25,11 +26,10 @@ Bedrock provides different templates to start from when building your deployment
 
 The following templates are currently available for deployment:
 
-- [azure-common-infra](../environments/azure-common-infra): Common infrastructure deployment template.
-
-- [azure-simple](../environments/azure-simple/): Single cluster deployment.
-- [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
-- [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
+- [azure-common-infra](../environments/azure-common-infra): Common infrastructure deployment template, required to deploy azure-single-keyvault and azure-multiple-clusters.
+- [azure-simple](../environments/azure-simple/): Simple single cluster deployment.
+- [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template. Requires [azure-common-infra](../environments/azure-common-infra) deployed first.
+- [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager. Requires [azure-common-infra](../environments/azure-common-infra) deployed first.
 
 The common steps necessary to deploy a cluster are:
 
@@ -42,10 +42,15 @@ The common steps necessary to deploy a cluster are:
 
 ### Create an Azure Service Principal
 
-You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
+For the Azure Simple template only, you can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
 ```bash
 $ az ad sp create-for-rbac --subscription <id | name>
+```
+
+For all other templates, an owner-level service principal is required
+```bash
+$ az ad sp create-for-rbac --role Owner --scopes /subscriptions/<your-subscription-id>
 ```
 
 The output of the above commands will look something like this:
@@ -60,9 +65,9 @@ The output of the above commands will look something like this:
 }
 ```
 
-Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
+Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have owner, contributor, or another level of access to the subscription.
 
-There are some environments that that perform role assignments during the process of deployments.  In this case, the Service Principal requires Owner level access on the subscription.  Each environment where this is the case will document the requirements and whether or not there is a configuration option not requiring the Owner level privileges.
+There are some environments that perform role assignments during the process of deployments.
 
 ### Configure Terraform CLI for Azure
 
@@ -102,9 +107,11 @@ This is a two step process:
 1. Create a new cluster configuration by copying an existing Terraform template.
 2. Customize your cluster by entering configuration values into '*.tfvars' files.
 
+To create a cluster environment based on the `azure-simple` template, continue below. Otherwise continue with the instructions for [azure-common-infra](../environments/azure-common-infra).
+
 #### Copy Terraform Template
 
-The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, for example, copy it to a new subdirectory with the name of the cluster you want to create:
+The typical way to create a new environment is to start from an existing template. To create a cluster environment based on the `azure-simple` template, copy it to a new subdirectory with the name of the cluster you want to create:
 
 ```bash
 $ cp -r cluster/environments/azure-simple cluster/environments/<your new cluster name>
@@ -114,25 +121,23 @@ In this case, we are creating it within the Bedrock tree, but the deployment tem
 
 #### Edit Configuration Values
 
-Most Bedrock deployment environments share a common set of configuration values. Listed below are the common set of values and an explanation of those values. In addition to these common values, environments that have additional variables, check the `variables.tf` file for your template for specifics.
+Most Bedrock deployment environments share a common set of configuration values. Listed below are the common set of values and an explanation of those values. In addition to these common values, environments may have additional variables. The full list of variables that are customizable are in the `variables.tf` file within each environment template.
 
-With the new environment created, edit `environments/azure/<your new cluster name>/terraform.tfvars` and update the variables as needed.
+With the new environment created, update the variables in `environments/azure/<your new cluster name>/terraform.tfvars`.
 
 The common variables:
 
-- `resource_group_name`: Name of the resource group where the cluster will be located.
+- `resource_group_name`: Name of the resource group where the cluster AKS will be located.
 - `resource_group_location`: Azure region the resource group should be created in.
 - `cluster_name`: Name of the Kubernetes cluster you want to create.
-- `agent_vm_count`: The number of agents VMs in the the node pool.
+- `agent_vm_count`: The number of agent VMs in the the node pool.
 - `dns_prefix`: DNS name for accessing the cluster from the internet (up to 64 characters in length, alphanumeric characters and hyphen '-' allowed, and must start with a letter).
-- `service_principal_id`: The id of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
-- `service_principal_secret`: The secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
-- `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.  Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step.
-- `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
+- `service_principal_id`: The id of the service principal created above for the AKS cluster. This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
+- `service_principal_secret`: The secret of the service principal created for the AKS cluster. This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
+- `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster. Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step.
+- `gitops_ssh_url`: The url of the git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) for more details).
 - `gitops_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](#set-up-gitops-repository-for-flux) step and configured to work with the GitOps repository.
 - `gitops_path`: Path to a subdirectory, or folder in a git repo
-
-The full list of variables that are customizable are in the `variables.tf` file within each environment template.
 
 Each component also may contain component specific variables that can be configured.  For instance, for the AKS module, additional configuration variables are found in [variables.tf](./aks/variables.tf).
 
@@ -155,13 +160,13 @@ This will display the plan for what infrastructure Terraform plans to deploy int
 
 Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to kick off a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator, and deploy any resource manifests in the `gitops_ssh_url`.
 
-If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred.  If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
+If errors occur during deployment, follow-on actions will depend on the nature of the error and at what stage it occurred. If the error cannot be resolved in a way that enables the remaining resources to be deployed/installed, it is possible to re-attempt the entire cluster deployment.  First, from within the `environments/azure/<your new cluster name>` directory, run `terraform destroy`, then fix the error if applicable (necessary tool not installed, for example), and finally re-run `terraform apply`.
 
 ### Configure Terraform to Store State Data in Azure
 
 Terraform records the information about what is created in a [Terraform state file](https://www.terraform.io/docs/state/) after it finishes applying.  By default, Terraform will create a file named `terraform.tfstate` in the directory where Terraform is applied.  Terraform needs this information so that it can be loaded when we need to know the state of the cluster for future modifications.
 
-In production scenarios, storing the state file on a local file system is not desired because typically you want to share the state between operators of the system.  Instead, we configure Terraform to store state remotely, and in Bedrock, we use Azure Blob Store for this storage. This is defined using a `backend` block.  The basic block looks like:
+In production scenarios, storing the state file on a local file system is not desired because typically you want to share the state between operators of the system. Instead, we configure Terraform to store state remotely, and in Bedrock, we use Azure Blob Store for this storage. This is defined using a `backend` block.  The basic block looks like:
 
 ```bash
 terraform {

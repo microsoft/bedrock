@@ -2,7 +2,7 @@
 
 The `azure-multiple-cluster` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment with flux and Azure Key Vault), each behind [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three clusters.
 
-`azure-multiple-cluster` is dependant on a deployment of [`azure-common-infra`](../azure-common-infra).
+The [`azure-common-infra`](../azure-common-infra) template must be deployed first.
 
 ## Getting Started
 
