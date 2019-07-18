@@ -17,7 +17,7 @@ Verify that these tools are added to your system's PATH in order to avoid errors
 Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- but we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider you'd like to create a cluster environment for to get started:
 
 - [Creating a Azure Kubernetes Service (AKS) cluster environment](./azure)
-- [Creating a Minikube cluster environment](./minikube
+- [Creating a Minikube cluster environment](./minikube)
 
 ## Incorporating Existing Resources
 
