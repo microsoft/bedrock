@@ -23,4 +23,4 @@ Bedrock provides templates for creating Kubernetes clusters for each supported c
 
 **IMPORTANT** It is important to note that any resources referenced as a `resource` in Terraform will assume to be managed by Terraform.  So, if one uses an existing cloud resource (resource group, vm, etc) be aware that any updates, changes, or deletions triggered by an operation in Terraform will impact that resource.  For instance, if one were to reference an existing Azure Resource Group and perform `terraform destroy`, the resource group and any resources (even those not managed by Terraform) in that resource group will be deleted.
 
-If you are evaluating Bedrock, it is recommended that you do so in a clean environment.  If you want to use existing resources, please read up one [`terraform import`](https://www.terraform.io/docs/import/index.html).
+If you are evaluating Bedrock, it is recommended that you do so in a clean environment.  If you want to use existing resources, please read up on [`terraform import`](https://www.terraform.io/docs/import/index.html).
