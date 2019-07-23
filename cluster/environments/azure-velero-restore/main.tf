@@ -5,7 +5,7 @@
 data "azurerm_client_config" "current" {}
 
 module "common-provider" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/provider"
+  source = "github.com/Microsoft/bedrock/cluster/common/provider"
 }
 
 resource "azurerm_resource_group" "cluster_rg" {
