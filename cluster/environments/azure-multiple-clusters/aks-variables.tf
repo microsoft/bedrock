@@ -23,6 +23,10 @@ variable "service_principal_id" {
   type = "string"
 }
 
+variable "service_principal_object_id" {
+  type = "string"
+}
+
 variable "service_principal_secret" {
   type = "string"
 }
@@ -66,5 +70,9 @@ variable "keyvault_name" {
 }
 
 variable "keyvault_resource_group" {
+  type = "string"
+}
+
+variable "identity_name" {
   type = "string"
 }

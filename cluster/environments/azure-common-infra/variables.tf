@@ -14,7 +14,7 @@ variable "global_resource_group_location" {
   type = "string"
 }
 
-variable "service_principal_id" {
+variable "service_principal_object_id" {
   type = "string"
 }
 
@@ -27,5 +27,9 @@ variable "subnet_prefix" {
 }
 
 variable "vnet_name" {
+  type = "string"
+}
+
+variable "identity_name" {
   type = "string"
 }

@@ -87,6 +87,10 @@ variable "service_principal_id" {
   type = "string"
 }
 
+variable "service_principal_object_id" {
+  type = "string"
+}
+
 variable "service_principal_secret" {
   type = "string"
 }
@@ -95,11 +99,19 @@ variable "subnet_prefixes" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
+variable "subnet_name" {
+  type = "string"
+}
+
+variable "vnet_name" {
   type = "string"
 }
 
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
+
+variable "identity_name" {
+  type = "string"
 }

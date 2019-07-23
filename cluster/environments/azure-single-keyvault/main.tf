@@ -1,5 +1,5 @@
 terraform {
-  backend "azurerm" {}
+  #backend "azurerm" {}
 }
 
 data "azurerm_client_config" "current" {}
@@ -9,8 +9,15 @@ resource "azurerm_resource_group" "cluster_rg" {
   location = "${var.resource_group_location}"
 }
 
+data "azurerm_subnet" "single" {
+  name     = "${var.subnet_name}"
+  virtual_network_name = "${var.vnet_name}"
+  resource_group_name = "${var.keyvault_resource_group}"
+}
+
 module "aks-gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -30,29 +37,21 @@ module "aks-gitops" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${data.azurerm_subnet.single.id}"
   network_policy           = "${var.network_policy}"
-}
-
-# Create Azure Key Vault role for SP
-module "keyvault_flexvolume_role" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
-
-  resource_group_name  = "${var.keyvault_resource_group}"
-  service_principal_id = "${var.service_principal_id}"
-  subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
-  keyvault_name        = "${var.keyvault_name}"
 }
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "../../azure/keyvault_flexvol"
 
-  resource_group_name      = "${var.keyvault_resource_group}"
-  service_principal_id     = "${var.service_principal_id}"
-  service_principal_secret = "${var.service_principal_secret}"
-  tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name            = "${var.keyvault_name}"
+  resource_group_name         = "${var.keyvault_resource_group}"
+  service_principal_id        = "${var.service_principal_id}"
+  service_principal_object_id = "${var.service_principal_object_id}"
+  service_principal_secret    = "${var.service_principal_secret}"
+  tenant_id                   = "${data.azurerm_client_config.current.tenant_id}"
+  keyvault_name               = "${var.keyvault_name}"
 
   kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"
 }

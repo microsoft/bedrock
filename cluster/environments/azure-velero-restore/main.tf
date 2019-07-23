@@ -20,7 +20,8 @@ resource "null_resource" "cloud_credentials" {
 }
 
 module "aks" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  #jsource = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  source = "../../azure/aks"
 
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
@@ -36,22 +37,14 @@ module "aks" {
   kubeconfig_filename      = "${var.kubeconfig_filename}"
 }
 
-# Create Azure Key Vault role for SP
-module "keyvault_flexvolume_role" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol_role"
-
-  resource_group_name  = "${var.keyvault_resource_group}"
-  service_principal_id = "${var.service_principal_id}"
-  subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
-  keyvault_name        = "${var.keyvault_name}"
-}
-
-# Deploy central keyvault flexvolume
+# Deploy keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "../../azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
+  service_principal_object_id     = "${var.service_principal_object_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
   keyvault_name            = "${var.keyvault_name}"

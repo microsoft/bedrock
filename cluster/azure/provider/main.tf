@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "~>1.29.0"
+  version = "~>1.31.0"
 }
 
 # Needed for the traffic manager role assignment
