@@ -3,10 +3,12 @@ data "azurerm_key_vault" "flexvol" {
   resource_group_name = "${var.resource_group_name}"
 }
 
-resource "azurerm_role_assignment" "flexvol" {
-  count = "${var.enable_flexvol? 1 : 0}"
+resource "null_resource" "flexvol_role" {
+  provisioner "local-exec" {
+    command = "az role assignment create --role ${var.flexvol_role_assignment_role} --assignee ${var.service_principal_id} --scope ${data.azurerm_key_vault.flexvol.id}"
+  }
 
-  principal_id         = "${var.service_principal_object_id}"
-  role_definition_name = "${var.flexvol_role_assignment_role}"
-  scope                = "${data.azurerm_key_vault.flexvol.id}"
+  triggers = {
+    precursor_done = "${var.precursor_done}"
+  }
 }

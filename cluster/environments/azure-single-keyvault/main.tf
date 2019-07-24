@@ -48,7 +48,6 @@ module "flex_volume" {
 
   resource_group_name         = "${var.keyvault_resource_group}"
   service_principal_id        = "${var.service_principal_id}"
-  service_principal_object_id = "${var.service_principal_object_id}"
   service_principal_secret    = "${var.service_principal_secret}"
   tenant_id                   = "${data.azurerm_client_config.current.tenant_id}"
   keyvault_name               = "${var.keyvault_name}"

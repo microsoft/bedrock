@@ -1,4 +1,4 @@
-variable "vault_uri" {
+variable "vault_id" {
   type = "string"
 }
 

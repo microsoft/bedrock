@@ -14,7 +14,7 @@ variable "global_resource_group_location" {
   type = "string"
 }
 
-variable "service_principal_object_id" {
+variable "service_principal_id" {
   type = "string"
 }
 

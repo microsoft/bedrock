@@ -40,8 +40,9 @@ metadata:
   name: $IDENTITY_NAME-identity-binding
 spec:
   AzureIdentity: $IDENTITY_NAME
-  Selector: $IDENTITY_NAME_msi_selector
+  Selector: $IDENTITY_NAME-msi-selector
 EOM
+echo $AZURE_IDENTITY_BINDING_YAML
 
 # Deploy Azure Identity Binding into the cluser
 if ! echo "$AZURE_IDENTITY_BINDING_YAML" | kubectl create -f -

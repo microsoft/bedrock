@@ -1,12 +1,12 @@
-variable "vault_id" {
+variable "keyvault_name" {
   type = "string"
 }
 
-variable "tenant_id" {
+variable "resource_group_name" {
   type = "string"
 }
 
-variable "object_id" {
+variable "service_principal_id" {
   type = "string"
 }
 
@@ -18,4 +18,14 @@ variable "key_permissions" {
 variable "secret_permissions" {
   type    = "list"
   default = ["delete", "get", "set"]
+}
+
+variable "certificate_permissions" {
+  type    = "list"
+  default = ["delete", "get", "create"]
+}
+
+variable "precursor_done" {
+  type    = "string"
+  default = "1"
 }

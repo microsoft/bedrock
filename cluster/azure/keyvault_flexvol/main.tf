@@ -7,18 +7,18 @@ data "azurerm_key_vault" "flexvol" {
   resource_group_name = "${var.resource_group_name}"
 }
 
-resource "azurerm_key_vault_access_policy" "flexvol" {
-  count = "${var.enable_flexvol ? 1 : 0}"
-
-  key_vault_id            = "${data.azurerm_key_vault.flexvol.id}"
-
-  tenant_id               = "${var.tenant_id}"
-  object_id               = "${var.service_principal_object_id}"
-
-  key_permissions         = "${var.flexvol_keyvault_key_permissions}"
-  secret_permissions      = "${var.flexvol_keyvault_secret_permissions}"
-  certificate_permissions = "${var.flexvol_keyvault_certificate_permissions}"
-}
+#resource "azurerm_key_vault_access_policy" "flexvol" {
+#  count = "${var.enable_flexvol ? 1 : 0}"
+#
+#  key_vault_id            = "${data.azurerm_key_vault.flexvol.id}"
+#
+#  tenant_id               = "${var.tenant_id}"
+#  object_id               = "${var.service_principal_object_id}"
+#
+#  key_permissions         = "${var.flexvol_keyvault_key_permissions}"
+#  secret_permissions      = "${var.flexvol_keyvault_secret_permissions}"
+#  certificate_permissions = "${var.flexvol_keyvault_certificate_permissions}"
+#}
 
 resource "null_resource" "deploy_flexvol" {
   count = "${var.enable_flexvol ? 1 : 0}"

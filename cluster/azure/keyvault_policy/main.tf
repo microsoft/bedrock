@@ -1,9 +1,15 @@
-resource "azurerm_key_vault_access_policy" "keyvault" {
-  key_vault_id = "${var.vault_id}"
+data "azurerm_key_vault" "keyvault_access_policy" {
+  name                = "${var.keyvault_name}"
+  resource_group_name = "${var.resource_group_name}"
+}
 
-  tenant_id = "${var.tenant_id}"
-  object_id = "${var.object_id}"
+resource "null_resource" "keyvault_access_policy" {
+  provisioner "local-exec" {
+    command = "az keyvault set-policy --name ${data.azurerm_key_vault.keyvault_access_policy.name} --spn ${var.service_principal_id} --resource-group ${var.resource_group_name} --key-permissions ${join(" ", var.key_permissions)} --secret-permissions ${join(" ", var.secret_permissions)} --certificate-permissions ${join(" ", var.certificate_permissions)}"
+  }
 
-  key_permissions    = "${var.key_permissions}"
-  secret_permissions = "${var.secret_permissions}"
+
+  triggers = {
+    precursor_done = "${var.precursor_done}"
+  }
 }
