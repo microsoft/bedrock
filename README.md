@@ -44,7 +44,7 @@ CI/CD:
 
 - Pipelines: [Azure DevOps](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops), [Octopus Deploy](https://github.com/microsoft/bedrock/blob/master/gitops/octopus), [TeamCity](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity), [Jenkins](https://github.com/microsoft/bedrock/blob/master/gitops/jenkins)
 
-> Flux is a tool that runs in the Kubernetes cluster. It detects changes made to a resource manifest Repository and applies them.
+> Flux is a tool that runs in the Kubernetes cluster. It detects changes made to a resource manifest repository and applies them.
 
 ## Getting Started
 1. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition for your deployment.
