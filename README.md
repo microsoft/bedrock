@@ -18,6 +18,7 @@ Building a Kubernetes cluster using Bedrock practices consists of the following 
 2. Setting up a CI/CD pipeline that will generate Kubernetes resource manifests from the Fabrikate definitions.
 3. The CI/CD pipeline checks in the generated resource manifests into a **resource manifest git repository**.
 4. Setting up the cluster infrastructure
+5. Detecting changes made to the resource manifest git repository and applying those to the cluster (GitOps).
 
 > Defining your deployment with **high level deployment definitions** is less error prone than directly editing resource manifests or cobbling together shell scripts to build resource manifests from Helm templates.
 
