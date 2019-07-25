@@ -28,18 +28,18 @@ Building a Kubernetes cluster using Bedrock practices consists of the following 
 ### Tools
 For each Bedrock component, several tools are being used. Suggestions for supporting other tools is done by [submitting an issue](https://github.com/microsoft/bedrock/issues).
 
-##### Infrastructure Tools:
+Infrastructure:
 - [Terraform](https://www.terraform.io/)
 
 
-##### Applications and Kubernetes Resources Tools:
+Applications and Kubernetes Resources:
 - [Fabrikate](https://github.com/microsoft/fabrikate)
 
 > Fabrikate is a tool that allows you to write [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) resource definition and configuration for multiple environments. It leverages the [Helm](https://helm.sh/) chart ecosystem.
 
 >Fabrikate components are High Level Definitions that get generated into Kubernetes resource manifest files.
 
-##### CI/CD Tools:
+CI/CD:
 - [Flux](https://github.com/fluxcd/flux/blob/master/chart/flux/README.md) for [GitOps](https://www.weave.works/technologies/gitops/)
 
 - Pipelines: [Azure DevOps](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops), [Octopus Deploy](https://github.com/microsoft/bedrock/blob/master/gitops/octopus), [TeamCity](https://github.com/microsoft/bedrock/blob/master/gitops/teamcity), [Jenkins](https://github.com/microsoft/bedrock/blob/master/gitops/jenkins)
