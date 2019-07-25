@@ -23,10 +23,6 @@ variable "service_principal_id" {
   type = "string"
 }
 
-variable "service_principal_object_id" {
-  type = "string"
-}
-
 variable "service_principal_secret" {
   type = "string"
 }
@@ -44,9 +40,9 @@ variable "gitops_ssh_key" {
   type = "string"
 }
 
-variable "aks_client_role_assignment_role" {
+variable "aks_client_network_role_assignment_role" {
   type    = "string"
-  default = "Contributor"
+  default = "Network Contributor"
 }
 
 variable "flux_recreate" {

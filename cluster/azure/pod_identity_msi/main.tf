@@ -13,8 +13,10 @@ resource "azurerm_user_assigned_identity" "podid" {
   location            = "${data.azurerm_resource_group.podid.location}"
 }
 
-resource "null_resource" "podid_msi" {
-  provisioner "local-exec" {
-    command = "az role assignment create --role \"Managed Identity Operator\" --assignee ${var.service_principal_id} --scope ${azurerm_user_assigned_identity.podid.id}"
-  }
+module "flexvol_role" {
+  source = "../role_assignment"
+
+  role_assignment_role = "Managed Identity Operator"
+  role_assignee = "${var.service_principal_id}"
+  role_scope = "${azurerm_user_assigned_identity.podid.id}"
 }

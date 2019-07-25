@@ -77,12 +77,13 @@ module "east_tm_endpoint" {
   }
 }
 
-# Create a role assignment with Contributor role for AKS client service principal object
-#   to join vnet/subnet/ip for load balancer/ingress controller
-resource "azurerm_role_assignment" "east_spra" {
-  principal_id         = "${var.service_principal_object_id}"
-  role_definition_name = "${var.aks_client_role_assignment_role}"
-  scope                = "${azurerm_resource_group.eastrg.id}"
+# Create a role assignment with Network Contributor role for AKS client service 
+# principal object to join vnet/subnet/ip for load balancer/ingress controller
+module "east_network_contributor_role" {
+  source = "../../azure/role_assignment"
+  role_assignment_role = "${var.aks_client_network_role_assignment_role}"
+  role_assignee = "${var.service_principal_id}"
+  role_scope = "${azurerm_resource_group.eastrg.id}"
 }
 
 module "east-pod-identity" {
@@ -101,7 +102,6 @@ module "east_flex_volume" {
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
-  service_principal_object_id = "${var.service_principal_object_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
   keyvault_name            = "${var.keyvault_name}"
