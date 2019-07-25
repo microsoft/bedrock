@@ -57,7 +57,7 @@ steps:
     BRANCH_NAME: $(Build.SourceBranchName)
 ```
 
-__Note__: If you would like to trigger the build on a branch other than master, add it to the above file under `trigger`
+__Note__: If you would like to trigger the build on a branch other than master, add it to the above file under `trigger`. See Azure Pipelines YAML reference [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops).
 
 ### 2. Create Pipeline
 
@@ -109,7 +109,7 @@ In Azure DevOps:
 
 ### 3. Configure Flux
 
-Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/README.md).
+Once you have your Azure Pipeline Build working, you will need to retrieve the SSH public key you used to [set up your cluster](../../cluster/common/flux/README.md).
 
 1. Copy the SSH key to your clipboard.
 

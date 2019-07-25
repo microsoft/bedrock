@@ -9,6 +9,16 @@ address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
 vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
 
+
+#--------------------------------------------------------------
+# CosmosDB & MongoDB variables
+#--------------------------------------------------------------
+
+# resource_group_name = "" # Piggybacking off global rg for CosmosDB
+cosmos_db_name = "my-cosmos-db-name"
+mongo_db_name = "my-mongo-db-name"
+# cosmos_db_offer_type = "Standard" - Optional field
+
 #--------------------------------------------------------------
 # Cluster variables
 #--------------------------------------------------------------
@@ -19,7 +29,7 @@ cluster_name = "azure-single-keyvault"
 dns_prefix = "azure-single-keyvault"
 
 gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-materialized"
-gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
+gitops_ssh_key = "./gitops_repo_key"
 
 resource_group_name = "azure-single-keyvault-rg"
 resource_group_location = "westus2"

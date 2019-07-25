@@ -1,15 +1,15 @@
-# azure-single-keyvault
+# azure-single-keyvault-cosmos-mongo-db-simple
 
-The `azure-single-keyvault` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault.
+The `azure-single-keyvault-cosmos-mongo-db-simple` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault. Additionally, it will deploy a CosmosDB configured for MongoDB.
 
 ## Getting Started
 
 1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
-2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure.
+2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure. This environment is dependant on a deployment on [azure-common-infra](../azure-common-infra), so configure and deploy azure-common-ifra prior to deploying `azure-single-keyvault-cosmos-mongo-db-simple`.
 
 ## Deploy the Environment
 
-The `azure-single-keyvault` uses the `backend.tfvars` and requires that you create another .tfvars if it does not already exists (e.g. `terraform.tfvars`).
+The `azure-single-keyvault-cosmos-mongo-db-simple` uses the `backend.tfvars` and requires that you create another .tfvars if it does not already exists (e.g. `terraform.tfvars`).
 
 `backend.tfvars` (**NOTE**: you can and should use the same `backend.tfvars` that was used to deploy `azure-common-infra`, but with a different key as shown below):
 
@@ -20,78 +20,63 @@ access_key="<storage account access key>"
 
 container_name="myContainer"
 
-key="tfstate-single-keyvault"
+key="tfstate-single-keyvault-cosmos-mongo-db-simple"
 ```
 
 If there is not a `terraform.tfvars`, create one that looks like this:
 
 ```
-#--------------------------------------------------------------
 
+#--------------------------------------------------------------
 # keyvault, vnet, and subnets are created seperately by azure-common-infra
+#--------------------------------------------------------------
+keyvault_name = "my-keyvault"
+keyvault_resource_group = "my-global-rg"
+
+address_space = "<cidr for cluster address space>"
+subnet_prefixes = "10.39.0.0/16"
+vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
+
 
 #--------------------------------------------------------------
-
-keyvault_name = "myVault"
-
-keyvault_resource_group = "myResourceGroup"
-
-address_space = "10.39.0.0/16"
-
-subnet_prefixes = "10.39.0.0/24"
-
-vnet_name = "myVnet"
-
-vnet_subnet_id = "/subscriptions/<subscriptionId>/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/mySubnet"
-
+# CosmosDB & MongoDB variables
 #--------------------------------------------------------------
 
+# resource_group_name = "" # Piggybacking off global rg for CosmosDB
+cosmos_db_name = "my-cosmos-db-name"
+mongo_db_name = "my-mongo-db-name"
+# cosmos_db_offer_type = "Standard" - Optional field
+
+#--------------------------------------------------------------
 # Cluster variables
-
 #--------------------------------------------------------------
-
 agent_vm_count = "3"
-
 agent_vm_size = "Standard_D4s_v3"
 
-cluster_name = "my-single-keyvault-cluster"
+cluster_name = "azure-single-keyvault-cosmos-mongo-db-simple"
+dns_prefix = "azure-single-keyvault-cosmos-mongo-db-simple"
 
-dns_prefix = "my-single-keyvault"
+gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-materialized"
+gitops_ssh_key = "./gitops_repo_key"
 
-gitops_ssh_url = "git@github.com:yradsmikham/fabrikate-production-cluster-demo-materialized"
-
-gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
-
-# you can create a new deploy key (e.g. ssh-keygen) to use as your gitops_ssh_key
-
-resource_group_name = "my-single-keyvault-rg"
-
+resource_group_name = "azure-single-keyvault-cosmos-mongo-db-simple-rg"
 resource_group_location = "westus2"
 
-ssh_public_key = "<ssh-public-key>"
+ssh_public_key = "<ssh public key>"
 
-service_principal_id = "<appId>"
-
-service_principal_secret = "<password>"
-
-subscription_id = "<subscriptionId>"
-
-tenant_id = "<tenantId>"
+service_principal_id = "<service principal id>"
+service_principal_secret = "<service principal secret>"
 
 #--------------------------------------------------------------
-
 # Optional variables - Uncomment to use
-
 #--------------------------------------------------------------
-
 # gitops_url_branch = "release-123"
-
 # gitops_poll_interval = "30s"
-
 # gitops_path = "prod"
+
 ```
 
-To deploy the azure-single-keyvault environment, run the following commands in your environment directory:
+To deploy the `azure-single-keyvault-cosmos-mongo-db-simple` environment, run the following commands in your environment directory:
 
 ```
 terraform init -backend-config=./backend.tfvars

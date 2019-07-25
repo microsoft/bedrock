@@ -13,6 +13,11 @@ variable "acr_enabled" {
   default = "true"
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 variable "cluster_name" {
   type = "string"
 }

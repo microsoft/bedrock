@@ -35,11 +35,6 @@ variable "kubeconfig_recreate" {
   default     = ""
 }
 
-variable "gc_enabled" {
-  type    = "string"
-  default = "true"
-}
-
 variable "gitops_poll_interval" {
   type    = "string"
   default = "5m"
@@ -102,4 +97,19 @@ variable "vnet_subnet_id" {
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
+
+variable "cosmos_db_name" {
+  description = "CosmosDB name"
+  type        = "string"
+}
+
+variable "cosmos_db_offer_type" {
+  type    = "string"
+  default = "Standard"
+}
+
+variable "mongo_db_name" {
+  description = "MongoDB name"
+  type        = "string"
 }

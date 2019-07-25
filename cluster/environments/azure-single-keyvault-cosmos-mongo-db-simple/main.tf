@@ -19,7 +19,6 @@ module "aks-gitops" {
   dns_prefix               = "${var.dns_prefix}"
   flux_recreate            = "${var.flux_recreate}"
   kubeconfig_recreate      = "${var.kubeconfig_recreate}"
-  gc_enabled               = "${var.gc_enabled}"
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_path}"
@@ -55,4 +54,14 @@ module "flex_volume" {
   keyvault_name            = "${var.keyvault_name}"
 
   kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"
+}
+
+# Deploy Cosmos/MongoDB
+module "cosmos_mongo_db" {
+  source = "../../azure/cosmos-mongo-db-simple"
+
+  global_rg            = "${var.keyvault_resource_group}"
+  cosmos_db_name       = "${var.cosmos_db_name}"
+  mongo_db_name        = "${var.mongo_db_name}"
+  cosmos_db_offer_type = "${var.cosmos_db_offer_type}"
 }
