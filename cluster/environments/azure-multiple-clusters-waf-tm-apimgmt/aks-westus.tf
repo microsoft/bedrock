@@ -15,7 +15,7 @@ locals {
 
 # Creates vnet
 module "west_vnet" {
-  source = "../../azure/vnet"
+  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
 
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
@@ -32,7 +32,7 @@ module "west_vnet" {
 
 # Creates aks cluster
 module "west_aks" {
-  source = "../../azure/aks"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
 
   resource_group_name      = "${local.west_rg_name}"
   resource_group_location  = "${local.west_rg_location}"
@@ -52,7 +52,7 @@ module "west_aks" {
 
 # Deploys flux in aks cluster
 module "west_flux" {
-  source = "../../common/flux"
+  source = "github.com/Microsoft/bedrock/cluster/common/flux"
 
   gitops_ssh_url       = "${var.gitops_ssh_url}"
   gitops_ssh_key       = "${var.gitops_ssh_key}"
