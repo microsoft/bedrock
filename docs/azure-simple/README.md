@@ -32,7 +32,7 @@ This document assumes one is running a current version of Ubuntu.  Windows users
 
 You can also turn on Windows Subsystem for Linux in settings:
 
-![Set up empty Flux repository](Win_Subsys_Linux.png)
+![Set up empty Flux repository](./images/Win_Subsys_Linux.png)
 
 Per Step 1. in [Prerequisites](#prerequisites) and [the Bedrock documentation](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), one must install `helm`, `terraform` and `kubectl`.  There are links for each in the documentation.
 
@@ -46,7 +46,7 @@ For information specific to your operating system, see the [Azure CLI install gu
 
 Create an empty git repository.  We will deploy the Bedrock environment using the empty repo and then add a Kubernetes manifest that defines a simple Web application.  The change to the repo will automatically update the deployment.
 
-![Set up empty Flux repository](empty_Repo.png)
+![Set up empty Flux repository](./images/empty_Repo.png)
 
 To use the [Flux repository](https://github.com/andrebriggs/sample_app_manifests/tree/master/prod), we must:
 
@@ -101,11 +101,11 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTNdGpnmztWRa8RofHl8dIGyNkEayNR6d7p2JtJ7+z
 
 Next, on the repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`.  Give your key a title and paste in the contents of your public key.  Important: allow the key to have `Write Access`.
 
-![enter key](addDeployKey.png)
+![enter key](./images/addDeployKey.png)
 
 Click "Add key", and you should see:
 
-![key result](deployKeyResult.png)
+![key result](./images/deployKeyResult.png)
 
 ## Create an Azure Service Principal
 
@@ -959,7 +959,7 @@ Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f p
 
 Now, push or drop the myWebApp.yaml file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  You can click `Upload files` on the GitHub repo page and drop the .yaml file:
 
-![Set up empty Flux repository](dropYAMLfile.png)
+![Set up empty Flux repository](./images/dropYAMLfile.png)
 
 Watch the running log for changes:
 
@@ -991,4 +991,4 @@ kube-system   metrics-server         ClusterIP      10.0.189.185   <none>       
 ```
 The EXTERNAL-IP, in this case is: 52.175.216.214.  Append the port and use http://52.175.216.214:8080 to run the service in a browser.
 
-![Deployed Web application running](WebAppRunning.png)
+![Deployed Web application running](./images/WebAppRunning.png)
