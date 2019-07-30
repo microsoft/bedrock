@@ -70,7 +70,7 @@ key="tfstate-common-infra"
 
 Make sure that you have also created a service principal with the following command and take note of the ID and tenant ID: 
 ```
-az ad sp create
+az ad sp create-for-rbac
 ```
 
 Create a `terraform.tfvars` if it does not already exist. It should include the following variables and look something like this:
