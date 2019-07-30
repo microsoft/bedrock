@@ -90,6 +90,6 @@ service_principal_id = "<appId"
 tenant_id = "<tenantId>"
 ```
 
-Execute `terraform init -backend-config=./backend.tfvars`.
+Execute `terraform init -backend-config="path=./backend.tfvars"`.
 
 If `terraform init` succeeds, execute `terraform apply -var-file=./terraform.tfvars`.
