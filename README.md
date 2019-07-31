@@ -23,7 +23,7 @@ A Bedrock deployment follows three general steps at a high level:
 
 Our cluster creation templates include deployments of a [cloud-native stack](https://github.com/timfpark/fabrikate-cloud-native) by default.  This is intended to be replaced with your own resource manifest repo, but you can also take advantage of this by jumping directly to step #3 if you'd like to give Bedrock a try before defining your own deployment.
 
-The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-simple/readme.md) deployment. 
+The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-simple/README.md) deployment. 
 
 ## Community
 
