@@ -33,6 +33,7 @@ module "flux" {
   kubeconfig_filename  = "${var.kubeconfig_filename}"
   flux_clone_dir       = "${var.cluster_name}-flux"
   acr_enabled          = "${var.acr_enabled}"
+  gc_enabled           = "${var.gc_enabled}"
 }
 
 module "kubediff" {
