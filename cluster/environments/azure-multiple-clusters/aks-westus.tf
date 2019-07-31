@@ -54,6 +54,7 @@ module "west_aks_gitops" {
   dns_ip                   = "${var.west_dns_ip}"
   docker_cidr              = "${var.west_docker_cidr}"
   kubeconfig_filename      = "${local.west_kubeconfig_filename}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
