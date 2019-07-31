@@ -32,7 +32,8 @@ module "west_vnet" {
 
 # Creates aks cluster
 module "west_aks" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  //source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  source = "../../azure/aks"
 
   resource_group_name      = "${local.west_rg_name}"
   resource_group_location  = "${local.west_rg_location}"
