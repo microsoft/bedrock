@@ -16,7 +16,6 @@ resource "random_id" "workspace" {
 }
 
 resource "azurerm_log_analytics_workspace" "workspace" {
-  count               = "${var.oms_agent_enabled == "true" ? 1 : 0}"
   name                = "bedrock-k8s-workspace-${random_id.workspace.hex}"
   location            = "${azurerm_resource_group.cluster.location}"
   resource_group_name = "${azurerm_resource_group.cluster.name}"
@@ -24,7 +23,6 @@ resource "azurerm_log_analytics_workspace" "workspace" {
 }
 
 resource "azurerm_log_analytics_solution" "solution" {
-  count                 = "${var.oms_agent_enabled == "true" ? 1 : 0}"
   solution_name         = "ContainerInsights"
   location              = "${azurerm_resource_group.cluster.location}"
   resource_group_name   = "${azurerm_resource_group.cluster.name}"
