@@ -1,4 +1,4 @@
-# Bedrock documentation v0.0.0
+# Bedrock documentation v1.0.0
 
 Bedrock Documents
 --------
