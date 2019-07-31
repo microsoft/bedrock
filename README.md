@@ -17,7 +17,7 @@ Bedrock also provides automation for deploying Kubernetes clusters with Terrafor
 
 A Bedrock deployment follows three general steps at a high level:
 
-1. [Create and deploy azure-simple](./docs/azure-simple/readme.md) a Kubernetes environment that uses Flux.
+1. [Create and deploy azure-simple](./docs/azure-simple/README.md), a Kubernetes environment that uses Flux.
 2. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition.
 3. [Deploy a CI/CD pipeline](./gitops) to build resource manifests for this deployment. 
 
