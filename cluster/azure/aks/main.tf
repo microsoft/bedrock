@@ -11,6 +11,7 @@ resource "random_id" "workspace" {
   keepers = {
     group_name = "${azurerm_resource_group.cluster.name}"
   }
+
   byte_length = 8
 }
 
@@ -76,9 +77,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   addon_profile {
-      oms_agent {
-        enabled                    = "${var.oms_agent_enabled}"
-        log_analytics_workspace_id = "${azurerm_log_analytics_workspace.workspace.id}"
-        }
+    oms_agent {
+      enabled                    = "${var.oms_agent_enabled}"
+      log_analytics_workspace_id = "${azurerm_log_analytics_workspace.workspace.id}"
     }
+  }
 }
