@@ -41,6 +41,11 @@ variable "acr_enabled" {
   default = "true"
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 # generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
 # or use existing ssh public/private key pair
 # add deploy key in gitops repo using public key with read/write access

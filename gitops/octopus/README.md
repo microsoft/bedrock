@@ -5,4 +5,4 @@ This section provides examples of how to configure Octopus Deploy to be your CD 
 Examples:
 
 1. [Manifest Generation Pipeline](OctopusDeploy.md)
-2. [Image Tage Release Pipeline](ImageTageRelease.md)
+2. [Image Tag Release Pipeline](ImageTageRelease.md)

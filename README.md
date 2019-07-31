@@ -29,6 +29,8 @@ The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-
 
 [Please join us on Slack](https://join.slack.com/t/bedrockco/shared_invite/enQtNjIwNzg3NTU0MDgzLTdiZGY4ZTM5OTM4MWEyM2FlZDA5MmE0MmNhNTQ2MGMxYTY2NGYxMTVlZWFmODVmODJlOWU0Y2U2YmM1YTE0NGI) for discussion and/or questions.
 
+Also read the [Bedrock FAQ](https://github.com/Microsoft/bedrock/wiki/FAQ) for answers to common questions.
+
 ## Contributing
 
 We do not claim to have all the answers and would greatly appreciate your ideas and pull requests.

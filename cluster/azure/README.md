@@ -7,7 +7,7 @@ Follow these steps to create an Azure Kubernetes Service (AKS) cluster using Ter
 - [Install required tools](#install-required-tools)
 - [Set up GitOps repository for Flux](../common/flux/)
 - [Understand Service Principal Requirements](./service-principal)
-- [Azure Cluster Deployment](##Azure-Cluster-Deployment)
+- [Azure Cluster Deployment](#Azure-Cluster-Deployment)
 
 For ongoing maintenance of an AKS cluster, take a look [here](./README-maintenance.md).
 
@@ -176,7 +176,7 @@ In order to setup an Azure backend, you need an Azure Storage account.  If you n
 > terraform apply -var 'name=<storage account name>' -var 'location=<storage account location>' -var 'resource_group_name=<storage account resource group>'
 ```
 
-where `storage account name` is the name of the storage account to store the Terraform state, `storage account location` is the Azure region the storage account should be created in, and `storage account resource group` is the name of the resource group to create the storage account in.  
+where `storage account name` is the name of the storage account to store the Terraform state, `storage account location` is the Azure region the storage account should be created in, and `storage account resource group` is the name of the resource group to create the storage account in.
 
 If there is already a pre-existing storage account, then retrieve the equivalent information for the existing account.
 
@@ -201,7 +201,7 @@ $ KUBECONFIG=./output/bedrock_kube_config:~/.kube/config kubectl config view --f
 It is also possible to use the config that was generated directly.  For instance, to list all the pods within the `flux` namespace, run the following:
 
 ```
-$ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux` 
+$ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux`
 ```
 
 ### Verify that your AKS cluster is healthy

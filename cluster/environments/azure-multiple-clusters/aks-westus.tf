@@ -38,6 +38,7 @@ module "west_aks_gitops" {
   cluster_name             = "${var.cluster_name}_westus"
   dns_prefix               = "${var.dns_prefix}"
   flux_recreate            = "${var.flux_recreate}"
+  gc_enabled               = "${var.gc_enabled}"
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_west_path}"
@@ -57,7 +58,7 @@ module "west_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
+  source = "../../azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.west_rg_name}"
   resource_location                   = "${local.west_rg_location}"
