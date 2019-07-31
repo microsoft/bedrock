@@ -14,9 +14,7 @@ Fabrikate Documents
 Various
 --------
 * [Bedrock pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/PipelineThinking.md)
-* [GitOps](https://github.com/microsoft/bedrock/tree/master/gitops/azure-devops)
-* [Image Tag Release](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ImageTagRelease.md)
-* [Azure DevOps](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/README.md)
+* [Image Tag Release Pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ImageTagRelease.md)
 
 Slack Discussion Forum
 --------
