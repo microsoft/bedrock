@@ -47,6 +47,7 @@ module "central_aks" {
   service_principal_secret = "${var.service_principal_secret}"
   kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # Deploys flux in aks cluster

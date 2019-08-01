@@ -48,4 +48,5 @@ module "aks-gitops" {
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
   network_policy           = "${var.network_policy}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }

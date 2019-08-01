@@ -68,3 +68,8 @@ variable "keyvault_name" {
 variable "keyvault_resource_group" {
   type = "string"
 }
+
+variable "oms_agent_enabled" {
+  type    = "string"
+  default = "false"
+}
