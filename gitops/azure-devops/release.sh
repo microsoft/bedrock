@@ -19,8 +19,10 @@ git_connect
 echo "FAB SET"
 if [[ -n $FAB_ENV_NAME ]]
 then
+    echo "fab set --environment "$FAB_ENV_NAME" --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE""
     fab set --environment "$FAB_ENV_NAME" --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
 else
+    echo "fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE""
     fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
 fi
 
