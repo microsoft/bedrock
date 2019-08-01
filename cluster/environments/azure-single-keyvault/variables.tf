@@ -103,3 +103,8 @@ variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
 }
+
+variable "oms_agent_enabled" {
+  type    = "string"
+  default = "false"
+}

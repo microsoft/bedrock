@@ -31,7 +31,8 @@ module "central_vnet" {
 
 # Creates aks cluster
 module "central_aks" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  //source = "github.com/Microsoft/bedrock/cluster/azure/aks"
+  source = "../../azure/aks"
 
   resource_group_name      = "${local.central_rg_name }"
   resource_group_location  = "${local.central_rg_location}"
@@ -47,6 +48,7 @@ module "central_aks" {
   service_principal_secret = "${var.service_principal_secret}"
   kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # Deploys flux in aks cluster

@@ -10,7 +10,8 @@ resource "azurerm_resource_group" "cluster_rg" {
 }
 
 module "aks-gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  //source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -32,6 +33,7 @@ module "aks-gitops" {
   ssh_public_key           = "${var.ssh_public_key}"
   vnet_subnet_id           = "${var.vnet_subnet_id}"
   network_policy           = "${var.network_policy}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # Create Azure Key Vault role for SP
