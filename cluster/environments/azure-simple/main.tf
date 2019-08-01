@@ -23,8 +23,7 @@ module "vnet" {
 }
 
 module "aks-gitops" {
-  //source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
-  source = "../../azure/aks-gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -49,5 +48,4 @@ module "aks-gitops" {
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
   network_policy           = "${var.network_policy}"
-  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }

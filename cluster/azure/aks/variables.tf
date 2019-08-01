@@ -100,9 +100,3 @@ variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
 }
-
-variable "oms_agent_enabled" {
-  default     = "false"
-  description = "Enable Azure Monitoring for AKS"
-  type        = "string"
-}

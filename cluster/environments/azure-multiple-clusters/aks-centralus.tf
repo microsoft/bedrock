@@ -30,8 +30,7 @@ module "central_vnet" {
 
 # Creates central aks cluster, flux, kubediff
 module "central_aks_gitops" {
-  //source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
-  source = "../../azure/aks-gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -55,7 +54,6 @@ module "central_aks_gitops" {
   dns_ip                   = "${var.central_dns_ip}"
   docker_cidr              = "${var.central_docker_cidr}"
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
-  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # create a static public ip and associate with traffic manger endpoint

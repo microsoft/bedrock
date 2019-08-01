@@ -32,8 +32,7 @@ module "west_vnet" {
 
 # Creates aks cluster
 module "west_aks" {
-  //source = "github.com/Microsoft/bedrock/cluster/azure/aks"
-  source = "../../azure/aks"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
 
   resource_group_name      = "${local.west_rg_name}"
   resource_group_location  = "${local.west_rg_location}"
@@ -49,7 +48,6 @@ module "west_aks" {
   service_principal_secret = "${var.service_principal_secret}"
   kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.west_kubeconfig_filename}"
-  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # Deploys flux in aks cluster
