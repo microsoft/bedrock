@@ -50,8 +50,3 @@ variable "flux_recreate" {
   type        = "string"
   default     = ""
 }
-
-variable "oms_agent_enabled" {
-  type    = "string"
-  default = "false"
-}

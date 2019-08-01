@@ -30,8 +30,7 @@ module "west_vnet" {
 
 # Creates west aks cluster, flux, kubediff
 module "west_aks_gitops" {
-  //source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
-  source = "../../azure/aks-gitops"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -55,7 +54,6 @@ module "west_aks_gitops" {
   dns_ip                   = "${var.west_dns_ip}"
   docker_cidr              = "${var.west_docker_cidr}"
   kubeconfig_filename      = "${local.west_kubeconfig_filename}"
-  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # create a static public ip and associate with traffic manger endpoint

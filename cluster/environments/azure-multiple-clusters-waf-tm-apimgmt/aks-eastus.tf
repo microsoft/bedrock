@@ -32,8 +32,7 @@ module "east_vnet" {
 
 # Creates aks cluster
 module "east_aks" {
-  //source = "github.com/Microsoft/bedrock/cluster/azure/aks"
-  source = "../../azure/aks"
+  source = "github.com/Microsoft/bedrock/cluster/azure/aks"
 
   resource_group_name      = "${local.east_rg_name }"
   resource_group_location  = "${local.east_rg_location}"
@@ -49,7 +48,6 @@ module "east_aks" {
   service_principal_secret = "${var.service_principal_secret}"
   kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.east_kubeconfig_filename}"
-  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # Deploys flux in aks cluster
