@@ -15,7 +15,7 @@ locals {
 
 # Creates central vnet
 module "central_vnet" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   resource_group_name     = "${local.central_rg_name }"
   resource_group_location = "${local.central_rg_location}"
@@ -30,7 +30,7 @@ module "central_vnet" {
 
 # Creates central aks cluster, flux, kubediff
 module "central_aks_gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -85,7 +85,7 @@ resource "azurerm_role_assignment" "central_spra" {
 
 # Deploy central keyvault flexvolume
 module "central_flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"

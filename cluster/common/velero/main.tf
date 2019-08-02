@@ -1,5 +1,5 @@
 module "common-provider" {
-  source = "github.com/Microsoft/bedrock/cluster/common/provider"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/common/provider"
 }
 
 resource "null_resource" "velero_restore" {
