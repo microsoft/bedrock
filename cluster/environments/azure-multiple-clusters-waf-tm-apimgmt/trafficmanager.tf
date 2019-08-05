@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "tmrg" {
 }
 
 module "trafficmanager" {
-  source = "../../azure/tm-profile"
+  source = "github.com/Microsoft/bedrock/cluster/azure/tm-profile"
 
   resource_group_name              = "${azurerm_resource_group.tmrg.name}"
   resource_group_location          = "${azurerm_resource_group.tmrg.location}"

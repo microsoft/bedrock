@@ -68,7 +68,7 @@ module "west_flux" {
 # create a dynamic public ip and associate with traffic manger endpoint
 
 module "west_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
+  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${azurerm_resource_group.westrg.name}"
   resource_location                   = "${local.west_rg_location}"
