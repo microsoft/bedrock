@@ -65,7 +65,7 @@ module "central_flux" {
 }
 
 module "central_tm_endpoint" {
-  source = "../../azure/tm-endpoint-ip"
+  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${azurerm_resource_group.centralrg.name}"
   resource_location                   = "${local.central_rg_location}"
