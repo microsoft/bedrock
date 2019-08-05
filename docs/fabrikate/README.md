@@ -6,7 +6,7 @@ The container is shown in the [Quickstart: Deploy an Azure Kubernetes Service (A
 A Walkthrough Deploying a Bedrock Environment](../azure-simple/README.md). 
 
 ## Manifest
-The target manifest for Fabrikate is shown under the heading [Run the application](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#run-the-application).   Copy the `.yaml` file provided in this section and create a file accessible to bash or Windows Subsystem for Linux (WSL Ubuntu).  
+The target manifest for Fabrikate is shown under the heading [Run the application](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#run-the-application).   Copy the `.yaml` file provided in this section and create a file accessible in bash or Windows Subsystem for Linux (WSL Ubuntu).  
 
 ## Fabrikate
 Download the latest version of Fabrikate CLI on your local machine from [releases](https://github.com/microsoft/fabrikate/releases). Unzip the appropriate binary and put fab in your path. The only tools you need to have installed are the fab CLI tool, helm, and git.
@@ -47,10 +47,10 @@ INFO[24-07-2019 12:04:49] 🙌  Finished generate
 When these commands finish, there will be a new directory named `generated` with a subdirectory named `common` that contains the manifest file you can use to deploy the application to a Bedrock Kubernetes cluster.
 
 ## Deployment
-Flux automation makes it easy to upgrade services or infrastructure deployed by Bedrock.  Flux watches a repo designated in the deployed .tfvars file.  See [Set Up Flux Manifest Repository](../azure-simple/README#set-up-flux-manifest-repository) and [Setup Terraform Deployment Variables](../azure-simple/README#setup-terraform-deployment-variables).
+Flux automation makes it easy to upgrade services or infrastructure deployed by Bedrock.  Flux monitors a repo designated in the deployed .tfvars file.  See [Set Up Flux Manifest Repository](../azure-simple/README#set-up-flux-manifest-repository) and [Set Up Terraform Deployment Variables](../azure-simple/README.md#setup-terraform-deployment-variables).
 
 ## Deploy an update using Kubernetes manifest
-In this example Flux watches the repo described under the heading [Set Up Flux Manifest Repository](../azure-simple/README#set-up-flux-manifest-repository).  Now we will add the `azure-vote` application to the running deployment by pushing the manifest created by Fabrikate to the repo.  
+In this example Flux monitors the repo described under the heading [Set Up Flux Manifest Repository](../azure-simple/README#set-up-flux-manifest-repository).  Now add the `azure-vote` application to the running deployment by pushing the manifest proviously created by Fabrikate to the repo.  
 
 The .yaml specification describes the service `azure-vote` and type: `LoadBalancer`.  It specifies the source of the Docker image that contains it.  The container will be accessible through the load balancer.
 
@@ -61,7 +61,7 @@ Get your Flux namespace by running: `KUBECONFIG=./output/bedrock_kube_config kub
 
 Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f flux-6ccd98596b-v4r7d --namespace=flux`.  This will display a running log of the deployment.
 
-Now push the azure-vote.yaml file that Fabrikate created in the `/generated/common` directory to the repo specified in the `.tfvars` file, or simply drop it to the GitHub repo.  Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.  
+Now push the azure-vote.yaml file that Fabrikate created in the `/generated/common` directory to the repo specified in the `.tfvars` file.  Or, simply drop it to the GitHub repo.  Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.  
 
 Watch the running log for changes:
 

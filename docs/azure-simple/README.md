@@ -8,7 +8,7 @@ This walkthrough consists of the following steps:
 2. [Create an Azure Service Principal](#create-an-azure-service-principal)
 3. [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
 4. [Clone the Bedrock Repository](#clone-the-bedrock-repository)
-5. [Setup Terraform Deployment Variables](#setup-terraform-deployment-variables)
+5. [Set up Terraform Deployment Variables](#setup-terraform-deployment-variables)
 6. [Deploy the Template](#deploy-the-template)
 7. [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
 8. [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
@@ -232,7 +232,7 @@ drwxr-xr-x   3 jmspring  staff   96 Jun 12 09:11 minikube
 
 Each of the directories represent a common pattern supported within Bedrock.  For more information see the [Bedrock github repo](https://github.com/microsoft/bedrock/tree/master/cluster/azure).  
 
-## Setup Terraform Deployment Variables
+## Set Up Terraform Deployment Variables
 
 As mentioned, we will be using `azure-simple`. Changing to that directory and doing an `ls -l` command reveals:
 
