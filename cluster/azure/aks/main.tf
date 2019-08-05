@@ -46,4 +46,11 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     client_id     = "${var.service_principal_id}"
     client_secret = "${var.service_principal_secret}"
   }
+
+  azure_active_directory {
+    server_app_id = "${var.server_app_id}"
+    server_app_secret = "${var.server_app_secret}"
+    client_app_id = "${var.client_app_id}"
+    tenant_id = "${var.tenant_id}"
+  }
 }
