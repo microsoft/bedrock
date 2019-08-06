@@ -87,5 +87,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       enabled                    = "${var.oms_agent_enabled}"
       log_analytics_workspace_id = "${azurerm_log_analytics_workspace.workspace.id}"
     }
+
+    http_application_routing {
+      enabled = "${var.enable_http_application_routing}"
+    }
   }
 }
