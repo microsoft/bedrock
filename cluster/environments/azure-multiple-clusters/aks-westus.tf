@@ -59,7 +59,7 @@ module "west_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.west_rg_name}"
   resource_location                   = "${local.west_rg_location}"
