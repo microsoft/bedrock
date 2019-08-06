@@ -3,7 +3,6 @@ provider "azurerm" {
 }
 
 provider "null" {
-    version = "~>2.2.0"
 }
 
 terraform {
