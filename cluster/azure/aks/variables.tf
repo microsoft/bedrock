@@ -139,7 +139,7 @@ variable "enable_azure_monitoring" {
 
 variable "enable_dev_spaces" {
   type = "string"
-  default = "true"
+  default = "false"
 }
 
 variable "space_name" {
