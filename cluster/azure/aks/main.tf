@@ -67,10 +67,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     docker_bridge_cidr = "${var.docker_cidr}"
   }
 
-  role_based_access_control {
-    enabled = true
-  }
-
   service_principal {
     client_id     = "${var.service_principal_id}"
     client_secret = "${var.service_principal_secret}"
