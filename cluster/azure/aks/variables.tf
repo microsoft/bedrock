@@ -126,3 +126,23 @@ variable "oms_agent_enabled" {
   description = "Enable Azure Monitoring for AKS"
   type        = "string"
 }
+
+variable "enable_http_application_routing" {
+  type = "string"
+  default = "true"
+}
+
+variable "enable_azure_monitoring" {
+  type = "string"
+  default = "true"
+}
+
+variable "enable_dev_spaces" {
+  type = "string"
+  default = "true"
+}
+
+variable "space_name" {
+  type = "string"
+  default = "bedrock-lab"
+}
