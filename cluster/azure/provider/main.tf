@@ -1,15 +1,13 @@
 provider "azurerm" {
-    version = "~>1.28.0"
-}
-
-provider "null" {
-}
-
-terraform {
-  required_version = "~> 0.12.6"
+  version = "~>1.29.0"
 }
 
 # Needed for the traffic manager role assignment
 provider "azuread" {
-  version = "~>0.3.0"
+  version = "~>0.3.1"
+}
+
+# common modules
+module "common-provider" {
+  source = "../../common/provider"
 }
