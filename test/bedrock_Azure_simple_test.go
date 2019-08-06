@@ -9,6 +9,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/otiai10/copy"
 )
 
 func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
@@ -18,7 +19,8 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	uniqueID := random.UniqueId()
 	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 
-	addressSpace := "10.39.0.0/16"
+	subnetPrefixes := []string{"10.10.1.0/24"}
+	addressSpace := "10.10.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	dnsprefix := k8sName + "-dns"
@@ -31,9 +33,13 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	vnetName := k8sName + "-vnet"
 
+	//Copy env directories as needed to avoid conflicting with other running tests
+	azureSimpleInfraFolder := "../cluster/test-temp-envs/azure-simple-" + k8sName
+	copy.Copy("../cluster/environments/azure-simple", azureSimpleInfraFolder)
+
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
-		TerraformDir: "../cluster/environments/azure-simple",
+		TerraformDir: azureSimpleInfraFolder,
 		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":            addressSpace,
@@ -47,7 +53,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
 			"subnet_name":              subnetName,
-			"subnet_prefix":            addressSpace,
+			"subnet_prefixes":          subnetPrefixes,
 			"subscription_id":          subscriptionid,
 			"tenant_id":                tenantid,
 			"vnet_name":                vnetName,
@@ -59,7 +65,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	terraform.InitAndApply(t, tfOptions)
 
 	// Obtain Kube_config file from module output
-	os.Setenv("KUBECONFIG", "../cluster/environments/azure-simple/output/bedrock_kube_config")
+	os.Setenv("KUBECONFIG", azureSimpleInfraFolder+"/output/bedrock_kube_config")
 	kubeConfig := os.Getenv("KUBECONFIG")
 
 	options := k8s.NewKubectlOptions("", kubeConfig)

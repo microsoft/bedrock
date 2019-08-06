@@ -55,7 +55,7 @@ variable "agent_vm_size" {
 
 variable "kubernetes_version" {
   type    = "string"
-  default = "1.12.6"
+  default = "1.13.7"
 }
 
 variable "admin_user" {
@@ -114,4 +114,15 @@ variable "dns_ip" {
 variable "docker_cidr" {
   default     = "172.17.0.1/16"
   description = "IP address (in CIDR notation) used as the Docker bridge IP address on nodes. Default of 172.17.0.1/16."
+}
+
+variable "network_policy" {
+  default     = "azure"
+  description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
+
+variable "oms_agent_enabled" {
+  default     = "false"
+  description = "Enable Azure Monitoring for AKS"
+  type        = "string"
 }

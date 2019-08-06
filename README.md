@@ -1,6 +1,7 @@
 # Bedrock
 
 [![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/bedrock)](https://goreportcard.com/report/github.com/microsoft/bedrock)
 
 This project is our humble attempt to combine the collective wisdom of the cloud native community for building best practice cloud native Kubernetes clusters, based on real world experiences deploying and operating applications and Kubernetes clusters.
 
@@ -16,17 +17,19 @@ Bedrock also provides automation for deploying Kubernetes clusters with Terrafor
 
 A Bedrock deployment follows three general steps at a high level:
 
-1. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition for your deployment.
-2. [Deploy a CI/CD pipeline](./gitops) to build resource manifests from this deployment definition.
-3. [Create and deploy](./cluster) a Kubernetes environment with Flux.
+1. [Create and deploy azure-simple](./docs/azure-simple/README.md), a Kubernetes environment that uses Flux.
+2. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition.
+3. [Deploy a CI/CD pipeline](./gitops) to build resource manifests for this deployment. 
 
 Our cluster creation templates include deployments of a [cloud-native stack](https://github.com/timfpark/fabrikate-cloud-native) by default.  This is intended to be replaced with your own resource manifest repo, but you can also take advantage of this by jumping directly to step #3 if you'd like to give Bedrock a try before defining your own deployment.
 
-The easiest way to try Bedrock is to start with our [azure-simple](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/azure-simple) deployment template or with [minikube](https://github.com/Microsoft/bedrock/tree/master/cluster/environments/minikube) to try it locally.   
+The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-simple/README.md) deployment. 
 
 ## Community
 
-[Please join us on Slack](https://publicslack.com/slacks/https-bedrockco-slack-com/invites/new) for discussion and/or questions.
+[Please join us on Slack](https://join.slack.com/t/bedrockco/shared_invite/enQtNjIwNzg3NTU0MDgzLTdiZGY4ZTM5OTM4MWEyM2FlZDA5MmE0MmNhNTQ2MGMxYTY2NGYxMTVlZWFmODVmODJlOWU0Y2U2YmM1YTE0NGI) for discussion and/or questions.
+
+Also read the [Bedrock FAQ](https://github.com/Microsoft/bedrock/wiki/FAQ) for answers to common questions.
 
 ## Contributing
 

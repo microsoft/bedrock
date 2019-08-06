@@ -2,7 +2,7 @@ resource "azurerm_public_ip" "pip" {
   name                = "${var.public_ip_name}-ip"
   location            = "${var.resource_location}"
   resource_group_name = "${var.resource_group_name}"
-  allocation_method   = "Static"
+  allocation_method   = "${var.allocation_method}"
   domain_name_label   = "${var.public_ip_name}-dns"
   tags                = "${var.tags}"
 }
@@ -24,8 +24,8 @@ resource "null_resource" "ip_address" {
     command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && echo ${azurerm_public_ip.pip.ip_address} > ${var.output_directory}/${var.ip_address_out_filename}"
   }
 
-  triggers {
-    ipaddress_to_disk  = "${var.ipaddress_to_disk}"
+  triggers = {
+    ipaddress_to_disk = "${var.ipaddress_to_disk}"
   }
 
   depends_on = ["azurerm_public_ip.pip"]

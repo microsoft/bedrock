@@ -1,4 +1,6 @@
-# Source build.sh
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1091
 . build.sh --source-only
 
 # Initialization
@@ -14,18 +16,20 @@ download_fab
 # Clone HLD repo
 git_connect
 
-# Fabrikate (Part 2)
-install_fab
-
-echo "FAB SET"
-fab set --subcomponent $SUBCOMPONENT $YAML_PATH=$YAML_PATH_VALUE
+if [[ -n $FAB_ENV_NAME ]]
+then
+    echo "fab set --environment "$FAB_ENV_NAME" --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE""
+    fab set --environment "$FAB_ENV_NAME" --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
+else
+    echo "fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE""
+    fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
+fi
 
 echo "GIT STATUS"
 git status
 
 echo "GIT ADD"
-#git add config/common.yaml
-git add .
+git add -A
 
 # Set git identity
 git config user.email "admin@azuredevops.com"

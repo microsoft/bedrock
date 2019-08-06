@@ -1,4 +1,3 @@
-
 output "keyvault_id" {
   description = "The id of the Keyvault"
   value       = "${azurerm_key_vault.keyvault.id}"

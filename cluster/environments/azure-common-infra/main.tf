@@ -1,6 +1,10 @@
-#terraform {
-#  backend "azurerm" {}
-#}
+terraform {
+  backend "azurerm" {}
+}
+
+module "provider" {
+  source = "github.com/Microsoft/bedrock/cluster/azure/provider"
+}
 
 resource "azurerm_resource_group" "global_rg" {
   name     = "${var.global_resource_group_name}"

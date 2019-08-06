@@ -10,18 +10,18 @@ variable "resource_group_name" {
   type = "string"
 }
 
-variable "resource_group_location"{
-  type="string"
+variable "resource_group_location" {
+  type = "string"
 }
 
-variable "traffic_manager_monitor_protocol"{
-  type="string"
-  default="http"
+variable "traffic_manager_monitor_protocol" {
+  type    = "string"
+  default = "http"
 }
 
-variable "traffic_manager_monitor_port"{
-  type="string"
-  default="80"
+variable "traffic_manager_monitor_port" {
+  type    = "string"
+  default = "80"
 }
 
 variable "tags" {

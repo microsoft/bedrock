@@ -18,7 +18,10 @@ module "aks" {
   service_cidr             = "${var.service_cidr}"
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
-  kubeconfig_recreate      = ""
+  kubeconfig_recreate      = "${var.kubeconfig_recreate}"
+  kubeconfig_filename      = "${var.kubeconfig_filename}"
+  network_policy           = "${var.network_policy}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 module "flux" {
@@ -28,10 +31,14 @@ module "flux" {
   gitops_ssh_key       = "${var.gitops_ssh_key}"
   gitops_path          = "${var.gitops_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
+  gitops_url_branch    = "${var.gitops_url_branch}"
+  enable_flux          = "${var.enable_flux}"
   flux_recreate        = "${var.flux_recreate}"
   kubeconfig_complete  = "${module.aks.kubeconfig_done}"
+  kubeconfig_filename  = "${var.kubeconfig_filename}"
   flux_clone_dir       = "${var.cluster_name}-flux"
   acr_enabled          = "${var.acr_enabled}"
+  gc_enabled           = "${var.gc_enabled}"
 }
 
 module "kubediff" {

@@ -23,11 +23,28 @@ At a high level, the steps for an operator of a Kubernetes cluster to make an op
 
 ## Getting Started
 
+Learning about how we think about designing GitOps Pipelines:
+
+* [GitOps Pipeline Design](./PipelineThinking.md)
+
 We provide instructions and automation for deploying a GitOps CI/CD pipeline for the following platforms:
 
 * [Azure Devops](./azure-devops)
+* [Octopus Deploy](./octopus)
+* [TeamCity](./teamcity)
+* [Jenkins](./jenkins)
 
 Pull requests would be gratefully accepted for other CI/CD platforms.
+
+## Beyond Getting Started
+
+Got through the examples? Learn about how to refine your GitOps pipelines for production use.
+
+* [GitOps Best Practices](BestPractices.md) 
+
+## Additional Questions?
+
+Check out the [wiki](https://github.com/Microsoft/bedrock/wiki/FAQ#gitops) pages. 
 
 ### Additional Resources
 + https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/use-git-microsoft

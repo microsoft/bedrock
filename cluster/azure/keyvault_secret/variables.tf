@@ -1,13 +1,13 @@
 variable "vault_uri" {
-    type = "string"
+  type = "string"
 }
 
 variable "secret_name" {
-    type = "string"
-    default = ""
+  type    = "string"
+  default = ""
 }
 
 variable "secret_value" {
-    type = "string"
-    default = ""
+  type    = "string"
+  default = ""
 }
