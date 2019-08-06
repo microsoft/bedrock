@@ -15,26 +15,6 @@ resource "random_id" "workspace" {
   byte_length = 8
 }
 
-resource "azurerm_log_analytics_workspace" "workspace" {
-  name                = "bedrock-k8s-workspace-${random_id.workspace.hex}"
-  location            = "${azurerm_resource_group.cluster.location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
-  sku                 = "PerGB2018"
-}
-
-resource "azurerm_log_analytics_solution" "solution" {
-  solution_name         = "ContainerInsights"
-  location              = "${azurerm_resource_group.cluster.location}"
-  resource_group_name   = "${azurerm_resource_group.cluster.name}"
-  workspace_resource_id = "${azurerm_log_analytics_workspace.workspace.id}"
-  workspace_name        = "${azurerm_log_analytics_workspace.workspace.name}"
-
-  plan {
-    publisher = "Microsoft"
-    product   = "OMSGallery/ContainerInsights"
-  }
-}
-
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
   location            = "${azurerm_resource_group.cluster.location}"
