@@ -129,17 +129,17 @@ variable "oms_agent_enabled" {
 
 variable "enable_http_application_routing" {
   type = "string"
-  default = "true"
+  default = "false"
 }
 
 variable "enable_azure_monitoring" {
   type = "string"
-  default = "true"
+  default = "false"
 }
 
 variable "enable_dev_spaces" {
   type = "string"
-  default = "true"
+  default = "false"
 }
 
 variable "space_name" {
