@@ -27,7 +27,6 @@ do
  c) CURRENT_VERSION=${OPTARG};;
  v) NEW_VERSION=${OPTARG};;
  s) SAVE_TMP_DIR=true;;
- o) CHECKOUT_VERSION=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -79,18 +78,10 @@ if [ "$CURRENT_VERSION" != "master" ]; then
         exit 1
     fi
 
-    git checkout $CHECKOUT_VERSION
+    git checkout $CURRENT_VERSION
     if [ $? -ne 0 ]; then
         echo "unable to checkout $CURRENT_VERSION"
         exit 1
-    fi
-else
-    if [ ! -z "$CHECKOUT_VERSION" ]; then
-        git checkout $CHECKOUT_VERSION
-        if [ $? -ne 0 ]; then
-            echo "unable to checkout $CURRENT_VERSION"
-            exit 1
-	fi
     fi
 fi
 
