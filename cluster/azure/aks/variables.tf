@@ -139,10 +139,10 @@ variable "enable_azure_monitoring" {
 
 variable "enable_dev_spaces" {
   type = "string"
-  default = "false"
+  default = "true"
 }
 
 variable "space_name" {
   type = "string"
-  default = "azds"
+  default = "bedrock-lab"
 }
