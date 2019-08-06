@@ -75,10 +75,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     client_id     = "${var.service_principal_id}"
     client_secret = "${var.service_principal_secret}"
   }
-  
-  role_based_access_control {
-    enabled = true
 
+  role_based_access_control {
     azure_active_directory {
       client_app_id     = "${var.client_app_id}"
       server_app_id     = "${var.server_app_id}"
