@@ -152,8 +152,3 @@ variable "space_name" {
   type    = "string"
   default = "bedrock-lab"
 }
-
-variable "dashboard_cluster_role" {
-  type = "string"
-  default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
-}
