@@ -67,29 +67,19 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     docker_bridge_cidr = "${var.docker_cidr}"
   }
 
+  role_based_access_control {
+    enabled = true
+  }
+
   service_principal {
     client_id     = "${var.service_principal_id}"
     client_secret = "${var.service_principal_secret}"
-  }
-
-  role_based_access_control {
-    enabled = true
-
-    azure_active_directory {
-      client_app_id     = "${var.client_app_id}"
-      server_app_id     = "${var.server_app_id}"
-      server_app_secret = "${var.server_app_secret}"
-    }
   }
 
   addon_profile {
     oms_agent {
       enabled                    = "${var.oms_agent_enabled}"
       log_analytics_workspace_id = "${azurerm_log_analytics_workspace.workspace.id}"
-    }
-    
-    http_application_routing {
-      enabled = "${var.enable_http_application_routing}"
     }
   }
 }
