@@ -47,7 +47,7 @@ Load testing is crucial to any application's success. We have chosen to use Locu
         | `-c`| name of the kubernetes configmap to create from `tasks.py` file in the loadtest folder. Default value is `locust-tasks-config`  | no |
         | `-w`        | Number of workers to run for load generation               | yes                                                   |
         | `-n`        | name of the kubernetes namespace to create and deploy locust. Default value is `load-test`               | no
-        | `-k`        | API authentication key for the load test to authenticate with the target API. It will be set as a value for `API_AUTH_KEY` environment variable in the POD which can accessed by locust tasks it in the runtime.               | no
+        | `-k`        | API authentication key for the load test to authenticate with the target API. It will be set as a value for `API_AUTH_KEY` environment variable in the POD which can accessed by locust tasks it in the runtime.               | yes, when `-p` argument is passed. Otherwise optional.
          | `-p`        | API authentication secret for the load test to authenticate with the target API. It will be set as a value for `API_AUTH_SECRET` environment variable in the POD which can accessed by locust tasks it in the runtime.               | yes, when `-k` argument is passed. Otherwise optional. 
     
 5. Check your deployment
