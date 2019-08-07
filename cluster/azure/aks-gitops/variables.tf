@@ -71,22 +71,22 @@ variable "service_principal_secret" {
 }
 
 variable "server_app_id" {
-  type = "string"
+  type        = "string"
   description = "(Required) The Server ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "client_app_id" {
-  type = "string"
-  description="(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "server_app_secret" {
-  type = "string"
-  description="(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "tenant_id" {
-  type = "string"
+  type        = "string"
   description = "(Optional) The Tenant ID used for Azure Active Directory Application. If this isn't specified the Tenant ID of the current Subscription is used. Changing this forces a new resource to be created."
 }
 
@@ -164,7 +164,7 @@ variable "space_name" {
 }
 
 variable "dashboard_cluster_role" {
-  type = "string"
+  type    = "string"
   default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
 }
 
