@@ -6,7 +6,7 @@ Bedrock automates Kubernetes cluster deployments with Terraform to provide full 
 
 Bedrock uses three tools to automate cluster deployments that you'll need to install if you don't already have them:
 
-- [terraform](https://www.terraform.io/intro/getting-started/install.html)
+- [terraform](https://www.terraform.io/intro/getting-started/install.html) Bedrock currently uses [Terraform 0.11.13](https://releases.hashicorp.com/terraform/0.11.13/).
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [helm](https://github.com/helm/helm)
 

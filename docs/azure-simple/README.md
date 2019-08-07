@@ -1,6 +1,6 @@
 # A Walkthrough Deploying a Bedrock Environment
 
-This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](https://github.com/microsoft/bedrock/gitops) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
+This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](../../gitops/README.md) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
 
 This walkthrough consists of the following steps:
 
@@ -687,37 +687,6 @@ module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): serviceacc
 module.aks-gitops.module.flux.null_resource.deploy_flux: Creation complete after 8s (ID: 495632976516241457)
 
 Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
-```
-
-The results of `terraform apply` are enumerated in the `terraform.tfstate` file. For an overview of resources created, run `terraform state list`:
-```bash
-~/bedrock/cluster/environments/azure-simple$ terraform state list                      
-
-azurerm_resource_group.cluster_rg
-module.aks-gitops.module.aks.azurerm_kubernetes_cluster.cluster
-module.aks-gitops.module.aks.azurerm_resource_group.cluster
-module.aks-gitops.module.aks.null_resource.cluster_credentials
-module.aks-gitops.module.flux.null_resource.deploy_flux
-module.vnet.azurerm_resource_group.vnet
-module.vnet.azurerm_subnet.subnet
-module.vnet.azurerm_virtual_network.vnet
-```
-To see all the details, run `terraform show`
-
-To see one element, for example, run `terraform state show module.vnet.azurerm_virtual_network.vnet`:
-```bash
-~/bedrock/cluster/environments/azure-simple$ terraform state show module.vnet.azurerm_virtual_network.vnet
-id                     = /subscriptions/b59451c1-cd43-41b3-b3a4-74155d8f6cf6/resourceGroups/tst-az-simple-rg/providers/Microsoft.Network/virtualNetworks/testazuresimplevnet
-address_space.#        = 1
-address_space.0        = 10.10.0.0/16
-ddos_protection_plan.# = 0
-dns_servers.#          = 0
-location               = westus2
-name                   = testazuresimplevnet
-resource_group_name    = tst-az-simple-rg
-subnet.#               = 0
-tags.%                 = 1
-tags.environment       = azure-simple
 ```
 ### Terraform State
 
