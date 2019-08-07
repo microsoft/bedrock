@@ -36,6 +36,7 @@ module "flux" {
   enable_flux              = "${var.enable_flux}"
   flux_recreate            = "${var.flux_recreate}"
   kubeconfig_complete      = "${module.aks.kubeconfig_done}"
+  kubeconfigadmin_done      = "${module.aks.kubeconfigadmin_done}"
   kubeconfig_filename      = "${var.kubeconfig_filename}"
   kubeconfigadmin_filename = "${var.kubeconfigadmin_filename}"
   flux_clone_dir           = "${var.cluster_name}-flux"
