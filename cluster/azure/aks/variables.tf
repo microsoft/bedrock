@@ -24,22 +24,22 @@ variable "service_principal_secret" {
 }
 
 variable "server_app_id" {
-  type = "string"
+  type        = "string"
   description = "(Required) The Server ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "client_app_id" {
-  type = "string"
-  description="(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "server_app_secret" {
-  type = "string"
-  description="(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "tenant_id" {
-  type = "string"
+  type        = "string"
   description = "(Optional) The Tenant ID used for Azure Active Directory Application. If this isn't specified the Tenant ID of the current Subscription is used. Changing this forces a new resource to be created."
 }
 
@@ -134,21 +134,31 @@ variable "oms_agent_enabled" {
 }
 
 variable "enable_http_application_routing" {
-  type = "string"
+  type    = "string"
   default = "false"
 }
 
 variable "enable_azure_monitoring" {
-  type = "string"
+  type    = "string"
   default = "false"
 }
 
 variable "enable_dev_spaces" {
-  type = "string"
+  type    = "string"
   default = "false"
 }
 
 variable "space_name" {
-  type = "string"
+  type    = "string"
   default = "bedrock-lab"
+}
+
+variable "enable_http_application_routing" {
+  type    = "string"
+  default = "true"
+}
+
+variable "enable_azure_monitoring" {
+  type    = "string"
+  default = "true"
 }
