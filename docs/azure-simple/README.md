@@ -282,7 +282,7 @@ Define the remainding fields:
 - `dns_prefix`: `testazuresimple`
 - `vnet_name`: `testazuresimplevnet`
 
-The, `gitops_ssh_key` is a *path* to the RSA private key we created under [Create an RSA Key for Logging Into AKS Nodes](#create-an-rsa-key-for-logging-into-aks-nodes)
+The, `gitops_ssh_key` is a *path* to the RSA private key we created under [Set Up Flux Manifest Repository](##set-up-flux-manifest-repository)
 The `ssh_public_key` is the RSA public key that was created for [AKS node access](#create-an-rsa-key-for-logging-into-aks-nodes).
 
 Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy.  Next, using the values just defined, fill in the other values that were generated.  Then, remove the old terraform.tfvars file.  
