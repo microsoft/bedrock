@@ -246,7 +246,7 @@ total 32
 -rw-r--r--  1 jmspring  staff  2465 Jun 12 09:11 variables.tf
 ```
 
-The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields.  To get the ssh_public_key, run: `more ~/.ssh/azure-simple-deploy-key.pub`.  The path to the private key is `"/home/<user>/.ssh/azure-simple-deploy-key"`.
+The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields.  To get the ssh_public_key, run: `more ~/.ssh/azure-simple-node-key.pub`.  The path to the private key is `"/home/<user>/.ssh/azure-simple-deploy-key"`.
 
 ```bash
 $ cat terraform.tfvars
