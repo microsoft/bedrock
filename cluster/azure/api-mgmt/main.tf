@@ -373,10 +373,10 @@ resource "azurerm_template_deployment" "api_mgmt_deployment" {
 DEPLOY
 
   # these key-value pairs are passed into the ARM Template's `parameters` block
-  parameters {
+  parameters = {
     "primary_region_waf_url" = "${var.traffic_manager_fqdn}"
-
     "service_cust_option1apim_name" = "${var.service_apim_name}"
+
   }
 
   deployment_mode = "Incremental"
