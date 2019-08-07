@@ -27,7 +27,6 @@ module "aks" {
   enable_azure_monitoring         = "${var.enable_azure_monitoring}"
   enable_dev_spaces               = "${var.enable_dev_spaces}"
   space_name                      = "${var.space_name}"
-  dashboard_cluster_role          = "${var.dashboard_cluster_role}"
 }
 
 module "flux" {
