@@ -55,3 +55,12 @@ module "kubediff" {
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
   gitops_ssh_url      = "${var.gitops_ssh_url}"
 }
+
+module "aks-dashboard" {
+  source = "../../azure/aks-dashboard"
+
+  kubeconfigadmin_filename = "${var.kubeconfigadmin_filename}"
+  dashboard_cluster_role = "${var.dashboard_cluster_role}"
+  output_directory = "${var.output_directory}"
+  kubeconfigadmin_done = "${module.aks.kubeconfigadmin_done}"
+}

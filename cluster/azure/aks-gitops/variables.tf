@@ -167,3 +167,8 @@ variable "dashboard_cluster_role" {
   type = "string"
   default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
 }
+
+variable "output_directory" {
+  type    = "string"
+  default = "./output"
+}

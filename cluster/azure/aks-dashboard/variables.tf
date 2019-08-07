@@ -14,3 +14,8 @@ variable "kubeconfigadmin_filename" {
   type        = "string"
   default     = "admin_kube_config"
 }
+
+variable "kubeconfigadmin_done" {
+  description = "Allows flux to wait for the admin kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
+  type        = "string"
+}
