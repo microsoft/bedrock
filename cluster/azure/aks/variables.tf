@@ -135,12 +135,12 @@ variable "oms_agent_enabled" {
 
 variable "enable_http_application_routing" {
   type    = "string"
-  default = "false"
+  default = "true"
 }
 
 variable "enable_azure_monitoring" {
   type    = "string"
-  default = "false"
+  default = "true"
 }
 
 variable "enable_dev_spaces" {
@@ -151,14 +151,4 @@ variable "enable_dev_spaces" {
 variable "space_name" {
   type    = "string"
   default = "bedrock-lab"
-}
-
-variable "enable_http_application_routing" {
-  type    = "string"
-  default = "true"
-}
-
-variable "enable_azure_monitoring" {
-  type    = "string"
-  default = "true"
 }
