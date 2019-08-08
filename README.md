@@ -20,6 +20,8 @@ A Bedrock deployment follows three steps at a high level:
 
 In addition to that in-depth documentation, we also maintain a [walkthrough for deploying the azure-simple environment template](./docs/azure-simple/README.md) that makes a great first step.
 
+Finally, we also maintain a [FAQ](https://github.com/Microsoft/bedrock/wiki/FAQ) for answers to common questions.
+
 ## Community
 
 [Please join us on Slack](https://join.slack.com/t/bedrockco/shared_invite/enQtNjIwNzg3NTU0MDgzLTdiZGY4ZTM5OTM4MWEyM2FlZDA5MmE0MmNhNTQ2MGMxYTY2NGYxMTVlZWFmODVmODJlOWU0Y2U2YmM1YTE0NGI) for discussion and/or questions.
