@@ -8,7 +8,7 @@ This walkthrough consists of the following steps:
 2. [Create an Azure Service Principal](#create-an-azure-service-principal)
 3. [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
 4. [Clone the Bedrock Repository](#clone-the-bedrock-repository)
-5. [Set up Terraform Deployment Variables](#setup-terraform-deployment-variables)
+5. [Set up Terraform Deployment Variables](#set-up-terraform-deployment-variables)
 6. [Deploy the Template](#deploy-the-template)
 7. [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
 8. [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
@@ -314,7 +314,7 @@ vnet_name = "testazuresimplevnet"
 
 ## Deploy the Template
 
-With the Terraform variables file, [testazuresimple.tfvars](#setup-terraform-deployment-variables), it is time to do the Terraform deployment.  There are three steps to this process:
+With the Terraform variables file, [testazuresimple.tfvars](#set-up-terraform-deployment-variables), it is time to do the Terraform deployment.  There are three steps to this process:
 
 - `terraform init` which initializes the local directory with metadata and other necessities Terraform needs.
 - `terraform plan` which sanity checks your variables against the deployment
