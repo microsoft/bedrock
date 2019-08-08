@@ -17,6 +17,7 @@ module "aks" {
   kubeconfig_recreate      = "${var.kubeconfig_recreate}"
   kubeconfig_filename      = "${var.kubeconfig_filename}"
   network_policy           = "${var.network_policy}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 module "flux" {
@@ -33,6 +34,7 @@ module "flux" {
   kubeconfig_filename  = "${var.kubeconfig_filename}"
   flux_clone_dir       = "${var.cluster_name}-flux"
   acr_enabled          = "${var.acr_enabled}"
+  gc_enabled           = "${var.gc_enabled}"
 }
 
 module "kubediff" {
