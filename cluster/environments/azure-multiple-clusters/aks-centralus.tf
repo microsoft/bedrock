@@ -38,6 +38,7 @@ module "central_aks_gitops" {
   cluster_name             = "${var.cluster_name}_centralus"
   dns_prefix               = "${var.dns_prefix}"
   flux_recreate            = "${var.flux_recreate}"
+  gc_enabled               = "${var.gc_enabled}"
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_central_path}"
@@ -53,6 +54,7 @@ module "central_aks_gitops" {
   dns_ip                   = "${var.central_dns_ip}"
   docker_cidr              = "${var.central_docker_cidr}"
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # create a static public ip and associate with traffic manger endpoint

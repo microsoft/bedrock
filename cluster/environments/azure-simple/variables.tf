@@ -13,6 +13,11 @@ variable "acr_enabled" {
   default = "true"
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 variable "cluster_name" {
   type = "string"
 }
@@ -110,4 +115,9 @@ variable "subnet_prefixes" {
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
+
+variable "oms_agent_enabled" {
+  type    = "string"
+  default = "false"
 }

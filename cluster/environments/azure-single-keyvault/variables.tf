@@ -35,6 +35,11 @@ variable "kubeconfig_recreate" {
   default     = ""
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 variable "gitops_poll_interval" {
   type    = "string"
   default = "5m"
@@ -97,4 +102,9 @@ variable "vnet_subnet_id" {
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
+}
+
+variable "oms_agent_enabled" {
+  type    = "string"
+  default = "false"
 }

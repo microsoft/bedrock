@@ -4,7 +4,7 @@ The `azure-common-infra` environment is a production ready template to setup com
 
 ## Getting Started
 
-1. Follow the instructions on the [main Azure page](../../azure) in this repo to create a [Service Principal](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#create-an-azure-service-principal) and to [Configure Terraform CLI for Azure](https://github.com/yradsmikham/bedrock/tree/infra-docs/cluster/azure#configure-terraform-cli-for-azure).
+1. Follow the instructions on the [main Azure page](../../azure) in this repo to create a [Service Principal](../../azure#create-an-azure-service-principal) and to [Configure Terraform CLI for Azure](../../azure#configure-terraform-cli-for-azure).
 2. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo:
 
     `cp -r cluster/environments/azure-common-infra cluster/environments/<your new cluster name>`
