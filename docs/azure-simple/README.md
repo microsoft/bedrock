@@ -8,7 +8,7 @@ This walkthrough consists of the following steps:
 2. [Create an Azure Service Principal](#create-an-azure-service-principal)
 3. [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
 4. [Clone the Bedrock Repository](#clone-the-bedrock-repository)
-5. [Set up Terraform Deployment Variables](#se-tup-terraform-deployment-variables)
+5. [Set up Terraform Deployment Variables](#set-up-terraform-deployment-variables)
 6. [Deploy the Template](#deploy-the-template)
 7. [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
 8. [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
