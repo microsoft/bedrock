@@ -22,6 +22,10 @@ In addition to that in-depth documentation, we also maintain a [walkthrough for 
 
 Finally, we also maintain a [FAQ](https://github.com/Microsoft/bedrock/wiki/FAQ) for answers to common questions.
 
+## Releases
+
+To support consistency in the deployment of Terraform based infrastructure.  Bedrock has started implementing releases for Terraform scripts.  The release process and tools for generating a release are found [here](./docs/releases).
+
 ## Community
 
 [Please join us on Slack](https://join.slack.com/t/bedrockco/shared_invite/enQtNjIwNzg3NTU0MDgzLTdiZGY4ZTM5OTM4MWEyM2FlZDA5MmE0MmNhNTQ2MGMxYTY2NGYxMTVlZWFmODVmODJlOWU0Y2U2YmM1YTE0NGI) for discussion and/or questions.
