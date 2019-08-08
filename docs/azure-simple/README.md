@@ -1,6 +1,6 @@
 # A Walkthrough Deploying a Bedrock Environment
 
-This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](https://github.com/microsoft/bedrock/gitops) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
+This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](../../gitops) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
 
 This walkthrough consists of the following steps:
 
