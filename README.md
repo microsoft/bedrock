@@ -1,6 +1,7 @@
 # Bedrock
 
 [![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/bedrock)](https://goreportcard.com/report/github.com/microsoft/bedrock)
 
 Bedrock is a set of automation and tooling for deploying production-level Kubernetes clusters with a secure and auditable [GitOps](./gitops) workflow, based the learnings we've had deploying and operating real world applications and Kubernetes clusters with our customers.
 
