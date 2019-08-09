@@ -1,5 +1,5 @@
 module "provider" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+  source = "github.com/microsoft/bedrock?ref=0.11.0//cluster/azure/provider"
 }
 
 resource "azurerm_resource_group" "cluster_rg" {
@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "cluster_rg" {
 }
 
 module "vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=0.11.0//cluster/azure/vnet"
 
   vnet_name               = "${var.vnet_name}"
   address_space           = "${var.address_space}"
@@ -23,7 +23,7 @@ module "vnet" {
 }
 
 module "aks-gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=0.11.0//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
