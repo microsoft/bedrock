@@ -8,7 +8,7 @@ data "azurerm_resource_group" "cluster" {
 
 resource "random_id" "workspace" {
   keepers = {
-    group_name = "${azurerm_resource_group.cluster.name}"
+    group_name = "${data.azurerm_resource_group.cluster.name}"
   }
 
   byte_length = 8
