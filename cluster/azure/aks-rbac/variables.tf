@@ -26,3 +26,8 @@ variable "kubeconfigadmin_done" {
   description = "Allows flux to wait for the admin kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
   type        = "string"
 }
+
+variable "output_directory" {
+  type    = "string"
+  default = "./output"
+}

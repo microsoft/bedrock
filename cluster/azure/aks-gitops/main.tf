@@ -69,6 +69,7 @@ module "aks-role-assignment" {
 
   kubeconfigadmin_filename = "${var.kubeconfigadmin_filename}"
   kubeconfigadmin_done = "${module.aks.kubeconfigadmin_done}"
+  output_directory = "${var.output_directory}"
   owners = "${var.aks_owners}"
   contributors = "${var.aks_contributors}"
   readers = "${var.aks_readers}"
