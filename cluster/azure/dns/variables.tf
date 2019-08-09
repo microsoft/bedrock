@@ -12,9 +12,9 @@ variable "name" {
   description = "name of dns zone, redirect traffic under a zone, i.e. dev.1cs.io"
 }
 
-variable "service_principal_id" {
+variable "service_principal_object_id" {
   type = "string"
-  description = "service principal app_id or object_id who can read and write dns text records"
+  description = "service principal object id who can read and write dns text records"
 }
 
 variable "caa_issuer" {

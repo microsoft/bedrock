@@ -29,5 +29,5 @@ resource "azurerm_dns_caa_record" "dnszone_caa" {
 resource "azurerm_role_assignment" "dnszone_contributor" {
   scope = "${azurerm_dns_zone.dnszone.id}"
   role_definition_name = "Contributor"
-  principal_id = "${var.service_principal_id}"
+  principal_id = "${var.service_principal_object_id}"
 }
