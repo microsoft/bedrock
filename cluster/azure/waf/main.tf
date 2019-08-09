@@ -1,12 +1,11 @@
-resource "azurerm_resource_group" "wafrg" {
+data "azurerm_resource_group" "wafrg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
 }
 
 resource "azurerm_application_gateway" "waf" {
   name                = "${var.wafname}-waf"
-  resource_group_name = "${azurerm_resource_group.wafrg.name}"
-  location            = "${azurerm_resource_group.wafrg.location}"
+  resource_group_name = "${data.azurerm_resource_group.wafrg.name}"
+  location            = "${data.azurerm_resource_group.wafrg.location}"
 
   # WAF configuration
   sku {

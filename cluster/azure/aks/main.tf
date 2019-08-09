@@ -2,9 +2,8 @@ module "azure-provider" {
   source = "../provider"
 }
 
-resource "azurerm_resource_group" "cluster" {
+data "azurerm_resource_group" "cluster" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
 }
 
 resource "random_id" "workspace" {
@@ -17,15 +16,15 @@ resource "random_id" "workspace" {
 
 resource "azurerm_log_analytics_workspace" "workspace" {
   name                = "bedrock-k8s-workspace-${random_id.workspace.hex}"
-  location            = "${azurerm_resource_group.cluster.location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
+  location            = "${data.azurerm_resource_group.cluster.location}"
+  resource_group_name = "${data.azurerm_resource_group.cluster.name}"
   sku                 = "PerGB2018"
 }
 
 resource "azurerm_log_analytics_solution" "solution" {
   solution_name         = "ContainerInsights"
-  location              = "${azurerm_resource_group.cluster.location}"
-  resource_group_name   = "${azurerm_resource_group.cluster.name}"
+  location              = "${data.azurerm_resource_group.cluster.location}"
+  resource_group_name   = "${data.azurerm_resource_group.cluster.name}"
   workspace_resource_id = "${azurerm_log_analytics_workspace.workspace.id}"
   workspace_name        = "${azurerm_log_analytics_workspace.workspace.name}"
 
@@ -37,8 +36,8 @@ resource "azurerm_log_analytics_solution" "solution" {
 
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
-  location            = "${azurerm_resource_group.cluster.location}"
-  resource_group_name = "${azurerm_resource_group.cluster.name}"
+  location            = "${data.azurerm_resource_group.cluster.location}"
+  resource_group_name = "${data.azurerm_resource_group.cluster.name}"
   dns_prefix          = "${var.dns_prefix}"
   kubernetes_version  = "${var.kubernetes_version}"
 
