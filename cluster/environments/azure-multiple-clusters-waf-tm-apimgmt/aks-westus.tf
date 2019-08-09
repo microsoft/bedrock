@@ -15,7 +15,7 @@ locals {
 
 # Creates vnet
 module "west_vnet" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/vnet"
 
   resource_group_name     = "${local.west_rg_name}"
 
@@ -31,7 +31,7 @@ module "west_vnet" {
 
 # Creates aks cluster
 module "west_aks" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/aks"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/aks"
 
   resource_group_name      = "${local.west_rg_name}"
   cluster_name             = "${var.cluster_name}-west"
@@ -51,7 +51,7 @@ module "west_aks" {
 
 # Deploys flux in aks cluster
 module "west_flux" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/common/flux"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/common/flux"
 
   gitops_ssh_url       = "${var.gitops_ssh_url}"
   gitops_ssh_key       = "${var.gitops_ssh_key}"
@@ -66,7 +66,7 @@ module "west_flux" {
 # create a dynamic public ip and associate with traffic manger endpoint
 
 module "west_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/tm-endpoint-ip"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.west_rg_name}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"

@@ -3,7 +3,7 @@ terraform {
 }
 
 module "provider" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/provider"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/provider"
 }
 
 data "azurerm_resource_group" "global_rg" {

@@ -4,7 +4,7 @@ data "azurerm_resource_group" "tmrg" {
 }
 
 module "trafficmanager" {
-  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/tm-profile"
+  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/tm-profile"
 
   resource_group_name              = "${data.azurerm_resource_group.tmrg.name}"
   traffic_manager_profile_name     = "${var.traffic_manager_profile_name}"
