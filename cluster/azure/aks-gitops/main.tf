@@ -63,3 +63,13 @@ module "aks-dashboard" {
   output_directory = "${var.output_directory}"
   kubeconfigadmin_done = "${module.aks.kubeconfigadmin_done}"
 }
+
+module "aks-role-assignment" {
+  source = "../../azure/aks-rbac"
+
+  kubeconfigadmin_filename = "${var.kubeconfigadmin_filename}"
+  kubeconfigadmin_done = "${module.aks.kubeconfigadmin_done}"
+  owners = "${var.aks_owners}"
+  contributors = "${var.aks_contributors}"
+  readers = "${var.aks_readers}"
+}

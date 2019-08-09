@@ -1,18 +1,18 @@
 variable "owners" {
   type = "string"
-  description = "comma separated user alias who are granted to cluster cluster admins"
+  description = "comma separated aad user object id who are granted to cluster cluster admins"
   default = []
 }
 
 variable "contributors" {
   type = "string"
-  description = "comma separated groups who are contributors to aks"
+  description = "comma separated aad group object id who are contributors to aks"
   default = []
 }
 
 variable "readers" {
   type = "string"
-  description = "comma separated groups who are readers to aks"
+  description = "comma separated aad group object id who are readers to aks"
   default = []
 }
 
