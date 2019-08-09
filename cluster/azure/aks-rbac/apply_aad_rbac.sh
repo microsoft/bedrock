@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :o:c:r:f: option
+while getopts :o:c:r: option
 do
  case "${option}" in
  o) OWNERS=${OPTARG};;
