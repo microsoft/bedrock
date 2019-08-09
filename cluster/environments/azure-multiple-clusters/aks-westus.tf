@@ -1,10 +1,5 @@
 data "azurerm_resource_group" "westrg" {
   name     = "${var.west_resource_group_name}"
-  location = "${var.west_resource_group_location}"
-}
-
-data "azurerm_resource_group" "keyvault" {
-  name     = "${var.keyvault_resource_group}"
 }
 
 # local variable with cluster and location specific

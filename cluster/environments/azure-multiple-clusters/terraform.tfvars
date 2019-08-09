@@ -36,14 +36,11 @@ traffic_manager_dns_name = ""
 
 traffic_manager_resource_group_name = ""
 
-traffic_manager_resource_group_location = ""
 
 #--------------------------------------------------------------
 # West
 #--------------------------------------------------------------
 west_resource_group_name = ""
-
-west_resource_group_location = ""
 
 gitops_west_path = ""
 
@@ -52,16 +49,12 @@ gitops_west_path = ""
 #--------------------------------------------------------------
 east_resource_group_name = ""
 
-east_resource_group_location = ""
-
 gitops_east_path = ""
 
 #--------------------------------------------------------------
 # Central
 #--------------------------------------------------------------
 central_resource_group_name = ""
-
-central_resource_group_location = ""
 
 gitops_central_path = ""
 

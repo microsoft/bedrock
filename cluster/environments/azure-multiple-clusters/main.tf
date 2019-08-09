@@ -9,6 +9,10 @@ data "azuread_service_principal" "sp" {
 
 data "azurerm_client_config" "current" {}
 
+data "azurerm_resource_group" "keyvault" {
+  name     = "${var.keyvault_resource_group}"
+}
+
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
   source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/keyvault_flexvol_role"
