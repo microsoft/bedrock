@@ -4,7 +4,6 @@ module "provider" {
 
 data "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
 }
 
 module "vnet" {

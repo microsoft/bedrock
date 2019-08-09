@@ -1,5 +1,4 @@
 resource_group_name="resource-group-name"
-resource_group_location="westus2"
 cluster_name="cluster-name"
 agent_vm_count = "3"
 dns_prefix="dns-prefix"
