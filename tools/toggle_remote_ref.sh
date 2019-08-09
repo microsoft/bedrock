@@ -8,7 +8,6 @@
 # github.com/<entity>/<repository>?ref=<current version>//...
 #
 # Note, this script will make changes to the current files checked out.
-set -x
 while getopts :c:v: option
 do
  case "${option}" in
