@@ -49,7 +49,7 @@ then
 
     # update files 
     for f in $FILE_SEARCH; do
-        sed -i -r "s/source[ ]{0,}=[ ]{0,}\"github.com\/$entity_name\/$project_name\?ref=$CURRENT_VERSION\/\/(.*)\"/source = \"github.com\/$entity_name\/$project_name\?ref=$NEW_VERSION\/\/\1/g" $f
+        sed -i -r "s/source[ ]{0,}=[ ]{0,}\"github.com\/$entity_name\/$project_name\?ref=$CURRENT_VERSION\/\/(.*)\"/source = \"github.com\/$entity_name\/$project_name\?ref=$NEW_VERSION\/\/\1\"/g" $f
     done
 
     echo "remote references updated"
