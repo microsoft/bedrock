@@ -1,6 +1,5 @@
 data "azurerm_resource_group" "tmrg" {
   name     = "${var.traffic_manager_resource_group_name}"
-  location = "${var.traffic_manager_resource_group_location}"
 }
 
 module "trafficmanager" {
