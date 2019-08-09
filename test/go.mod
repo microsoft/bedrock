@@ -16,13 +16,15 @@ require (
 	github.com/googleapis/gnostic v0.2.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc // indirect
 	github.com/gruntwork-io/gruntwork-cli v0.4.2 // indirect
-	github.com/gruntwork-io/terratest v0.14.2
+	github.com/gruntwork-io/terratest v0.18.3
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.6 // indirect
+	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/otiai10/copy v1.0.1
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pquerna/otp v1.1.0 // indirect
 	github.com/spf13/cobra v0.0.3 // indirect

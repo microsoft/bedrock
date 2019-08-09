@@ -30,13 +30,14 @@ variable "subnet_prefixes" {
 
 variable "subnet_names" {
   description = "A list of public subnets inside the vNet."
+  type        = "list"
   default     = ["subnet1", "subnet2"]
 }
 
 variable "subnet_service_endpoints" {
   description = "A list of the service endpoints for the subnet (e.g. Microsoft.Web)"
   type        = "list"
-  default     = ["", ""]
+  default     = [[], []]
 }
 
 variable "tags" {
