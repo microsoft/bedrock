@@ -14,4 +14,4 @@ shunit2
 vendor
 flux
 kubediff
-.idea
+.idea/
