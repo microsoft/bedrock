@@ -7,7 +7,6 @@ module "vnet" {
   subnet_prefixes = ["${var.subnet_prefix}"]
 
   resource_group_name     = "${data.azurerm_resource_group.global_rg.name}"
-  resource_group_location = "${data.azurerm_resource_group.global_rg.location}"
   subnet_names            = ["${var.subnet_name}"]
 }
 
