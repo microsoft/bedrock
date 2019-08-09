@@ -1,24 +1,19 @@
 variable "owners" {
-  type = "list"
-  description = "list of user alias who are granted to cluster cluster admins"
+  type = "string"
+  description = "comma separated user alias who are granted to cluster cluster admins"
   default = []
 }
 
 variable "contributors" {
-  type = "list"
-  description = "list of groups who are contributors to aks"
+  type = "string"
+  description = "comma separated groups who are contributors to aks"
   default = []
 }
 
 variable "readers" {
-  type = "list"
-  description = "list of groups who are readers to aks"
+  type = "string"
+  description = "comma separated groups who are readers to aks"
   default = []
-}
-
-variable "output_directory" {
-  type    = "string"
-  default = "./output"
 }
 
 variable "kubeconfigadmin_filename" {
