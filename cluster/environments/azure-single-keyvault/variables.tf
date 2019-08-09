@@ -95,7 +95,11 @@ variable "subnet_prefixes" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
+variable "vnet_name" {
+  type = "string"
+}
+
+variable "subnet_name" {
   type = "string"
 }
 
