@@ -1,19 +1,19 @@
 variable "owners" {
   type = "string"
   description = "comma separated aad user object id who are granted to cluster cluster admins"
-  default = []
+  default = ""
 }
 
 variable "contributors" {
   type = "string"
   description = "comma separated aad group object id who are contributors to aks"
-  default = []
+  default = ""
 }
 
 variable "readers" {
   type = "string"
   description = "comma separated aad group object id who are readers to aks"
-  default = []
+  default = ""
 }
 
 variable "kubeconfigadmin_filename" {
