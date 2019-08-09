@@ -6,7 +6,6 @@ module "aks" {
   source = "../../azure/aks"
 
   resource_group_name      = "${data.azurerm_resource_group.name}"
-  resource_group_location  = "${data.azurerm_resource_group.location}"
   cluster_name             = "${var.cluster_name}"
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
