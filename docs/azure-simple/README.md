@@ -1,6 +1,6 @@
 # A Walkthrough Deploying a Bedrock Environment
 
-This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](https://github.com/microsoft/bedrock/gitops) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
+This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](../../gitops) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
 
 This walkthrough consists of the following steps:
 
@@ -17,7 +17,7 @@ This walkthrough consists of the following steps:
 
 Before starting the deployment, there are several required steps:
 
-- Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.11.13](https://releases.hashicorp.com/terraform/0.11.13/).
+- Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.11.14](https://releases.hashicorp.com/terraform/0.11.14/).
 - Enroll as an Azure subscriber.  The free trial subscription does not support enough cores to run this tutorial.
 - Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
 - Set up [Flux manifest repository](#set-up-flux-manifest-repository).
