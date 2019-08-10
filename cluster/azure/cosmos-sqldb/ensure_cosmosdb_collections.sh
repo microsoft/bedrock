@@ -35,7 +35,7 @@ COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr ';' '\n'))
 for i in "${COLLECTION_ARRAY[@]}"
 do
     CURRENT_SETTINGS="$i"
-    echo "$CURRENT_SETTINGS"
+    echo "current setting: $CURRENT_SETTINGS"
 
     COLLECTION_SETTINGS=($(echo "$CURRENT_SETTINGS" | tr ',' '\n'))
     COLLECTION_NAME=${COLLECTION_SETTINGS[0]}
