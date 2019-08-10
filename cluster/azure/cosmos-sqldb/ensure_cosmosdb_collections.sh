@@ -27,6 +27,8 @@ else
     echo "Input is valid"
 fi
 
+echo "current env"
+printenv
 echo "az login with terraform service principal"
 echo "environment variables: clientId=$clientId, tenantId=$tenantId"
 az login --service-principal --username $clientId --password $secret --tenant $tenantId
