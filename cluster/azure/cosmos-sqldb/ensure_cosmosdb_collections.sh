@@ -36,7 +36,7 @@ do
     PARTITION_KEY=$COLLECTION_SETTINGS[1]
     THROUGH_PUT=$COLLECTION_SETTINGS[2]
 
-    $COLLECTION=$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME']")
+    COLLECTION="$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME']")"
     if [ -z $COLLECTION ]; then
         az cosmosdb collection create \
             --name $ACCOUNT_NAME \
