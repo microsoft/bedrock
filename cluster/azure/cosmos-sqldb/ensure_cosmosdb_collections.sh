@@ -40,7 +40,7 @@ do
     THROUGH_PUT=${COLLECTION_SETTINGS[2]}
     echo "provisioning collection, name=$COLLECTION_NAME, partition=$PARTITION_KEY, throughput=$THROUGH_PUT"
 
-    COLLECTION="$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME']" -o tsv)"
+    COLLECTION="$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME'].{id:id}" -o tsv)"
     if [ -z $COLLECTION ]; then
         az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
         echo "created collection $COLLECTION_NAME"
