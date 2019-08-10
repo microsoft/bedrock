@@ -2,7 +2,9 @@ package test
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 
@@ -34,6 +36,14 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	azureSimpleInfraFolder := "../cluster/test-temp-envs/azure-simple-" + k8sName
 	copy.Copy("../cluster/environments/azure-simple", azureSimpleInfraFolder)
 
+	//Create the resource group
+	cmd := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(-1)
+	}
+
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
 		TerraformDir: azureSimpleInfraFolder,
@@ -45,7 +55,6 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
 			"resource_group_name":      k8sRG,
-			"resource_group_location":  location,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,

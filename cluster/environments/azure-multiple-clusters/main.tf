@@ -3,3 +3,7 @@ module "provider" {
 }
 
 data "azurerm_client_config" "current" {}
+
+data "azurerm_resource_group" "keyvault" {
+  name     = "${var.keyvault_resource_group}"
+}

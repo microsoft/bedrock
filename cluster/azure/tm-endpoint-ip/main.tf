@@ -1,7 +1,16 @@
+data "azurerm_resource_group" "pip" {
+    name = "${var.resource_group_name}"
+}
+
+data "azurerm_resource_group" "tmgr" {
+    name = "${var.traffic_manager_resource_group_name}"
+}
+
 resource "azurerm_public_ip" "pip" {
   name                = "${var.public_ip_name}-ip"
-  location            = "${var.resource_location}"
-  resource_group_name = "${var.resource_group_name}"
+  location            = "${data.azurerm_resource_group.pip.location}"
+  resource_group_name = "${data.azurerm_resource_group.pip.name}"
+
   allocation_method   = "${var.allocation_method}"
   domain_name_label   = "${var.public_ip_name}-dns"
   tags                = "${var.tags}"
@@ -9,7 +18,7 @@ resource "azurerm_public_ip" "pip" {
 
 resource "azurerm_traffic_manager_endpoint" "endpoint" {
   name                = "${var.endpoint_name}-ep"
-  resource_group_name = "${var.traffic_manager_resource_group_name}"
+  resource_group_name = "${data.azurerm_resource_group.tmgr.name}"
   profile_name        = "${var.traffic_manager_profile_name}"
   target              = "${var.endpoint_name}-dns"
   target_resource_id  = "${azurerm_public_ip.pip.id}"

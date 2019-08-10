@@ -1,12 +1,11 @@
-resource "azurerm_resource_group" "westrg" {
+data "azurerm_resource_group" "westrg" {
   name     = "${var.west_resource_group_name}"
-  location = "${var.west_resource_group_location}"
 }
 
 # local variable with cluster and location specific
 locals {
-  west_rg_name                 = "${azurerm_resource_group.westrg.name}"
-  west_rg_location             = "${azurerm_resource_group.westrg.location}"
+  west_rg_name                 = "${data.azurerm_resource_group.westrg.name}"
+  west_rg_location             = "${data.azurerm_resource_group.westrg.location}"
   west_prefix                  = "${local.west_rg_location}_${var.cluster_name}"
   west_flux_clone_dir          = "${local.west_prefix}_flux"
   west_kubeconfig_filename     = "${local.west_prefix}_kube_config"
@@ -18,7 +17,6 @@ module "west_vnet" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/vnet"
 
   resource_group_name     = "${local.west_rg_name}"
-  resource_group_location = "${local.west_rg_location}"
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.west_address_space}"
   subnet_prefixes         = "${var.west_subnet_prefixes}"
@@ -44,8 +42,7 @@ module "west_aks_gitops" {
   gitops_path              = "${var.gitops_west_path}"
   gitops_url_branch        = "${var.gitops_west_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
-  resource_group_location  = "${var.west_resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.westrg.name}"
+  resource_group_name      = "${local.west_rg_name}"
   service_cidr             = "${var.west_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
@@ -62,7 +59,6 @@ module "west_tm_endpoint" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.west_rg_name}"
-  resource_location                   = "${local.west_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
   endpoint_name                       = "${local.west_rg_location}_${var.cluster_name}"
@@ -97,7 +93,7 @@ module "west-pod-identity" {
 module "west_flex_volume" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
-  resource_group_name      = "${var.keyvault_resource_group}"
+  resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"

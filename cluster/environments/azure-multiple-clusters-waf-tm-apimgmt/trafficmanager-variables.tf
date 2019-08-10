@@ -2,11 +2,6 @@ variable "traffic_manager_resource_group_name" {
   type = "string"
 }
 
-variable "traffic_manager_resource_group_location" {
-  type    = "string"
-  default = "centralus"
-}
-
 variable "traffic_manager_profile_name" {
   type    = "string"
   default = "globaltf"

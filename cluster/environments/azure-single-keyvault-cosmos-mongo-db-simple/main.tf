@@ -4,9 +4,18 @@ terraform {
 
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_resource_group" "cluster_rg" {
+data "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
+}
+
+data "azurerm_resource_group" "keyvault" {
+  name     = "${var.keyvault_resource_group}"
+}
+
+data "azurerm_subnet" "vnet" {
+  name                 = "${var.subnet_name}"
+  virtual_network_name = "${var.vnet_name}"
+  resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
 }
 
 module "aks-gitops" {
@@ -24,20 +33,20 @@ module "aks-gitops" {
   gitops_path              = "${var.gitops_path}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_url_branch        = "${var.gitops_url_branch}"
-  resource_group_location  = "${var.resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
+  resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${data.azurerm_subnet.vnet.id}"
   network_policy           = "${var.network_policy}"
+  gc_enabled               = "${var.gc_enabled}"
 }
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
-  resource_group_name      = "${var.keyvault_resource_group}"
+  resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
@@ -50,7 +59,7 @@ module "flex_volume" {
 module "cosmos_mongo_db" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/cosmos-mongo-db-simple"
 
-  global_rg            = "${var.keyvault_resource_group}"
+  global_rg            = "${data.azurerm_resource_group.keyvault.name}"
   cosmos_db_name       = "${var.cosmos_db_name}"
   mongo_db_name        = "${var.mongo_db_name}"
   cosmos_db_offer_type = "${var.cosmos_db_offer_type}"

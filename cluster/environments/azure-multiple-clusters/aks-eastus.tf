@@ -1,12 +1,11 @@
-resource "azurerm_resource_group" "eastrg" {
+data "azurerm_resource_group" "eastrg" {
   name     = "${var.east_resource_group_name}"
-  location = "${var.east_resource_group_location}"
 }
 
 # local variable with cluster and location specific
 locals {
-  east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
-  east_rg_location             = "${azurerm_resource_group.eastrg.location}"
+  east_rg_name                 = "${data.azurerm_resource_group.eastrg.name}"
+  east_rg_location             = "${data.azurerm_resource_group.eastrg.location}"
   east_prefix                  = "${local.east_rg_location}_${var.cluster_name}"
   east_flux_clone_dir          = "${local.east_prefix}_flux"
   east_kubeconfig_filename     = "${local.east_prefix}_kube_config"
@@ -18,7 +17,6 @@ module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/vnet"
 
   resource_group_name     = "${local.east_rg_name }"
-  resource_group_location = "${local.east_rg_location}"
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
   address_space           = "${var.east_address_space}"
   subnet_prefixes         = "${var.east_subnet_prefixes}"
@@ -44,8 +42,7 @@ module "east_aks_gitops" {
   gitops_path              = "${var.gitops_east_path}"
   gitops_url_branch        = "${var.gitops_east_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
-  resource_group_location  = "${var.east_resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.eastrg.name}"
+  resource_group_name      = "${local.east_rg_name}"
   service_cidr             = "${var.east_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
@@ -62,7 +59,6 @@ module "east_tm_endpoint" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.east_rg_name}"
-  resource_location                   = "${local.east_rg_location}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
   endpoint_name                       = "${local.east_rg_location}_${var.cluster_name}"
@@ -97,7 +93,7 @@ module "east-pod-identity" {
 module "east_flex_volume" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
-  resource_group_name      = "${var.keyvault_resource_group}"
+  resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"

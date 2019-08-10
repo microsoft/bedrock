@@ -1,12 +1,11 @@
-resource "azurerm_resource_group" "centralrg" {
+data "azurerm_resource_group" "centralrg" {
   name     = "${var.central_resource_group_name}"
-  location = "${var.central_resource_group_location}"
 }
 
 # local variable with cluster and location specific
 locals {
-  central_rg_name                 = "${azurerm_resource_group.centralrg.name}"
-  central_rg_location             = "${azurerm_resource_group.centralrg.location}"
+  central_rg_name                 = "${data.azurerm_resource_group.centralrg.name}"
+  central_rg_location             = "${data.azurerm_resource_group.centralrg.location}"
   central_prefix                  = "${local.central_rg_location}-${var.cluster_name}"
   central_flux_clone_dir          = "${local.central_prefix}-flux"
   central_kubeconfig_filename     = "${local.central_prefix}_kube_config"
@@ -17,8 +16,7 @@ locals {
 module "central_vnet" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/vnet"
 
-  resource_group_name     = "${local.central_rg_name }"
-  resource_group_location = "${local.central_rg_location}"
+  resource_group_name     = "${local.central_rg_name}"
 
   subnet_names    = ["${var.cluster_name}-aks-subnet"]
   address_space   = "${var.central_address_space}"
@@ -33,8 +31,7 @@ module "central_vnet" {
 module "central_aks" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/aks"
 
-  resource_group_name      = "${local.central_rg_name }"
-  resource_group_location  = "${local.central_rg_location}"
+  resource_group_name      = "${local.central_rg_name}"
   cluster_name             = "${var.cluster_name}-central"
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
@@ -67,8 +64,7 @@ module "central_flux" {
 module "central_tm_endpoint" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.centralrg.name}"
-  resource_location                   = "${local.central_rg_location}"
+  resource_group_name                 = "${local.central_rg_name}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
   endpoint_name                       = "${local.central_rg_location}-waf-ipcentral"
@@ -87,5 +83,5 @@ resource "azurerm_role_assignment" "central_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
-  scope                = "${azurerm_resource_group.centralrg.id}"
+  scope                = "${data.azurerm_resource_group.centralrg.id}"
 }
