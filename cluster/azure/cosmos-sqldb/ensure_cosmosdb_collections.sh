@@ -30,7 +30,7 @@ fi
 COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr ';' '\n'))
 for i in "${COLLECTION_ARRAY[@]}"
 do
-    COLLECTION_SETTINGS=($(echo "$i" | tr ';' '\n'))
+    COLLECTION_SETTINGS=($(echo "$i" | tr ',' '\n'))
     COLLECTION_NAME=$COLLECTION_SETTINGS[0]
     PARTITION_KEY=$COLLECTION_SETTINGS[1]
     THROUGH_PUT=$COLLECTION_SETTINGS[2]
