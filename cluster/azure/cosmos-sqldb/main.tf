@@ -50,5 +50,5 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
     cosmos_db_collections = "${var.cosmos_db_collections}"
   }
 
-  depends_on = ["azurerm_cosmosdb_sql_database"]
+  depends_on = ["azurerm_cosmosdb_sql_database.sqldb"]
 }
