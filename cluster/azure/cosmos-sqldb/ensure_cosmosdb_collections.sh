@@ -27,9 +27,9 @@ else
     echo "Input is valid"
 fi
 
-echo "az login with terraform service principal"
-echo "environment variables: clientId=$ARM_CLIENT_ID, tenantId=$ARM_TENANT_ID"
-az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+# echo "az login with terraform service principal"
+# echo "environment variables: clientId=$ARM_CLIENT_ID, tenantId=$ARM_TENANT_ID"
+# az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
 
 COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr ';' '\n'))
 for i in "${COLLECTION_ARRAY[@]}"
