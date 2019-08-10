@@ -23,7 +23,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	subnetName := k8sName + "-subnet"
-	tenantid := os.Getenv("ARM_TENANT_ID")
 	vnetName := k8sName + "-vnet"
 
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
@@ -59,7 +58,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"service_principal_id":           clientid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
-			"tenant_id":                      tenantid,
 			"vnet_name":                      vnetName,
 		},
 	}

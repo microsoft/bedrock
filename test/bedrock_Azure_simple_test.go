@@ -17,9 +17,9 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	// Generate a random cluster name to prevent a naming conflict
 	uniqueID := random.UniqueId()
-	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
+	k8sName := strings.ToLower(fmt.Sprintf("gTestk8s-%s", uniqueID))
 
-	subnetPrefixes := []string{"10.10.1.0/24"}
+	subnetPrefix := "10.10.1.0/24"
 	addressSpace := "10.10.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
@@ -28,9 +28,6 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	location := os.Getenv("DATACENTER_LOCATION")
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
-	subnetName := k8sName + "-subnet"
-	subscriptionid := os.Getenv("ARM_SUBSCRIPTION_ID")
-	tenantid := os.Getenv("ARM_TENANT_ID")
 	vnetName := k8sName + "-vnet"
 
 	//Copy env directories as needed to avoid conflicting with other running tests
@@ -52,10 +49,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
-			"subnet_name":              subnetName,
-			"subnet_prefixes":          subnetPrefixes,
-			"subscription_id":          subscriptionid,
-			"tenant_id":                tenantid,
+			"subnet_prefix":            subnetPrefix,
 			"vnet_name":                vnetName,
 		},
 	}

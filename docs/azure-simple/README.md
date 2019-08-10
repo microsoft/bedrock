@@ -17,7 +17,7 @@ This walkthrough consists of the following steps:
 
 Before starting the deployment, there are several required steps:
 
-- Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.11.14](https://releases.hashicorp.com/terraform/0.11.14/).
+- Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.12.6](https://releases.hashicorp.com/terraform/0.12.6/).
 - Enroll as an Azure subscriber.  The free trial subscription does not support enough cores to run this tutorial.
 - Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
 - Set up [Flux manifest repository](#set-up-flux-manifest-repository).

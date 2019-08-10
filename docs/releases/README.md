@@ -33,6 +33,7 @@ The script takes the following arguments:
 Running the script resembles:
 
 ```bash
+
 $ ./tools/bedrock_terraform_release.sh -v 0.1.0
 Cloning into 'bedrock'...
 remote: Enumerating objects: 20, done.
