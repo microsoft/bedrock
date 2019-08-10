@@ -57,10 +57,10 @@ module "east_aks_gitops" {
 # create a static public ip and associate with traffic manger endpoint
 module "east_tm_endpoint" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/tm-endpoint-ip"
-
+  
   resource_group_name                 = "${local.east_rg_name}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
-  traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
+  traffic_manager_profile_name        = "${module.trafficmanager.traffic_manager_name}"
   endpoint_name                       = "${local.east_rg_location}_${var.cluster_name}"
   public_ip_name                      = "${var.cluster_name}"
   ip_address_out_filename             = "${local.east_ip_address_out_filename}"
@@ -77,7 +77,7 @@ module "east_network_contributor_role" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/role_assignment"
   role_assignment_role = "${var.aks_client_network_role_assignment_role}"
   role_assignee = "${var.service_principal_id}"
-  role_scope = "${azurerm_resource_group.eastrg.id}"
+  role_scope = "${data.azurerm_resource_group.eastrg.id}"
 }
 
 module "east-pod-identity" {
