@@ -7,8 +7,8 @@ keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
-vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
-
+vnet_name = "<vnet name>"
+subnet_name = "<subnet_name>"
 
 #--------------------------------------------------------------
 # CosmosDB & MongoDB variables

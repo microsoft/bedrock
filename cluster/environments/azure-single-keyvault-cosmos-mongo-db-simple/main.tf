@@ -6,11 +6,16 @@ data "azurerm_client_config" "current" {}
 
 data "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
 }
 
 data "azurerm_resource_group" "keyvault" {
   name     = "${var.keyvault_resource_group}"
+}
+
+data "azurerm_subnet" "vnet" {
+  name                 = "${var.subnet_name}"
+  virtual_network_name = "${var.vnet_name}"
+  resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
 }
 
 module "aks-gitops" {
@@ -32,8 +37,9 @@ module "aks-gitops" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${data.azurerm_subnet.vnet.id}"
   network_policy           = "${var.network_policy}"
+  gc_enabled               = "${var.gc_enabled}"
 }
 
 # Create Azure Key Vault role for SP
