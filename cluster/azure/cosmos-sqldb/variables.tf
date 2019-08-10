@@ -24,11 +24,16 @@ variable "consistency_level" {
   default = "Session"
 }
 
+variable "enable_filewall" {
+  type = "string"
+  description = "Specify if firewall rules should be applied"
+  default = "false"
+}
+
 variable "allowed_ip_ranges" {
   type = "string"
   description = "allowed ip range in addition to azure services and azure portal, i.e. 12.54.145.0/24,13.75.0.0/16"
 }
-
 
 variable "cosmos_db_offer_type" {
   type    = "string"
