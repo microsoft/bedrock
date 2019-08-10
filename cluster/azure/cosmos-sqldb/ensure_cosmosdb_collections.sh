@@ -31,9 +31,9 @@ COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr ';' '\n'))
 for i in "${COLLECTION_ARRAY[@]}"
 do
     COLLECTION_SETTINGS=($(echo "$i" | tr ',' '\n'))
-    COLLECTION_NAME=$COLLECTION_SETTINGS[0]
-    PARTITION_KEY=$COLLECTION_SETTINGS[1]
-    THROUGH_PUT=$COLLECTION_SETTINGS[2]
+    COLLECTION_NAME=${COLLECTION_SETTINGS[0]}
+    PARTITION_KEY=${COLLECTION_SETTINGS[1]}
+    THROUGH_PUT=${COLLECTION_SETTINGS[2]}
     echo "provisioning collection, name=$COLLECTION_NAME, partition=$PARTITION_KEY, throughput=$THROUGH_PUT"
 
     COLLECTION="$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME']" -o tsv)"
