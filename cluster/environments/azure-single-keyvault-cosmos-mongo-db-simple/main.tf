@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "cluster_rg" {
 }
 
 module "aks-gitops" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -35,7 +35,7 @@ module "aks-gitops" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
@@ -48,7 +48,7 @@ module "flex_volume" {
 
 # Deploy Cosmos/MongoDB
 module "cosmos_mongo_db" {
-  source = "../../azure/cosmos-mongo-db-simple"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/cosmos-mongo-db-simple"
 
   global_rg            = "${var.keyvault_resource_group}"
   cosmos_db_name       = "${var.cosmos_db_name}"

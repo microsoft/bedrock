@@ -1,8 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 module "keyvault" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault"
-  source = "../../azure/keyvault"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault"
 
   keyvault_name       = "${var.keyvault_name}"
   resource_group_name = "${var.global_resource_group_name}"
@@ -10,8 +9,7 @@ module "keyvault" {
 }
 
 module "keyvault_access_policy_default" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_policy"
-  source = "../../azure/keyvault_policy"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_policy"
 
   keyvault_name = "${module.keyvault.keyvault_name}"
   resource_group_name = "${var.global_resource_group_name}"

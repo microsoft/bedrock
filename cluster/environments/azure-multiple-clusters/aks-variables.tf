@@ -72,3 +72,8 @@ variable "keyvault_resource_group" {
 variable "identity_name" {
   type = "string"
 }
+
+variable "oms_agent_enabled" {
+  type    = "string"
+  default = "false"
+}

@@ -15,8 +15,7 @@ locals {
 
 # Creates west vnet
 module "west_vnet" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/vnet"
-  source = "../../azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/vnet"
 
   resource_group_name     = "${local.west_rg_name}"
   resource_group_location = "${local.west_rg_location}"
@@ -31,8 +30,7 @@ module "west_vnet" {
 
 # Creates west aks cluster, flux, kubediff
 module "west_aks_gitops" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/aks-gitops"
-  source = "../../azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -56,12 +54,12 @@ module "west_aks_gitops" {
   dns_ip                   = "${var.west_dns_ip}"
   docker_cidr              = "${var.west_docker_cidr}"
   kubeconfig_filename      = "${local.west_kubeconfig_filename}"
+  oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/tm-endpoint-ip"
-  source = "../../azure/tm-endpoint-ip"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.west_rg_name}"
   resource_location                   = "${local.west_rg_location}"
@@ -80,14 +78,14 @@ module "west_tm_endpoint" {
 # Create a role assignment with Network Contributor role for AKS client service 
 # principal object to join vnet/subnet/ip for load balancer/ingress controller
 module "west_network_contributor_role" {
-  source = "../../azure/role_assignment"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/role_assignment"
   role_assignment_role = "${var.aks_client_network_role_assignment_role}"
   role_assignee = "${var.service_principal_id}"
   role_scope = "${azurerm_resource_group.westrg.id}"
 }
 
 module "west-pod-identity" {
-  source = "../../azure/pod_identity"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/pod_identity"
   resource_group_name = "${var.keyvault_resource_group}"
   subscription_id     = "${data.azurerm_client_config.current.subscription_id}"
   identity_name       = "${var.identity_name}"
@@ -97,8 +95,7 @@ module "west-pod-identity" {
 
 # Deploy west keyvault flexvolume
 module "west_flex_volume" {
-  #source = "github.com/Microsoft/bedrock/cluster/azure/keyvault_flexvol"
-  source = "../../azure/keyvault_flexvol"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${var.keyvault_resource_group}"
   service_principal_id     = "${var.service_principal_id}"
