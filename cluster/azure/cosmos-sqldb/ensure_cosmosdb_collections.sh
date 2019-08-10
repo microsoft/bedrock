@@ -45,6 +45,6 @@ do
         az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
         echo "created collection $COLLECTION_NAME"
     else
-        echo 'Collection $COLLECTION_NAME already created'
+        echo "Collection $COLLECTION_NAME already created"
     fi
 done
