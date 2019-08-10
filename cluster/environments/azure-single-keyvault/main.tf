@@ -45,7 +45,7 @@ module "aks-gitops" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol_role"
+  source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol"
 
   resource_group_name         = "${var.keyvault_resource_group}"
   service_principal_id        = "${var.service_principal_id}"

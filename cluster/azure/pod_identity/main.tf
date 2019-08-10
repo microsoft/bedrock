@@ -40,6 +40,6 @@ resource "null_resource" "install_azure_identity" {
   triggers = {
     enable_pod_identity   = "${var.enable_pod_identity}"
     pod_identity_recreate = "${var.pod_identity_recreate}"
-    pod_identity_deployed = "${null_resource.deploy_pod_identity.id}"
+    pod_identity_deployed = "${join("", null_resource.deploy_pod_identity.*.id)}"
   }
 }
