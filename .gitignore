@@ -15,3 +15,5 @@ vendor
 flux
 kubediff
 .idea/
+**/bug.md
+**/bugs.md
