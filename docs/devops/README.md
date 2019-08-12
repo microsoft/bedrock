@@ -1,6 +1,6 @@
 # Use Fabrikate in DevOps Pipeline to automate updates to Bedrock Deployment
 
-This walkthrough uses an Azure DevOps pipeline and Fabrikate to automate changes to a running Bedrock deployment. A deployment such as [A Walkthrough Deploying a Bedrock Environment](../azure-simple/README) can assign the `gitops_ssh_url` field in the `terraform.tfvars` file to a repo that receives the output of Fabrikate in a DevOps pipeline.  
+This walkthrough uses an Azure DevOps pipeline and Fabrikate to automate changes to a running Bedrock deployment. A deployment such as [A Walkthrough Deploying a Bedrock Environment](../azure-simple/README.md) can assign the `gitops_ssh_url` field in the `terraform.tfvars` file to a repo that receives the output of Fabrikate in a DevOps pipeline.  
 
 When the pipeline runs, it calls `fab install` and `fab generate`, which we ran from the commandline in a previous example: [Build Fabrikate Definition for Container Deployment](../fabrikate/readme).  The manifest that results from the DevOps pipeline is sent to another repo and directory that Flux is watching.  Updates to the Bedrock deployment are automatic.
 
