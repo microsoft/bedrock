@@ -19,5 +19,5 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = "${azurerm_resource_group.vnet.name}"
 
   address_prefix    = "${var.subnet_prefixes[count.index]}"
-  service_endpoints = "${split(",",var.subnet_service_endpoints[count.index])}"
+  service_endpoints = "${var.subnet_service_endpoints[count.index]}"
 }

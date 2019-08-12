@@ -1,5 +1,5 @@
 module "east_waf_subnet" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/subnet"
 
   resource_group_name = "${azurerm_resource_group.eastrg.name}"
   vnet_name           = "${module.east_vnet.vnet_name}"
@@ -8,7 +8,7 @@ module "east_waf_subnet" {
 }
 
 module "east_waf" {
-  source = "github.com/Microsoft/bedrock/cluster/azure/waf"
+  source = "github.com/microsoft/bedrock?ref=0.12support//cluster/azure/waf"
 
   resource_group_name     = "${azurerm_resource_group.eastrg.name}"
   resource_group_location = "${azurerm_resource_group.eastrg.location}"
