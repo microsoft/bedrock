@@ -73,7 +73,7 @@ The second repo receives the resulting `.yaml` files that Fabrikate creates when
 
 Create this repo with a `prod` directory.  Put a `README.md` in it to make the `prod` directory visible in GitHub.
 
-The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorized Flux to query this repo.  From the [Bedrock deployment](../azure-simple/README.md#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/readme#add-repository-key).  
+The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorized Flux to query this repo.  From the [Bedrock deployment](../azure-simple/README.md#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/README.md#add-repository-key).  
 
 ## Set up Azure DevOps Pipeline
 
@@ -144,7 +144,7 @@ Open the `Variables` dialog and add an [access token](https://help.github.com/en
 
 _________________________________________________________________________
 
-Using the same procedure add another variable: MANIFEST_REPO.  Assign the value of this variable to the manifest repo we set up under the heading [Manifests repo](#manifest-repo).
+Using the same procedure add another variable: MANIFEST_REPO.  Assign the value of this variable to the repo set up under the following heading [Manifests repo](#manifest-repo).
 
 ![Manifest repo](./images/manifest-repo.png)
 
@@ -166,9 +166,9 @@ Now when changes are committed to the Fabrikate repo, a new manifest will be cre
 
 ### Complete scenario
 
-Test this scenario by pushing a new manifest to the `vote-deploy` directory of the Fabrikate repo.  Use the `azure-vote.yaml` manifest from [Build Fabrikate Definition for Container Deployment](../fabrikate/readme.)
+Test this scenario by pushing a new manifest to the `vote-deploy` directory of the Fabrikate repo.  Use the `azure-vote.yaml` manifest from [Build Fabrikate Definition for Container Deployment](../fabrikate/README.md).
 
-Next, follow the instructions under [Results](../fabrikate/readme#results) to find the `EXTERNAL-IP` of a new load balancer that will appear when Flux picks up the change and it is deployed to the cluster.  
+Next, follow the instructions under [Results](../fabrikate/README.md#results) to find the `EXTERNAL-IP` of a new load balancer that will appear when Flux picks up the change and it is deployed to the cluster.  
 
 In a browser open the URL to run the azure-vote application:
 
