@@ -2,7 +2,7 @@
 module "pod_identity" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/pod_identity_msi"
   
-resource_group_name  = "${data.azurerm_resource_group.global_rg.name}"
+  resource_group_name  = "${data.azurerm_resource_group.global_rg.name}"
   service_principal_id = "${var.service_principal_id}"
   identity_name        = "${var.identity_name}"
 }
