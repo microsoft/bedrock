@@ -2,14 +2,14 @@
 
 This walkthrough uses an Azure DevOps pipeline and Fabrikate to automate changes to a running Bedrock deployment. A deployment such as [A Walkthrough Deploying a Bedrock Environment](../azure-simple/README.md) can assign the `gitops_ssh_url` field in the `terraform.tfvars` file to a repo that receives the output of Fabrikate in a DevOps pipeline.  
 
-When the pipeline runs, it calls `fab install` and `fab generate`, which we ran from the commandline in a previous example: [Build Fabrikate Definition for Container Deployment](../fabrikate/readme).  The manifest that results from the DevOps pipeline is sent to another repo and directory that Flux is watching.  Updates to the Bedrock deployment are automatic.
+When the pipeline runs, it calls `fab install` and `fab generate`, which we ran from the commandline in a previous example: [Build Fabrikate Definition for Container Deployment](../fabrikate/README.md).  The manifest that results from the DevOps pipeline is sent to another repo and directory that Flux is watching.  Updates to the Bedrock deployment are automatic.
 
 ## Set up git repos for Pipeline
 
-You'll need two repos for this example, one to run Fabrikate and another to receive the resulting `.yaml` files.  We're using the `azure-vote` application also used in [Build Fabrikate Definition for Container Deployment](../fabrikate/readme).  
+You'll need two repos for this example, one to run Fabrikate and another to receive the resulting `.yaml` files.  We're using the `azure-vote` application also used in [Build Fabrikate Definition for Container Deployment](../fabrikate/README.md).  
 
 ### Fabrikate repo
-In this example, the repo that runs Fabrikate in the DevOps pipeline uses a directory structure like the following screenshot.  For now, add a [simple web app manifest](../azure-simple/readme#deploy-an-update-using-kubernetes-manifest) to the `vote-deploy` directory.
+In this example, the repo that runs Fabrikate in the DevOps pipeline uses a directory structure like the following screenshot.  For now, add a [simple web app manifest](../azure-simple/README.md#deploy-an-update-using-kubernetes-manifest) to the `vote-deploy` directory.
 
 ![Fabrikate repo](./images/fabrikate-repo.png)
 
@@ -73,7 +73,7 @@ The second repo receives the resulting `.yaml` files that Fabrikate creates when
 
 Create this repo with a `prod` directory.  Put a `README.md` in it to make the `prod` directory visible in GitHub.
 
-The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorized Flux to query this repo.  From the [Bedrock deployment](../azure-simple/readme#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/readme#add-repository-key).  
+The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorized Flux to query this repo.  From the [Bedrock deployment](../azure-simple/README.md#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/readme#add-repository-key).  
 
 ## Set up Azure DevOps Pipeline
 
@@ -154,7 +154,7 @@ Now when you run the pipeline, it should succeed.  The manifests repo on GitHub 
 
 ## Use Flux to deploy changes from Manifests repo
 
-If you deployed [A Walkthrough Deploying a Bedrock Environment](../azure-simple/readme), it is simple to target the output of this pipeline in the `terraform.tfvars` file of the deployment.  
+If you deployed [A Walkthrough Deploying a Bedrock Environment](../azure-simple/README.md), it is simple to target the output of this pipeline in the `terraform.tfvars` file of the deployment.  
 
 * Assign the `ssh_public_key` field in the `terraform.tfvars file` to the key generated and installed under the heading: [Manifests repo](#manifests-repo)
 * Assign the `gitops_ssh_url` field to the manifests repo.  
