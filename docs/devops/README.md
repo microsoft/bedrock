@@ -73,7 +73,7 @@ The second repo receives the resulting `.yaml` files that Fabrikate creates when
 
 Create this repo with a `prod` directory.  Put a `README.md` in it to make the `prod` directory visible in GitHub.
 
-The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorized Flux to query this repo.  From the [Bedrock deployment](../azure-simple/README.md#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/README.md#add-repository-key).  
+The Bedrock deployment that will be updated by manifests from this repo must authenticate and authorize Flux to query this repo.  From the [Bedrock deployment](../azure-simple/README.md#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository), use `ssh-keygen` to generate a deploy key.  Add it to this repo as described in the deployment document under the heading [Add Repository Key](../azure-simple/README.md#add-repository-key).  
 
 ## Set up Azure DevOps Pipeline
 
