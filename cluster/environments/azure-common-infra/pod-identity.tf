@@ -7,6 +7,15 @@ module "pod_identity" {
   identity_name        = "${var.identity_name}"
 }
 
+# give additional delay to let Azure settle *sigh*
+resource "null_resource" "podid_delay" {
+  provisioner "local-exec" {
+    command = "sleep 20"
+  }
+
+  depends_on = [ module.pod_identity ]
+} 
+
 # give MSI role permission to the keyvault
 module "pod_identity_kv_role" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_flexvol_role"
@@ -15,7 +24,7 @@ module "pod_identity_kv_role" {
   keyvault_name        = "${module.keyvault.keyvault_name}"
   service_principal_id = "${module.pod_identity.pod_msi_client_id}"
   subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
-  precursor_done       = "${module.keyvault_access_policy_default.id}"
+  precursor_done       = "${null_resource.podid_delay.id}"
 }
 
 # configure MSI access policy to keyvault
