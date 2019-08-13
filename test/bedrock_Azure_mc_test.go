@@ -52,6 +52,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
 
+	idName := k8sName + "-pod-id"
+
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
 	backendName := os.Getenv("ARM_BACKEND_STORAGE_NAME")
 	backendKey := os.Getenv("ARM_BACKEND_STORAGE_KEY")
@@ -93,6 +95,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
 			"vnet_name":                      vnetName,
+			"identity_name":                  idName,
 		},
 	}
 
@@ -172,6 +175,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"gitops_poll_interval":     "5m",
 			"keyvault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
+			"identity_name":            idName,
 
 			"traffic_manager_profile_name":            tmName,
 			"traffic_manager_dns_name":                tm_dnsprefix,
