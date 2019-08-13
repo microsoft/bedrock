@@ -23,10 +23,11 @@ Beyond these, you'll only need the Azure `az` command line tool installed (used 
 
 Bedrock provides different templates to start from when building your deployment environment.  Each template has a set of common and specific requirements that must be met in order to deploy them.
 
+Common across templates, it is required that the resource group(s) needed by the enviornment be created prior to deploying.  For how to create a resource group, see [here]()
+
 The following templates are currently available for deployment:
 
 - [azure-common-infra](../environments/azure-common-infra): Common infrastructure deployment template.
-
 - [azure-simple](../environments/azure-simple/): Single cluster deployment.
 - [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
@@ -39,6 +40,16 @@ The common steps necessary to deploy a cluster are:
 - [Create the AKS cluster using Terraform](#create-the-aks-cluster-using-terraform)
 - [Configure `kubectl` to see your new AKS cluster](#configure-kubectl-to-see-your-new-aks-cluster)
 - [Verify that your AKS cluster is healthy](#verify-that-your-aks-cluster-is-healthy)
+
+### Creating Resource Groups
+
+Resource groups can be created throug the [Azure portal](https://portal.azure.com) or via the Azure CLI as follows:
+
+```bash
+$ az group create -n <resource group name> -l <resource group location>
+```
+
+Within each environment, the required resource groups that need to be created are documented.
 
 ### Create an Azure Service Principal
 

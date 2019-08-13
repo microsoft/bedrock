@@ -24,6 +24,17 @@ To deploy this environment, follow the [common steps](../../azure/) for deployin
 
 Additional environment-wide variables that can be configured are in [aks-variables.tf](./aks-variables.tf).
 
+## Resource Group Requirement
+
+The Azure Multiple Container environment requires the creation of a resource group per cluster deployment as well as a resource group for traffic manager.  In addition, there is a reference to the resource group created within [Azure Common Infra](../azure-common-infra).  The current set of groups that need to be created and the requisite variables are:
+
+- Central US Cluster - `central_resource_group_name`
+- East US Cluster - `east_resource_group_name`
+- West US Cluster - `west_resource_group_name`
+- Traffice Manager - `traffic_manager_resource_group_name`
+
+To use the Azure CLI to create the resource group, see [here](../../azure/README.md).
+
 ### Cluster Deployment
 
 The `azure-multiple-cluster` environment assumes three regional clusters are deployed with their configurations and deployment scripts named accordingly - `aks-eastus`, `aks-westus`, `aks-centralus`.  If your region requirements differ, modify these names to match.
