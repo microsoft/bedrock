@@ -2,12 +2,12 @@
 
 from locust import HttpLocust, TaskSet, task
 
-class ProductTaskSet(TaskSet):
+class HomeTaskSet(TaskSet):
 
     @task(1)
     def index(self):
-        self.client.get("/productpage")
+        self.client.get("/")
 
 
-class ProductsLocust(HttpLocust):
-    task_set = ProductTaskSet
+class HomeLocust(HttpLocust):
+    task_set = HomeTaskSet
