@@ -28,6 +28,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	addressSpace := "10.10.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	tenantId := os.Getenv("ARM_TENANT_ID")
 	dnsprefix := k8sName + "-dns"
 	k8sRG := k8sName + "-rg"
 	location := os.Getenv("DATACENTER_LOCATION")
@@ -42,6 +43,13 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	//Create the resource group
         fmt.Println("here 4")
+	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantId)
+	err0 := cmd0.Run()
+	if err0 != nil {
+		log.Fatal(err0)
+		os.Exit(-1)
+	}
+	fmt.Println("here 4.5")
 	cmd := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
 	err := cmd.Run()
 	if err != nil {
