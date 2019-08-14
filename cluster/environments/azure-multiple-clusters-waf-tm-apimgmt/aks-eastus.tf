@@ -17,9 +17,7 @@ module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/vnet"
 
   resource_group_name = "${local.east_rg_name}"
-
   subnet_names = ["${var.cluster_name}-aks-subnet"]
-
   address_space   = "${var.east_address_space}"
   subnet_prefixes = "${var.east_subnet_prefixes}"
 

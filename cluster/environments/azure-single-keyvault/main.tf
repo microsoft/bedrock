@@ -14,10 +14,6 @@ data "azurerm_subnet" "single" {
   resource_group_name = "${var.keyvault_resource_group}"
 }
 
-data "azurerm_resource_group" "keyvault" {
-  name     = "${var.keyvault_resource_group}"
-}
-
 module "aks-gitops" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/aks-gitops"
 

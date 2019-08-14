@@ -7,6 +7,10 @@ The `azure-single-keyvault` environment deploys a single production level AKS cl
 1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
 2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure.
 
+## Resource Group Requirement
+
+The Azure Single Cluster environment requires the creation of a single resource group for cluster deployment, with the variable named `resource_group_name`.  In addition, there is a reference to the resource group created within [Azure Common Infra](../azure-common-infra).  To use the Azure CLI to create the resource group, see [here](../../azure/README.md).
+
 ## Deploy the Environment
 
 The `azure-single-keyvault` uses the `backend.tfvars` and requires that you create another .tfvars if it does not already exists (e.g. `terraform.tfvars`).
@@ -65,8 +69,6 @@ gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
 # you can create a new deploy key (e.g. ssh-keygen) to use as your gitops_ssh_key
 
 resource_group_name = "my-single-keyvault-rg"
-
-resource_group_location = "westus2"
 
 ssh_public_key = "<ssh-public-key>"
 
