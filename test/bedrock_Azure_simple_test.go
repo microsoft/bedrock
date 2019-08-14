@@ -17,10 +17,13 @@ import (
 func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	t.Parallel()
 
+        fmt.Println("here 1")
+
 	// Generate a random cluster name to prevent a naming conflict
 	uniqueID := random.UniqueId()
-	k8sName := strings.ToLower(fmt.Sprintf("gTestk8s-%s", uniqueID))
+	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 
+        fmt.Println("here 2")
 	subnetPrefix := "10.10.1.0/24"
 	addressSpace := "10.10.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
@@ -32,17 +35,20 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	sshkey := os.Getenv("ssh_key")
 	vnetName := k8sName + "-vnet"
 
+        fmt.Println("here 3")
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureSimpleInfraFolder := "../cluster/test-temp-envs/azure-simple-" + k8sName
 	copy.Copy("../cluster/environments/azure-simple", azureSimpleInfraFolder)
 
 	//Create the resource group
+        fmt.Println("here 4")
 	cmd := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(-1)
 	}
+        fmt.Println("here 5")
 
 	// Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{
