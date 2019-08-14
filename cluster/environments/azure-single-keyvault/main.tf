@@ -18,7 +18,6 @@ data "azurerm_subnet" "vnet" {
   resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
 }
 
-
 module "aks-gitops" {
   source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/aks-gitops"
 
