@@ -71,22 +71,22 @@ variable "service_principal_secret" {
 }
 
 variable "server_app_id" {
-  type = "string"
+  type        = "string"
   description = "(Required) The Server ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "client_app_id" {
-  type = "string"
-  description="(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Client ID of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "server_app_secret" {
-  type = "string"
-  description="(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
+  type        = "string"
+  description = "(Required) The Server Secret of an Azure Active Directory Application. Changing this forces a new resource to be created."
 }
 
 variable "tenant_id" {
-  type = "string"
+  type        = "string"
   description = "(Optional) The Tenant ID used for Azure Active Directory Application. If this isn't specified the Tenant ID of the current Subscription is used. Changing this forces a new resource to be created."
 }
 
@@ -121,6 +121,12 @@ variable "kubeconfig_filename" {
   default     = "bedrock_kube_config"
 }
 
+variable "kubeconfigadmin_filename" {
+  description = "Name of the admin kube config file saved to disk."
+  type        = "string"
+  default     = "admin_kube_config"
+}
+
 variable "kubeconfig_recreate" {
   description = "Any change to this variable will recreate the kube config file to local disk."
   type        = "string"
@@ -135,4 +141,52 @@ variable "network_policy" {
 variable "oms_agent_enabled" {
   type    = "string"
   default = "false"
+}
+
+variable "enable_http_application_routing" {
+  type    = "string"
+  default = "true"
+}
+
+variable "enable_azure_monitoring" {
+  type    = "string"
+  default = "true"
+}
+
+variable "enable_dev_spaces" {
+  type    = "string"
+  default = "false"
+}
+
+variable "space_name" {
+  type    = "string"
+  default = "bedrock-lab"
+}
+
+variable "dashboard_cluster_role" {
+  type    = "string"
+  default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
+}
+
+variable "output_directory" {
+  type    = "string"
+  default = "./output"
+}
+
+variable "aks_owners" {
+  type = "string"
+  description = "comma separated aad user object id who are granted to cluster cluster admins"
+  default = ""
+}
+
+variable "aks_contributors" {
+  type = "string"
+  description = "comma separated aad group object id who are contributors to aks"
+  default = ""
+}
+
+variable "aks_readers" {
+  type = "string"
+  description = "comma separated aad group object id who are readers to aks"
+  default = ""
 }

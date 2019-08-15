@@ -15,3 +15,6 @@ vendor
 flux
 kubediff
 locust
+.idea/
+**/bug.md
+**/bugs.md

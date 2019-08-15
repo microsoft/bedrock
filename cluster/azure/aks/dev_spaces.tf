@@ -7,6 +7,7 @@ resource "null_resource" "enable_dev_spaces" {
 
   triggers = {
     enable_dev_spaces  = "${var.enable_dev_spaces}"
+    space_name = "${var.space_name}"
   }
 
   depends_on = ["azurerm_kubernetes_cluster.cluster"]
