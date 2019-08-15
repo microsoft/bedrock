@@ -19,12 +19,13 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	// Generate a random cluster name to prevent a naming conflict
 	uniqueID := random.UniqueId()
-	k8sName := strings.ToLower(fmt.Sprintf("gTestk8s-%s", uniqueID))
+	k8sName := fmt.Sprintf("gTestk8s-%s", uniqueID)
 
 	subnetPrefix := "10.10.1.0/24"
 	addressSpace := "10.10.0.0/16"
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	tenantId := os.Getenv("ARM_TENANT_ID")
 	dnsprefix := k8sName + "-dns"
 	k8sRG := k8sName + "-rg"
 	location := os.Getenv("DATACENTER_LOCATION")
@@ -37,9 +38,17 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	copy.Copy("../cluster/environments/azure-simple", azureSimpleInfraFolder)
 
 	//Create the resource group
-	cmd := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
-	err := cmd.Run()
-	if err != nil {
+	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantId)
+	err0 := cmd0.Run()
+	if err0 != nil {
+		fmt.Println("unable to login to azure cli")
+		log.Fatal(err0)
+		os.Exit(-1)
+	}
+	cmd1 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+	err1 := cmd1.Run()
+	if err1 != nil {
+		fmt.Println("failed to create resource group")
 		log.Fatal(err)
 		os.Exit(-1)
 	}

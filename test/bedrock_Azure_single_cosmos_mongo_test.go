@@ -38,13 +38,21 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
-	//Create the common resource group
-	cmd := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(-1)
-	}
+	//Create the resource group
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantId)
+        err0 := cmd0.Run()
+        if err0 != nil {
+                fmt.Println("unable to login to azure cli")
+                log.Fatal(err0)
+                os.Exit(-1)
+        }
+        cmd1 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+        err1 := cmd1.Run()
+        if err1 != nil {
+                fmt.Println("failed to create common resource group")
+                log.Fatal(err)
+                os.Exit(-1)
+        }
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
@@ -94,6 +102,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	cmd2 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
 	err2 := cmd2.Run()
 	if err != nil {
+                fmt.Println("failed to create cluster resource group")
 		log.Fatal(err2)
 		os.Exit(-1)
 	}

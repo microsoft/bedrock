@@ -65,9 +65,17 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
         //Create the common resource group
-        cmd := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
-        err := cmd.Run()
-        if err != nil {
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantId)
+        err0 := cmd0.Run()
+        if err0 != nil {
+                fmt.Println("unable to login to azure cli")
+                log.Fatal(err0)
+                os.Exit(-1)
+        }
+        cmd1 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+        err1 := cmd1.Run()
+        if err1 != nil {
+                fmt.Println("failed to create common resource group")
                 log.Fatal(err)
                 os.Exit(-1)
         }
@@ -124,6 +132,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
         cmd2 := exec.Command("az", "group", "create", "-n", k8s_eastRG, "-l", cluster_location2)
         err2 := cmd2.Run()
         if err != nil {
+                fmt.Println("failed to create east resource group")
                 log.Fatal(err2)
                 os.Exit(-1)
         }
@@ -131,6 +140,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
         cmd3 := exec.Command("az", "group", "create", "-n", k8s_westRG, "-l", cluster_location1)
         err3 := cmd3.Run()
         if err3 != nil {
+                fmt.Println("failed to create west resource group")
                 log.Fatal(err3)
                 os.Exit(-1)
         }
@@ -138,6 +148,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
         cmd4 := exec.Command("az", "group", "create", "-n", k8s_centralRG, "-l", cluster_location3)
         err4 := cmd4.Run()
         if err != nil {
+                fmt.Println("failed to create central resource group")
                 log.Fatal(err4)
                 os.Exit(-1)
         }
@@ -145,6 +156,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
         cmd5 := exec.Command("az", "group", "create", "-n", k8s_globalRG, "-l", location)
         err5 := cmd5.Run()
         if err != nil {
+                fmt.Println("failed to create global resource group")
                 log.Fatal(err5)
                 os.Exit(-1)
         }
