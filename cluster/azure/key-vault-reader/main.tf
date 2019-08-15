@@ -32,7 +32,7 @@ resource "null_resource" "keyvault_reader" {
     command = "${path.module}/ensure_vault_reader.sh -v ${var.keyvault_name} -n ${var.service_principal_name} -g ${var.resource_group_name}"
   }
 
-  triggers {
+  triggers = {
     service_principal_name = "${var.service_principal_name}"
     keyvault_name          = "${var.keyvault_name}"
   }

@@ -45,7 +45,7 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
     command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c ${var.cosmos_db_collections}"
   }
 
-  triggers {
+  triggers = {
     cosmos_db_account  = "${var.cosmos_db_account}"
     cosmos_db_name = "${var.cosmos_db_name}"
     cosmos_db_collections = "${var.cosmos_db_collections}"
