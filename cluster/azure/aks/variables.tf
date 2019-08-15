@@ -55,7 +55,7 @@ variable "agent_vm_size" {
 
 variable "kubernetes_version" {
   type    = "string"
-  default = "1.13.7"
+  default = "1.13.9"
 }
 
 variable "admin_user" {

@@ -43,7 +43,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
-	tenantid := os.Getenv("ARM_TENANT_ID")
 
 	addressSpace := "10.39.0.0/16"
 	subnetName := k8sName + "-subnet"
@@ -85,7 +84,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"service_principal_id":           clientid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
-			"tenant_id":                      tenantid,
 			"vnet_name":                      vnetName,
 		},
 	}
@@ -272,7 +270,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 
 	//Verify that we get a 200 OK response and response text contains `Cats` otherwise clean up AKS load balancer and destroy resources
 	//Bedrock is using the azure-vote.yaml service that provisions a stateless simple voting app using redis on all clusters
-	_reqErr := http_helper.HttpGetWithRetryWithCustomValidationE(t, testTM_URL, maxRetries, timeBetweenRetries, func(status int, body string) bool {
+	_reqErr := http_helper.HttpGetWithRetryWithCustomValidationE(t, testTM_URL, nil, maxRetries, timeBetweenRetries, func(status int, body string) bool {
 		return status == 200 && strings.Contains(body, `"Cats"`)
 	})
 
