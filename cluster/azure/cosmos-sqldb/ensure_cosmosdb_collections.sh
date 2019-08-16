@@ -30,12 +30,12 @@ fi
 # echo "az login with terraform service principal"
 # echo "environment variables: clientId=$ARM_CLIENT_ID, tenantId=$ARM_TENANT_ID"
 # az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+echo "collections: \n$COLLECTIONS"
 
-COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr ';' '\n'))
+COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr '*' '\n'))
 for i in "${COLLECTION_ARRAY[@]}"
 do
     CURRENT_SETTINGS="$i"
-    echo "current setting: $CURRENT_SETTINGS"
 
     COLLECTION_SETTINGS=($(echo "$CURRENT_SETTINGS" | tr ',' '\n'))
     COLLECTION_NAME=${COLLECTION_SETTINGS[0]}

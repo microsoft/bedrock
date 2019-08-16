@@ -42,7 +42,7 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
   count = "${var.cosmos_db_collections != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c ${var.cosmos_db_collections}"
+    command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c \"${var.cosmos_db_collections}\""
   }
 
   triggers = {
