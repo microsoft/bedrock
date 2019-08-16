@@ -27,6 +27,11 @@ variable "aks_cluster_name" {
   description = "name of AKS cluster"
 }
 
+variable "aks_cluster_spn_name" {
+  type        = "string"
+  description = "name of AKS cluster service principal"
+}
+
 variable "aks_cluster_resource_group_name" {
   type        = "string"
   description = "AKS cluster resource group (NOT Node resource group name that starts with MC)"

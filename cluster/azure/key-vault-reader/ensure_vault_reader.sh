@@ -29,47 +29,49 @@ if [ -z "$VAULT_RESOURCE_GROUP_NAME" ]; then
 fi
 
 KEY_VAULT=$(az keyvault show -g "$VAULT_RESOURCE_GROUP_NAME" -n "$VAULT_NAME")
-AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id')
+AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "Key vault id: $AZ_KEY_VAULT_ID"
 
-AKS_RESOURCE_GROUP_ID=$(az group show -n "$AKS_CLUSTER_RESOURCE_GROUP" | jq '.id')
+AKS_RESOURCE_GROUP_ID=$(az group show -n "$AKS_CLUSTER_RESOURCE_GROUP" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "AKS resource group id: $AKS_RESOURCE_GROUP_ID"
 
 UNDERSCORE="_"
 AKS_NODE_RESOURCE_GROUP="MC$UNDERSCORE$AKS_CLUSTER_RESOURCE_GROUP$UNDERSCORE$AKS_CLUSTER_NAME$UNDERSCORE$AKS_CLUSTER_LOCATION"
-AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n "$AKS_NODE_RESOURCE_GROUP" | jq '.id')
+AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n "$AKS_NODE_RESOURCE_GROUP" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "MC resource group id: $AKS_NODE_RESOURCE_GROUP_ID"
 
 EXISTING_AKS_SPNS=$(az ad sp list --display-name "$AKS_CLUSTER_SPN_NAME")
-AKS_SPN_APP_ID=$(echo "$EXISTING_AKS_SPNS" | jq '.[0].appId')
+AKS_SPN_APP_ID=$(echo "$EXISTING_AKS_SPNS" | jq '.[0].appId' | sed -e 's/^"//' -e 's/"$//')
 echo "AKS cluster spn app id: $AKS_SPN_APP_ID"
 
 echo "Ensure msi $IDENTITY_NAME is created"
 EXISTING_IDENTTIIES="$(az identity list --resource-group "$AKS_NODE_RESOURCE_GROUP" --query "[?name=='$IDENTITY_NAME']" -o json)"
 EXISTING_IDENTITY_FOUND=$(echo "$EXISTING_IDENTTIIES" | jq '. | length')
-MSI_CLIENT_ID=""
+MSI_PRINCIPAL_ID=""
 MSI_ID=""
 if [ $EXISTING_IDENTITY_FOUND -eq 0 ]; then
     MSI_CREATED="$(az identity create -g "$AKS_NODE_RESOURCE_GROUP" -n "$IDENTITY_NAME" -o json)"
     echo "Service identity:"
     echo "$MSI_CREATED"
-    MSI_CLIENT_ID=$(echo "$MSI_CREATED" | jq '.clientId')
-    MSI_ID=$(echo "$MSI_CREATED" | jq '.id')
+    MSI_PRINCIPAL_ID=$(echo "$MSI_CREATED" | jq '.principalId' | sed -e 's/^"//' -e 's/"$//')
+    MSI_ID=$(echo "$MSI_CREATED" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 else
-    MSI_CLIENT_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].clientId')
+    MSI_PRINCIPAL_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].principalId' | sed -e 's/^"//' -e 's/"$//')
+    MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].id' | sed -e 's/^"//' -e 's/"$//')
 fi
-echo "User-assigned identity client id: $MSI_CLIENT_ID"
+echo "User-assigned identity client id: $MSI_PRINCIPAL_ID"
 echo "User-assigned identity id: $MSI_ID"
 
 echo "Ensure appropriate permissions are granted to msi"
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_CLIENT_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_CLIENT_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID"
 
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_CLIENT_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_CLIENT_ID" --scope "$AKS_RESOURCE_GROUP_ID"
+echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\""
+az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID"
 
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_CLIENT_ID\" --scope \"$AZ_KEY_VAULT_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_CLIENT_ID" --scope "$AZ_KEY_VAULT_ID"
+echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\""
+az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID"
+
+echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\""
+az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID"
 
 echo "Ensure Managed Identity Operator role is granted to aks spn"
 echo "az role assignment create --role \"Managed Identity Operator\" --assignee \"$AKS_SPN_APP_ID\" --scope \"$MSI_ID\""

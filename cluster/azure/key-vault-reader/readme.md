@@ -9,15 +9,16 @@ We will create a single pod identity and share it to all the services who need t
     - MC resource group
     - Key vault
     - AKS cluster resource group
+3. set keyvault policy and grant [secret,certificate]/[get,list] to identity
 
 ``` bash
 az role assignment create --role Reader --assignee $identity.principalId --scope $scopeId
 ```
-3. grant aks cluster spn `Managed Identity Operator` role to identity
+4. grant aks cluster spn `Managed Identity Operator` role to identity
 ``` bash
 az role assignment create --role `Managed Identity Operator` --assignee $aksSpn.appId --scope $identity.id
 ```
-4. for each service who is using pod identity, create `AzureIdentity`
+5. for each service who is using pod identity, create `AzureIdentity`
 ``` yaml
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzureIdentity
@@ -28,7 +29,7 @@ spec:
   ResourceID: {{.Values.serviceIdentity.id}}
   ClientId: {{.Values.serviceIdentity.clientId}}
 ```
-5. for each service who is using pod identity, create `AzureIdentityBinding`
+6. for each service who is using pod identity, create `AzureIdentityBinding`
 ``` yaml
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzureIdentityBinding
@@ -38,7 +39,7 @@ spec:
   AzureIdentity: "{{.Values.service.name}}"
   Selector: "{{.Values.service.label}}"
 ```
-6. for each service who is using pod identity, add `aadpodidbinding` to labels
+7. for each service who is using pod identity, add `aadpodidbinding` to labels
     - api/web
 ``` yaml
 ---
