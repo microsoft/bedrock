@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-while getopts :v:n:kg:ag:c:L: option
+while getopts :v:n:g:a:c:l: option
 do
     case "${option}" in
     v) VAULT_NAME=${OPTARG};;
     n) IDENTITY_NAME=${OPTARG};;
-    kg) VAULT_RESOURCE_GROUP_NAME=${OPTARG};;
-    ag) AKS_CLUSTER_RESOURCE_GROUP=${OPTARG};;
+    g) VAULT_RESOURCE_GROUP_NAME=${OPTARG};;
+    a) AKS_CLUSTER_RESOURCE_GROUP=${OPTARG};;
     c) AKS_CLUSTER_NAME=${OPTARG};;
     l) AKS_CLUSTER_LOCATION=${OPTARG};;
     *) echo "ERROR: Please refer to usage guide on GitHub" >&2
@@ -64,20 +64,21 @@ if [ $EXISTING_IDENTITY_FOUND -eq 0 ]; then
     echo "$MSI_CREATED"
     MSI_ID=$(echo "$MSI_CREATED" | jq '.clientId')
 else
-    MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '[0].clientId')
+    MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].clientId')
 fi
 
 echo "Ensure appropriate permissions are granted to msi"
-AKS_NODE_RESOURCE_GROUP="MC_$AKS_CLUSTER_RESOURCE_GROUP_$AKS_CLUSTER_NAME_$AKS_CLUSTER_LOCATION"
-AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n $AKS_NODE_RESOURCE_GROUP -o tsv --query ".id")
+UNDERSCORE="_"
+AKS_NODE_RESOURCE_GROUP="MC$UNDERSCORE$AKS_CLUSTER_RESOURCE_GROUP$UNDERSCORE$AKS_CLUSTER_NAME$UNDERSCORE$AKS_CLUSTER_LOCATION"
+AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n $AKS_NODE_RESOURCE_GROUP | jq '.id')
 az role assignment create --role "Reader" --assignee $MSI_ID --scope $AKS_NODE_RESOURCE_GROUP_ID
 
-AKS_RESOURCE_GROUP_ID==$(az group show -n $AKS_CLUSTER_RESOURCE_GROUP -o tsv --query ".id")
+AKS_RESOURCE_GROUP_ID==$(az group show -n $AKS_CLUSTER_RESOURCE_GROUP | jq '.id')
 az role assignment create --role "Reader" --assignee $MSI_ID --scope $AKS_RESOURCE_GROUP_ID
 
 az role assignment create --role "Reader" --assignee $MSI_ID --scope $AZ_KEY_VAULT_ID
 
 echo "Ensure Managed Identity Operator role is granted to aks spn"
 EXISTING_AKS_SPNS=$(az ad sp list --display-name "$AKS_CLUSTER_NAME")
-AKS_SPN_APP_ID=$(echo "$EXISTING_AKS_SPNS" | jq '[0].appId')
+AKS_SPN_APP_ID=$(echo "$EXISTING_AKS_SPNS" | jq '.[0].appId')
 az role assignment create --role "Managed Identity Operator" --assignee $AKS_SPN_APP_ID --scope $MSI_ID
