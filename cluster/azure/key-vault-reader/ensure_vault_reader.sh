@@ -62,8 +62,10 @@ else
     MSI_CLIENT_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].clientId' | sed -e 's/^"//' -e 's/"$//')
     MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].id' | sed -e 's/^"//' -e 's/"$//')
 fi
-echo "User-assigned identity client id: $MSI_PRINCIPAL_ID"
+
 echo "User-assigned identity id: $MSI_ID"
+echo "User-assigned identity principal id: $MSI_PRINCIPAL_ID"
+echo "User-assigned identity client id: $MSI_CLIENT_ID"
 
 echo "Ensure appropriate permissions are granted to msi"
 
