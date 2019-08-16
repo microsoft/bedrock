@@ -48,15 +48,18 @@ echo "Ensure msi $IDENTITY_NAME is created"
 EXISTING_IDENTTIIES="$(az identity list --resource-group "$AKS_NODE_RESOURCE_GROUP" --query "[?name=='$IDENTITY_NAME']" -o json)"
 EXISTING_IDENTITY_FOUND=$(echo "$EXISTING_IDENTTIIES" | jq '. | length')
 MSI_PRINCIPAL_ID=""
+MSI_CLIENT_ID=""
 MSI_ID=""
 if [ $EXISTING_IDENTITY_FOUND -eq 0 ]; then
     MSI_CREATED="$(az identity create -g "$AKS_NODE_RESOURCE_GROUP" -n "$IDENTITY_NAME" -o json)"
     echo "Service identity:"
     echo "$MSI_CREATED"
     MSI_PRINCIPAL_ID=$(echo "$MSI_CREATED" | jq '.principalId' | sed -e 's/^"//' -e 's/"$//')
+    MSI_CLIENT_ID=$(echo "$MSI_CREATED" | jq '.clientId' | sed -e 's/^"//' -e 's/"$//')
     MSI_ID=$(echo "$MSI_CREATED" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 else
     MSI_PRINCIPAL_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].principalId' | sed -e 's/^"//' -e 's/"$//')
+    MSI_CLIENT_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].clientId' | sed -e 's/^"//' -e 's/"$//')
     MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].id' | sed -e 's/^"//' -e 's/"$//')
 fi
 echo "User-assigned identity client id: $MSI_PRINCIPAL_ID"
@@ -76,3 +79,9 @@ az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope
 echo "Ensure Managed Identity Operator role is granted to aks spn"
 echo "az role assignment create --role \"Managed Identity Operator\" --assignee \"$AKS_SPN_APP_ID\" --scope \"$MSI_ID\""
 az role assignment create --role "Managed Identity Operator" --assignee "$AKS_SPN_APP_ID" --scope "$MSI_ID"
+
+echo "Setu keyvault secret policy"
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --spn \"$MSI_CLIENT_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --spn "$MSI_CLIENT_ID"
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --spn \"$MSI_CLIENT_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --certificate-permissions get list --spn "$MSI_CLIENT_ID"
