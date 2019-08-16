@@ -14,10 +14,7 @@ resource "azurerm_key_vault" "keyvault" {
   location            = "${azurerm_resource_group.keyvault.location}"
   resource_group_name = "${azurerm_resource_group.keyvault.name}"
   tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
-
-  sku {
-    name = "${var.keyvault_sku}"
-  }
+  sku_name            = "${var.keyvault_sku}"
 
   network_acls {
     default_action = "Allow"
@@ -34,7 +31,7 @@ resource "null_resource" "keyvault_reader" {
 
   triggers = {
     vault_reader_identity = "${var.vault_reader_identity}"
-    keyvault_name          = "${var.keyvault_name}"
+    vault_name            = "${var.vault_name}"
   }
 
   depends_on = ["azurerm_key_vault.keyvault"]
