@@ -40,9 +40,4 @@ resource "azurerm_key_vault" "keyvault" {
       "delete"
     ]
   }
-
-  network_acls {
-    default_action = "Deny"
-    bypass         = "AzureServices"
-  }
 }
