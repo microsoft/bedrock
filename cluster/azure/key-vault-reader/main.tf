@@ -26,14 +26,14 @@ resource "azurerm_key_vault" "keyvault" {
 }
 
 resource "null_resource" "keyvault_reader" {
-  count = "${var.service_principal_name != "" && var.vault_name != "" ? 1 : 0}"
+  count = "${var.vault_reader_identity != "" && var.vault_name != "" ? 1 : 0}"
 
   provisioner "local-exec" {
     command = "${path.module}/ensure_vault_reader.sh -v ${var.vault_name} -n ${var.vault_reader_identity} -Kg ${var.resource_group_name} -ag ${var.aks_cluster_resource_group_name} -c ${var.aks_cluster_name} -l ${var.aks_cluster_location}"
   }
 
   triggers = {
-    service_principal_name = "${var.service_principal_name}"
+    vault_reader_identity = "${var.vault_reader_identity}"
     keyvault_name          = "${var.keyvault_name}"
   }
 
