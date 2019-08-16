@@ -1,12 +1,3 @@
-variable "keyvault_name" {
-  description = "Name of the keyvault to create"
-}
-
-variable "keyvault_sku" {
-  description = "SKU of the keyvault to create"
-  default     = "standard"
-}
-
 variable "resource_group_name" {
   description = "Default resource group name that the network will be created in."
 }
@@ -16,7 +7,32 @@ variable "location" {
   type        = "string"
 }
 
-variable "service_principal_name" {
-  description = "service principal name that will be granted reader role to key vault. The service principal musbe by unique with this name"
+variable "vault_name" {
   type        = "string"
+  description = "Name of the keyvault to create"
+}
+
+variable "keyvault_sku" {
+  description = "SKU of the keyvault to create"
+  default     = "standard"
+}
+
+variable "vault_reader_identity" {
+  description = "name of user assigned identity (MSI) that will be granted reader role to key vault. The identity name must be by unique within subscription"
+  type        = "string"
+}
+
+variable "aks_cluster_name" {
+  type        = "string"
+  description = "name of AKS cluster"
+}
+
+variable "aks_cluster_resource_group_name" {
+  type        = "string"
+  description = "AKS cluster resource group (NOT Node resource group name that starts with MC)"
+}
+
+variable "aks_cluster_location" {
+  type = "string"
+  description = "AKS resource group location"
 }

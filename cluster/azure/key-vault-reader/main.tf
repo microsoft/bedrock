@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "keyvault" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "keyvault" {
-  name                = "${var.keyvault_name}"
+  name                = "${var.vault_name}"
   location            = "${azurerm_resource_group.keyvault.location}"
   resource_group_name = "${azurerm_resource_group.keyvault.name}"
   tenant_id           = "${data.azurerm_client_config.current.tenant_id}"
@@ -26,10 +26,10 @@ resource "azurerm_key_vault" "keyvault" {
 }
 
 resource "null_resource" "keyvault_reader" {
-  count = "${var.service_principal_name != "" && var.keyvault_name != "" ? 1 : 0}"
+  count = "${var.service_principal_name != "" && var.vault_name != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "${path.module}/ensure_vault_reader.sh -v ${var.keyvault_name} -n ${var.service_principal_name} -g ${var.resource_group_name}"
+    command = "${path.module}/ensure_vault_reader.sh -v ${var.vault_name} -n ${var.vault_reader_identity} -Kg ${var.resource_group_name} -ag ${var.aks_cluster_resource_group_name} -c ${var.aks_cluster_name} -l ${var.aks_cluster_location}"
   }
 
   triggers = {

@@ -4,7 +4,7 @@ while getopts :v:n:kg:ag:c:L: option
 do
     case "${option}" in
     v) VAULT_NAME=${OPTARG};;
-    n) SERVICE_PRINCIPAL_NAME=${OPTARG};;
+    n) IDENTITY_NAME=${OPTARG};;
     kg) VAULT_RESOURCE_GROUP_NAME=${OPTARG};;
     ag) AKS_CLUSTER_RESOURCE_GROUP=${OPTARG};;
     c) AKS_CLUSTER_NAME=${OPTARG};;
@@ -14,8 +14,8 @@ do
     esac
 done
 
-if [ -z "$SERVICE_PRINCIPAL_NAME" ]; then
-    echo "usage: $0 -n <SERVICE_PRINCIPAL_NAME>"
+if [ -z "$IDENTITY_NAME" ]; then
+    echo "usage: $0 -n <IDENTITY_NAME>"
     exit 1
 fi
 if [ -z "$VAULT_NAME" ]; then
@@ -54,12 +54,12 @@ AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id')
 #     fi
 # fi
 
-echo "Ensure msi $SERVICE_PRINCIPAL_NAME is created"
-EXISTING_IDENTTIIES=$(az identity list --resource-group $AKS_CLUSTER_RESOURCE_GROUP --query "[?name=='$SERVICE_PRINCIPAL_NAME']" -o json)
+echo "Ensure msi $IDENTITY_NAME is created"
+EXISTING_IDENTTIIES=$(az identity list --resource-group $AKS_CLUSTER_RESOURCE_GROUP --query "[?name=='$IDENTITY_NAME']" -o json)
 EXISTING_IDENTITY_FOUND=$(echo "$EXISTING_IDENTTIIES" | jq '. | length')
 MSI_ID=""
 if [ $EXISTING_IDENTITY_FOUND -eq 0 ]; then
-    $MSI_CREATED=$(az identity create -g $AKS_CLUSTER_RESOURCE_GROUP -n $SERVICE_PRINCIPAL_NAME)
+    $MSI_CREATED=$(az identity create -g $AKS_CLUSTER_RESOURCE_GROUP -n $IDENTITY_NAME)
     echo "Service identity:"
     echo "$MSI_CREATED"
     MSI_ID=$(echo "$MSI_CREATED" | jq '.clientId')
