@@ -9,7 +9,7 @@ data "azuread_service_principal" "flexvol" {
 resource "azurerm_key_vault_access_policy" "flexvol" {
   count = "${var.enable_flexvol ? 1 : 0}"
 
-  vault_name          = "${var.keyvault_name}"
+  vault_name          = "${var.vault_name}"
   resource_group_name = "${var.resource_group_name}"
 
   tenant_id = "${var.tenant_id}"

@@ -79,7 +79,7 @@ subnet_prefix = "10.39.0.0/24"
 
 address_space = "10.39.0.0/16"
 
-keyvault_name = "mykeyvault"
+vault_name = "mykeyvault"
 
 global_resource_group_name = "my-rg"
 

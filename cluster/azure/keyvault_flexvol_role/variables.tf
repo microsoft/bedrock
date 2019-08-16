@@ -9,7 +9,7 @@ variable "flexvol_role_assignment_role" {
   default     = "Reader"
 }
 
-variable "keyvault_name" {
+variable "vault_name" {
   description = "The name of the keyvault that will be associated with the flex volume."
   type        = "string"
 }

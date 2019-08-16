@@ -48,7 +48,7 @@ variable "enable_flexvol" {
   default = "true"
 }
 
-variable "keyvault_name" {
+variable "vault_name" {
   description = "The name of the keyvault that will be associated with the flex volume."
   type        = "string"
 }

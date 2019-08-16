@@ -91,7 +91,7 @@ module "central_flex_volume" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name            = "${var.keyvault_name}"
+  vault_name            = "${var.vault_name}"
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
 
   kubeconfig_complete = "${module.central_aks_gitops.kubeconfig_done}"

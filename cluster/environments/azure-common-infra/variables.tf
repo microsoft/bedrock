@@ -2,7 +2,7 @@ variable "address_space" {
   type = "string"
 }
 
-variable "keyvault_name" {
+variable "vault_name" {
   type = "string"
 }
 

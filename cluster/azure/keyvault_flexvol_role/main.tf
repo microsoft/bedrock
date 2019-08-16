@@ -7,5 +7,5 @@ resource "azurerm_role_assignment" "flexvol" {
 
   principal_id         = "${data.azuread_service_principal.flexvol.id}"
   role_definition_name = "${var.flexvol_role_assignment_role}"
-  scope                = "/subscriptions/${var.subscription_id}/resourcegroups/${var.resource_group_name}/providers/Microsoft.KeyVault/vaults/${var.keyvault_name}"
+  scope                = "/subscriptions/${var.subscription_id}/resourcegroups/${var.resource_group_name}/providers/Microsoft.KeyVault/vaults/${var.vault_name}"
 }

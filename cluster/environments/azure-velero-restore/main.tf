@@ -43,7 +43,7 @@ module "keyvault_flexvolume_role" {
   resource_group_name  = "${var.keyvault_resource_group}"
   service_principal_id = "${var.service_principal_id}"
   subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
-  keyvault_name        = "${var.keyvault_name}"
+  vault_name        = "${var.vault_name}"
 }
 
 # Deploy central keyvault flexvolume
@@ -54,7 +54,7 @@ module "flex_volume" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"
-  keyvault_name            = "${var.keyvault_name}"
+  vault_name            = "${var.vault_name}"
 
   kubeconfig_complete = "${module.aks.kubeconfig_done}"
 }

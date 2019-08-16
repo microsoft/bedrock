@@ -78,7 +78,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":                  addressSpace,
-			"keyvault_name":                  kvName,
+			"vault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
 			"global_resource_group_location": location,
 			"service_principal_id":           clientid,
@@ -133,7 +133,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
 			"gitops_poll_interval":     "5m",
-			"keyvault_name":            kvName,
+			"vault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
 
 			"traffic_manager_profile_name":            tmName,

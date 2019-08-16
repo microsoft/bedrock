@@ -32,7 +32,7 @@ If there is not a `terraform.tfvars`, create one that looks like this:
 
 #--------------------------------------------------------------
 
-keyvault_name = "myVault"
+vault_name = "myVault"
 
 keyvault_resource_group = "myResourceGroup"
 

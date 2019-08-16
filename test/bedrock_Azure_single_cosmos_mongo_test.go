@@ -6,7 +6,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/otiai10/copy"
-	
+
 	"os"
 	"os/exec"
 	"strings"
@@ -54,7 +54,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":                  addressSpace,
-			"keyvault_name":                  kvName,
+			"vault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
 			"global_resource_group_location": location,
 			"service_principal_id":           clientid,
@@ -108,7 +108,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"dns_prefix":               dnsprefix,
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
-			"keyvault_name":            kvName,
+			"vault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
 			"resource_group_name":      k8sRG,
 			"resource_group_location":  location,
@@ -150,7 +150,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 		fmt.Println("Flexvolume verification complete")
 	}
 
-	//Test Case 3: Verify Cosmos/MongoDB	
+	//Test Case 3: Verify Cosmos/MongoDB
 	fmt.Println("Test case 3: Verifying Cosmos/MongoDB deployment")
 	cosmos_db_key := terraform.Output(t, k8s_tfOptions, "azure_cosmos_db_primary_master_key")
 	cmd := exec.Command("az" ,"cosmosdb", "database", "exists" ,"--name", cosmos_db_name ,"--key", cosmos_db_key, "--db-name", mongo_db_name)

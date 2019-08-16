@@ -52,7 +52,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 		Upgrade:      true,
 		Vars: map[string]interface{}{
 			"address_space":                  addressSpace,
-			"keyvault_name":                  kvName,
+			"vault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
 			"global_resource_group_location": location,
 			"service_principal_id":           clientid,
@@ -104,7 +104,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"dns_prefix":               dnsprefix,
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
-			"keyvault_name":            kvName,
+			"vault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
 			"resource_group_name":      k8sRG,
 			"resource_group_location":  location,

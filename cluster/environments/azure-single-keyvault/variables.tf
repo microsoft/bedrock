@@ -63,7 +63,7 @@ variable "gitops_path" {
   default = ""
 }
 
-variable "keyvault_name" {
+variable "vault_name" {
   type = "string"
 }
 

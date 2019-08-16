@@ -61,7 +61,7 @@ variable "gc_enabled" {
   default = "true"
 }
 
-variable "keyvault_name" {
+variable "vault_name" {
   type = "string"
 }
 

@@ -30,7 +30,7 @@ If there is not a `terraform.tfvars`, create one that looks like this:
 #--------------------------------------------------------------
 # keyvault, vnet, and subnets are created seperately by azure-common-infra
 #--------------------------------------------------------------
-keyvault_name = "my-keyvault"
+vault_name = "my-keyvault"
 keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
