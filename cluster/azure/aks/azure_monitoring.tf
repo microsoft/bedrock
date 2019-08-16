@@ -2,7 +2,7 @@ resource "null_resource" "enable_azure_monitoring" {
   count = "${var.enable_azure_monitoring ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "az aks enable-addons --resource-group ${var.resource_group_name} --name ${var.cluster_name} --addons monitoring"
+    command = "az aks disable-addons --resource-group ${var.resource_group_name} --name ${var.cluster_name} --addons monitoring; az aks enable-addons --resource-group ${var.resource_group_name} --name ${var.cluster_name} --addons monitoring"
   }
 
   triggers = {
