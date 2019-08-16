@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-while getopts :v:n:g:a:c:l: option
+while getopts :v:n:g:a:c:s:l: option
 do
     case "${option}" in
     v) VAULT_NAME=${OPTARG};;
