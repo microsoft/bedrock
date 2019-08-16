@@ -8,7 +8,7 @@ output "keyvault_uri" {
   value       = "${azurerm_key_vault.keyvault.vault_uri}"
 }
 
-output "keyvault_name" {
+output "vault_name" {
   description = "The name of the Keyvault"
   value       = "${azurerm_key_vault.keyvault.name}"
 }

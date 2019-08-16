@@ -1,4 +1,4 @@
-variable "keyvault_name" {
+variable "vault_name" {
   description = "Name of the keyvault to create"
   default     = "acctkeyvault"
 }
@@ -16,4 +16,9 @@ variable "resource_group_name" {
 variable "location" {
   description = "The location/region where the core network will be created. The full list of Azure regions can be found at https://azure.microsoft.com/regions"
   type        = "string"
+}
+
+variable "service_principal_object_id" {
+  type = "string"
+  description = "terraform service principal object id"
 }
