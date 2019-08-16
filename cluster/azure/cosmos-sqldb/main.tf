@@ -12,7 +12,7 @@ resource "azurerm_cosmosdb_account" "cosmosdb_account" {
   offer_type                = "${var.cosmos_db_offer_type}"
   kind                      = "GlobalDocumentDB"
   enable_automatic_failover = true
-  ip_range_filter           = "${var.enable_filewall} ? \"0.0.0.0,104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26,${var.allowed_ip_ranges}\" : null"
+  ip_range_filter           = "${var.enable_filewall ? "${var.allowed_ip_ranges}" : ""}"
 
   consistency_policy {
     consistency_level       = "${var.consistency_level}"
