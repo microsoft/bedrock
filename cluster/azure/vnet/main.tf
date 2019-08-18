@@ -13,8 +13,11 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "subnet" {
-  name                 = "subnet"
+  count                = "${length(var.subnet_names)}"
+  name                 = "${var.subnet_names[count.index]}"
   virtual_network_name = "${azurerm_virtual_network.vnet.name}"
   resource_group_name  = "${azurerm_resource_group.vnet.name}"
-  address_prefix       = "10.0.1.0/24"
+
+  address_prefix    = "${var.subnet_prefixes[count.index]}"
+  service_endpoints = "${var.subnet_service_endpoints[count.index]}"
 }

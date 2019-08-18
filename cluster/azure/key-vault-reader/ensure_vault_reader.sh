@@ -62,23 +62,25 @@ else
     MSI_CLIENT_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].clientId' | sed -e 's/^"//' -e 's/"$//')
     MSI_ID=$(echo "$EXISTING_IDENTTIIES" | jq '.[0].id' | sed -e 's/^"//' -e 's/"$//')
 fi
-echo "User-assigned identity client id: $MSI_PRINCIPAL_ID"
+
 echo "User-assigned identity id: $MSI_ID"
+echo "User-assigned identity principal id: $MSI_PRINCIPAL_ID"
+echo "User-assigned identity client id: $MSI_CLIENT_ID"
 
 echo "Ensure appropriate permissions are granted to msi"
 
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID"
+echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\""
+az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID"
 
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID"
+echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\""
+az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID"
 
-echo "az role assignment create --role \"Reader\" --assignee \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\""
-az role assignment create --role "Reader" --assignee "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID"
+echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\""
+az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID"
 
 echo "Ensure Managed Identity Operator role is granted to aks spn"
-echo "az role assignment create --role \"Managed Identity Operator\" --assignee \"$AKS_SPN_APP_ID\" --scope \"$MSI_ID\""
-az role assignment create --role "Managed Identity Operator" --assignee "$AKS_SPN_APP_ID" --scope "$MSI_ID"
+echo "az role assignment create --role \"Managed Identity Operator\" --assignee-object-id \"$AKS_SPN_APP_ID\" --scope \"$MSI_ID\""
+az role assignment create --role "Managed Identity Operator" --assignee-object-id "$AKS_SPN_APP_ID" --scope "$MSI_ID"
 
 echo "Setu keyvault secret policy"
 echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --spn \"$MSI_CLIENT_ID\""
