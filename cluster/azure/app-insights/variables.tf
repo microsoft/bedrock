@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  description = "The location/region where the core network will be created. The full list of Azure regions can be found at https://azure.microsoft.com/regions"
+  description = "The location/region of resource group"
   type        = "string"
 }
 
