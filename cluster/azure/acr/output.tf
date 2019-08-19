@@ -1,19 +1,15 @@
-variable "id" {
-  type = "string"
-  description = "resource id of acr"
+output "id" {
+  value = "${azurerm_container_registry.acr.id}"
 }
 
-variable "login_server" {
-  type = "string"
-  description = "login server for docker"
+output "login_server" {
+  value = "${azurerm_container_registry.acr.login_server}"
 }
 
-variable "admin_username" {
-  type = "string"
-  description = "username"
+output "admin_username" {
+  value = "${azurerm_container_registry.acr.admin_username}"
 }
 
-variable "admin_password" {
-  type = "string"
-  description = "password"
+output "admin_password" {
+  value = "${azurerm_container_registry.acr.admin_password}"
 }
