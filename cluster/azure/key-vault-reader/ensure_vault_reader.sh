@@ -79,7 +79,7 @@ echo "Ensure Managed Identity Operator role is granted to aks spn"
 echo "az role assignment create --role \"Managed Identity Operator\" --assignee-object-id \"$AKS_SPN_OBJECT_ID\" --scope \"$MSI_ID\""
 az role assignment create --role "Managed Identity Operator" --assignee-object-id "$AKS_SPN_OBJECT_ID" --scope "$MSI_ID"
 
-echo "Setu keyvault secret policy"
+echo "Setup keyvault secret/certificate policy"
 echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --spn \"$MSI_CLIENT_ID\""
 az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --spn "$MSI_CLIENT_ID"
 echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --spn \"$MSI_CLIENT_ID\""
