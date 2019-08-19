@@ -23,7 +23,7 @@ Beyond these, you'll only need the Azure `az` command line tool installed (used 
 
 Bedrock provides different templates to start from when building your deployment environment.  Each template has a set of common and specific requirements that must be met in order to deploy them.
 
-Common across templates, it is required that the resource group(s) needed by the enviornment be created prior to deploying.  For how to create a resource group, see [here]()
+Common across templates, it is required that the resource group(s) needed by the enviornment be created prior to deploying.  For how to create a resource group, see [here](#Creating-Resource-Groups).
 
 The following templates are currently available for deployment:
 
