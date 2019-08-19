@@ -24,6 +24,8 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	kvRG := kvName + "-rg"
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	tenantid := os.Getenv("ARM_TENANT_ID")
 	subnetName := k8sName + "-subnet"
 	vnetName := k8sName + "-vnet"
 
@@ -38,18 +40,18 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
 	//Create the resource group
-        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantId)
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
         err0 := cmd0.Run()
         if err0 != nil {
                 fmt.Println("unable to login to azure cli")
                 log.Fatal(err0)
                 os.Exit(-1)
         }
-        cmd1 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+        cmd1 := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
         err1 := cmd1.Run()
         if err1 != nil {
                 fmt.Println("failed to create resource group")
-                log.Fatal(err)
+                log.Fatal(err1)
                 os.Exit(-1)
         }
 
@@ -86,7 +88,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 
 	// Generate azure single environment using resources generated from common-infra
 	dnsprefix := k8sName + "-dns"
-	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	k8sRG := k8sName + "-rg"
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
