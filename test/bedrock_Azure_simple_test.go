@@ -49,7 +49,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	err1 := cmd1.Run()
 	if err1 != nil {
 		fmt.Println("failed to create resource group")
-		log.Fatal(err)
+		log.Fatal(err1)
 		os.Exit(-1)
 	}
 
