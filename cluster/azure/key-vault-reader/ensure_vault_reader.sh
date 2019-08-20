@@ -80,7 +80,9 @@ echo "az role assignment create --role \"Managed Identity Operator\" --assignee-
 az role assignment create --role "Managed Identity Operator" --assignee-object-id "$AKS_SPN_OBJECT_ID" --scope "$MSI_ID"
 
 echo "Setup keyvault secret/certificate policy"
-echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --spn \"$MSI_CLIENT_ID\""
-az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --spn "$MSI_CLIENT_ID"
-echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --spn \"$MSI_CLIENT_ID\""
-az keyvault set-policy -n "$VAULT_NAME" --certificate-permissions get list --spn "$MSI_CLIENT_ID"
+# NOTE: there was a design flow that in order to use clientId, current login identity (spn) needs to have graph [directory.read.all] permission
+# which is used to query object-id, we can just pass in $MSI_PRINCIPAL_ID which is object_id
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --object-id "$MSI_PRINCIPAL_ID"
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --certificate-permissions get list --object-id "$MSI_PRINCIPAL_ID"
