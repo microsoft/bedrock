@@ -56,11 +56,13 @@ The .yaml specification describes the service `azure-vote` and type: `LoadBalanc
 ## Results
 To see the changes as Flux picks them up and deploys them, open a bash command window and navigate to the Bedrock deployment, for example, the `bedrock/cluster/environments/azure-simple` directory.
 
-Get your Flux namespace by running: `KUBECONFIG=./output/bedrock_kube_config kubectl get pod -n flux`.
+Get the Flux pod name: `KUBECONFIG=./output/bedrock_kube_config kubectl get pod -n flux`.
 
 Copy the name of the pod (the one that is not memcached).
 
-Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <your-Flux-namespace> --namespace=flux`.  This will display a running log of the deployment.
+Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <your-flux-pod-name > --namespace=flux`.
+
+This will display a running log of the deployment.
 
 Now push the azure-vote.yaml file that Fabrikate created in the `/generated/common` directory to the repo specified in the `.tfvars` file.  Or, simply drop it to the GitHub repo.  Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.  
 
