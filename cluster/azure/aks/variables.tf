@@ -72,10 +72,6 @@ variable "output_directory" {
   default = "./output"
 }
 
-variable "vnet_subnet_id" {
-  type = "string"
-}
-
 variable "enable_virtual_node_addon" {
   type    = "string"
   default = "false"

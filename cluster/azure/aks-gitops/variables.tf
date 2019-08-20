@@ -94,10 +94,6 @@ variable "ssh_public_key" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
-  type = "string"
-}
-
 variable "service_cidr" {
   default     = "10.0.0.0/16"
   description = "Used to assign internal services in the AKS cluster an IP address. This IP address range should be an address space that isn't in use elsewhere in your network environment. This includes any on-premises network ranges if you connect, or plan to connect, your Azure virtual networks using Express Route or a Site-to-Site VPN connections."
