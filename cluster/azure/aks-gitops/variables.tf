@@ -1,3 +1,14 @@
+############################################################
+# aks                                                      #
+############################################################
+variable "resource_group_name" {
+  type = "string"
+}
+
+variable "resource_group_location" {
+  type = "string"
+}
+
 variable "agent_vm_count" {
   type    = "string"
   default = "3"
@@ -7,58 +18,11 @@ variable "agent_vm_size" {
   type = "string"
 }
 
-variable "acr_enabled" {
-  type = "string"
-}
-
-variable "gc_enabled" {
-  type = "string"
-}
-
 variable "cluster_name" {
   type = "string"
 }
 
 variable "dns_prefix" {
-  type = "string"
-}
-
-variable "enable_flux" {
-  type    = "string"
-  default = "true"
-}
-
-variable "flux_recreate" {
-  type = "string"
-}
-
-variable "gitops_ssh_url" {
-  type = "string"
-}
-
-variable "gitops_ssh_key" {
-  type = "string"
-}
-
-variable "gitops_path" {
-  type    = "string"
-  default = ""
-}
-
-variable "gitops_poll_interval" {
-  type    = "string"
-  default = "5m"
-}
-
-variable "gitops_url_branch" {
-  type = "string"
-}
-
-variable "resource_group_name" {
-  type = "string"
-}
-
-variable "resource_group_location" {
   type = "string"
 }
 
@@ -129,11 +93,58 @@ variable "kubeconfig_recreate" {
   default     = ""
 }
 
-variable "network_policy" {
-  default     = "azure"
-  description = "Network policy to be used with Azure CNI. Either azure or calico."
+variable "output_directory" {
+  type    = "string"
+  default = "./output"
 }
 
+############################################################
+# flux                                                     #
+############################################################
+
+variable "gc_enabled" {
+  type = "string"
+}
+
+variable "acr_enabled" {
+  type = "string"
+}
+
+variable "enable_flux" {
+  type    = "string"
+  default = "true"
+}
+
+variable "flux_recreate" {
+  type = "string"
+}
+
+variable "gitops_ssh_url" {
+  type = "string"
+}
+
+variable "gitops_ssh_key" {
+  type = "string"
+}
+
+variable "gitops_path" {
+  type    = "string"
+  default = ""
+}
+
+variable "gitops_poll_interval" {
+  type    = "string"
+  default = "5m"
+}
+
+variable "gitops_url_branch" {
+  type = "string"
+}
+
+
+############################################################
+# addon                                                    #
+############################################################
 variable "oms_agent_enabled" {
   type    = "string"
   default = "false"
@@ -164,11 +175,9 @@ variable "dashboard_cluster_role" {
   default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
 }
 
-variable "output_directory" {
-  type    = "string"
-  default = "./output"
-}
-
+############################################################
+# rbac                                                     #
+############################################################
 variable "aks_owners" {
   type = "string"
   description = "comma separated aad user object id who are granted to cluster cluster admins"
@@ -185,4 +194,23 @@ variable "aks_readers" {
   type = "string"
   description = "comma separated aad group object id who are readers to aks"
   default = ""
+}
+
+############################################################
+# kv-reader                                                #
+############################################################
+
+variable "vault_name" {
+  type        = "string"
+  description = "Name of the keyvault to create"
+}
+
+variable "vault_reader_identity" {
+  description = "name of user assigned identity (MSI) that will be granted reader role to key vault. The identity name must be by unique within subscription"
+  type        = "string"
+}
+
+variable "aks_cluster_spn_name" {
+  type        = "string"
+  description = "name of AKS cluster service principal"
 }
