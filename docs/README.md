@@ -18,4 +18,4 @@ Various
 
 Slack Discussion Forum
 --------
-* [Bedrock Discussion](https://app.slack.com/client/TGEBY5S23/CGD6ASN4T)
+* [Bedrock Discussion](https://join.slack.com/t/bedrockco/shared_invite/enQtNjIwNzg3NTU0MDgzLTdiZGY4ZTM5OTM4MWEyM2FlZDA5MmE0MmNhNTQ2MGMxYTY2NGYxMTVlZWFmODVmODJlOWU0Y2U2YmM1YTE0NGI)
