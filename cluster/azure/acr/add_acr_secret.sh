@@ -14,20 +14,20 @@ do
     esac
 done
 
+if [ -z "$ACR_NAME" ]; then
+    echo "usage: $0 -v <ACR_NAME>"
+    exit 1
+fi
 if [ -z "$VAULT_NAME" ]; then
     echo "usage: $0 -v <VAULT_NAME>"
     exit 1
 fi
-if [ -z "$USERNAME_SECRET_NAME" ]; then
-    echo "usage: $0 -g <USERNAME_SECRET_NAME>"
+if [ -z "$AUTH_SECRET_NAME" ]; then
+    echo "usage: $0 -g <AUTH_SECRET_NAME>"
     exit 1
 fi
 if [ -z "$USERNAME" ]; then
     echo "usage: $0 -g <USERNAME>"
-    exit 1
-fi
-if [ -z "$PASSWORD_SECRET_NAME" ]; then
-    echo "usage: $0 -g <PASSWORD_SECRET_NAME>"
     exit 1
 fi
 if [ -z "$PASSWORD" ]; then
