@@ -4,7 +4,7 @@ resource "azurerm_container_registry" "acr" {
   location                 = "${var.location}"
   sku                      = "Premium"
   admin_enabled            = true
-  georeplication_locations = ["${var.location}", "${var.alternate_location}"]
+  georeplication_locations = ["${var.alternate_location}"]
 }
 
 resource "null_resource" "store_acr_secrets" {
