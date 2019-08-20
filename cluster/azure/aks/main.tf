@@ -58,14 +58,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     os_disk_size_gb = 30
   }
 
-  network_profile {
-    network_plugin     = "azure"
-    network_policy     = "${var.network_policy}"
-    service_cidr       = "${var.service_cidr}"
-    dns_service_ip     = "${var.dns_ip}"
-    docker_bridge_cidr = "${var.docker_cidr}"
-  }
-
   role_based_access_control {
     enabled = true
 
