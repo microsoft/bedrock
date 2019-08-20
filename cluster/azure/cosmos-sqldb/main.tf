@@ -14,8 +14,8 @@ resource "azurerm_cosmosdb_account" "cosmosdb_account" {
 
   consistency_policy {
     consistency_level       = "${var.consistency_level}"
-    max_interval_in_seconds = 300
-    max_staleness_prefix    = 100000
+    max_interval_in_seconds = 5
+    max_staleness_prefix    = 100
   }
 
   geo_location {
