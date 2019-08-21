@@ -1,5 +1,5 @@
 module "west_waf_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=0.12.0//cluster/azure/subnet"
 
   resource_group_name = "${data.azurerm_resource_group.westrg.name}"
   vnet_name           = "${module.west_vnet.vnet_name}"
@@ -8,7 +8,7 @@ module "west_waf_subnet" {
 }
 
 module "west_waf" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/waf"
+  source = "github.com/microsoft/bedrock?ref=0.12.0//cluster/azure/waf"
 
   resource_group_name     = "${data.azurerm_resource_group.westrg.name}"
   wafname                 = "${var.prefix}-west-waf"
