@@ -34,6 +34,7 @@ The following templates are currently available for deployment:
 
 The common steps necessary to deploy a cluster are:
 
+- [Build Fabrikate Definition for Container Deployment](../../docs/fabrikate/README.md) 
 - [Create an Azure service principal](#create-an-azure-service-principal)
 - [Configure Terraform CLI to use the Azure Service Principal](#configure-terraform-cli-for-azure)
 - [Create Terraform configuration files](#create-terraform-configuration-files)
