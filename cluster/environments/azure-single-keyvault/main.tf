@@ -48,6 +48,5 @@ module "flex_volume" {
   service_principal_secret    = "${var.service_principal_secret}"
   tenant_id                   = "${data.azurerm_client_config.current.tenant_id}"
   keyvault_name               = "${var.keyvault_name}"
-
-  kubeconfig_complete = "${module.aks-gitops.kubeconfig_done}"
+  kubeconfig_complete         = "${module.aks-gitops.kubeconfig_done}"
 }

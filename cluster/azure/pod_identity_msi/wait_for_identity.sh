@@ -1,7 +1,7 @@
 #!/bin/bash
 IDENTITY_ID=$1
 WAIT_TIME_SECONDS=2
-TIMEOUT_SECONDS=180
+TIMEOUT_SECONDS=360
 
 FOUND=0
 echo "waiting for identity to propagate -- $IDENTITY_ID"
