@@ -14,7 +14,7 @@ locals {
 
 # Creates central vnet
 module "central_vnet" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   resource_group_name     = "${local.central_rg_name }"
   subnet_names            = ["${var.cluster_name}_aks_subnet"]
@@ -28,7 +28,7 @@ module "central_vnet" {
 
 # Creates central aks cluster, flux, kubediff
 module "central_aks_gitops" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -56,7 +56,7 @@ module "central_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "central_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/tm-endpoint-ip"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = "${local.central_rg_name}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
@@ -81,7 +81,7 @@ resource "azurerm_role_assignment" "central_spra" {
 
 # Deploy central keyvault flexvolume
 module "central_flex_volume" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/keyvault_flexvol"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"

@@ -5,7 +5,7 @@
 data "azurerm_client_config" "current" {}
 
 module "common-provider" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/common/provider"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/common/provider"
 }
 
 data "azurerm_resource_group" "cluster_rg" {
@@ -24,7 +24,7 @@ resource "null_resource" "cloud_credentials" {
 }
 
 module "aks" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/aks"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
 
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
@@ -41,7 +41,7 @@ module "aks" {
 
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/keyvault_flexvol_role"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol_role"
 
   resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id = "${var.service_principal_id}"
@@ -51,7 +51,7 @@ module "keyvault_flexvolume_role" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/azure/keyvault_flexvol"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
 
   resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"
@@ -63,7 +63,7 @@ module "flex_volume" {
 }
 
 module "velero" {
-  source = "github.com/microsoft/bedrock?ref=byo.rg//cluster/common/velero"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/common/velero"
 
   velero_bucket                          = "${var.velero_bucket}"
   velero_backup_location_config          = "${var.velero_backup_location_config}"
