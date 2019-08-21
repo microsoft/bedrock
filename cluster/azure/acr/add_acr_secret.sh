@@ -40,6 +40,6 @@ if [ -z "$EMAIL" ]; then
 fi
 
 AUTH=$(echo "$ACR_NAME:$PASSWORD" | base64)
-DOCKERCONFIG="{\"auths\":{\"$ACR_NAME.azurecr.io\":{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\",\"email\":\"$EMAIL\",\"auth\":\"$AUTH\"}}}"
+DOCKERCONFIG=$(echo "{\"auths\":{\"$ACR_NAME.azurecr.io\":{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\",\"email\":\"$EMAIL\",\"auth\":\"$AUTH\"}}}" | base64 )
 
 az keyvault secret set --vault-name $VAULT_NAME --name $AUTH_SECRET_NAME --value $DOCKERCONFIG
