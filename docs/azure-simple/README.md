@@ -922,9 +922,11 @@ spec:
 
 To see the changes as Flux picks them up and deploys them, open a bash command window and navigate to the `bedrock/cluster/environments/azure-simple` directory.
 
-Get your Flux namespace by running: `KUBECONFIG=./output/bedrock_kube_config kubectl get po --all-namespaces`
+Get your Flux pod name by running: `KUBECONFIG=./output/bedrock_kube_config kubectl get pod -n flux`
 
-Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f po/flux-5897d4679b-tckth --namespace=flux`.  This will display a running log of the deployment.
+Copy the name of the pod (the one that is not memcached).
+
+Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <Flux-pod-name> --namespace=flux`.  This will display a running log of the deployment.
 
 Now, push or drop the myWebApp.yaml file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  You can click `Upload files` on the GitHub repo page and drop the .yaml file:
 
