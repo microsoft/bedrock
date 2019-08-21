@@ -68,19 +68,28 @@ echo "User-assigned identity principal id: $MSI_PRINCIPAL_ID"
 echo "User-assigned identity client id: $MSI_CLIENT_ID"
 
 echo "Ensure appropriate permissions are granted to msi"
-echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID"
-echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\""
-az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID"
-echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\""
-az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID"
+MAX_RETRIES=5
+for ((i=0; i<$MAX_RETRIES; i++)); do
+    echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\"" &&
+    az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID" &&
+    echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\"" &&
+    az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID" &&
+    echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\"" &&
+    az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID" && break
+
+    echo "Wait 15 seconds while newly created identity objectid is being populated"
+    sleep 15
+done
+[[ $MAX_RETRIES -eq i ]] && { echo "Failed to assign role to kv-reader"; exit 1; }
 
 echo "Ensure Managed Identity Operator role is granted to aks spn"
 echo "az role assignment create --role \"Managed Identity Operator\" --assignee-object-id \"$AKS_SPN_OBJECT_ID\" --scope \"$MSI_ID\""
 az role assignment create --role "Managed Identity Operator" --assignee-object-id "$AKS_SPN_OBJECT_ID" --scope "$MSI_ID"
 
 echo "Setup keyvault secret/certificate policy"
-echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --spn \"$MSI_CLIENT_ID\""
-az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --spn "$MSI_CLIENT_ID"
-echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --spn \"$MSI_CLIENT_ID\""
-az keyvault set-policy -n "$VAULT_NAME" --certificate-permissions get list --spn "$MSI_CLIENT_ID"
+# NOTE: there was a design flow that in order to use clientId, current login identity (spn) needs to have graph [directory.read.all] permission
+# which is used to query object-id, we can just pass in $MSI_PRINCIPAL_ID which is object_id
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --object-id "$MSI_PRINCIPAL_ID"
+echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
+az keyvault set-policy -n "$VAULT_NAME" --certificate-permissions get list --object-id "$MSI_PRINCIPAL_ID"

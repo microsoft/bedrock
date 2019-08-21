@@ -12,11 +12,6 @@ variable "vault_name" {
   description = "Name of the keyvault to create"
 }
 
-variable "keyvault_sku" {
-  description = "SKU of the keyvault to create"
-  default     = "standard"
-}
-
 variable "vault_reader_identity" {
   description = "name of user assigned identity (MSI) that will be granted reader role to key vault. The identity name must be by unique within subscription"
   type        = "string"
@@ -40,4 +35,20 @@ variable "aks_cluster_resource_group_name" {
 variable "aks_cluster_location" {
   type = "string"
   description = "AKS resource group location"
+}
+
+variable "kubeconfigadmin_filename" {
+  description = "Name of the admin kube config file saved to disk."
+  type        = "string"
+  default     = "admin_kube_config"
+}
+
+variable "kubeconfigadmin_done" {
+  description = "Allows flux to wait for the admin kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
+  type        = "string"
+}
+
+variable "output_directory" {
+  type    = "string"
+  default = "./output"
 }
