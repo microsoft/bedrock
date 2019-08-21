@@ -31,8 +31,8 @@ if [ -c "$CURRENT_VERSION" ]; then
     exit 1
 fi
 
-NEW_VERSION=`echo $NEW_VERSION | sed 's/\./\\\./'`
-CURRENT_VERSION=`echo $CURRENT_VERSION | sed 's/\./\\\./'`
+NEW_VERSION=`echo $NEW_VERSION | sed 's/\./\\\./g'`
+CURRENT_VERSION=`echo $CURRENT_VERSION | sed 's/\./\\\./g'`
 
 read -p "This script will modify files in this checked out repository.  Are you sure you want to continue? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]

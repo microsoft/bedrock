@@ -4,9 +4,18 @@ terraform {
 
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_resource_group" "cluster_rg" {
+data "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
+}
+
+data "azurerm_resource_group" "keyvault" {
+  name     = "${var.keyvault_resource_group}"
+}
+
+data "azurerm_subnet" "vnet" {
+  name                 = "${var.subnet_name}"
+  virtual_network_name = "${var.vnet_name}"
+  resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
 }
 
 module "aks-gitops" {
@@ -25,12 +34,11 @@ module "aks-gitops" {
   gitops_path              = "${var.gitops_path}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_url_branch        = "${var.gitops_url_branch}"
-  resource_group_location  = "${var.resource_group_location}"
-  resource_group_name      = "${azurerm_resource_group.cluster_rg.name}"
+  resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${data.azurerm_subnet.vnet.id}"
   network_policy           = "${var.network_policy}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
@@ -39,7 +47,7 @@ module "aks-gitops" {
 module "keyvault_flexvolume_role" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol_role"
 
-  resource_group_name  = "${var.keyvault_resource_group}"
+  resource_group_name  = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id = "${var.service_principal_id}"
   subscription_id      = "${data.azurerm_client_config.current.subscription_id}"
   keyvault_name        = "${var.keyvault_name}"
@@ -49,7 +57,7 @@ module "keyvault_flexvolume_role" {
 module "flex_volume" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
 
-  resource_group_name      = "${var.keyvault_resource_group}"
+  resource_group_name      = "${data.azurerm_resource_group.keyvault.name}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   tenant_id                = "${data.azurerm_client_config.current.tenant_id}"

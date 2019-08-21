@@ -10,10 +10,6 @@ variable "resource_group_name" {
   type = "string"
 }
 
-variable "resource_group_location" {
-  type = "string"
-}
-
 variable "traffic_manager_monitor_protocol" {
   type    = "string"
   default = "http"

@@ -49,6 +49,11 @@ variable "gitops_url_branch" {
   default = "master"
 }
 
+variable "gc_enabled" {
+  type    = "string"
+  default = "true"
+}
+
 variable "gitops_ssh_key" {
   type = "string"
 }
@@ -90,7 +95,11 @@ variable "subnet_prefixes" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
+variable "vnet_name" {
+  type = "string"
+}
+
+variable "subnet_name" {
   type = "string"
 }
 

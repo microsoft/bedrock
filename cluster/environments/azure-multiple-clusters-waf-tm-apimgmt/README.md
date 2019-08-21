@@ -9,6 +9,16 @@ The template also creates an API management service which is an enterprise grade
 You can deploy the `azure-multiple-cluster-waf-tm-apimgmt` using a Service Principal that has Owner privileges on the Azure Subscription. 
 To deploy this environment, follow the [common steps](https://github.com/microsoft/bedrock/blob/master/cluster/azure) for deploying a cluster with the following modifications:
 
+## Resource Group Requirement
+
+The Azure Multiple Container w/ API Management and WAF environment requires the creation of a resource group per cluster deployment as well as a resource group for traffic manager.  The current set of groups that need to be created and the requisite variables are:
+
+- Central US Cluster - `central_resource_group_name`
+- East US Cluster - `east_resource_group_name`
+- West US Cluster - `west_resource_group_name`
+- Traffice Manager - `traffic_manager_resource_group_name`
+
+To use the Azure CLI to create the resource group, see [here](../../azure/README.md).
 
 # Getting Started
 
@@ -23,14 +33,12 @@ To deploy this environment, follow the [common steps](https://github.com/microso
 * Application Gateway configuration
     - `Prefix`: prefix to be added in web application firewall name service.
     - `location`: Azure Region for web application firewall 
-    - `resource_group_name_<region>`: Name of the resource group for the Web application firewall.
     - `vnet_<region>`: virtual network location for Web application firewall.
 
 * Traffic Manager configuration
     - `traffic_manager_profile_name`: Name of the Azure Traffic Manager Profile.
     - `traffic_manager_dns_name`: DNS name for accessing the traffic manager url from the internet. For ex: `http://<dnsname>.trafficmanager.net`.
     - `traffic_manager_resource_group_name`: Name of the resource group for the Traffic Manager.
-    - `traffic_manager_resource_group_location`: Azure region the Traffic Manager resource group.
 * Common configuration for all Kubernetes clusters
     - `cluster_name`: The name of the Kubernetes cluster. The location will be added as a suffix.
     - `agent_vm_count`: The number of agents VMs in the the node pool.
@@ -43,15 +51,12 @@ To deploy this environment, follow the [common steps](https://github.com/microso
     - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
-    - `west_resource_group_location`: Location of the Azure region. For ex: `westus2`.
     - `gitops_west_path`: Path to a subdirectory, or folder in a git repo
 * Central cluster
     - `central_resource_group_name`: Name of the resource group for the cluster.
-    - `central_resource_group_location`: Location of the Azure region. For ex: `centralus`.
     - `gitops_central_path`: Path to a subdirectory, or folder in a git repo
 * East Cluster
     - `east_resource_group_name`:  Name of the resource group for the cluster.
-    - `east_resource_group_locatio`: Location of the Azure region. For ex: `eastus2`.
     - `gitops_east_path`: Path to a subdirectory, or folder in a git repo
 3. Configure Terraform backend. It is optional, but a best practice for production environments
 

@@ -11,6 +11,10 @@ The `azure-common-infra` environment is a production ready template to setup com
 
 When this is complete, proceed with the following steps to complete the `azure-common-infra` deployment.
 
+## Resource Group Requirement
+
+This environment requires a single resource group be created.  The requisite variable is `resource_group_name`.  To use the Azure CLI to create the resource group, see [here](../../azure/README.md).
+
 ### Create Storage Account in Azure
 
 Before attempting to deploy the infrastructure environments, you will also need to create an Azure Storage Account. You can do this in Azure Portal, or by using the Azure CLI:
@@ -82,8 +86,6 @@ address_space = "10.39.0.0/16"
 keyvault_name = "mykeyvault"
 
 global_resource_group_name = "my-rg"
-
-global_resource_group_location = "westus2"
 
 service_principal_id = "<appId"
 

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 	"time"
@@ -43,6 +44,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	tenantid := os.Getenv("ARM_TENANT_ID")
 
 	addressSpace := "10.39.0.0/16"
 	subnetName := k8sName + "-subnet"
@@ -60,6 +63,22 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
+
+        //Create the common resource group
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
+        err0 := cmd0.Run()
+        if err0 != nil {
+                fmt.Println("unable to login to azure cli")
+                log.Fatal(err0)
+                os.Exit(-1)
+        }
+        cmd1 := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
+        err1 := cmd1.Run()
+        if err1 != nil {
+                fmt.Println("failed to create common resource group")
+                log.Fatal(err1)
+                os.Exit(-1)
+        }
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
@@ -80,7 +99,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"address_space":                  addressSpace,
 			"keyvault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
-			"global_resource_group_location": location,
 			"service_principal_id":           clientid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
@@ -95,7 +113,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 
 	// Multicluster & keyvault deployment vars
 	tmName := k8sName + "-tm"
-	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 
 	dnsprefix := k8sName + "-dns"
 	tm_dnsprefix := uniqueID + "tmdns"
@@ -108,6 +125,39 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	cluster_location1 := "westus2"
 	cluster_location2 := "eastus2"
 	cluster_location3 := "centralus"
+
+        //Create the east resource group
+        cmd2 := exec.Command("az", "group", "create", "-n", k8s_eastRG, "-l", cluster_location2)
+        err2 := cmd2.Run()
+        if err2 != nil {
+                fmt.Println("failed to create east resource group")
+                log.Fatal(err2)
+                os.Exit(-1)
+        }
+        //Create the west resource group
+        cmd3 := exec.Command("az", "group", "create", "-n", k8s_westRG, "-l", cluster_location1)
+        err3 := cmd3.Run()
+        if err3 != nil {
+                fmt.Println("failed to create west resource group")
+                log.Fatal(err3)
+                os.Exit(-1)
+        }
+        //Create the central resource group
+        cmd4 := exec.Command("az", "group", "create", "-n", k8s_centralRG, "-l", cluster_location3)
+        err4 := cmd4.Run()
+        if err4 != nil {
+                fmt.Println("failed to create central resource group")
+                log.Fatal(err4)
+                os.Exit(-1)
+        }
+        //Create the global resource group
+        cmd5 := exec.Command("az", "group", "create", "-n", k8s_globalRG, "-l", location)
+        err5 := cmd5.Run()
+        if err5 != nil {
+                fmt.Println("failed to create global resource group")
+                log.Fatal(err5)
+                os.Exit(-1)
+        }
 
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
@@ -139,18 +189,14 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"traffic_manager_profile_name":            tmName,
 			"traffic_manager_dns_name":                tm_dnsprefix,
 			"traffic_manager_resource_group_name":     k8s_globalRG,
-			"traffic_manager_resource_group_location": location,
 
 			"west_resource_group_name":     k8s_westRG,
-			"west_resource_group_location": "westus2",
 			"gitops_west_path":             "",
 
 			"east_resource_group_name":     k8s_eastRG,
-			"east_resource_group_location": "eastus2",
 			"gitops_east_path":             "",
 
 			"central_resource_group_name":     k8s_centralRG,
-			"central_resource_group_location": "centralus",
 			"gitops_central_path":             "",
 		},
 	}
