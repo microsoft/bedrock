@@ -14,14 +14,6 @@ variable "traffic_manager_url" {
   default = ""
 }
 
-variable "api_management_resource_group_name" {
-  default = "apimgmtresgrp5"
-}
-
-variable "region" {
-  default = "eastus"
-}
-
 variable "service_apim_name" {
   default = "apimgmt-tm"
 }

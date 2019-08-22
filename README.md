@@ -15,13 +15,13 @@ On each commit to the high level definition repo, this CI/CD pipeline uses Fabri
 
 A Bedrock deployment follows three steps at a high level:
 
-1. [Create and deploy](./cluster) a Kubernetes environment starting from one of our Terraform environment templates.
-2. [Deploy a GitOps CI/CD pipeline](./gitops) to build and release resource manifests from this deployment definition.
-3. Define a [Fabrikate](https://github.com/Microsoft/fabrikate) definition for your deployment.
+1. [Create and deploy azure-simple](./docs/azure-simple/README.md) a Kubernetes environment that uses Flux.
+2. Define a [Fabrikate](./docs/fabrikate/README.md) definition.
+3. [Deploy a CI/CD pipeline](./docs/devops/README.md) to build resource manifests for this deployment. 
 
 In addition to that in-depth documentation, we also maintain a [walkthrough for deploying the azure-simple environment template](./docs/azure-simple/README.md) that makes a great first step.
 
-Finally, we also maintain a [FAQ](https://github.com/Microsoft/bedrock/wiki/FAQ) for answers to common questions.
+The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-simple/README.md) environment template. 
 
 ## Releases
 

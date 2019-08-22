@@ -1,12 +1,11 @@
-resource "azurerm_resource_group" "eastrg" {
+data "azurerm_resource_group" "eastrg" {
   name     = "${var.east_resource_group_name}"
-  location = "${var.east_resource_group_location}"
 }
 
 # local variable with cluster and location specific
 locals {
-  east_rg_name                 = "${azurerm_resource_group.eastrg.name}"
-  east_rg_location             = "${azurerm_resource_group.eastrg.location}"
+  east_rg_name                 = "${data.azurerm_resource_group.eastrg.name}"
+  east_rg_location             = "${data.azurerm_resource_group.eastrg.location}"
   east_prefix                  = "${local.east_rg_location}-${var.cluster_name}"
   east_flux_clone_dir          = "${local.east_prefix}-flux"
   east_kubeconfig_filename     = "${local.east_prefix}_kube_config"
@@ -17,11 +16,8 @@ locals {
 module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = "${local.east_rg_name }"
-  resource_group_location = "${local.east_rg_location}"
-
+  resource_group_name = "${local.east_rg_name}"
   subnet_names = ["${var.cluster_name}-aks-subnet"]
-
   address_space   = "${var.east_address_space}"
   subnet_prefixes = "${var.east_subnet_prefixes}"
 
@@ -34,8 +30,7 @@ module "east_vnet" {
 module "east_aks" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
 
-  resource_group_name      = "${local.east_rg_name }"
-  resource_group_location  = "${local.east_rg_location}"
+  resource_group_name      = "${local.east_rg_name}"
   cluster_name             = "${var.cluster_name}-east"
   agent_vm_count           = "${var.agent_vm_count}"
   dns_prefix               = "${var.dns_prefix}"
@@ -70,8 +65,7 @@ module "east_flux" {
 module "east_tm_endpoint" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
 
-  resource_group_name                 = "${azurerm_resource_group.eastrg.name}"
-  resource_location                   = "${local.east_rg_location}"
+  resource_group_name                 = "${local.east_rg_name}"
   traffic_manager_resource_group_name = "${var.traffic_manager_resource_group_name}"
   traffic_manager_profile_name        = "${var.traffic_manager_profile_name}"
   endpoint_name                       = "${local.east_rg_location}-waf-ipeast"
@@ -90,5 +84,5 @@ resource "azurerm_role_assignment" "east_spra" {
   count                = "${var.service_principal_is_owner == "1" ? 1 : 0}"
   principal_id         = "${data.azuread_service_principal.sp.id}"
   role_definition_name = "${var.aks_client_role_assignment_role}"
-  scope                = "${azurerm_resource_group.eastrg.id}"
+  scope                = "${data.azurerm_resource_group.eastrg.id}"
 }

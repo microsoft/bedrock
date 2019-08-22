@@ -7,6 +7,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/otiai10/copy"
 
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -23,7 +24,9 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
 	location := os.Getenv("DATACENTER_LOCATION")
+	tenantid := os.Getenv("ARM_TENANT_ID")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+        clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	subnetName := k8sName + "-subnet"
 	vnetName := k8sName + "-vnet"
 
@@ -36,6 +39,22 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
+
+	//Create the resource group
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
+        err0 := cmd0.Run()
+        if err0 != nil {
+                fmt.Println("unable to login to azure cli")
+                log.Fatal(err0)
+                os.Exit(-1)
+        }
+        cmd1 := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
+        err1 := cmd1.Run()
+        if err1 != nil {
+                fmt.Println("failed to create common resource group")
+                log.Fatal(err1)
+                os.Exit(-1)
+        }
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
@@ -56,7 +75,6 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"address_space":                  addressSpace,
 			"vault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
-			"global_resource_group_location": location,
 			"service_principal_id":           clientid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
@@ -69,21 +87,26 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	terraform.Init(t, common_backend_tfOptions)
 	terraform.Apply(t, common_tfOptions)
 
-	//Obtain the vnet_subnet_id for the deployed vnet from the common-infra bedrock environment
-	commonInfra_subnetID := terraform.Output(t, common_tfOptions, "vnet_subnet_id")
-
 	// Generate azure single environment using resources generated from common-infra
-	dnsprefix := k8sName + "-dns"
-	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+        dnsprefix := k8sName + "-dns"
 	k8sRG := k8sName + "-rg"
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
-	cosmos_db_name := k8sName+"-cosmosdb"
-	mongo_db_name := k8sName+"-mongodb"
+	cosmos_db_name := k8sName + "-cosmosdb"
+	mongo_db_name := k8sName + "-mongodb"
 
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureSingleKeyvaultFolder := "../cluster/test-temp-envs/azure-single-keyvault-cosmos-mongo-db-simple-" + k8sName
 	copy.Copy("../cluster/environments/azure-single-keyvault-cosmos-mongo-db-simple", azureSingleKeyvaultFolder)
+
+	//Create the cluster resource group
+	cmd2 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
+	err2 := cmd2.Run()
+	if err2 != nil {
+                fmt.Println("failed to create cluster resource group")
+		log.Fatal(err2)
+		os.Exit(-1)
+	}
 
 	//Specify the test case folder and "-var" option mapping for the environment backend
 	k8s_backend_tfOptions := &terraform.Options{
@@ -116,7 +139,8 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
 			"subnet_prefixes":          "10.39.0.0/16",
-			"vnet_subnet_id":           commonInfra_subnetID,
+			"subnet_name":              subnetName,
+			"vnet_name":                vnetName,
 			"cosmos_db_name":           cosmos_db_name,
 			"mongo_db_name":            mongo_db_name,
 		},
@@ -153,12 +177,11 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	//Test Case 3: Verify Cosmos/MongoDB
 	fmt.Println("Test case 3: Verifying Cosmos/MongoDB deployment")
 	cosmos_db_key := terraform.Output(t, k8s_tfOptions, "azure_cosmos_db_primary_master_key")
-	cmd := exec.Command("az" ,"cosmosdb", "database", "exists" ,"--name", cosmos_db_name ,"--key", cosmos_db_key, "--db-name", mongo_db_name)
-
-    out, cosmosMongoErr := cmd.CombinedOutput()
-    if cosmosMongoErr != nil {
+	cmd3 := exec.Command("az", "cosmosdb", "database", "exists", "--name", cosmos_db_name, "--key", cosmos_db_key, "--db-name", mongo_db_name)
+	out, cosmosMongoErr := cmd3.CombinedOutput()
+	if cosmosMongoErr != nil {
 		t.Fatal(cosmosMongoErr)
-    } else if !strings.Contains(string(out), "true") {
+	} else if !strings.Contains(string(out), "true") {
 		t.Fatal(cosmosMongoErr)
 	} else {
 		fmt.Println("CosmosDB with MongoDB verification complete.")

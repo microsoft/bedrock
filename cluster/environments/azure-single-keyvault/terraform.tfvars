@@ -7,7 +7,9 @@ keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
-vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
+
+subnet_name = "<subnet name>"
+vnet_name = "<vnet name>"
 
 #--------------------------------------------------------------
 # Cluster variables
@@ -22,7 +24,6 @@ gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-mat
 gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
 
 resource_group_name = "azure-single-keyvault-rg"
-resource_group_location = "westus2"
 
 ssh_public_key = "<ssh public key>"
 

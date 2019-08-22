@@ -7,8 +7,8 @@ keyvault_resource_group = "my-global-rg"
 
 address_space = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
-vnet_subnet_id = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
-
+vnet_name = "<vnet name>"
+subnet_name = "<subnet_name>"
 
 #--------------------------------------------------------------
 # CosmosDB & MongoDB variables
@@ -32,7 +32,6 @@ gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-mat
 gitops_ssh_key = "./gitops_repo_key"
 
 resource_group_name = "azure-single-keyvault-rg"
-resource_group_location = "westus2"
 
 ssh_public_key = "<ssh public key>"
 

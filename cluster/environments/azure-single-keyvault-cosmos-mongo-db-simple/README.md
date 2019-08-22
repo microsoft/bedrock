@@ -2,6 +2,10 @@
 
 The `azure-single-keyvault-cosmos-mongo-db-simple` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault. Additionally, it will deploy a CosmosDB configured for MongoDB.
 
+## Resource Group Requirement
+
+The Azure Single Cluster environment requires the creation of a single resource group for cluster deployment, with the variable named `resource_group_name`.  In addition, there is a reference to the resource group created within [Azure Common Infra](../azure-common-infra).  To use the Azure CLI to create the resource group, see [here](../../azure/README.md).
+
 ## Getting Started
 
 1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
