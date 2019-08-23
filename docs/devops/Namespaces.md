@@ -79,7 +79,7 @@ spec:
 ## Namespace deployment in DevOps Pipeline
 When the manifest shown in the previous section is merged to the triggering branch of a DevOps pipeline, Fabrikate will send it to the repo Flux uses to deploy changes to the Bedrock cluster.
 
-This example uses a GitHub repo named `bedrock-services` in tandem with another repo named `bedrock-services-manifests`.
+This example uses a GitHub repo named `bedrock-services` in tandem with another repo named `bedrock-services-manifests`.  It assumes a scenario in which development is progressing in branches that are then merged to the master branch of a repo in a DevOps pipeline.
 
 The development repo shown in the following screenshot includes a manifests directory.  Manifests merged to this directory of the master branch trigger the DevOps pipeline.
 
@@ -89,7 +89,9 @@ The `azure-pipeline.yaml` manifest installed on this repo specifies [Fabrikate](
 
 ![Namespaces-Services-Manifests-repo](./images/namespaces-services-manifests-repo.png)
 
-The Bedrock cluster uses Flux to monitor the `bedrock-services-manifests` repo for changes.  This repo is specified in the `terraform.tfvars` file during [set up](../azure-simple/README.md#set-up-terraform-deployment-variables).
+The Bedrock cluster uses Flux to monitor the `bedrock-services-manifests` repo for changes.  This repo is specified in the `terraform.tfvars` file.  For details see [Set Up Terraform Deployment Variables](../azure-simple/README.md#set-up-terraform-deployment-variables).
+
+The metadata specifications in the manifest that Flux obtains deploy the `mywebapp` service to the `dev` namespace.  The service can be reviewed and tested using a distinct IP address while the existing production edition of `mywebapp` runs in the `default` namespace.
 
 
 
