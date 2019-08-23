@@ -93,6 +93,7 @@ The Bedrock cluster uses Flux to monitor the `prod` directory of the `bedrock-se
 
 The metadata specifications in the manifest that Flux gets from the `bedrock-services-manifests` repo deploy the `mywebapp` service to the `dev` namespace.  Then the service can be reviewed and tested using a distinct IP address while the existing production edition of `mywebapp` runs in the `default` namespace.
 
+After review the manifest is altered by changing the three dev namespace settings to `default` namespace.  Simply removing these namespace metadata settings has the same effect and deploys the service to the `default` namespace.
 
 
 For more information about namespaces, see the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
