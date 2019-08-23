@@ -8,7 +8,7 @@ Using containers from previous examples, the following screenshot shows *azure-v
 
 A previous document describes how to set up a [DevOps Pipeline to automate updates to Bedrock Deployment](README.md).  This new scenario specifies the *dev* namespace in a manifest for the tentative changes.  When review and testing are complete, we change a few lines of metadata in the manifest from the *dev* namespace to the *default* production namespace.
 
-## Create a Namespace
+## Create Namespace
 To create a namespace for this scenario define it in new manifest, for example the following: `dev-namespace.yaml`.
 ```
 apiVersion: v1
