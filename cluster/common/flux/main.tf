@@ -10,7 +10,15 @@ resource "null_resource" "deploy_flux" {
   }
 
   triggers = {
-    enable_flux   = "${var.enable_flux}"
-    flux_recreate = "${var.flux_recreate}"
+    enable_flux           = "${var.enable_flux}"
+    flux_recreate         = "${var.flux_recreate}"
+    gitops_path           = "${var.gitops_path}"
+    flux_image_repository = "${var.flux_image_repository}"
+    flux_image_tag        = "${var.flux_image_tag}"
+    gc_enabled            = "${var.gc_enabled}"
+    gitops_ssh_url        = "${var.gitops_ssh_url}"
+    gitops_ssh_key        = "${var.gitops_ssh_key}"
+    flux_clone_dir        = "${var.flux_clone_dir}"
+    acr_enabled           = "${var.acr_enabled}"
   }
 }
