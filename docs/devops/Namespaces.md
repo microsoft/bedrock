@@ -6,7 +6,7 @@ Using containers from previous examples, the following screenshot shows *azure-v
 
 ![Namespaces](./images/namespaces1.png)
 
-A previous document describes how to set up a [DevOps Pipeline to automate updates to Bedrock Deployment](README.md).  In this new scenario the *dev* namespace can be specified in a manifest that includes tentative changes.  When review and testing are complete, a few lines of metadata in the manifest can be changed from the *dev* namespace to the *default* or production namespace.
+A previous document describes how to set up a [DevOps Pipeline to automate updates to Bedrock Deployment](README.md).  In this new scenario the *dev* namespace is specified in a manifest that includes tentative changes.  When review and testing are complete, a few lines of metadata in the manifest are changed from the *dev* namespace to the *default* or production namespace.
 
 ## Create a Namespace
 To create a namespace for this scenario requires a manifest, for example the following: `dev-namespace.yaml`.
