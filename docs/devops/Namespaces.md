@@ -89,7 +89,7 @@ The `azure-pipeline.yaml` manifest installed on this repo specifies [Fabrikate](
 
 ![Namespaces-Services-Manifests-repo](./images/namespaces-services-manifests-repo.png)
 
-The Bedrock cluster uses Flux to monitor the `bedrock-services-manifests` repo for changes.  This repo is specified in the `terraform.tfvars` file [during set up](../../azure-simple/README.md#set-up-terraform-deployment-variables).
+The Bedrock cluster uses Flux to monitor the `bedrock-services-manifests` repo for changes.  This repo is specified in the `terraform.tfvars` file during [set up](../azure-simple/README.md#set-up-terraform-deployment-variables).
 
 
 
