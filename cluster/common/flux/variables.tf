@@ -97,3 +97,13 @@ variable "flux_clone_dir" {
   description = "Name of the directory to clone flux repo and deploy in the cluster."
   type        = "string"
 }
+
+variable "create_helm_operator" {
+  type = "string"
+  description = "create helm operator"
+}
+
+variable "create_helm_operator_crds" {
+  type = "string"
+  description = "create CRDs associated with helm operator"
+}

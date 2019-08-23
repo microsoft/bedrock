@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e:c:s:r:t:z: option
+while getopts :b:f:g:k:d:e:c:s:r:t:z:h:i: option
 do
  case "${option}" in
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -13,6 +13,8 @@ do
  r) FLUX_IMAGE_REPOSITORY=${OPTARG};;
  t) FLUX_IMAGE_TAG=${OPTARG};;
  z) GC_ENABLED=${OPTARG};;
+ h) CREATE_HELM_OPERATOR=${OPTARG};;
+ i) CREATE_CRDS=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -58,7 +60,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED" --set helmOperator.create=true --set helmOperator.createCRD=false; then
+if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED" --set helmOperator.create=true --set helmOperator.createCRD=true; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
