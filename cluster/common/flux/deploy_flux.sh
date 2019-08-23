@@ -58,13 +58,36 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED"; then
+if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED" --set helmOperator.create=true --set helmOperator.createCRD=false; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
 
+echo "TODO: install crd in separate command?"
+
 # back to the root dir
 cd ../../../../ || exit 1
+
+
+echo "Creating helm and tiller in kube-system"
+if ! kubectl describe sa tiller -n kube-system > /dev/null 2>&1; then
+    if ! kubectl -n kube-system create sa tiller; then
+        echo "ERROR: failed to create service account tiller in namespace kube-system"
+        exit 1
+    fi
+fi
+
+echo "Creating clusterrolebinding for tiller"
+if ! kubectl describe clusterrolebinding tiller-cluster-role > /dev/null 2>&1; then
+    if ! kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller; then
+        echo "ERROR: failed to create custerrolebinding for tiller"
+        exit 1
+    fi
+fi
+
+echo "Init helm with sa=tiller"
+helm init --skip-refresh --upgrade --service-account tiller
+
 
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE if needed"
