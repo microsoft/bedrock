@@ -24,6 +24,9 @@ else
     echo "fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE""
     fab set --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
 fi
+if [ $? -ne 0 ]; then
+    exit 1;
+fi
 
 echo "GIT STATUS"
 git status
