@@ -1,5 +1,5 @@
 #!/bin/sh
-while getopts :b:f:g:k:d:e:c:s:r:t:z: option
+while getopts :b:f:g:k:d:e:c:s:r:t:z:h:i: option
 do
  case "${option}" in
  b) GITOPS_URL_BRANCH=${OPTARG};;
@@ -13,6 +13,8 @@ do
  r) FLUX_IMAGE_REPOSITORY=${OPTARG};;
  t) FLUX_IMAGE_TAG=${OPTARG};;
  z) GC_ENABLED=${OPTARG};;
+ h) CREATE_HELM_OPERATOR=${OPTARG};;
+ i) CREATE_CRDS=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -58,14 +60,44 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED"; then
+if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED" --set helmOperator.create="$CREATE_HELM_OPERATOR" --set helmOperator.createCRD="CREATE_CRDS"; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
 
+echo "TODO: install crd in separate command?"
+
 # back to the root dir
 cd ../../../../ || exit 1
 
+
+echo "Creating helm and tiller in kube-system"
+if ! kubectl describe sa tiller -n kube-system > /dev/null 2>&1; then
+    if ! kubectl -n kube-system create sa tiller; then
+        echo "ERROR: failed to create service account tiller in namespace kube-system"
+        exit 1
+    fi
+fi
+
+echo "Creating clusterrolebinding for tiller"
+if ! kubectl describe clusterrolebinding tiller-cluster-role > /dev/null 2>&1; then
+    if ! kubectl create clusterrolebinding tiller-cluster-role --clusterrole=cluster-admin --serviceaccount=kube-system:tiller; then
+        echo "ERROR: failed to create custerrolebinding for tiller"
+        exit 1
+    fi
+fi
+
+echo "Init helm with sa=tiller"
+helm init --skip-refresh --upgrade --service-account tiller
+
+
+echo "clear CRDs (helm doesn't handle crd lifecycle)..."
+if kubectl describe crd fluxhelmreleases.helm.integrations.flux.weave.works > /dev/null 2>&1; then
+    kubectl delete crd fluxhelmreleases.helm.integrations.flux.weave.works
+fi
+if kubectl describe crd helmreleases.flux.weave.works > /dev/null 2>&1; then
+    kubectl delete crd helmreleases.flux.weave.works
+fi
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE if needed"
 if ! kubectl describe namespace $KUBE_NAMESPACE > /dev/null 2>&1; then

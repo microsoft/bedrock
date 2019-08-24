@@ -141,6 +141,16 @@ variable "gitops_url_branch" {
   type = "string"
 }
 
+variable "create_helm_operator" {
+  type = "string"
+  description = "create helm operator"
+}
+
+variable "create_helm_operator_crds" {
+  type = "string"
+  description = "create CRDs associated with helm operator"
+}
+
 
 ############################################################
 # addon                                                    #
