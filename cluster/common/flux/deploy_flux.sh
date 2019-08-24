@@ -91,6 +91,13 @@ echo "Init helm with sa=tiller"
 helm init --skip-refresh --upgrade --service-account tiller
 
 
+echo "clear CRDs (helm doesn't handle crd lifecycle)..."
+if kubectl describe crd fluxhelmreleases.helm.integrations.flux.weave.works > /dev/null 2>&1; then
+    kubectl delete crd fluxhelmreleases.helm.integrations.flux.weave.works
+fi
+if kubectl describe crd helmreleases.flux.weave.works > /dev/null 2>&1; then
+    kubectl delete crd helmreleases.flux.weave.works
+fi
 
 echo "creating kubernetes namespace $KUBE_NAMESPACE if needed"
 if ! kubectl describe namespace $KUBE_NAMESPACE > /dev/null 2>&1; then
