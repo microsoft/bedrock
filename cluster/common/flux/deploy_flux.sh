@@ -81,7 +81,7 @@ fi
 
 echo "Creating clusterrolebinding for tiller"
 if ! kubectl describe clusterrolebinding tiller-cluster-role > /dev/null 2>&1; then
-    if ! kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller; then
+    if ! kubectl create clusterrolebinding tiller-cluster-role --clusterrole=cluster-admin --serviceaccount=kube-system:tiller; then
         echo "ERROR: failed to create custerrolebinding for tiller"
         exit 1
     fi
