@@ -2,7 +2,9 @@ trigger:
   batch: true
   branches:
     include:
-    - bedrock_testing
+    - master
+    - azure-pipelines
+    - bedrock-testing-v2
   paths:
     include:
     - /cluster/azure/*
@@ -176,6 +178,7 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+      dependsOn: Multicluster_diff
 
   #  - script: |
   #      export ssh_key=$(readlink -f id_rsa.pub)
