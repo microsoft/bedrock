@@ -34,6 +34,12 @@ pr:
     exclude:
     - '**/*.md'
 
+variables:
+  GOBIN:  '$(GOPATH)/bin' # Go binaries path
+  GOROOT: '/usr/local/go1.11' # Go installation path
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+
 stages:
 - stage: Bedrock_Init_Validation
   jobs:
@@ -49,12 +55,6 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 180
-
-    variables:
-      GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      GOROOT: '/usr/local/go1.11' # Go installation path
-      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - checkout: self
