@@ -38,7 +38,7 @@ pr:
 
 jobs:
 - job: Bedrock_Test_SIMPLE
-  displayName: Bedrock_Build_Tests
+  displayName: Bedrock_Build_Azure_Simple
   timeoutInMinutes: 180
   pool:
     vmImage: 'Ubuntu-16.04'
@@ -135,7 +135,7 @@ jobs:
     displayName: 'Integration Test: Bedrock_Azure-Simple '
 
 - job: Bedrock_Test_KEYVAULT
-  displayName: Bedrock_Build_Tests
+  displayName: Bedrock_Build_Azure_Single_KeyVault
   timeoutInMinutes: 180
   pool:
     vmImage: 'Ubuntu-16.04'
@@ -231,7 +231,7 @@ jobs:
     displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
 
 - job: Bedrock_Test_MULTIPLE
-  displayName: Bedrock_Build_Tests
+  displayName: Bedrock_Build_Azure_Multiple_Clusters
   timeoutInMinutes: 180
   pool:
     vmImage: 'Ubuntu-16.04'
