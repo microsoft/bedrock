@@ -37,7 +37,7 @@ pr:
 
 
 jobs:
-- job: Bedrock_Test_Harness
+- job: Bedrock_Test_SIMPLE
   displayName: Bedrock_Build_Tests
   timeoutInMinutes: 180
   pool:
@@ -62,7 +62,7 @@ jobs:
     env:
       VERIFY_ONLY: 1
       HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
-      
+
   - script: |
       mkdir -p '$(GOBIN)'
       mkdir -p '$(GOPATH)/pkg'
@@ -134,6 +134,86 @@ jobs:
     workingDirectory: '$(modulePath)/test'
     displayName: 'Integration Test: Bedrock_Azure-Simple '
 
+- job: Bedrock_Test_KEYVAULT
+  displayName: Bedrock_Build_Tests
+  timeoutInMinutes: 180
+  pool:
+    vmImage: 'Ubuntu-16.04'
+    timeoutInMinutes: 180
+
+  variables:
+    GOBIN:  '$(GOPATH)/bin' # Go binaries path
+    GOROOT: '/usr/local/go1.11' # Go installation path
+    GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+    modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+
+  steps:
+  - checkout: self
+    persistCredentials: true
+    clean: true
+
+  - task: ShellScript@2
+    displayName: Validate GitOps pipeline
+    inputs:
+      scriptPath: gitops/azure-devops/build.sh
+    env:
+      VERIFY_ONLY: 1
+      HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
+
+  - script: |
+      mkdir -p '$(GOBIN)'
+      mkdir -p '$(GOPATH)/pkg'
+      mkdir -p '$(modulePath)'
+      shopt -s extglob
+      shopt -s dotglob
+      mv !(gopath) '$(modulePath)'
+      echo '##vso[task.prependpath]$(GOBIN)'
+      echo '##vso[task.prependpath]$(GOROOT)/bin'
+    displayName: 'Set up Go workspace'
+
+  - script: |
+      terraform -version
+      wget https://releases.hashicorp.com/terraform/$(tf_version)/terraform_$(tf_version)_linux_amd64.zip -q
+      unzip -q terraform_$(tf_version)_linux_amd64.zip
+      sudo mv terraform /usr/local/bin
+      terraform -version
+      curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      chmod +x ./kubectl
+      sudo mv ./kubectl /usr/local/bin/kubectl
+      curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+      chmod 700 get_helm.sh
+      ./get_helm.sh
+    displayName: 'Install terraform, kubectl, helm'
+
+  - bash: |
+      # Fail if any of these files have warnings
+      find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
+        while IFS="" read -r file
+        do
+          shellcheck "$file"
+        done
+    displayName: 'Run Shell Linting (ShellCheck)'
+
+  - script: |
+      terraform fmt -check=true -write=false -list=true > /dev/null
+      if [ $? -eq 0 ]
+      then
+        echo "Bedrock_Linting: All terraform files are valid."
+      else
+        echo "Bedrock_Linting: Terraform files invalid format, submit new commit with changes (run terraform fmt)."
+        exit 1
+      fi
+      gofmt -d ../bedrock/test/ | grep "^@@.*@@" > /dev/null
+      if [ "$?" -eq "1" ]; then
+        echo "Bedrock_Linting: All golang files are valid."
+      else
+        go fmt ../bedrock/test/
+        echo "Bedrock_Linting: Golang files invalid format, submit new commit with changes (run gofmt in /test/ directory)."
+        exit 1
+      fi
+    workingDirectory: '$(modulePath)/cluster'
+    displayName: 'Terraform lint check'
+
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
       export public_key=$(cat id_rsa.pub)
@@ -149,6 +229,86 @@ jobs:
       ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
     workingDirectory: '$(modulePath)/test'
     displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
+
+- job: Bedrock_Test_MULTIPLE
+  displayName: Bedrock_Build_Tests
+  timeoutInMinutes: 180
+  pool:
+    vmImage: 'Ubuntu-16.04'
+    timeoutInMinutes: 180
+
+  variables:
+    GOBIN:  '$(GOPATH)/bin' # Go binaries path
+    GOROOT: '/usr/local/go1.11' # Go installation path
+    GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+    modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+
+  steps:
+  - checkout: self
+    persistCredentials: true
+    clean: true
+
+  - task: ShellScript@2
+    displayName: Validate GitOps pipeline
+    inputs:
+      scriptPath: gitops/azure-devops/build.sh
+    env:
+      VERIFY_ONLY: 1
+      HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
+
+  - script: |
+      mkdir -p '$(GOBIN)'
+      mkdir -p '$(GOPATH)/pkg'
+      mkdir -p '$(modulePath)'
+      shopt -s extglob
+      shopt -s dotglob
+      mv !(gopath) '$(modulePath)'
+      echo '##vso[task.prependpath]$(GOBIN)'
+      echo '##vso[task.prependpath]$(GOROOT)/bin'
+    displayName: 'Set up Go workspace'
+
+  - script: |
+      terraform -version
+      wget https://releases.hashicorp.com/terraform/$(tf_version)/terraform_$(tf_version)_linux_amd64.zip -q
+      unzip -q terraform_$(tf_version)_linux_amd64.zip
+      sudo mv terraform /usr/local/bin
+      terraform -version
+      curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      chmod +x ./kubectl
+      sudo mv ./kubectl /usr/local/bin/kubectl
+      curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+      chmod 700 get_helm.sh
+      ./get_helm.sh
+    displayName: 'Install terraform, kubectl, helm'
+
+  - bash: |
+      # Fail if any of these files have warnings
+      find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
+        while IFS="" read -r file
+        do
+          shellcheck "$file"
+        done
+    displayName: 'Run Shell Linting (ShellCheck)'
+
+  - script: |
+      terraform fmt -check=true -write=false -list=true > /dev/null
+      if [ $? -eq 0 ]
+      then
+        echo "Bedrock_Linting: All terraform files are valid."
+      else
+        echo "Bedrock_Linting: Terraform files invalid format, submit new commit with changes (run terraform fmt)."
+        exit 1
+      fi
+      gofmt -d ../bedrock/test/ | grep "^@@.*@@" > /dev/null
+      if [ "$?" -eq "1" ]; then
+        echo "Bedrock_Linting: All golang files are valid."
+      else
+        go fmt ../bedrock/test/
+        echo "Bedrock_Linting: Golang files invalid format, submit new commit with changes (run gofmt in /test/ directory)."
+        exit 1
+      fi
+    workingDirectory: '$(modulePath)/cluster'
+    displayName: 'Terraform lint check'
 
   - script: |
       export ssh_key=$(readlink -f id_rsa.pub)
@@ -181,5 +341,3 @@ jobs:
 #      ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
 #    workingDirectory: '$(modulePath)/test'
 #    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
-
-    
