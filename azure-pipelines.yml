@@ -55,7 +55,7 @@ stages:
       env:
         VERIFY_ONLY: 1
         HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
-    - template: pipelines/bedrock_test_init.yml
+    - template: pipelines/bedrock-test-init.yml
     - bash: |
         # Fail if any of these files have warnings
         find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
@@ -94,7 +94,7 @@ stages:
       timeoutInMinutes: 180
 
     steps:
-    - template: pipelines/bedrock_test_init.yml
+    - template: pipelines/bedrock-test-init.yml
     - script: |
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
@@ -127,7 +127,7 @@ stages:
       modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
-    - template: pipelines/bedrock_test_init.yml
+    - template: pipelines/bedrock-test-init.yml
     - script: |
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
@@ -159,7 +159,7 @@ stages:
       modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
-    - template: pipelines/bedrock_test_init.yml
+    - template: pipelines/bedrock-test-init.yml
     - script: |
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
