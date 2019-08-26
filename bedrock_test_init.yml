@@ -1,8 +1,4 @@
 steps:
-- checkout: self
-  persistCredentials: true
-  clean: true
-
 - script: |
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
