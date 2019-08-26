@@ -39,7 +39,7 @@ stages:
   jobs:
   - job: Bedrock_Init_Validate
     steps:
-    - bash: echo "Validation Test Succeeded!"
+    - template: bedrock_test_init.yml
 
 - stage: Bedrock_Integration_Test_Validation
   jobs:
