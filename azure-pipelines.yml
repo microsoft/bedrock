@@ -45,6 +45,9 @@ stages:
   jobs:
   - job: Bedrock_Init_Validate
     steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
     - task: ShellScript@2
       displayName: Validate GitOps pipeline
       inputs:
