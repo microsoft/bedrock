@@ -37,6 +37,7 @@ pr:
 stages:
 - stage: Bedrock_Init_Validation
   jobs:
+  - job: Bedrock_Init_Validate
     steps:
     - bash: echo "Validation Test Succeeded!"
 
