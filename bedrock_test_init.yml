@@ -3,14 +3,6 @@ steps:
   persistCredentials: true
   clean: true
 
-- task: ShellScript@2
-  displayName: Validate GitOps pipeline
-  inputs:
-    scriptPath: gitops/azure-devops/build.sh
-  env:
-    VERIFY_ONLY: 1
-    HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
-
 - script: |
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
@@ -35,32 +27,3 @@ steps:
     chmod 700 get_helm.sh
     ./get_helm.sh
   displayName: 'Install terraform, kubectl, helm'
-
-- bash: |
-    # Fail if any of these files have warnings
-    find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
-      while IFS="" read -r file
-      do
-        shellcheck "$file"
-      done
-  displayName: 'Run Shell Linting (ShellCheck)'
-
-- script: |
-    terraform fmt -check=true -write=false -list=true > /dev/null
-    if [ $? -eq 0 ]
-    then
-      echo "Bedrock_Linting: All terraform files are valid."
-    else
-      echo "Bedrock_Linting: Terraform files invalid format, submit new commit with changes (run terraform fmt)."
-      exit 1
-    fi
-    gofmt -d ../bedrock/test/ | grep "^@@.*@@" > /dev/null
-    if [ "$?" -eq "1" ]; then
-      echo "Bedrock_Linting: All golang files are valid."
-    else
-      go fmt ../bedrock/test/
-      echo "Bedrock_Linting: Golang files invalid format, submit new commit with changes (run gofmt in /test/ directory)."
-      exit 1
-    fi
-  workingDirectory: '$(modulePath)/cluster'
-  displayName: 'Terraform lint check'
