@@ -13,6 +13,7 @@ resource "null_resource" "deploy_flux" {
     enable_flux               = "${var.enable_flux}"
     flux_recreate             = "${var.flux_recreate}"
     gitops_path               = "${var.gitops_path}"
+    gitops_url_branch         = "${var.gitops_url_branch}"
     flux_image_repository     = "${var.flux_image_repository}"
     flux_image_tag            = "${var.flux_image_tag}"
     gc_enabled                = "${var.gc_enabled}"
