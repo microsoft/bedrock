@@ -60,7 +60,7 @@ stages:
           do
             shellcheck "$file"
           done
-    displayName: 'Run Shell Linting (ShellCheck)'
+      displayName: 'Run Shell Linting (ShellCheck)'
     - script: |
         terraform fmt -check=true -write=false -list=true > /dev/null
         if [ $? -eq 0 ]
