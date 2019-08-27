@@ -4,6 +4,7 @@ Bedrock Documents
 --------
 * [Walkthrough azure-simple](./azure-simple/README.md)
 * [Use Fabrikate in DevOps Pipeline to automate updates to Bedrock Deployment](./devops/README.md)
+* [Namespaces to Partition Cluster Resources in DevOps Pipeline](./devops/Namespaces.md)
 
 Fabrikate Documents
 --------
