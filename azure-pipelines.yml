@@ -147,6 +147,7 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
+        ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
@@ -180,6 +181,7 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
+        ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
@@ -196,18 +198,18 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
       condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
 
-#   #  - script: |
-#   #      export ssh_key=$(readlink -f id_rsa.pub)
-#   #      export public_key=$(cat id_rsa.pub)
-#   #      find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-#   #      go test -v -run TestIT_Bedrock_AzureMC_APIM_Test -timeout 99999s
-#   #    env:
-#   #      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-#   #      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-#   #      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-#   #      ARM_TENANT_ID: $(ARM_TENANT_ID)
-#   #      ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
-#   #      ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
-#   #      ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
-#   #    workingDirectory: '$(modulePath)/test'
-#   #    displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
+#     - script: |
+#         export ssh_key=$(readlink -f id_rsa.pub)
+#         export public_key=$(cat id_rsa.pub)
+#         find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
+#         go test -v -run TestIT_Bedrock_AzureMC_APIM_Test -timeout 99999s
+#       env:
+#         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+#         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+#         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+#         ARM_TENANT_ID: $(ARM_TENANT_ID)
+#         ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
+#         ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
+#         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
+#       workingDirectory: '$(modulePath)/test'
+#       displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
