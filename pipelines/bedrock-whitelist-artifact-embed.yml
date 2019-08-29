@@ -1,0 +1,17 @@
+steps:
+  - download: current
+    artifact: variables
+  - bash: |
+      ALL_IT_TESTS=$(cat $(Pipeline.Workspace)/variables/ALL_IT_TESTS)
+      AZ_SIMPLE_TEST=$(cat $(Pipeline.Workspace)/variables/AZ_SIMPLE_TEST)
+      AZ_COMMON_KV_TEST=$(cat $(Pipeline.Workspace)/variables/AZ_COMMON_KV_TEST)
+      AZ_COMMON_MC_TEST=$(cat $(Pipeline.Workspace)/variables/AZ_COMMON_MC_TEST)
+      echo "##vso[task.setvariable variable=ALL_IT_TESTS]$ALL_IT_TESTS"
+      echo "##vso[task.setvariable variable=AZ_SIMPLE_TEST]$AZ_SIMPLE_TEST"
+      echo "##vso[task.setvariable variable=AZ_COMMON_KV_TEST]$AZ_COMMON_KV_TEST"
+      echo "##vso[task.setvariable variable=AZ_COMMON_MC_TEST]$AZ_COMMON_MC_TEST"
+      echo "This is the value of ALL_IT_TESTS: $ALL_IT_TESTS"
+      echo "This is the value of AZ_SIMPLE_TEST: $AZ_SIMPLE_TEST"
+      echo "This is the value of AZ_COMMON_KV_TEST: $AZ_COMMON_KV_TEST"
+      echo "This is the value of AZ_COMMON_MC_TEST: $AZ_COMMON_MC_TEST"
+    displayName: 'Setting Integration Test Trigger Variables'
