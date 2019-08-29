@@ -118,7 +118,24 @@ if kubectl get secret $KUBE_SECRET_NAME -n $KUBE_NAMESPACE > /dev/null 2>&1; the
         exit 1
     fi
 
-    secret=$(< "$GITOPS_SSH_KEY" base64)
+    unameOut="$(uname -s)"
+    case "${unameOut}" in
+        Linux*)     machine=Linux;;
+        Darwin*)    machine=Mac;;
+        CYGWIN*)    machine=Cygwin;;
+        MINGW*)     machine=MinGw;;
+        *)          machine="UNKNOWN:${unameOut}"
+    esac
+
+    echo "Running on $machine"
+    if [ "$machine" == "Mac" ]; then
+        echo "base decode using option -b"
+        secret=$(< "$GITOPS_SSH_KEY" base64 -b 0)
+    else
+        echo "base decode using option -w"
+        secret=$(< "$GITOPS_SSH_KEY" base64 -w 0)
+    fi
+
     if [ ! $secret ]; then
         echo "Invalid content for $GITOPS_SSH_KEY"
         exit 1
