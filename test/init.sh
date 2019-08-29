@@ -4,7 +4,6 @@
 # 2. check_required_env_variables: verifies that required environment variables are defined. 
 # USAGE: template_build_targets $BUILD_UPSTREAMBRANCH $BUILD_SOURCEBRANCHNAME
 #        check_required_env_variables
-# Triggering All Tests for PR#567
 
 #!/usr/bin/env bash
 set -euo pipefail
