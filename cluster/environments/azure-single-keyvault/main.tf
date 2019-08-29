@@ -43,6 +43,14 @@ module "aks-gitops" {
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
+module "acr" {
+  source = "../../azure/acr"
+
+  acr_name                 = "${var.acr_name}"
+  enable_acr               = "${var.enable_acr}"
+  resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"
+}
+
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol_role"
