@@ -9,7 +9,6 @@ steps:
     AZ_COMMON_KV_TEST=false
     AZ_COMMON_MC_TEST=false
 
-
     # we should always use master as a comparison, except in the case that this is
     # a build for master. In this case we can use HEAD~ (1 commit behind master)
     # because all merges will be squash merges
@@ -31,43 +30,32 @@ steps:
     # perform all environment integration tests
     if [[ ! -z "$(echo $FILE_CHANGE_SET | grep -e "cluster/azure\|cluster/common\|test/\|tools/\|pipelines")" ]]; then
         echo "Performing all tests."
-        echo $ALL_IT_TESTS
         ALL_IT_TESTS=true
-        echo $ALL_IT_TESTS
     else
         # if git diff detects commits made to only 'azure-simple' path, run azure-simple integration test
         if [[ ! -z "$(echo $FILE_CHANGE_SET | grep "cluster/environments/azure-simple")" ]]; then
             echo "The Azure Simple Integration test will run."
-            echo $AZ_SIMPLE_TEST
             AZ_SIMPLE_TEST=true
-            echo $AZ_SIMPLE_TEST
-
         fi
         # if git diff detects commits made to 'azure-common-infra' path, run azure-single-keyvault and
         # azure-multiple-clusters integration tests
         if [[ ! -z "$(echo $FILE_CHANGE_SET | grep "cluster/environments/azure-common-infra")" ]]; then
             echo "The Azure Single Keyvault and Azure Multiple Clusters tests will run."
-            echo $AZ_COMMON_KV_TEST
+            # Set All Environment Templates affected by Common Environment modification
             AZ_COMMON_KV_TEST=true
             AZ_COMMON_MC_TEST=true
-            # Set All Environment Templates affected by Common Environment modification
-            echo $AZ_COMMON_KV_TEST
         fi
         # if git diff detects commits made to 'azure-single-keyvault' path, run azure-single-keyvault
         # integration test
         if [[ ! -z "$(echo $FILE_CHANGE_SET | grep "cluster/environments/azure-single-keyvault")" ]]; then
             echo "The Azure Single Keyvault test will run."
-            echo $AZ_COMMON_KV_TEST
             AZ_COMMON_KV_TEST=true
-            echo $AZ_COMMON_KV_TEST
         fi
         # if git diff detects commits made to 'azure-multiple-clusters' path, run azure-multiple-clusters
         # integration test
         if [[ ! -z "$(echo $FILE_CHANGE_SET | grep "cluster/environments/azure-multiple-clusters")" ]]; then
             echo "The Azure Multiple Cluster test will run."
-            echo $AZ_COMMON_MC_TEST
             AZ_COMMON_MC_TEST=true
-            echo $AZ_COMMON_MC_TEST
         fi
     fi
     echo "##vso[task.setvariable variable=ALL_IT_TESTS;isOutput=true]$ALL_IT_TESTS"
