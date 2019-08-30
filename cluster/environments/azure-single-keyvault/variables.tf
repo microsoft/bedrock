@@ -108,3 +108,13 @@ variable "oms_agent_enabled" {
   type    = "string"
   default = "false"
 }
+
+variable "enable_acr" {
+  type    = "string"
+  default = "false"
+}
+
+variable "acr_name" {
+  type = "string"
+  default = ""
+}
