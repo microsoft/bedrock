@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "aksgitops" {
-    name = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 module "aks" {
@@ -49,6 +49,7 @@ module "flux" {
   gc_enabled                = "${var.gc_enabled}"
   create_helm_operator      = "${var.create_helm_operator}"
   create_helm_operator_crds = "${var.create_helm_operator_crds}"
+  git_label                 = "${var.git_label}"
 }
 
 module "kubediff" {
