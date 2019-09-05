@@ -37,3 +37,5 @@ service_principal_secret = "<service principal secret>"
 # gitops_poll_interval = "30s"
 # gitops_path = "prod"
 # oms_agent_enabled = "false"
+# enable_acr = "true"
+# acr_name = <name of container registry>
