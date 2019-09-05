@@ -10,103 +10,113 @@ do
  esac
 done
 
-if [ -z $OWNERS ]; then
-    echo "OWNERS is empty"
-else
-    echo "OWNERS: $OWNERS"
+function assign_aks_roles {
+    if [ -z $OWNERS ]; then
+        echo "OWNERS is empty"
+    else
+        echo "OWNERS: $OWNERS"
 
-    OWNERs_YAML="---"
-    OWNERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
-    OWNERs_YAML+="\nkind: ClusterRoleBinding"
-    OWNERs_YAML+="\nmetadata:"
-    OWNERs_YAML+="\n  name: aks-cluster-admins"
-    OWNERs_YAML+="\nroleRef:"
-    OWNERs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
-    OWNERs_YAML+="\n  kind: ClusterRole"
-    OWNERs_YAML+="\n  name: cluster-admin"
-    OWNERs_YAML+="\nsubjects:"
+        OWNERs_YAML="---"
+        OWNERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+        OWNERs_YAML+="\nkind: ClusterRoleBinding"
+        OWNERs_YAML+="\nmetadata:"
+        OWNERs_YAML+="\n  name: aks-cluster-admins"
+        OWNERs_YAML+="\nroleRef:"
+        OWNERs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+        OWNERs_YAML+="\n  kind: ClusterRole"
+        OWNERs_YAML+="\n  name: cluster-admin"
+        OWNERs_YAML+="\nsubjects:"
 
-    OWNERS_ARRAY=($(echo "$OWNERS" | tr ',' '\n'))
-    for i in "${OWNERS_ARRAY[@]}"
-    do
-        OWNERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
-        OWNERs_YAML+="\n    kind: User"
-        OWNERs_YAML+="\n    name: $i"
-    done
+        OWNERS_ARRAY=($(echo "$OWNERS" | tr ',' '\n'))
+        for i in "${OWNERS_ARRAY[@]}"
+        do
+            OWNERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+            OWNERs_YAML+="\n    kind: User"
+            OWNERs_YAML+="\n    name: $i"
+        done
 
-    echo "owners yaml file:"
-    echo "$OWNERs_YAML"
-    echo "\napplying...\n"
+        echo "owners yaml file:"
+        echo "$OWNERs_YAML"
+        echo "\napplying...\n"
 
-    echo "$OWNERs_YAML" | kubectl apply -f -
+        echo "$OWNERs_YAML" | kubectl apply -f -
 
-    echo "\ndone!"
-fi
+        echo "\ndone!"
+    fi
+
+    if [ -z $CONTRIBUTORS ]; then
+        echo "CONTRIBUTORS is empty"
+    else
+        echo "CONTRIBUTORS: $CONTRIBUTORS"
+
+        CONTRIBUTORs_YAML="---"
+        CONTRIBUTORs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+        CONTRIBUTORs_YAML+="\nkind: ClusterRoleBinding"
+        CONTRIBUTORs_YAML+="\nmetadata:"
+        CONTRIBUTORs_YAML+="\n  name: aks-cluster-admins"
+        CONTRIBUTORs_YAML+="\nroleRef:"
+        CONTRIBUTORs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+        CONTRIBUTORs_YAML+="\n  kind: ClusterRole"
+        CONTRIBUTORs_YAML+="\n  name: cluster-admin"
+        CONTRIBUTORs_YAML+="\nsubjects:"
+
+        CONTRIBUTORS_ARRAY=($(echo "$CONTRIBUTORS" | tr ',' '\n'))
+        for i in "${CONTRIBUTORS_ARRAY[@]}"
+        do
+            CONTRIBUTORs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+            CONTRIBUTORs_YAML+="\n    kind: User"
+            CONTRIBUTORs_YAML+="\n    name: $i"
+        done
+
+        echo "owners yaml file:"
+        echo "$CONTRIBUTORs_YAML"
+        echo "\napplying...\n"
+
+        echo "$CONTRIBUTORs_YAML" | kubectl apply -f -
+
+        echo "\ndone!"
+    fi
 
 
-if [ -z $CONTRIBUTORS ]; then
-    echo "CONTRIBUTORS is empty"
-else
-    echo "CONTRIBUTORS: $CONTRIBUTORS"
+    if [ -z $READERS ]; then
+        echo "READERS is empty"
+    else
+        echo "READERS: $READERS"
 
-    CONTRIBUTORs_YAML="---"
-    CONTRIBUTORs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
-    CONTRIBUTORs_YAML+="\nkind: ClusterRoleBinding"
-    CONTRIBUTORs_YAML+="\nmetadata:"
-    CONTRIBUTORs_YAML+="\n  name: aks-cluster-admins"
-    CONTRIBUTORs_YAML+="\nroleRef:"
-    CONTRIBUTORs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
-    CONTRIBUTORs_YAML+="\n  kind: ClusterRole"
-    CONTRIBUTORs_YAML+="\n  name: cluster-admin"
-    CONTRIBUTORs_YAML+="\nsubjects:"
+        READERs_YAML="---"
+        READERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+        READERs_YAML+="\nkind: ClusterRoleBinding"
+        READERs_YAML+="\nmetadata:"
+        READERs_YAML+="\n  name: aks-cluster-admins"
+        READERs_YAML+="\nroleRef:"
+        READERs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+        READERs_YAML+="\n  kind: ClusterRole"
+        READERs_YAML+="\n  name: cluster-admin"
+        READERs_YAML+="\nsubjects:"
 
-    CONTRIBUTORS_ARRAY=($(echo "$CONTRIBUTORS" | tr ',' '\n'))
-    for i in "${CONTRIBUTORS_ARRAY[@]}"
-    do
-        CONTRIBUTORs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
-        CONTRIBUTORs_YAML+="\n    kind: User"
-        CONTRIBUTORs_YAML+="\n    name: $i"
-    done
+        READERS_ARRAY=($(echo "$READERS" | tr ',' '\n'))
+        for i in "${READERS_ARRAY[@]}"
+        do
+            READERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+            READERs_YAML+="\n    kind: User"
+            READERs_YAML+="\n    name: $i"
+        done
 
-    echo "owners yaml file:"
-    echo "$CONTRIBUTORs_YAML"
-    echo "\napplying...\n"
+        echo "owners yaml file:"
+        echo "$READERs_YAML"
+        echo "\napplying...\n"
 
-    echo "$CONTRIBUTORs_YAML" | kubectl apply -f -
+        echo "$READERs_YAML" | kubectl apply -f -
 
-    echo "\ndone!"
-fi
+        echo "\ndone!"
+    fi
+}
 
-
-if [ -z $READERS ]; then
-    echo "READERS is empty"
-else
-    echo "READERS: $READERS"
-
-    READERs_YAML="---"
-    READERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
-    READERs_YAML+="\nkind: ClusterRoleBinding"
-    READERs_YAML+="\nmetadata:"
-    READERs_YAML+="\n  name: aks-cluster-admins"
-    READERs_YAML+="\nroleRef:"
-    READERs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
-    READERs_YAML+="\n  kind: ClusterRole"
-    READERs_YAML+="\n  name: cluster-admin"
-    READERs_YAML+="\nsubjects:"
-
-    READERS_ARRAY=($(echo "$READERS" | tr ',' '\n'))
-    for i in "${READERS_ARRAY[@]}"
-    do
-        READERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
-        READERs_YAML+="\n    kind: User"
-        READERs_YAML+="\n    name: $i"
-    done
-
-    echo "owners yaml file:"
-    echo "$READERs_YAML"
-    echo "\napplying...\n"
-
-    echo "$READERs_YAML" | kubectl apply -f -
-
-    echo "\ndone!"
-fi
+MAX_RETRIES=5
+for ((k=0; k<$MAX_RETRIES; k++)); do
+    assign_aks_roles && break
+    
+    echo "Wait 15 seconds before retry $k time"
+    sleep 15
+done
+[[ $MAX_RETRIES -eq $k ]] && { echo "Failed to assign rbac role to aks"; exit 1; }
