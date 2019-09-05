@@ -38,7 +38,7 @@ variable "gitops_url_branch" {
 
 variable "acr_enabled" {
   type    = "string"
-  default = "true"
+  default = "false"
 }
 
 variable "gc_enabled" {

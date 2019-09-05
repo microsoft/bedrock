@@ -13,6 +13,8 @@ done
 if [ -z $OWNERS ]; then
     echo "OWNERS is empty"
 else
+    echo "OWNERS: $OWNERS"
+
     OWNERs_YAML="---"
     OWNERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
     OWNERs_YAML+="\nkind: ClusterRoleBinding"
@@ -45,6 +47,8 @@ fi
 if [ -z $CONTRIBUTORS ]; then
     echo "CONTRIBUTORS is empty"
 else
+    echo "CONTRIBUTORS: $CONTRIBUTORS"
+
     CONTRIBUTORs_YAML="---"
     CONTRIBUTORs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
     CONTRIBUTORs_YAML+="\nkind: ClusterRoleBinding"
@@ -77,6 +81,8 @@ fi
 if [ -z $READERS ]; then
     echo "READERS is empty"
 else
+    echo "READERS: $READERS"
+
     READERs_YAML="---"
     READERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
     READERs_YAML+="\nkind: ClusterRoleBinding"
