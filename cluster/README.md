@@ -12,6 +12,12 @@ Bedrock uses three tools to automate cluster deployments that you'll need to ins
 
 Verify that these tools are added to your system's PATH in order to avoid errors during cluster deployment.  (Note to WSL users: You will need to either move the executables to /usr/local/bin, or modify ~/.bashrc to add them to PATH and persist the new additions across restarts.)
 
+## Releases
+
+To support consistency in the deployment of Terraform based infrastructure.  Bedrock has started implementing releases for Terraform scripts.  The release process and tools for generating a release are found [here](./docs/releases).
+
+The first release(s) is 0.11.0 which will be the basic end of life for Terraform 0.11.x support and 0.12.0 which will be the first release supporting Terraform 0.12.x.
+
 ## Follow Cloud Provider Guide
 
 Bedrock provides templates for creating Kubernetes clusters for each supported cloud provider (currently only Azure -- but we would gratefully accept pull requests for other cloud providers).  Follow the instructions for the cloud provider you'd like to create a cluster environment for to get started:
