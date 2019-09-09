@@ -24,7 +24,7 @@ module "flexvol_role" {
   source = "../role_assignment"
 
   role_assignment_role = "Managed Identity Operator"
-  role_assignee        = "${var.service_principal_id}"
+  role_assignee        = "${var.service_principal_object_id}"
   role_scope           = "${join("",azurerm_user_assigned_identity.podid.*.id)}"
   precursor_done       = "${join("",null_resource.wait_for_identity_propagation.*.id)}"
 }

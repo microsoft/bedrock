@@ -10,7 +10,7 @@ module "keyvault" {
 module "keyvault_access_policy_default" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/keyvault_policy"
 
-  keyvault_name = "${module.keyvault.keyvault_name}"
-  resource_group_name = "${var.global_resource_group_name}"
-  service_principal_id = "${data.azurerm_client_config.current.service_principal_application_id}"
+  keyvault_name               = "${module.keyvault.keyvault_name}"
+  resource_group_name         = "${var.global_resource_group_name}"
+  service_principal_object_id = "${data.azurerm_client_config.current.service_principal_object_id}"
 }

@@ -4,10 +4,12 @@ WAIT_TIME_SECONDS=2
 TIMEOUT_SECONDS=360
 
 FOUND=0
+az account show
 echo "waiting for identity to propagate -- $IDENTITY_ID"
 while true; do
-    az ad sp show --id $1 >& /dev/null
-    if [ $? -eq 0 ]; then
+    result=$( az ad sp show --id $1 2>&1 1>/dev/null )
+    #az ad sp show --id $1 
+    if [[ $? -eq 0 ]] || [[ "$result" == "Insufficient privileges to complete the operation." ]]; then
         FOUND=1
 	break
     fi

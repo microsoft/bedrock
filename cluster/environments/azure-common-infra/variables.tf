@@ -10,7 +10,7 @@ variable "global_resource_group_name" {
   type = "string"
 }
 
-variable "service_principal_id" {
+variable "service_principal_object_id" {
   type = "string"
 }
 
