@@ -66,6 +66,8 @@ To test that this workflow works, you may:
 
 ## SSH Keys
 
+**For you to utilize this approach, you must utilize, at minimum, [Fabrikate v0.15.1 or above](https://github.com/microsoft/fabrikate/releases/).**
+
 While Personal Access Tokens offer a reliable way to read and clone Git repositories on behalf of a user, they can become unwieldy to use in practice. For an Azure DevOps scenario, imagine if a component's subcomponents were spread across multiple Organizations - a user supplying a Personal Access Token would have to provide one for every organization the component depends on. For example, given the following component.yaml:
 
 ```
@@ -103,7 +105,7 @@ Take note the following considerations:
 - For Azure Devops, this process must be repeated for every organization that your component depends on.
 - For Github, the user account to which the public key is added must have access to all the private repositories that your component depends on.
 
-With this setup, you can migrate away from Personal Access Tokens, and use a more secure Public/Private key approach to manage and maintain repository access, while still working with Fabrikate components from private repositories.
+With this setup, you can migrate away from Personal Access Tokens for installing components, and use a more secure Public/Private key approach to manage and maintain repository access, while still working with Fabrikate components from private repositories. Take note: you will still require a  Personal Access Token to configure automatic Pull Requests against your High Level Definition repository.
 
 
 ## Additional Resources
