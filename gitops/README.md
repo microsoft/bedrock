@@ -40,11 +40,12 @@ Pull requests would be gratefully accepted for other CI/CD platforms.
 
 Got through the examples? Learn about how to refine your GitOps pipelines for production use.
 
-* [GitOps Best Practices](BestPractices.md) 
+* [GitOps Best Practices](BestPractices.md)
+* [Operating Private Repositories](PrivateRepositories.md)
 
 ## Additional Questions?
 
-Check out the [wiki](https://github.com/Microsoft/bedrock/wiki/FAQ#gitops) pages. 
+Check out the [wiki](https://github.com/Microsoft/bedrock/wiki/FAQ#gitops) pages.
 
 ### Additional Resources
 + https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/use-git-microsoft
