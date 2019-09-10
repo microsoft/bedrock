@@ -26,9 +26,11 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	location := os.Getenv("DATACENTER_LOCATION")
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	clientid := os.Getenv("ARM_CLIENT_ID")
+        clientobjectid := os.Getenv("ARM_CLIENT_OBJECT_ID")
         clientsecret := os.Getenv("ARM_CLIENT_SECRET")
 	subnetName := k8sName + "-subnet"
 	vnetName := k8sName + "-vnet"
+	idName := strings.ToLower(k8sName + "-pod-id")
 
 	//Generate common-infra backend for tf.state files to be persisted in azure storage account
 	backendName := os.Getenv("ARM_BACKEND_STORAGE_NAME")
@@ -75,10 +77,11 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"address_space":                  addressSpace,
 			"keyvault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
-			"service_principal_id":           clientid,
+			"service_principal_object_id":    clientobjectid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
 			"vnet_name":                      vnetName,
+			"identity_name":                  idName,
 		},
 	}
 
@@ -134,7 +137,6 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"keyvault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
 			"resource_group_name":      k8sRG,
-			"resource_group_location":  location,
 			"ssh_public_key":           publickey,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
@@ -143,6 +145,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"vnet_name":                vnetName,
 			"cosmos_db_name":           cosmos_db_name,
 			"mongo_db_name":            mongo_db_name,
+			"identity_name":            idName,
 		},
 	}
 

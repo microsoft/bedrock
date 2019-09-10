@@ -45,6 +45,8 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+        clientobjectid := os.Getenv("ARM_CLIENT_OBJECT_ID")
+
 	tenantid := os.Getenv("ARM_TENANT_ID")
 
 	addressSpace := "10.39.0.0/16"
@@ -101,7 +103,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"address_space":                  addressSpace,
 			"keyvault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
-			"service_principal_id":           clientid,
+			"service_principal_object_id":    clientobjectid,
 			"subnet_name":                    subnetName,
 			"subnet_prefix":                  addressSpace,
 			"vnet_name":                      vnetName,
@@ -176,19 +178,20 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	tfOptions := &terraform.Options{
 		TerraformDir: azureMultipleClustersFolder,
 		Vars: map[string]interface{}{
-			"cluster_name":             k8sName,
-			"agent_vm_count":           agent_vm_count,
-			"agent_vm_size":            agent_vm_size,
-			"dns_prefix":               dnsprefix,
-			"service_principal_id":     clientid,
-			"service_principal_secret": clientsecret,
-			"ssh_public_key":           publickey,
-			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-			"gitops_ssh_key":           sshkey,
-			"gitops_poll_interval":     "5m",
-			"keyvault_name":            kvName,
-			"keyvault_resource_group":  kvRG,
-			"identity_name":            idName,
+			"cluster_name":                k8sName,
+			"agent_vm_count":              agent_vm_count,
+			"agent_vm_size":               agent_vm_size,
+			"dns_prefix":                  dnsprefix,
+			"service_principal_id":        clientid,
+			"service_principal_secret":    clientsecret,
+			"service_principal_object_id": clientobjectid,
+			"ssh_public_key":              publickey,
+			"gitops_ssh_url":              "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
+			"gitops_ssh_key":              sshkey,
+			"gitops_poll_interval":        "5m",
+			"keyvault_name":               kvName,
+			"keyvault_resource_group":     kvRG,
+			"identity_name":               idName,
 
 			"traffic_manager_profile_name":            tmName,
 			"traffic_manager_dns_name":                tm_dnsprefix,

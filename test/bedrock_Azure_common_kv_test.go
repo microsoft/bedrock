@@ -25,6 +25,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
+	clientobjectid := os.Getenv("ARM_CLIENT_OBJECT_ID")
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	subnetName := k8sName + "-subnet"
 	vnetName := k8sName + "-vnet"
@@ -52,6 +53,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
         err1 := cmd1.Run()
         if err1 != nil {
                 fmt.Println("failed to create resource group")
+                fmt.Println("resource group -", kvRG)
                 log.Fatal(err1)
                 os.Exit(-1)
         }
@@ -75,7 +77,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"address_space":              addressSpace,
 			"keyvault_name":              kvName,
 			"global_resource_group_name": kvRG,
-			"service_principal_id":       clientid,
+			"service_principal_object_id": clientobjectid,
 			"subnet_name":                subnetName,
 			"subnet_prefix":              addressSpace,
 			"vnet_name":                  vnetName,
