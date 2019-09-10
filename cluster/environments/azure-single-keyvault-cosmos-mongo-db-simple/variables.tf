@@ -75,10 +75,6 @@ variable "resource_group_name" {
   type = "string"
 }
 
-variable "resource_group_location" {
-  type = "string"
-}
-
 variable "ssh_public_key" {
   type = "string"
 }
@@ -100,6 +96,10 @@ variable "vnet_name" {
 }
 
 variable "subnet_name" {
+  type = "string"
+}
+
+variable "identity_name" {
   type = "string"
 }
 

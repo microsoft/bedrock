@@ -72,6 +72,28 @@ The output of the above commands will look something like this:
 }
 ```
 
+Some environments require the Object ID of the service principal (role assignments, keyvault policy).  The Object ID is not returned as part of the output above.  In order to retrieve the Object ID of the Service Principla, one uses the following Azure CLI command:
+
+```bash
+$ az ad sp show --id <service principal id>
+```
+
+The output of the above command is somewhat verbose, but look for the value `objectId` which would be in the output resembling:
+
+```bash
+{
+  "accountEnabled": "True",
+  "addIns": [],
+  "alternativeNames": [],
+...
+  "objectId": "2a6478e1-d246-4653-a491-858c587660d1",
+  "objectType": "ServicePrincipal",
+  "odata.metadata": "https://graph.windows.net/abcdef01-86f1-beef-91ab-2d7cd011aaaa/$metadata#directoryObjects/@Element",
+  "odata.type": "Microsoft.DirectoryServices.ServicePrincipal",
+...
+}
+```
+
 Note: You may receive an error if you do not have sufficient permissions on your Azure subscription to create a service principal.  If this happens, contact a subscription administrator to determine whether you have contributor-level access to the subscription.
 
 There are some environments that perform role assignments during the process of deployments.  In this case, the Service Principal requires Owner level access on the subscription.  Each environment where this is the case will document the requirements and whether or not there is a configuration option not requiring the Owner level privileges.

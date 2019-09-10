@@ -14,6 +14,10 @@ variable "acr_enabled" {
   default = "true"
 }
 
+variable "identity_name" {
+  type = "string"
+}
+
 variable "address_space" {
   type = "string"
 }
@@ -75,19 +79,11 @@ variable "resource_group_name" {
   type = "string"
 }
 
-variable "resource_group_location" {
-  type = "string"
-}
-
 variable "ssh_public_key" {
   type = "string"
 }
 
 variable "service_principal_id" {
-  type = "string"
-}
-
-variable "service_principal_object_id" {
   type = "string"
 }
 
@@ -99,7 +95,11 @@ variable "subnet_prefixes" {
   type = "string"
 }
 
-variable "vnet_subnet_id" {
+variable "vnet_name" {
+  type = "string"
+}
+
+variable "subnet_name" {
   type = "string"
 }
 

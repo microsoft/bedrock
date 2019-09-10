@@ -10,16 +10,21 @@ module "common-provider" {
 
 data "azurerm_resource_group" "cluster_rg" {
   name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
 }
 
 data "azurerm_resource_group" "keyvault" {
   name     = "${var.keyvault_resource_group}"
 }
 
+data "azurerm_subnet" "velero" {
+  name     = "${var.subnet_name}"
+  virtual_network_name = "${var.vnet_name}"
+  resource_group_name = "${var.keyvault_resource_group}"
+}
+
 resource "null_resource" "cloud_credentials" {
   provisioner "local-exec" {
-    command = "echo \"AZURE_SUBSCRIPTION_ID=${var.subscription_id}\nAZURE_TENANT_ID=${var.tenant_id}\nAZURE_CLIENT_ID=${var.service_principal_id}\nAZURE_CLIENT_SECRET=${var.service_principal_secret}\nAZURE_RESOURCE_GROUP=MC_${data.azurerm_resource_group.cluster_rg.name}_${var.cluster_name}_${var.resource_group_location}\" > ./credentials-velero"
+    command = "echo \"AZURE_SUBSCRIPTION_ID=${var.subscription_id}\nAZURE_TENANT_ID=${var.tenant_id}\nAZURE_CLIENT_ID=${var.service_principal_id}\nAZURE_CLIENT_SECRET=${var.service_principal_secret}\nAZURE_RESOURCE_GROUP=MC_${data.azurerm_resource_group.cluster_rg.name}_${var.cluster_name}_${data.azurerm_resource_group.cluster_rg.location}\" > ./credentials-velero"
   }
 }
 
@@ -34,7 +39,7 @@ module "aks" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
-  vnet_subnet_id           = "${var.vnet_subnet_id}"
+  vnet_subnet_id           = "${data.azurerm_subnet.velero.id}"
   output_directory         = "${var.output_directory}"
   kubeconfig_filename      = "${var.kubeconfig_filename}"
 }

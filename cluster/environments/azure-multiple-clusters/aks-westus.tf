@@ -76,7 +76,7 @@ module "west_tm_endpoint" {
 module "west_network_contributor_role" {
   source = "github.com/microsoft/bedrock?ref=bedrock.msi//cluster/azure/role_assignment"
   role_assignment_role = "${var.aks_client_network_role_assignment_role}"
-  role_assignee = "${var.service_principal_id}"
+  role_assignee = "${var.service_principal_object_id}"
   role_scope = "${data.azurerm_resource_group.westrg.id}"
 }
 

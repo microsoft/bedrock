@@ -1,5 +1,5 @@
 terraform {
-  backend "azurerm" {}
+  #backend "azurerm" {}
 }
 
 data "azurerm_client_config" "current" {}

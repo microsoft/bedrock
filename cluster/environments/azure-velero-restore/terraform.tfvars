@@ -16,7 +16,7 @@ keyvault_resource_group = "my-global-rg"
 address_space   = "<cidr for cluster address space>"
 subnet_prefixes = "10.39.0.0/16"
 vnet_name       = "my-vnet"
-vnet_subnet_id  = "/subscriptions/<subid>/resourceGroups/<my-global-rg>/providers/Microsoft.Network/virtualNetworks/<my-vnet>/subnets/<my-subnet>"
+subnet_name     = "my-subnet"
 
 #--------------------------------------------------------------
 # Cluster variables
