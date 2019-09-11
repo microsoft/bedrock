@@ -5,7 +5,7 @@
 
 Bedrock is automation and tooling for operationalizing production Kubernetes clusters with a [GitOps](./gitops) workflow.  GitOps enables you to build a workflow around your deployments and infrastructure similiar to that of a typical development workflow: pull request based operational changes, point in time auditability into what was deployed on the Kubernetes cluster, and providing nonrepudation about who made those changes.
 
-This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction that separates structure from configuration.  Thismakes them easier to maintain versus directly specifying them in Kubernetes resource manifest YAML or cobbling together shell scripts to build Kubernetes resource manifests from templating solutions.  Fabrikate definitions also allow you to leverage common pieces across many deployments and to share structure amongst different clusters differentiated only by config.
+This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction that separates structure from configuration.  This makes them easier to maintain versus directly specifying them in Kubernetes resource manifest YAML or cobbling together shell scripts to build Kubernetes resource manifests from templating solutions.  Fabrikate definitions also allow you to leverage common pieces across many deployments and to share structure amongst different clusters differentiated only by config.
 
 Bedrock also provides [guidance and automation](./gitops/README.md) for building GitOps pipelines with a variety of popular CI/CD orchestrators.
 
