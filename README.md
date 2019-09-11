@@ -7,6 +7,8 @@ Bedrock is automation and tooling for operationalizing production Kubernetes clu
 
 This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction and also separate structure from configuration that directly specifying them as Kubernetes resource manifest YAML or cobbling together shell scripts to build resource manifests from templating solutions.  Fabrikate definitions also allow youto leverage common pieces across many deployments and to share structure amongst different clusters differentiated by config.
 
+Bedrock also provides [guidance and automation](./gitops/README.md) for building GitOps pipelines with a variety of popular CI/CD orchestrators.
+
 Finally, Bedrock provides a set of Terraform environment templates for deploying your Kubernetes clusters, including automation for setting up the GitOps Operator [Flux](https://github.com/fluxcd/flux) in your cluster.
 
 ## Getting Started
