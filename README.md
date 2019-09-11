@@ -3,11 +3,7 @@
 [![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/bedrock)](https://goreportcard.com/report/github.com/microsoft/bedrock)
 
-<<<<<<< HEAD
-Bedrock is a set of automation and tooling for deploying production-level Kubernetes clusters with a secure and auditable [GitOps](./gitops) workflow, based on the learnings we've had deploying and operating real world applications and Kubernetes clusters with our customers.
-=======
 Bedrock is automation and tooling for operationalizing production Kubernetes clusters with a [GitOps](./gitops) workflow.  GitOps enables you to build a workflow around your deployments and infrastructure similiar to that of a typical development workflow: pull request based operational changes, point in time auditability into what was deployed on the Kubernetes cluster, and providing nonrepudation about who made those changes.
->>>>>>> WIP on docs
 
 This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction and also separate structure from configuration that directly specifying them as Kubernetes resource manifest YAML or cobbling together shell scripts to build resource manifests from templating solutions.  Fabrikate definitions also allow youto leverage common pieces across many deployments and to share structure amongst different clusters differentiated by config.
 
