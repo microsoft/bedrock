@@ -154,6 +154,7 @@ stages:
         go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
@@ -188,6 +189,7 @@ stages:
         go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
