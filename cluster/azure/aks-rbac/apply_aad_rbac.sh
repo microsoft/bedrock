@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 while getopts :o:c:r: option
 do
  case "${option}" in
@@ -35,12 +35,12 @@ else
     done
 
     echo "owners yaml file:"
-    echo "$OWNERs_YAML"
+    echo -e "$OWNERs_YAML"
     echo "\napplying...\n"
 
-    echo "$OWNERs_YAML" | kubectl apply -f -
+    echo -e "$OWNERs_YAML" | kubectl apply -f -
 
-    echo "\ndone!"
+    echo -e "\ndone!"
 fi
 
 if [ -z $CONTRIBUTORS ]; then
@@ -68,12 +68,12 @@ else
     done
 
     echo "owners yaml file:"
-    echo "$CONTRIBUTORs_YAML"
+    echo -e "$CONTRIBUTORs_YAML"
     echo "\napplying...\n"
 
-    echo "$CONTRIBUTORs_YAML" | kubectl apply -f -
+    echo -e "$CONTRIBUTORs_YAML" | kubectl apply -f -
 
-    echo "\ndone!"
+    echo -e "\ndone!"
 fi
 
 
@@ -102,10 +102,10 @@ else
     done
 
     echo "owners yaml file:"
-    echo "$READERs_YAML"
+    echo -e "$READERs_YAML"
     echo "\napplying...\n"
 
-    echo "$READERs_YAML" | kubectl apply -f -
+    echo -e "$READERs_YAML" | kubectl apply -f -
 
-    echo "\ndone!"
+    echo -e "\ndone!"
 fi
