@@ -90,7 +90,6 @@ module "kv-reader-identity" {
   resource_group_name             = "${var.resource_group_name}"
   location                        = "${var.resource_group_location}"
   aks_cluster_name                = "${var.cluster_name}"
-  aks_cluster_resource_group_name = "${var.resource_group_name}"
   aks_cluster_location            = "${var.resource_group_location}"
 
   vault_name            = "${var.vault_name}"
