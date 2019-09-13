@@ -5,8 +5,7 @@ do
     case "${option}" in
     v) VAULT_NAME=${OPTARG};;
     n) IDENTITY_NAME=${OPTARG};;
-    g) VAULT_RESOURCE_GROUP_NAME=${OPTARG};;
-    a) AKS_CLUSTER_RESOURCE_GROUP=${OPTARG};;
+    g) RESOURCE_GROUP_NAME=${OPTARG};;
     c) AKS_CLUSTER_NAME=${OPTARG};;
     s) AKS_CLUSTER_SPN_NAME=${OPTARG};;
     l) AKS_CLUSTER_LOCATION=${OPTARG};;
@@ -23,20 +22,20 @@ if [ -z "$VAULT_NAME" ]; then
     echo "usage: $0 -v <VAULT_NAME>"
     exit 1
 fi
-if [ -z "$VAULT_RESOURCE_GROUP_NAME" ]; then
-    echo "usage: $0 -g <VAULT_RESOURCE_GROUP_NAME>"
+if [ -z "$RESOURCE_GROUP_NAME" ]; then
+    echo "usage: $0 -g <RESOURCE_GROUP_NAME>"
     exit 1
 fi
 
-KEY_VAULT=$(az keyvault show -g "$VAULT_RESOURCE_GROUP_NAME" -n "$VAULT_NAME")
+KEY_VAULT=$(az keyvault show -n "$VAULT_NAME")
 AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "Key vault id: $AZ_KEY_VAULT_ID"
 
-AKS_RESOURCE_GROUP_ID=$(az group show -n "$AKS_CLUSTER_RESOURCE_GROUP" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
-echo "AKS resource group id: $AKS_RESOURCE_GROUP_ID"
+RESOURCE_GROUP_ID=$(az group show -n "$RESOURCE_GROUP_NAME" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
+echo "AKS resource group id: $RESOURCE_GROUP_ID"
 
 UNDERSCORE="_"
-AKS_NODE_RESOURCE_GROUP="MC$UNDERSCORE$AKS_CLUSTER_RESOURCE_GROUP$UNDERSCORE$AKS_CLUSTER_NAME$UNDERSCORE$AKS_CLUSTER_LOCATION"
+AKS_NODE_RESOURCE_GROUP="MC$UNDERSCORE$RESOURCE_GROUP_NAME$UNDERSCORE$AKS_CLUSTER_NAME$UNDERSCORE$AKS_CLUSTER_LOCATION"
 AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n "$AKS_NODE_RESOURCE_GROUP" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "MC resource group id: $AKS_NODE_RESOURCE_GROUP_ID"
 
@@ -45,13 +44,13 @@ AKS_SPN_OBJECT_ID=$(echo "$EXISTING_AKS_SPNS" | jq '.[0].objectId' | sed -e 's/^
 echo "AKS cluster spn app id: $AKS_SPN_OBJECT_ID"
 
 echo "Ensure msi $IDENTITY_NAME is created"
-EXISTING_IDENTTIIES="$(az identity list --resource-group "$AKS_NODE_RESOURCE_GROUP" --query "[?name=='$IDENTITY_NAME']" -o json)"
+EXISTING_IDENTTIIES="$(az identity list --resource-group "$RESOURCE_GROUP_NAME" --query "[?name=='$IDENTITY_NAME']" -o json)"
 EXISTING_IDENTITY_FOUND=$(echo "$EXISTING_IDENTTIIES" | jq '. | length')
 MSI_PRINCIPAL_ID=""
 MSI_CLIENT_ID=""
 MSI_ID=""
 if [ $EXISTING_IDENTITY_FOUND -eq 0 ]; then
-    MSI_CREATED="$(az identity create -g "$AKS_NODE_RESOURCE_GROUP" -n "$IDENTITY_NAME" -o json)"
+    MSI_CREATED="$(az identity create -g "$RESOURCE_GROUP_NAME" -n "$IDENTITY_NAME" -o json)"
     echo "Service identity:"
     echo "$MSI_CREATED"
     MSI_PRINCIPAL_ID=$(echo "$MSI_CREATED" | jq '.principalId' | sed -e 's/^"//' -e 's/"$//')
@@ -72,8 +71,8 @@ MAX_RETRIES=5
 for ((i=0; i<$MAX_RETRIES; i++)); do
     echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\"" &&
     az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID" &&
-    echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_RESOURCE_GROUP_ID\"" &&
-    az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_RESOURCE_GROUP_ID" &&
+    echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$RESOURCE_GROUP_ID\"" &&
+    az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$RESOURCE_GROUP_ID" &&
     echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\"" &&
     az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID" && break
 

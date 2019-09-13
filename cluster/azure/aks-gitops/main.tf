@@ -7,6 +7,7 @@ module "aks" {
 
   resource_group_name             = "${var.resource_group_name}"
   cluster_name                    = "${var.cluster_name}"
+  kubernetes_version              = "${var.kubernetes_version}"
   agent_vm_count                  = "${var.agent_vm_count}"
   agent_vm_size                   = "${var.agent_vm_size}"
   dns_prefix                      = "${var.dns_prefix}"
@@ -89,7 +90,6 @@ module "kv-reader-identity" {
   resource_group_name             = "${var.resource_group_name}"
   location                        = "${var.resource_group_location}"
   aks_cluster_name                = "${var.cluster_name}"
-  aks_cluster_resource_group_name = "${var.resource_group_name}"
   aks_cluster_location            = "${var.resource_group_location}"
 
   vault_name            = "${var.vault_name}"
