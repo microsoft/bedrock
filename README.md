@@ -3,31 +3,23 @@
 [![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/bedrock)](https://goreportcard.com/report/github.com/microsoft/bedrock)
 
-Bedrock is a set of automation and tooling for deploying production-level Kubernetes clusters with a secure and auditable [GitOps](./gitops) workflow, based on the learnings we've had deploying and operating real world applications and Kubernetes clusters with our customers.
+Bedrock is automation and tooling for operationalizing production Kubernetes clusters with a [GitOps](./gitops) workflow.  GitOps enables you to build a workflow around your deployments and infrastructure similiar to that of a typical development workflow: pull request based operational changes, point in time auditability into what was deployed on the Kubernetes cluster, and providing nonrepudation about who made those changes.
 
-Bedrock provides automation for deploying and maintaining the infrastructure surrounding your Kubernetes clusters with Terraform, including deployment and setup of [Flux](https://github.com/weaveworks/flux), which automates the application of the resource manifests specified.
+This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction that separates structure from configuration.  This makes them easier to maintain versus directly specifying them in Kubernetes resource manifest YAML or cobbling together shell scripts to build Kubernetes resource manifests from templating solutions.  Fabrikate definitions also allow you to leverage common pieces across many deployments and to share structure amongst different clusters differentiated only by config.
 
-It also includes automation for building CI/CD pipelines for building and releasing changes to your Kubernetes cluster from a higher level [Fabrikate](https://github.com/Microsoft/fabrikate) definition. Defining your deployment at this higher level of abstraction is less error prone than directly editing resource manifest files or cobbling together shell scripts to build resource manifests from Helm templates, and allows you to leverage common pieces across many deployments and to share structure amongst different clusters differentiated by config.
+Bedrock also provides [guidance and automation](./gitops/README.md) for building GitOps pipelines with a variety of popular CI/CD orchestrators.
 
-On each commit to the high level definition repo, this CI/CD pipeline uses Fabrikate to generate resource manifests from this definition and checks them into a resource manifest git repo. This resource manifest repo both specifies exactly what should be deployed and also provides an audit trail of all of the low level operational changes. This combination of high level definition and resource manifest repos allow you to secure, control, code review, and audit what is currently deployed at both a high and low level.
+Finally, Bedrock provides a set of Terraform environment templates for deploying your Kubernetes clusters, including automation for setting up the GitOps Operator [Flux](https://github.com/fluxcd/flux) in your cluster.
 
 ## Getting Started
 
 A Bedrock deployment follows three steps at a high level:
 
-1. [Create and deploy azure-simple](./docs/azure-simple/README.md) a Kubernetes environment that uses Flux.
-2. Define a [Fabrikate](./docs/fabrikate/README.md) definition.
-3. [Deploy a CI/CD pipeline](./docs/devops/README.md) to build resource manifests for this deployment. 
+1. [Create and deploy](./cluster/README.md) a GitOps enabled Kubernetes cluster.
+2. Define a [Fabrikate](https://github.com/microsoft/fabrikate) high level deployment definition.
+3. [Setup a GitOps pipeline](./gitops/README.md) to automate deployments of this definition to this cluster based on typical application and cluster lifecycle events.
 
-In addition to that in-depth documentation, we also maintain a [walkthrough for deploying the azure-simple environment template](./docs/azure-simple/README.md) that makes a great first step.
-
-The easiest way to try Bedrock is to start with our [azure-simple](./docs/azure-simple/README.md) environment template. 
-
-## Releases
-
-To support consistency in the deployment of Terraform based infrastructure.  Bedrock has started implementing releases for Terraform scripts.  The release process and tools for generating a release are found [here](./docs/releases).
-
-The first release(s) will be 0.11.0 which will be the basic end of life for Terraform 0.11.x support and 0.12.0 which will be the first release supporting Terraform 0.12.x.
+The steps required to operationalize a production Kubernetes cluster can be pretty extensive, so we have also put togeter a [simple walkthrough for deploying a first cluster](./docs/azure-simple/README.md) that makes a great first step.
 
 ## Community
 
