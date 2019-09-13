@@ -59,10 +59,10 @@ variable "flexvol_recreate" {
   default     = ""
 }
 
-variable "kubeconfig_filename" {
-  description = "Name of the kube config file saved to disk."
+variable "kubeconfigadmin_filename" {
+  description = "Name of the admin kube config file saved to disk. (because aad integration, regular kube config doesn't have credential)"
   type        = "string"
-  default     = "bedrock_kube_config"
+  default     = "admin_kube_config"
 }
 
 variable "kubeconfig_complete" {
