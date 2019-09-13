@@ -2,10 +2,6 @@ module "common-provider" {
   source = "../../common/provider"
 }
 
-data "azuread_service_principal" "flexvol" {
-  application_id = "${var.service_principal_id}"
-}
-
 resource "azurerm_key_vault_access_policy" "flexvol" {
   count = "${var.enable_flexvol ? 1 : 0}"
 
@@ -13,7 +9,7 @@ resource "azurerm_key_vault_access_policy" "flexvol" {
   resource_group_name = "${var.resource_group_name}"
 
   tenant_id = "${var.tenant_id}"
-  object_id = "${data.azuread_service_principal.flexvol.id}"
+  object_id = "${var.service_principal_id}"
 
   key_permissions         = "${var.flexvol_keyvault_key_permissions}"
   secret_permissions      = "${var.flexvol_keyvault_secret_permissions}"
