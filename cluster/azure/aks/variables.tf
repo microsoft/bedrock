@@ -92,6 +92,10 @@ variable "docker_cidr" {
   description = "IP address (in CIDR notation) used as the Docker bridge IP address on nodes. Default of 172.17.0.1/16."
 }
 
+variable "network_plugin" {
+  default     = "azure"
+  description = "Network plugin used by AKS. Either azure or kubenet."
+}
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
