@@ -108,6 +108,10 @@ variable "subnet_prefix" {
   default     = "10.10.1.0/24"
 }
 
+variable "network_plugin" {
+  default     = "azure"
+  description = "Network plugin used by AKS. Either azure or kubenet."
+}
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."

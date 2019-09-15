@@ -20,6 +20,7 @@ module "aks" {
   kubeconfig_recreate      = "${var.kubeconfig_recreate}"
   kubeconfig_filename      = "${var.kubeconfig_filename}"
   network_policy           = "${var.network_policy}"
+  network_plugin           = "${var.network_plugin}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 

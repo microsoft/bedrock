@@ -4,14 +4,25 @@ This document walks through a Bedrock deployment.  It does not include everythin
 
 This walkthrough consists of the following steps:
 
-1. [Prerequisites](#prerequisites)
-2. [Create an Azure Service Principal](#create-an-azure-service-principal)
-3. [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
-4. [Clone the Bedrock Repository](#clone-the-bedrock-repository)
-5. [Set up Terraform Deployment Variables](#set-up-terraform-deployment-variables)
-6. [Deploy the Template](#deploy-the-template)
-7. [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
-8. [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
+- [A Walkthrough Deploying a Bedrock Environment](#a-walkthrough-deploying-a-bedrock-environment)
+  - [Prerequisites](#prerequisites)
+    - [Install the required tooling](#install-the-required-tooling)
+    - [Install the Azure CLI](#install-the-azure-cli)
+    - [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
+      - [Create an RSA Key Pair for a Deploy Key for the Flux Repository](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository)
+      - [Add Repository Key](#add-repository-key)
+  - [Create an Azure Service Principal](#create-an-azure-service-principal)
+    - [Create an RSA Key for Logging Into AKS Nodes](#create-an-rsa-key-for-logging-into-aks-nodes)
+  - [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
+  - [Clone the Bedrock Repository](#clone-the-bedrock-repository)
+  - [Set Up Terraform Deployment Variables](#set-up-terraform-deployment-variables)
+  - [Deploy the Template](#deploy-the-template)
+    - [Terraform Init](#terraform-init)
+    - [Terraform Plan](#terraform-plan)
+    - [Terraform Apply](#terraform-apply)
+    - [Terraform State](#terraform-state)
+  - [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
+  - [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
 
 ## Prerequisites
 
@@ -269,6 +280,7 @@ vnet_name = "<vnet name>"
 # gitops_poll_interval = "30s"
 # gitops_path = "prod"
 # network_policy = "calico"
+# network_plugin = "azure"
 ```
 
 From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough the defaults for `agent_vm_count=3` and `resource_group_location=westus2` are usable. 
@@ -310,6 +322,7 @@ vnet_name = "testazuresimplevnet"
 # gitops_poll_interval = "30s"
 # gitops_path = "prod"
 # network_policy = "calico"
+# network_plugin = "azure"
 ```
 
 ## Deploy the Template

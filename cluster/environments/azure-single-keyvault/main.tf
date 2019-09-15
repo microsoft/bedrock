@@ -5,11 +5,11 @@ terraform {
 data "azurerm_client_config" "current" {}
 
 data "azurerm_resource_group" "cluster_rg" {
-  name     = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 data "azurerm_resource_group" "keyvault" {
-  name     = "${var.keyvault_resource_group}"
+  name = "${var.keyvault_resource_group}"
 }
 
 data "azurerm_subnet" "vnet" {
@@ -39,6 +39,7 @@ module "aks-gitops" {
   service_principal_secret = "${var.service_principal_secret}"
   ssh_public_key           = "${var.ssh_public_key}"
   vnet_subnet_id           = "${data.azurerm_subnet.vnet.id}"
+  network_plugin           = "${var.network_plugin}"
   network_policy           = "${var.network_policy}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
