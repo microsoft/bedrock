@@ -35,7 +35,7 @@ variable "flexvol_keyvault_certificate_permissions" {
 variable "flexvol_deployment_url" {
   description = "The url to the yaml file for deploying the KeyVault flex volume."
   type        = "string"
-  default     = "https://raw.githubusercontent.com/Azure/kubernetes-keyvault-flexvol/31f593250045e8dc861e13a8e943284787b7f17e/deployment/kv-flexvol-installer.yaml"
+  default     = "https://raw.githubusercontent.com/Azure/kubernetes-keyvault-flexvol/9d66bc071bcf759cc8e1cc85983f5e9a9930ba16/deployment/kv-flexvol-installer.yaml"
 }
 
 variable "output_directory" {
