@@ -3,7 +3,7 @@ module "azure-provider" {
 }
 
 data "azurerm_resource_group" "cluster" {
-  name     = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 resource "random_id" "workspace" {
@@ -59,7 +59,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   network_profile {
-    network_plugin     = "azure"
+    network_plugin     = "${var.network_plugin}"
     network_policy     = "${var.network_policy}"
     service_cidr       = "${var.service_cidr}"
     dns_service_ip     = "${var.dns_ip}"

@@ -99,6 +99,10 @@ variable "subnet_name" {
   type = "string"
 }
 
+variable "network_plugin" {
+  default     = "azure"
+  description = "Network plugin used by AKS. Either azure or kubenet."
+}
 variable "network_policy" {
   default     = "azure"
   description = "Network policy to be used with Azure CNI. Either azure or calico."
@@ -115,6 +119,6 @@ variable "enable_acr" {
 }
 
 variable "acr_name" {
-  type = "string"
+  type    = "string"
   default = ""
 }
