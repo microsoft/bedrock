@@ -14,9 +14,9 @@ variable "kubeconfigadmin_done" {
   type        = "string"
 }
 
-variable "k8s_namespace" {
+variable "k8s_namespaces" {
   type        = "string"
-  description = "target k8s namespace where secret will be created"
+  description = "comma-separated k8s namespaces where secret will be created"
 }
 
 variable "k8s_secret_name" {
