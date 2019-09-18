@@ -36,11 +36,15 @@ else
     echo "NAMESPACES=$NAMESPACES"
 fi
 
-SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value" | base64 --decode)
-echo $SECRET_YAML
+SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value | @base64d")
+if [ -f /tmp/sslcert-sace-works.yaml ]; then
+    rm /tmp/sslcert-sace-works.yaml
+fi
+echo -e "$SECRET_YAML" | sed -e 's/^"//' -e 's/"$//' > /tmp/sslcert-sace-works.yaml
 
 NAMESPACE_ARRAY=($(echo "$NAMESPACES" | tr ',' '\n'))
 for ns in "${NAMESPACE_ARRAY[@]}"
 do
-    echo -e $SECRET_YAML | kubectl apply -n $ns -f -
+    echo "creating secret '$NAME' on namespace '$ns'"
+    kubectl apply -n $ns -f /tmp/sslcert-sace-works.yaml --v=5
 done
