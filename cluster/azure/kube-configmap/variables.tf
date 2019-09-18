@@ -15,14 +15,19 @@ variable "kubeconfigadmin_done" {
   default     = "true"
 }
 
-variable "k8s_namespaces" {
+variable "k8s_namespace" {
   type        = "string"
-  description = "comma-separated k8s namespaces where secret will be created"
+  description = "target k8s namespaces where secret will be created"
 }
 
-variable "k8s_secret_name" {
+variable "k8s_configmap_name" {
   type        = "string"
-  description = "secret name"
+  description = "name of configmap"
+}
+
+variable "k8s_configmap_keys" {
+  type = "string"
+  description = "comma-separated keys used in configmap, length must be same as length of secret names"
 }
 
 variable "key_vault_name" {
@@ -30,7 +35,7 @@ variable "key_vault_name" {
   description = "name of key vault"
 }
 
-variable "key_vault_secret_name" {
+variable "key_vault_secret_names" {
   type        = "string"
-  description = "name of kv secret, value must be base64 encoded yaml secret to be used by k8s"
+  description = "comma-separated names of kv secret, each secret content is stored as plain text file (xml, json, yaml, conf, etc)"
 }
