@@ -43,15 +43,25 @@ else
     echo "SECRET_NAMES=$SECRET_NAMES"
 fi
 
-SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value | @base64d")
-if [ -f "/tmp/$NAME.yaml" ]; then
-    rm "/tmp/$NAME.yaml"
-fi
-echo -e "$SECRET_YAML" | sed -e 's/^"//' -e 's/"$//' > "/tmp/$NAME.yaml"
-
 SECRET_NAME_ARRAY=($(echo "$SECRET_NAMES" | tr ',' '\n'))
-for ns in "${SECRET_NAME_ARRAY[@]}"
+CONFIG_MAP_KEY_ARRAY=($(echo "$CONFIG_MAP_KEYS" | tr ',' '\n'))
+
+for name in "${SECRET_NAME_ARRAY[@]}"
 do
-    echo "creating secret '$NAME' on namespace '$ns'"
-    kubectl apply -n $ns -f "/tmp/$NAME.yaml" --v=5
+    echo "downloading file '$name' from vault '$VAULT_NAME'"
+    az keyvault secret download --vault-name $VAULT_NAME --name $name --file "/tmp/$name"
 done
+
+args=""
+for i in "${!CONFIG_MAP_KEY_ARRAY[@]}"; do
+    key=${CONFIG_MAP_KEY_ARRAY[i]}
+    filename=${SECRET_NAME_ARRAY[i]}
+    file="/tmp/$filename"
+    arg=$(printf '--from-file=%s=%s ' "$key" "$filename")
+    echo "arg=$arg"
+    args+=$arg
+done
+
+cmd="kubectl create configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE $args"
+echo "cmd=$cmd"
+eval $cmd 
