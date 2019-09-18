@@ -133,6 +133,7 @@ stages:
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
+    condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
       vmImage: 'Ubuntu-16.04'
@@ -163,7 +164,6 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
-      condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
 
   - job: Bedrock_Test_MULTIPLE
     condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
