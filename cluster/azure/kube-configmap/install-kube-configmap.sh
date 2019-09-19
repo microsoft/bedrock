@@ -49,6 +49,9 @@ CONFIG_MAP_KEY_ARRAY=($(echo "$CONFIG_MAP_KEYS" | tr ',' '\n'))
 for name in "${SECRET_NAME_ARRAY[@]}"
 do
     echo "downloading file '$name' from vault '$VAULT_NAME'"
+    if [ -f "/tmp/$name" ]; then
+        rm "/tmp/$name"
+    fi
     az keyvault secret download --vault-name $VAULT_NAME --name $name --file "/tmp/$name"
 done
 
@@ -57,11 +60,27 @@ for i in "${!CONFIG_MAP_KEY_ARRAY[@]}"; do
     key=${CONFIG_MAP_KEY_ARRAY[i]}
     filename=${SECRET_NAME_ARRAY[i]}
     file="/tmp/$filename"
-    arg=$(printf '--from-file=%s=%s ' "$key" "$filename")
+    arg="--from-file=$key=$file "
     echo "arg=$arg"
     args+=$arg
 done
 
 cmd="kubectl create configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE $args"
 echo "cmd=$cmd"
-eval $cmd 
+
+if ! kubectl describe namespace $K8S_NAMESPACE > /dev/null 2>&1; then
+    if ! kubectl create namespace $K8S_NAMESPACE; then
+        echo "ERROR: failed to create kubernetes namespace $K8S_NAMESPACE"
+        exit 1
+    fi
+fi
+
+if kubectl describe configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
+    echo "Configmap already exist, try remove it"
+    if ! kubectl delete configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
+        echo "ERROR failed to delete previous configmap"
+        exit 1
+    fi
+fi
+
+eval $cmd
