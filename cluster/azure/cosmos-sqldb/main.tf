@@ -14,8 +14,7 @@ resource "azurerm_cosmosdb_account" "cosmosdb_account" {
   }
 
   geo_location {
-    prefix            = "${var.cosmos_db_account}-customid"
-    location          = "${azurerm_resource_group.cosmosdb.location}"
+    location          = "${var.location}"
     failover_priority = 0
   }
 
