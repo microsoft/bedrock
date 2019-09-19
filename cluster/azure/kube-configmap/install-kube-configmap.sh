@@ -57,11 +57,11 @@ for i in "${!CONFIG_MAP_KEY_ARRAY[@]}"; do
     key=${CONFIG_MAP_KEY_ARRAY[i]}
     filename=${SECRET_NAME_ARRAY[i]}
     file="/tmp/$filename"
-    arg=$(printf '--from-file=%s=%s ' "$key" "$filename")
+    arg="$key=$filename "
     echo "arg=$arg"
     args+=$arg
 done
 
 cmd="kubectl create configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE $args"
 echo "cmd=$cmd"
-eval $cmd 
+eval $cmd
