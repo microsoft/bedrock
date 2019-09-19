@@ -19,9 +19,6 @@ elif [ -z $RESOURCE_GROUP_NAME ]; then
 elif [ -z $DB_NAME ]; then
     echo "DB_NAME is empty"
     exit 1;
-elif [ -z $THROUGHPUT ]; then
-    echo "THROUGHPUT is empty"
-    exit 1;
 else
     echo "Input is valid"
 fi
