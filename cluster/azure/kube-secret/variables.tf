@@ -25,6 +25,11 @@ variable "k8s_secret_name" {
   description = "secret name"
 }
 
+variable "key_vault_secret_version" {
+  type        = "string"
+  description = "version of kv secret"
+}
+
 variable "key_vault_name" {
   type        = "string"
   description = "name of key vault"
