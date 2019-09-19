@@ -75,7 +75,7 @@ if ! kubectl describe namespace $K8S_NAMESPACE > /dev/null 2>&1; then
     fi
 fi
 
-if ! kubectl describe configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
+if kubectl describe configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
     echo "Configmap already exist, try remove it"
     if ! kubectl delete configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
         echo "ERROR failed to delete previous configmap"
