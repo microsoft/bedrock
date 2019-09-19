@@ -9,29 +9,29 @@ variable "location" {
 }
 
 variable "alt_location" {
-  type = "string"
+  type        = "string"
   description = "The Azure Region which should be used for the alternate location when failed over."
 }
 
 variable "cosmos_db_account" {
-  type = "string"
+  type        = "string"
   description = "name of cosmosdb account"
 }
 
 variable "consistency_level" {
-  type = "string"
+  type        = "string"
   description = "cosmosdb consistency level: BoundedStaleness, Eventual, Session, Strong, ConsistentPrefix"
-  default = "Session"
+  default     = "Session"
 }
 
 variable "enable_filewall" {
-  type = "string"
+  type        = "string"
   description = "Specify if firewall rules should be applied"
-  default = "false"
+  default     = "false"
 }
 
 variable "allowed_ip_ranges" {
-  type = "string"
+  type        = "string"
   description = "allowed ip range in addition to azure services and azure portal, i.e. 12.54.145.0/24,13.75.0.0/16"
 }
 
@@ -46,6 +46,16 @@ variable "cosmos_db_name" {
 }
 
 variable "cosmos_db_collections" {
-  type    = "string"
+  type        = "string"
   description = "collections are separated by ';', each entry takes the format: collection_name,partiton_key,throughput"
+}
+
+variable "vault_name" {
+  type        = "string"
+  description = "key vault to store auth key of cosmosdb connection"
+}
+
+variable "master_vault_name" {
+  type        = "string"
+  description = "master key vault to store auth key of cosmosdb connection"
 }
