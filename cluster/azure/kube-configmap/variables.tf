@@ -39,3 +39,8 @@ variable "key_vault_secret_names" {
   type        = "string"
   description = "comma-separated names of kv secret, each secret content is stored as plain text file (xml, json, yaml, conf, etc)"
 }
+
+variable "key_vault_secret_version" {
+  type        = "string"
+  description = "version of kv secret"
+}

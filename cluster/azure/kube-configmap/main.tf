@@ -10,10 +10,11 @@ resource "null_resource" "create_k8s_secret" {
   }
 
   triggers = {
-    k8s_namespace          = "${var.k8s_namespace}"
-    k8s_configmap_name     = "${var.k8s_configmap_name}"
-    k8s_configmap_keys     = "${var.k8s_configmap_keys}"
-    key_vault_name         = "${var.key_vault_name}"
-    key_vault_secret_names = "${var.key_vault_secret_names}"
+    k8s_namespace            = "${var.k8s_namespace}"
+    k8s_configmap_name       = "${var.k8s_configmap_name}"
+    k8s_configmap_keys       = "${var.k8s_configmap_keys}"
+    key_vault_name           = "${var.key_vault_name}"
+    key_vault_secret_names   = "${var.key_vault_secret_names}"
+    key_vault_secret_version = "${var.key_vault_secret_version}"
   }
 }
