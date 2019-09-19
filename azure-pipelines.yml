@@ -106,6 +106,7 @@ stages:
   jobs:
   - job: Bedrock_Test_SIMPLE
     displayName: Bedrock_Build_Azure_Simple
+    condition: and(succeeded(), or(eq(variables['AZ_SIMPLE_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
       vmImage: 'Ubuntu-16.04'
@@ -129,10 +130,10 @@ stages:
           ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
         workingDirectory: '$(modulePath)/test'
         displayName: 'Integration Test: Bedrock_Azure-Simple '
-        condition: and(succeeded(), or(eq(variables['AZ_SIMPLE_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
+    condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
       vmImage: 'Ubuntu-16.04'
@@ -163,9 +164,9 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
-      condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
 
   - job: Bedrock_Test_MULTIPLE
+    condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     displayName: Bedrock_Build_Azure_Multiple_Clusters
     timeoutInMinutes: 60
     pool:
@@ -198,7 +199,6 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
-      condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
 
 #     - script: |
 #         export ssh_key=$(readlink -f id_rsa.pub)
