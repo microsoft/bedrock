@@ -45,6 +45,13 @@ echo -e "$SECRET_YAML" | sed -e 's/^"//' -e 's/"$//' > "/tmp/$NAME.yaml"
 NAMESPACE_ARRAY=($(echo "$NAMESPACES" | tr ',' '\n'))
 for ns in "${NAMESPACE_ARRAY[@]}"
 do
+    if ! kubectl describe namespace $ns > /dev/null 2>&1; then
+        if ! kubectl create namespace $ns; then
+            echo "ERROR: failed to create kubernetes namespace $ns"
+            exit 1
+        fi
+    fi
+
     echo "creating secret '$NAME' on namespace '$ns'"
     kubectl apply -n $ns -f "/tmp/$NAME.yaml" --v=5
 done
