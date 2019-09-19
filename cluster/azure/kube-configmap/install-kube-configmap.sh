@@ -60,7 +60,7 @@ for i in "${!CONFIG_MAP_KEY_ARRAY[@]}"; do
     key=${CONFIG_MAP_KEY_ARRAY[i]}
     filename=${SECRET_NAME_ARRAY[i]}
     file="/tmp/$filename"
-    arg="--from-file=$key=$filename "
+    arg="--from-file=$key=$file "
     echo "arg=$arg"
     args+=$arg
 done
