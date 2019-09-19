@@ -1,12 +1,7 @@
-resource "azurerm_resource_group" "cosmosdb" {
-  name     = "${var.resource_group_name}"
-  location = "${var.location}"
-}
-
 resource "azurerm_cosmosdb_account" "cosmosdb_account" {
   name                      = "${var.cosmos_db_account}"
-  location                  = "${azurerm_resource_group.cosmosdb.location}"
-  resource_group_name       = "${azurerm_resource_group.cosmosdb.name}"
+  location                  = "${var.location}"
+  resource_group_name       = "${var.resource_group_name}"
   offer_type                = "${var.cosmos_db_offer_type}"
   kind                      = "GlobalDocumentDB"
   enable_automatic_failover = true
