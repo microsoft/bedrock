@@ -23,7 +23,7 @@ else
     echo "Input is valid"
 fi
 
-SECRET_NAME="$SECRET_NAME"
+SECRET_NAME="$ACCOUNT_NAME-authkey"
 AUTH_KEY="$(az cosmosdb keys list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME -o json | jq ".primaryMasterKey")"
 
 SECRET="$(az keyvault secret list --vault-name $VAULT_NAME --query "[?contains(id, '$SECRET_NAME')]" -o json | jq ".[].id")"
@@ -32,7 +32,7 @@ if [ -z $SECRET ]; then
     echo "authkey added to key vault"
 else
     EXISTING_SECRET="$(az keyvault secret show --vault-name $VAULT_NAME --name "$SECRET_NAME" -o json | jq ".value")"
-    if [ "$EXISTING_SECRET" == "$SECRET"]; then
+    if [ "$EXISTING_SECRET"=="$SECRET" ]; then
         az keyvault secret set --vault-name $VAULT_NAME --name "$SECRET_NAME" --value "$AUTH_KEY"
         echo "authkey added to key vault"
     else
