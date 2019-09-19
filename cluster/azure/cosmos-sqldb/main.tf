@@ -1,33 +1,31 @@
-resource "azurerm_cosmosdb_account" "cosmosdb_account" {
-  name                      = "${var.cosmos_db_account}"
-  location                  = "${var.location}"
-  resource_group_name       = "${var.resource_group_name}"
-  offer_type                = "${var.cosmos_db_offer_type}"
-  kind                      = "GlobalDocumentDB"
-  enable_automatic_failover = true
-  ip_range_filter           = "${var.enable_filewall ? "${var.allowed_ip_ranges}" : ""}"
+resource "null_resource" "cosmosdb_account" {
+  count = "${var.cosmos_db_account != "" && var.resource_group_name != "" ? 1 : 0}"
 
-  consistency_policy {
-    consistency_level       = "${var.consistency_level}"
-    max_interval_in_seconds = 5
-    max_staleness_prefix    = 100
+  provisioner "local-exec" {
+    command = "${path.module}/ensure_cosmosdb_account.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -c ${var.consistency_level}"
   }
 
-  geo_location {
-    location          = "${var.location}"
-    failover_priority = 0
-  }
-
-  geo_location {
-    location          = "${var.alt_location}"
-    failover_priority = 1
+  triggers = {
+    cosmos_db_account   = "${var.cosmos_db_account}"
+    resource_group_name = "${var.resource_group_name}"
+    consistency_level   = "${var.consistency_level}"
   }
 }
 
-resource "azurerm_cosmosdb_sql_database" "sqldb" {
-  name                = "${var.cosmos_db_name}"
-  resource_group_name = "${azurerm_cosmosdb_account.cosmosdb_account.resource_group_name}"
-  account_name        = "${azurerm_cosmosdb_account.cosmosdb_account.name}"
+resource "null_resource" "cosmosdb_db" {
+  count = "${var.cosmos_db_account != "" && var.resource_group_name != "" && var.cosmos_db_name != "" ? 1 : 0}"
+
+  provisioner "local-exec" {
+    command = "${path.module}/ensure_cosmosdb_db.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name}"
+  }
+
+  triggers = {
+    cosmos_db_account   = "${var.cosmos_db_account}"
+    resource_group_name = "${var.resource_group_name}"
+    cosmos_db_name      = "${var.cosmos_db_name}"
+  }
+
+  depends_on = ["null_resource.cosmosdb_account"]
 }
 
 resource "null_resource" "create_cosmosdb_sql_collections" {
@@ -38,10 +36,10 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
   }
 
   triggers = {
-    cosmos_db_account  = "${var.cosmos_db_account}"
-    cosmos_db_name = "${var.cosmos_db_name}"
+    cosmos_db_account     = "${var.cosmos_db_account}"
+    cosmos_db_name        = "${var.cosmos_db_name}"
     cosmos_db_collections = "${var.cosmos_db_collections}"
   }
 
-  depends_on = ["azurerm_cosmosdb_sql_database.sqldb"]
+  depends_on = ["null_resource.cosmosdb_db"]
 }
