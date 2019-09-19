@@ -49,6 +49,9 @@ CONFIG_MAP_KEY_ARRAY=($(echo "$CONFIG_MAP_KEYS" | tr ',' '\n'))
 for name in "${SECRET_NAME_ARRAY[@]}"
 do
     echo "downloading file '$name' from vault '$VAULT_NAME'"
+    if [ -f "/tmp/$name" ]; then
+        rm "/tmp/$name"
+    fi
     az keyvault secret download --vault-name $VAULT_NAME --name $name --file "/tmp/$name"
 done
 
