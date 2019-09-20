@@ -36,7 +36,7 @@ else
     echo "NAMESPACES=$NAMESPACES"
 fi
 
-SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value | @base64d")
+SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value" | base64 -id)
 if [ -f "/tmp/$NAME.yaml" ]; then
     rm "/tmp/$NAME.yaml"
 fi
