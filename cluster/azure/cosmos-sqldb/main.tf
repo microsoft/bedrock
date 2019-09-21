@@ -2,7 +2,7 @@ resource "null_resource" "cosmosdb_account" {
   count = "${var.cosmos_db_account != "" && var.resource_group_name != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "${path.module}/ensure_cosmosdb_account.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -c ${var.consistency_level}"
+    command = "${path.module}/ensure_cosmosdb_account.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -c ${var.consistency_level} -l ${var.location}"
   }
 
   triggers = {
