@@ -26,7 +26,7 @@ fi
 
 ACCOUNT="$(az cosmosdb list --query "[?name=='$ACCOUNT_NAME']" -o json | jq ".[].id")"
 if [ -z $ACCOUNT ]; then
-    az cosmosdb create --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME --default-consistency-level $CONSISTENCY --kind GlobalDocumentDB --locations "regionName=$LOCATION failoverPriority=0 isZoneRedundant=False"
+    az cosmosdb create --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME --default-consistency-level $CONSISTENCY --kind GlobalDocumentDB --locations regionName=$LOCATION failoverPriority=0 isZoneRedundant=False
     echo "created account $ACCOUNT_NAME"
 else
     echo "Account $ACCOUNT_NAME already created"
