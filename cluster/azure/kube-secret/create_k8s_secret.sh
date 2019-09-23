@@ -36,21 +36,7 @@ else
     echo "NAMESPACES=$NAMESPACES"
 fi
 
-unameOut="$(uname -s)"
-case "${unameOut}" in
-    Linux*)     machine=Linux;;
-    Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    *)          machine="UNKNOWN:${unameOut}"
-esac
-
-echo "Running on $machine"
-if [ "$machine" == "Mac" ]; then
-    SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value" | base64 --decode)
-else
-    SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value" | base64 -id)
-fi
+SECRET_YAML=$(az keyvault secret show --vault-name $VAULT_NAME --name $SECRET_NAME -o json | jq ".value | @base64d")
 
 if [ -f "/tmp/$NAME.yaml" ]; then
     rm "/tmp/$NAME.yaml"
