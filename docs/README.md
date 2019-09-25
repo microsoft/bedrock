@@ -11,6 +11,10 @@ Fabrikate Documents
 * [Fabrikate](https://github.com/Microsoft/fabrikate)
 * [Fabrikate cloud-native](https://github.com/microsoft/fabrikate-definitions/tree/master/definitions/fabrikate-cloud-native)
 
+Azure DevOps
+--------
+* [Setup an Azure DevOps Project and a Pipeline using the Azure CLI DevOps extension](./azure-devops/README.md)
+* 
 Various
 --------
 * [Bedrock pipeline](https://github.com/microsoft/bedrock/blob/master/gitops/PipelineThinking.md)
