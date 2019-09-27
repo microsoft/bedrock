@@ -24,3 +24,15 @@ variable "sku_name" {
   type    = "string"
   default = "Standard"
 }
+
+variable "vault_name" {
+  type = "string"
+}
+
+variable "access_key_secret_name" {
+  type = "string"
+}
+
+variable "hostname_secret_name" {
+  type = "string"
+}
