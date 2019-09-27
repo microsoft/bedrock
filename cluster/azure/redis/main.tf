@@ -19,7 +19,10 @@ resource "null_resource" "set_redis_accesskey" {
   }
 
   triggers = {
-    name = "${var.name}"
+    name                   = "${var.name}"
+    vault_name             = "${var.vault_name}"
+    access_key_secret_name = "${var.access_key_secret_name}"
+    hostname_secret_name   = "${var.hostname_secret_name}"
   }
 
   depends_on = ["azurerm_redis_cache.redis"]
