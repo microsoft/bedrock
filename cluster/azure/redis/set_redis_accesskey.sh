@@ -1,9 +1,9 @@
 #!/bin/sh
-while getopts n:r:v:a:k:s:h: option
+while getopts n:g:v:a:k:s:h: option
 do
  case "${option}" in
  n) REDIS_NAME=${OPTARG};;
- r) RESOURCE_GROUP_NAME=${OPTARG};;
+ g) RESOURCE_GROUP_NAME=${OPTARG};;
  v) VAULT_NAME=${OPTARG};;
  a) ACCESS_KEY_SECRET_NAME=${OPTARG};;
  k) ACCESS_KEY=${OPTARG};;
