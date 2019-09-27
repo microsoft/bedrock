@@ -12,7 +12,7 @@ resource "azurerm_redis_cache" "redis" {
 }
 
 resource "null_resource" "set_redis_accesskey" {
-  count = "${var.name ? 1 : 0}"
+  count = "${var.name != "" ? 1 : 0}"
 
   provisioner "local-exec" {
     command = "${path.module}/set_redis_accesskey.sh -n ${var.name} -g ${var.resource_group_name} -v ${var.vault_name} -a ${var.access_key_secret_name} -k ${azurerm_redis_cache.redis.primary_access_key} -s ${var.hostname_secret_name} -h ${azurerm_redis_cache.redis.hostname}"
