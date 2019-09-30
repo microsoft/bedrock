@@ -33,6 +33,15 @@ variable "access_key_secret_name" {
   type = "string"
 }
 
+variable "access_key_secret_version" {
+  type = "string"
+}
+
+
 variable "hostname_secret_name" {
+  type = "string"
+}
+
+variable "hostname_secret_version" {
   type = "string"
 }

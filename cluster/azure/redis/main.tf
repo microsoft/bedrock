@@ -22,7 +22,9 @@ resource "null_resource" "set_redis_accesskey" {
     name                   = "${var.name}"
     vault_name             = "${var.vault_name}"
     access_key_secret_name = "${var.access_key_secret_name}"
+    access_key_secret_version = "${var.access_key_secret_version}"
     hostname_secret_name   = "${var.hostname_secret_name}"
+    hostname_secret_version   = "${var.hostname_secret_version}"
   }
 
   depends_on = ["azurerm_redis_cache.redis"]
