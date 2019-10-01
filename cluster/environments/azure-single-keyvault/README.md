@@ -102,7 +102,7 @@ terraform apply -var-file=./terraform.tfvars
 
 ## Configure kubectl to see your new AKS cluster
 
-Upon deployment of the cluster, one artifact that the terraform scripts generate is the credentials necessary for logging into the AKS cluster that was deployed. These credentials are placed in the location specified by the variable “output_directory”. For single cluster environments, this defaults to .”/output”.
+Upon deployment of the cluster, one artifact that the terraform scripts generate is the credentials necessary for logging into the AKS cluster that was deployed. These credentials are placed in the location specified by the variable "output_directory". For single cluster environments, this defaults to .”/output”.
 
 With the default kube config file name, you can copy this to your ~/.kube/config by executing:
 

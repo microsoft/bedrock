@@ -178,7 +178,7 @@ In production scenarios, storing the state file on a local file system is not de
 
 ```bash
 terraform {
-   backend “azure” {
+   backend "azure" {
    }
 }
 ```

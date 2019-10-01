@@ -35,7 +35,7 @@ Another example of an augmentation pipeline builds upon the previous example. Th
 ![High level example of container promotion augmentation pipeline](images/container-promo-pipeline.png)
 <p align="center"><i>High level example of container promotion augmentation pipeline</i></p>
 
-Starting from a state where you already have your microservices in environment “pre-production” you can:
+Starting from a state where you already have your microservices in environment "pre-production" you can:
 + Verify that version of microservices we want is deployed on the cluster (via automation or manual intervention). 
 + Execute end to end/smoke tests to exercise your microservices in the environment
 + Promote your image container to the production version of your container registry if end to end/smoke test are successful
