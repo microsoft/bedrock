@@ -1,4 +1,7 @@
 #!/bin/sh
+
+set -e
+
 while getopts :a:r:v: option
 do
  case "${option}" in
