@@ -24,8 +24,8 @@ else
 fi
 
 SECRET_NAME="$ACCOUNT_NAME-authkey"
-AUTH_KEY=az cosmosdb keys list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME -o json | jq ".primaryMasterKey"
-AUTH_KEY=echo $AUTH_KEY | sed -e 's/^"//' -e 's/"$//' # it's base64-encoded, no need to wrap in quote
+AUTH_KEY=$(az cosmosdb keys list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME -o json | jq ".primaryMasterKey")
+AUTH_KEY=$(echo $AUTH_KEY | sed -e 's/^"//' -e 's/"$//') # it's base64-encoded, no need to wrap in quote
 
 SECRET="$(az keyvault secret list --vault-name $VAULT_NAME --query "[?contains(id, '$SECRET_NAME')]" -o json | jq ".[].id")"
 if [ -z $SECRET ]; then
