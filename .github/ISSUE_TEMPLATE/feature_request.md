@@ -2,9 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ""
-labels:
-  - enhancement
-  - triage
+labels: enhancement, triage
 assignees: ""
 ---
 
