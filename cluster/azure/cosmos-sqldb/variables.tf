@@ -18,6 +18,11 @@ variable "cosmos_db_account" {
   description = "name of cosmosdb account"
 }
 
+variable "recreate_cosmosdb_account" {
+  type    = "string"
+  default = "false"
+}
+
 variable "consistency_level" {
   type        = "string"
   description = "cosmosdb consistency level: BoundedStaleness, Eventual, Session, Strong, ConsistentPrefix"

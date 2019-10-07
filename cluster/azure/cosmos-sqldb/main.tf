@@ -9,6 +9,7 @@ resource "null_resource" "cosmosdb_account" {
     cosmos_db_account   = "${var.cosmos_db_account}"
     resource_group_name = "${var.resource_group_name}"
     consistency_level   = "${var.consistency_level}"
+    recreate = "${var.recreate_cosmosdb_account}"
   }
 }
 
