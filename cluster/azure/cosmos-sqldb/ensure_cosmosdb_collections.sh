@@ -45,7 +45,11 @@ do
 
     COLLECTION="$(az cosmosdb collection list --name $ACCOUNT_NAME --db-name $DB_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$COLLECTION_NAME'].{id:id}" -o tsv)"
     if [ -z $COLLECTION ]; then
-        az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
+        if [ -z $PARTITION_KEY ]; then
+            az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --throughput $THROUGH_PUT
+        else
+            az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
+        fi
         echo "created collection $COLLECTION_NAME"
     else
         echo "Collection $COLLECTION_NAME already created"
