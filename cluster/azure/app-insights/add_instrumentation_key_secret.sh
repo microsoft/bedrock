@@ -34,5 +34,5 @@ if [ -z "$APP_ID_SECRET_NAME" ]; then
     exit 1
 fi
 
-az keyvault secret set --vault-name $VAULT_NAME --name $INSTRUMENTATION_KEY_SECRET_NAME --value $INSTRUMENTATION_KEY
-az keyvault secret set --vault-name $VAULT_NAME --name $APP_ID_SECRET_NAME --value $APP_ID
+az keyvault secret set --vault-name $VAULT_NAME --name $INSTRUMENTATION_KEY_SECRET_NAME --value $INSTRUMENTATION_KEY --output none
+az keyvault secret set --vault-name $VAULT_NAME --name $APP_ID_SECRET_NAME --value $APP_ID --output none

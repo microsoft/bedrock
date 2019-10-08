@@ -55,4 +55,4 @@ AUTH=$(echo "$ACR_NAME:$PASSWORD" | base64)
 DOCKERCONFIG=$(echo "{\"auths\":{\"$ACR_NAME.azurecr.io\":{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\",\"email\":\"$EMAIL\",\"auth\":\"$AUTH\"}}}" | base64)
 # echo "DOCKERCONFIG\n$DOCKERCONFIG"
 
-az keyvault secret set --vault-name $VAULT_NAME --name "$AUTH_SECRET_NAME" --value "$DOCKERCONFIG"
+az keyvault secret set --vault-name $VAULT_NAME --name "$AUTH_SECRET_NAME" --value "$DOCKERCONFIG" --output none
