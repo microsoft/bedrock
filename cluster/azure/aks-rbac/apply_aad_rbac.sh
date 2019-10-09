@@ -1,14 +1,28 @@
 #!/bin/bash
-while getopts :o:c:r: option
+while getopts :o:c:r:a:b:n: option
 do
  case "${option}" in
  o) OWNERS=${OPTARG};;
  c) CONTRIBUTORS=${OPTARG};;
  r) READERS=${OPTARG};;
- *) echo "Please refer to usage guide on GitHub" >&2
+ a) CONTRIBUTOR_CLUSTER_ROLE_FILE=${OPTARG};;
+ b) READER_CLUSTER_ROLE_FILE=${OPTARG};;
+  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
 done
+
+if ! kubectl apply -f "$CONTRIBUTOR_CLUSTER_ROLE_FILE"
+then
+    echo "Unable to deploy cluster role cluster-contributor."
+    exit 1
+fi
+
+if ! kubectl apply -f "$READER_CLUSTER_ROLE_FILE"
+then
+    echo "Unable to deploy cluster role: cluster-reader."
+    exit 1
+fi
 
 if [ -z $OWNERS ]; then
     echo "OWNERS is empty"
@@ -52,20 +66,21 @@ else
     CONTRIBUTORs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
     CONTRIBUTORs_YAML+="\nkind: ClusterRoleBinding"
     CONTRIBUTORs_YAML+="\nmetadata:"
-    CONTRIBUTORs_YAML+="\n  name: aks-cluster-admins"
+    CONTRIBUTORs_YAML+="\n  name: aks-cluster-contributors"
     CONTRIBUTORs_YAML+="\nroleRef:"
     CONTRIBUTORs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
     CONTRIBUTORs_YAML+="\n  kind: ClusterRole"
-    CONTRIBUTORs_YAML+="\n  name: cluster-admin"
+    CONTRIBUTORs_YAML+="\n  name: cluster-contributor"
     CONTRIBUTORs_YAML+="\nsubjects:"
 
     CONTRIBUTORS_ARRAY=($(echo "$CONTRIBUTORS" | tr ',' '\n'))
-    for i in "${CONTRIBUTORS_ARRAY[@]}"
+    for c in "${CONTRIBUTORS_ARRAY[@]}"
     do
         CONTRIBUTORs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         CONTRIBUTORs_YAML+="\n    kind: User"
-        CONTRIBUTORs_YAML+="\n    name: $i"
+        CONTRIBUTORs_YAML+="\n    name: $c"
     done
+
 
     echo "owners yaml file:"
     echo -e "$CONTRIBUTORs_YAML"
@@ -86,19 +101,19 @@ else
     READERs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
     READERs_YAML+="\nkind: ClusterRoleBinding"
     READERs_YAML+="\nmetadata:"
-    READERs_YAML+="\n  name: aks-cluster-admins"
+    READERs_YAML+="\n  name: aks-cluster-readers"
     READERs_YAML+="\nroleRef:"
     READERs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
     READERs_YAML+="\n  kind: ClusterRole"
-    READERs_YAML+="\n  name: cluster-admin"
+    READERs_YAML+="\n  name: cluster-reader"
     READERs_YAML+="\nsubjects:"
 
     READERS_ARRAY=($(echo "$READERS" | tr ',' '\n'))
-    for i in "${READERS_ARRAY[@]}"
+    for r in "${READERS_ARRAY[@]}"
     do
         READERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         READERs_YAML+="\n    kind: User"
-        READERs_YAML+="\n    name: $i"
+        READERs_YAML+="\n    name: $r"
     done
 
     echo "owners yaml file:"

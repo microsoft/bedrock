@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-contributor
+rules:
+  - apiGroups: ["", "extensions"]
+    resources: ["services","nodes","ingresses","pods","ingresses/status"]
+    verbs: ["get","list","watch","create","update","delete","patch"]
+  - apiGroups: [""]
+    resources: ["configmaps","secrets","endpoints","events"]
+    verbs: ["get","list","watch","create","update","delete","patch"]
