@@ -20,7 +20,7 @@ resource "azurerm_dns_caa_record" "dnszone_caa" {
     value = "${var.caa_issuer}"
   }
 
-  depends_on = ["azurerm_dns_zone.dns_zone"]
+  depends_on = ["azurerm_dns_zone.dnszone"]
 }
 
 resource "null_resource" "dnszone_contributor" {
@@ -35,5 +35,5 @@ resource "null_resource" "dnszone_contributor" {
     service_principal_object_id = "${var.service_principal_object_id}"
   }
 
-  depends_on = ["azurerm_dns_zone.dns_zone"]
+  depends_on = ["azurerm_dns_zone.dnszone"]
 }
