@@ -68,32 +68,20 @@ done
 cmd="kubectl create configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE $args"
 echo "cmd=$cmd"
 
-RETRY_COUNT=0
-PREV_CONFIGMAP_CLEARED=0
-while [ $RETRY_COUNT -lt 3 ] && [ $PREV_CONFIGMAP_CLEARED -eq 0 ]
-do
-    if ! kubectl describe namespace $K8S_NAMESPACE > /dev/null 2>&1; then
-        if ! kubectl create namespace $K8S_NAMESPACE; then
-            echo "ERROR: failed to create kubernetes namespace $K8S_NAMESPACE"
-            RETRY_COUNT=$((RETRY_COUNT+1))
-        fi
+if ! kubectl describe namespace $K8S_NAMESPACE > /dev/null 2>&1; then
+    echo "Creating k8s namespace $K8S_NAMESPACE"
+    if ! kubectl create namespace $K8S_NAMESPACE; then
+        echo "ERROR: failed to create kubernetes namespace $K8S_NAMESPACE"
     fi
-
-    if kubectl describe configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
-        echo "Configmap already exist, try remove it"
-        if ! kubectl delete configmap $CONFIG_MAP_NAME -n $K8S_NAMESPACE > /dev/null 2>&1; then
-            echo "ERROR failed to delete previous configmap, retry"
-            RETRY_COUNT=$((RETRY_COUNT+1))
-            sleep 10
-        else
-            PREV_CONFIGMAP_CLEARED=1
-        fi
-    fi
-done
-
-if [ $PREV_CONFIGMAP_CLEARED -eq 1 ]; then
-    eval $cmd
-else
-    echo "ERROR failed to delete previous configmap"
-    exit 1
 fi
+
+if kubectl describe configmap "$CONFIG_MAP_NAME" -n $K8S_NAMESPACE > /dev/null 2>&1; then
+    echo "Configmap already exist, try remove it"
+    if ! kubectl delete configmap "$CONFIG_MAP_NAME" -n $K8S_NAMESPACE > /dev/null 2>&1; then
+        echo "Warning: failed to delete previous configmap, retry"
+    else
+        echo "Removed previous configmap: $CONFIG_MAP_NAME"
+    fi
+fi
+
+eval $cmd
