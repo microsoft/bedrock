@@ -294,6 +294,12 @@ Define the remainding fields:
 - `dns_prefix`: `testazuresimple`
 - `vnet_name`: `testazuresimplevnet`
 
+Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group 
+
+```bash
+az group create -l westus2 -n testazuresimplerg
+```
+
 The, `gitops_ssh_key` is a *path* to the RSA private key we created under [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
 The `ssh_public_key` is the RSA public key that was created for [AKS node access](#create-an-rsa-key-for-logging-into-aks-nodes).
 
