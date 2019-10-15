@@ -38,5 +38,5 @@ echo "ensure spn has contributor access to dns zone"
 EXISTING_ASSIGNMENTS=$(az role assignment list --role Contributor --assignee $SPN_OBJECT_ID --scope $DNS_ZONE_ID)
 ASSIGNMENT_COUNT=$(echo "$EXISTING_ASSIGNMENTS" | jq ". | length")
 if [ $ASSIGNMENT_COUNT -eq 0 ]; then
-    az role assignment create --role Contributor --assignee $SPN_OBJECT_ID --scope $DNS_ZONE_ID
+    az role assignment create --role Contributor --assignee-object-id $SPN_OBJECT_ID --scope $DNS_ZONE_ID
 fi
