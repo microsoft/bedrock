@@ -1,15 +1,18 @@
 #!/bin/bash
-while getopts :o:c:r:a:b:n: option
+while getopts :o:c:r:n:d:s:a:b: option
 do
- case "${option}" in
- o) OWNERS=${OPTARG};;
- c) CONTRIBUTORS=${OPTARG};;
- r) READERS=${OPTARG};;
- a) CONTRIBUTOR_CLUSTER_ROLE_FILE=${OPTARG};;
- b) READER_CLUSTER_ROLE_FILE=${OPTARG};;
-  *) echo "Please refer to usage guide on GitHub" >&2
-    exit 1 ;;
- esac
+    case "${option}" in
+        o) OWNERS=${OPTARG};;
+        c) CONTRIBUTORS=${OPTARG};;
+        r) READERS=${OPTARG};;
+        n) OWNERGROUPS=${OPTARG};;
+        d) CONTRIBUTORGROUPS=${OPTARG};;
+        s) READERGROUPS=${OPTARG};;
+        a) CONTRIBUTOR_CLUSTER_ROLE_FILE=${OPTARG};;
+        b) READER_CLUSTER_ROLE_FILE=${OPTARG};;
+        *) echo "Please refer to usage guide on GitHub" >&2
+            exit 1 ;;
+    esac
 done
 
 if ! kubectl apply -f "$CONTRIBUTOR_CLUSTER_ROLE_FILE"
@@ -121,6 +124,107 @@ else
     echo "\napplying...\n"
 
     echo -e "$READERs_YAML" | kubectl apply -f -
+
+    echo -e "\ndone!"
+fi
+
+if [ -z $OWNERGROUPS ]; then
+    echo "OWNERGROUPS is empty"
+else
+    echo "OWNERGROUPS: $OWNERGROUPS"
+
+    OWNERGROUPs_YAML="---"
+    OWNERGROUPs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+    OWNERGROUPs_YAML+="\nkind: ClusterRoleBinding"
+    OWNERGROUPs_YAML+="\nmetadata:"
+    OWNERGROUPs_YAML+="\n  name: aks-cluster-admins"
+    OWNERGROUPs_YAML+="\nroleRef:"
+    OWNERGROUPs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+    OWNERGROUPs_YAML+="\n  kind: ClusterRole"
+    OWNERGROUPs_YAML+="\n  name: cluster-admin"
+    OWNERGROUPs_YAML+="\nsubjects:"
+
+    OWNERGROUPS_ARRAY=($(echo "$OWNERGROUPS" | tr ',' '\n'))
+    for i in "${OWNERGROUPS_ARRAY[@]}"
+    do
+        OWNERGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+        OWNERGROUPs_YAML+="\n    kind: Group"
+        OWNERGROUPs_YAML+="\n    name: $i"
+    done
+
+    echo "owners yaml file:"
+    echo -e "$OWNERGROUPs_YAML"
+    echo "\napplying...\n"
+
+    echo -e "$OWNERGROUPs_YAML" | kubectl apply -f -
+
+    echo -e "\ndone!"
+fi
+
+if [ -z $CONTRIBUTORGROUPS ]; then
+    echo "CONTRIBUTORGROUPS is empty"
+else
+    echo "CONTRIBUTORGROUPS: $CONTRIBUTORGROUPS"
+
+    CONTRIBUTORGROUPs_YAML="---"
+    CONTRIBUTORGROUPs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+    CONTRIBUTORGROUPs_YAML+="\nkind: ClusterRoleBinding"
+    CONTRIBUTORGROUPs_YAML+="\nmetadata:"
+    CONTRIBUTORGROUPs_YAML+="\n  name: aks-cluster-contributors"
+    CONTRIBUTORGROUPs_YAML+="\nroleRef:"
+    CONTRIBUTORGROUPs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+    CONTRIBUTORGROUPs_YAML+="\n  kind: ClusterRole"
+    CONTRIBUTORGROUPs_YAML+="\n  name: cluster-contributor"
+    CONTRIBUTORGROUPs_YAML+="\nsubjects:"
+
+    CONTRIBUTORGROUPS_ARRAY=($(echo "$CONTRIBUTORGROUPS" | tr ',' '\n'))
+    for c in "${CONTRIBUTORGROUPS_ARRAY[@]}"
+    do
+        CONTRIBUTORGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+        CONTRIBUTORGROUPs_YAML+="\n    kind: Group"
+        CONTRIBUTORGROUPs_YAML+="\n    name: $c"
+    done
+
+
+    echo "contributors yaml file:"
+    echo -e "$CONTRIBUTORGROUPs_YAML"
+    echo "\napplying...\n"
+
+    echo -e "$CONTRIBUTORGROUPs_YAML" | kubectl apply -f -
+
+    echo -e "\ndone!"
+fi
+
+
+if [ -z $READERGROUPS ]; then
+    echo "READERGROUPS is empty"
+else
+    echo "READERGROUPS: $READERGROUPS"
+
+    READERGROUPs_YAML="---"
+    READERGROUPs_YAML+="\napiVersion: rbac.authorization.k8s.io/v1"
+    READERGROUPs_YAML+="\nkind: ClusterRoleBinding"
+    READERGROUPs_YAML+="\nmetadata:"
+    READERGROUPs_YAML+="\n  name: aks-cluster-readers"
+    READERGROUPs_YAML+="\nroleRef:"
+    READERGROUPs_YAML+="\n  apiGroup: rbac.authorization.k8s.io"
+    READERGROUPs_YAML+="\n  kind: ClusterRole"
+    READERGROUPs_YAML+="\n  name: cluster-reader"
+    READERGROUPs_YAML+="\nsubjects:"
+
+    READERGROUPS_ARRAY=($(echo "$READERGROUPS" | tr ',' '\n'))
+    for r in "${READERGROUPS_ARRAY[@]}"
+    do
+        READERGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
+        READERGROUPs_YAML+="\n    kind: Group"
+        READERGROUPs_YAML+="\n    name: $r"
+    done
+
+    echo "readers yaml file:"
+    echo -e "$READERGROUPs_YAML"
+    echo "\napplying...\n"
+
+    echo -e "$READERGROUPs_YAML" | kubectl apply -f -
 
     echo -e "\ndone!"
 fi
