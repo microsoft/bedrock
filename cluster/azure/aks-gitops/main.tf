@@ -78,6 +78,9 @@ module "aks-role-assignment" {
   owners                   = "${var.aks_owners}"
   contributors             = "${var.aks_contributors}"
   readers                  = "${var.aks_readers}"
+  owner_groups             = "${var.aks_owner_groups}"
+  contributor_groups       = "${var.aks_contributor_groups}"
+  reader_groups            = "${var.aks_reader_groups}"
 }
 
 module "kv-reader-identity" {
@@ -87,10 +90,10 @@ module "kv-reader-identity" {
   kubeconfigadmin_done     = "${module.aks.kubeconfigadmin_done}"
   output_directory         = "${var.output_directory}"
 
-  resource_group_name             = "${var.resource_group_name}"
-  location                        = "${var.resource_group_location}"
-  aks_cluster_name                = "${var.cluster_name}"
-  aks_cluster_location            = "${var.resource_group_location}"
+  resource_group_name  = "${var.resource_group_name}"
+  location             = "${var.resource_group_location}"
+  aks_cluster_name     = "${var.cluster_name}"
+  aks_cluster_location = "${var.resource_group_location}"
 
   vault_name            = "${var.vault_name}"
   vault_reader_identity = "${var.vault_reader_identity}"
