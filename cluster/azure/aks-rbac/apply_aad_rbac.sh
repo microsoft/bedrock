@@ -27,7 +27,9 @@ then
     exit 1
 fi
 
-if [ -z $OWNERS ] || [ "$OWNERS"=="empty" ]; then
+echo "OWNERS=$OWNERS"
+
+if [ -z $OWNERS ] || [ "$OWNERS" == "empty" ]; then
     echo "OWNERS is empty"
 else
     echo "OWNERS: $OWNERS"
@@ -60,7 +62,7 @@ else
     echo -e "\ndone!"
 fi
 
-if [ -z $CONTRIBUTORS ] || [ "$CONTRIBUTORS"=="empty" ]; then
+if [ -z $CONTRIBUTORS ] || [ "$CONTRIBUTORS" == "empty" ]; then
     echo "CONTRIBUTORS is empty"
 else
     echo "CONTRIBUTORS: $CONTRIBUTORS"
@@ -95,7 +97,7 @@ else
 fi
 
 
-if [ -z $READERS ] || [ "$READERS"=="empty" ]; then
+if [ -z $READERS ] || [ "$READERS" == "empty" ]; then
     echo "READERS is empty"
 else
     echo "READERS: $READERS"
@@ -128,7 +130,7 @@ else
     echo -e "\ndone!"
 fi
 
-if [ -z $OWNERGROUPS ] || [ "$OWNERGROUPS"=="empty" ]; then
+if [ -z $OWNERGROUPS ] || [ "$OWNERGROUPS" == "empty" ]; then
     echo "OWNERGROUPS is empty"
 else
     echo "OWNERGROUPS: $OWNERGROUPS"
@@ -161,7 +163,7 @@ else
     echo -e "\ndone!"
 fi
 
-if [ -z $CONTRIBUTORGROUPS ] || [ "$CONTRIBUTORGROUPS"=="empty" ]; then
+if [ -z $CONTRIBUTORGROUPS ] || [ "$CONTRIBUTORGROUPS" == "empty" ]; then
     echo "CONTRIBUTORGROUPS is empty"
 else
     echo "CONTRIBUTORGROUPS: $CONTRIBUTORGROUPS"
@@ -196,7 +198,7 @@ else
 fi
 
 
-if [ -z $READERGROUPS ] || [ "$READERGROUPS"=="empty" ]; then
+if [ -z $READERGROUPS ] || [ "$READERGROUPS" == "empty" ]; then
     echo "READERGROUPS is empty"
 else
     echo "READERGROUPS: $READERGROUPS"
