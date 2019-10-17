@@ -27,10 +27,12 @@ then
     exit 1
 fi
 
-echo "OWNERS=$OWNERS"
-
 if [ -z $OWNERS ] || [ "$OWNERS" == "empty" ]; then
     echo "OWNERS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-admins > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-admins"
+        kubectl delete ClusterRoleBinding aks-cluster-admins
+    fi
 else
     echo "OWNERS: $OWNERS"
 
@@ -55,7 +57,7 @@ else
 
     echo "owners yaml file:"
     echo -e "$OWNERs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$OWNERs_YAML" | kubectl apply -f -
 
@@ -64,6 +66,10 @@ fi
 
 if [ -z $CONTRIBUTORS ] || [ "$CONTRIBUTORS" == "empty" ]; then
     echo "CONTRIBUTORS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-contributors > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-contributors"
+        kubectl delete ClusterRoleBinding aks-cluster-contributors
+    fi
 else
     echo "CONTRIBUTORS: $CONTRIBUTORS"
 
@@ -87,9 +93,9 @@ else
     done
 
 
-    echo "owners yaml file:"
+    echo "contributor yaml file:"
     echo -e "$CONTRIBUTORs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$CONTRIBUTORs_YAML" | kubectl apply -f -
 
@@ -99,6 +105,10 @@ fi
 
 if [ -z $READERS ] || [ "$READERS" == "empty" ]; then
     echo "READERS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-readers > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-readers"
+        kubectl delete ClusterRoleBinding aks-cluster-readers
+    fi
 else
     echo "READERS: $READERS"
 
@@ -121,9 +131,9 @@ else
         READERs_YAML+="\n    name: $r"
     done
 
-    echo "owners yaml file:"
+    echo "reader yaml file:"
     echo -e "$READERs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$READERs_YAML" | kubectl apply -f -
 
@@ -132,6 +142,10 @@ fi
 
 if [ -z $OWNERGROUPS ] || [ "$OWNERGROUPS" == "empty" ]; then
     echo "OWNERGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-admin-groups > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-admin-groups"
+        kubectl delete ClusterRoleBinding aks-cluster-admin-groups
+    fi
 else
     echo "OWNERGROUPS: $OWNERGROUPS"
 
@@ -154,9 +168,9 @@ else
         OWNERGROUPs_YAML+="\n    name: $i"
     done
 
-    echo "owners yaml file:"
+    echo "owner groups yaml file:"
     echo -e "$OWNERGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$OWNERGROUPs_YAML" | kubectl apply -f -
 
@@ -165,6 +179,10 @@ fi
 
 if [ -z $CONTRIBUTORGROUPS ] || [ "$CONTRIBUTORGROUPS" == "empty" ]; then
     echo "CONTRIBUTORGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-contributor-groups > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-contributor-groups"
+        kubectl delete ClusterRoleBinding aks-cluster-contributor-groups
+    fi
 else
     echo "CONTRIBUTORGROUPS: $CONTRIBUTORGROUPS"
 
@@ -188,9 +206,9 @@ else
     done
 
 
-    echo "contributors yaml file:"
+    echo "contributor groups yaml file:"
     echo -e "$CONTRIBUTORGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$CONTRIBUTORGROUPs_YAML" | kubectl apply -f -
 
@@ -200,6 +218,10 @@ fi
 
 if [ -z $READERGROUPS ] || [ "$READERGROUPS" == "empty" ]; then
     echo "READERGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-reader-groups > /dev/null 2>&1; then
+        echo "removing cluster role binding: aks-cluster-reader-groups"
+        kubectl delete ClusterRoleBinding aks-cluster-reader-groups
+    fi
 else
     echo "READERGROUPS: $READERGROUPS"
 
@@ -222,9 +244,9 @@ else
         READERGROUPs_YAML+="\n    name: $r"
     done
 
-    echo "readers yaml file:"
+    echo "reader groups yaml file:"
     echo -e "$READERGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$READERGROUPs_YAML" | kubectl apply -f -
 
