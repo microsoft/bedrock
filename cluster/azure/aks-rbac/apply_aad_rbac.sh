@@ -31,6 +31,10 @@ echo "OWNERS=$OWNERS"
 
 if [ -z $OWNERS ] || [ "$OWNERS" == "empty" ]; then
     echo "OWNERS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-admins > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-admins"
+        kubectl delete clusterrolebinding aks-cluster-admins
+    fi
 else
     echo "OWNERS: $OWNERS"
 
@@ -46,16 +50,17 @@ else
     OWNERs_YAML+="\nsubjects:"
 
     OWNERS_ARRAY=($(echo "$OWNERS" | tr ',' '\n'))
-    for i in "${OWNERS_ARRAY[@]}"
+    for owner_id in "${OWNERS_ARRAY[@]}"
     do
+        owner_id=$(echo $owner_id | sed -e 's/^"//' -e 's/"$//')
         OWNERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         OWNERs_YAML+="\n    kind: User"
-        OWNERs_YAML+="\n    name: $i"
+        OWNERs_YAML+="\n    name: $owner_id"
     done
 
     echo "owners yaml file:"
     echo -e "$OWNERs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$OWNERs_YAML" | kubectl apply -f -
 
@@ -64,6 +69,10 @@ fi
 
 if [ -z $CONTRIBUTORS ] || [ "$CONTRIBUTORS" == "empty" ]; then
     echo "CONTRIBUTORS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-contributors > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-contributors"
+        kubectl delete clusterrolebinding aks-cluster-contributors
+    fi
 else
     echo "CONTRIBUTORS: $CONTRIBUTORS"
 
@@ -79,17 +88,17 @@ else
     CONTRIBUTORs_YAML+="\nsubjects:"
 
     CONTRIBUTORS_ARRAY=($(echo "$CONTRIBUTORS" | tr ',' '\n'))
-    for c in "${CONTRIBUTORS_ARRAY[@]}"
+    for contributor_id in "${CONTRIBUTORS_ARRAY[@]}"
     do
+        contributor_id=$(echo $contributor_id | sed -e 's/^"//' -e 's/"$//')
         CONTRIBUTORs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         CONTRIBUTORs_YAML+="\n    kind: User"
-        CONTRIBUTORs_YAML+="\n    name: $c"
+        CONTRIBUTORs_YAML+="\n    name: $contributor_id"
     done
 
-
-    echo "owners yaml file:"
+    echo "contributor yaml file:"
     echo -e "$CONTRIBUTORs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$CONTRIBUTORs_YAML" | kubectl apply -f -
 
@@ -99,6 +108,10 @@ fi
 
 if [ -z $READERS ] || [ "$READERS" == "empty" ]; then
     echo "READERS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-readers > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-readers"
+        kubectl delete clusterrolebinding aks-cluster-readers
+    fi
 else
     echo "READERS: $READERS"
 
@@ -114,16 +127,17 @@ else
     READERs_YAML+="\nsubjects:"
 
     READERS_ARRAY=($(echo "$READERS" | tr ',' '\n'))
-    for r in "${READERS_ARRAY[@]}"
+    for reader_id in "${READERS_ARRAY[@]}"
     do
+        reader_id=$(echo $reader_id | sed -e 's/^"//' -e 's/"$//')
         READERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         READERs_YAML+="\n    kind: User"
-        READERs_YAML+="\n    name: $r"
+        READERs_YAML+="\n    name: $reader_id"
     done
 
-    echo "owners yaml file:"
+    echo "reader yaml file:"
     echo -e "$READERs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$READERs_YAML" | kubectl apply -f -
 
@@ -132,6 +146,10 @@ fi
 
 if [ -z $OWNERGROUPS ] || [ "$OWNERGROUPS" == "empty" ]; then
     echo "OWNERGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-admin-groups > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-admin-groups"
+        kubectl delete clusterrolebinding aks-cluster-admin-groups
+    fi
 else
     echo "OWNERGROUPS: $OWNERGROUPS"
 
@@ -147,16 +165,17 @@ else
     OWNERGROUPs_YAML+="\nsubjects:"
 
     OWNERGROUPS_ARRAY=($(echo "$OWNERGROUPS" | tr ',' '\n'))
-    for i in "${OWNERGROUPS_ARRAY[@]}"
+    for owner_group_id in "${OWNERGROUPS_ARRAY[@]}"
     do
+        owner_group_id=$(echo $owner_group_id | sed -e 's/^"//' -e 's/"$//')
         OWNERGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         OWNERGROUPs_YAML+="\n    kind: Group"
-        OWNERGROUPs_YAML+="\n    name: $i"
+        OWNERGROUPs_YAML+="\n    name: $owner_group_id"
     done
 
-    echo "owners yaml file:"
+    echo "owner groups yaml file:"
     echo -e "$OWNERGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$OWNERGROUPs_YAML" | kubectl apply -f -
 
@@ -165,6 +184,10 @@ fi
 
 if [ -z $CONTRIBUTORGROUPS ] || [ "$CONTRIBUTORGROUPS" == "empty" ]; then
     echo "CONTRIBUTORGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-contributor-groups > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-contributor-groups"
+        kubectl delete clusterrolebinding aks-cluster-contributor-groups
+    fi
 else
     echo "CONTRIBUTORGROUPS: $CONTRIBUTORGROUPS"
 
@@ -180,17 +203,18 @@ else
     CONTRIBUTORGROUPs_YAML+="\nsubjects:"
 
     CONTRIBUTORGROUPS_ARRAY=($(echo "$CONTRIBUTORGROUPS" | tr ',' '\n'))
-    for c in "${CONTRIBUTORGROUPS_ARRAY[@]}"
+    for contributor_group_id in "${CONTRIBUTORGROUPS_ARRAY[@]}"
     do
+        contributor_group_id=$(echo $contributor_group_id | sed -e 's/^"//' -e 's/"$//')
         CONTRIBUTORGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         CONTRIBUTORGROUPs_YAML+="\n    kind: Group"
-        CONTRIBUTORGROUPs_YAML+="\n    name: $c"
+        CONTRIBUTORGROUPs_YAML+="\n    name: $contributor_group_id"
     done
 
 
-    echo "contributors yaml file:"
+    echo "contributor groups yaml file:"
     echo -e "$CONTRIBUTORGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$CONTRIBUTORGROUPs_YAML" | kubectl apply -f -
 
@@ -200,6 +224,10 @@ fi
 
 if [ -z $READERGROUPS ] || [ "$READERGROUPS" == "empty" ]; then
     echo "READERGROUPS is empty"
+    if kubectl describe clusterrolebinding aks-cluster-reader-groups > /dev/null 2>&1; then
+        echo "deleting clusterrolebinding aks-cluster-reader-groups"
+        kubectl delete clusterrolebinding aks-cluster-reader-groups
+    fi
 else
     echo "READERGROUPS: $READERGROUPS"
 
@@ -215,16 +243,17 @@ else
     READERGROUPs_YAML+="\nsubjects:"
 
     READERGROUPS_ARRAY=($(echo "$READERGROUPS" | tr ',' '\n'))
-    for r in "${READERGROUPS_ARRAY[@]}"
+    for reader_group_id in "${READERGROUPS_ARRAY[@]}"
     do
+        reader_group_id=$(echo $reader_group_id | sed -e 's/^"//' -e 's/"$//')
         READERGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         READERGROUPs_YAML+="\n    kind: Group"
-        READERGROUPs_YAML+="\n    name: $r"
+        READERGROUPs_YAML+="\n    name: $reader_group_id"
     done
 
-    echo "readers yaml file:"
+    echo "reader groups yaml file:"
     echo -e "$READERGROUPs_YAML"
-    echo "\napplying...\n"
+    echo -e "\napplying...\n"
 
     echo -e "$READERGROUPs_YAML" | kubectl apply -f -
 
