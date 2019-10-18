@@ -287,9 +287,10 @@ $SpNameSecretArray | ForEach-Object {
         $SpSecretName = $SpName
     }
 
+    Write-Host "Installing $ResourceType '$SpName' to Cosmos DB collection '$CollectionName' in database '$DbName'..."
+
     $SpDefinition = $(az keyvault secret show --vault-name $VaultName --name $SpSecretName | ConvertFrom-Json).value | FromBase64
 
-    Write-Host "Installing $ResourceType '$SpName' to Cosmos DB collection '$CollectionName' in database '$DbName'..."
     $createResult = SubmitCosmosDbApiRequest `
         -Verb 'POST' `
         -ResourceId "dbs/$DbName/colls/$CollectionName" `
