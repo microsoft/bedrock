@@ -1,8 +1,8 @@
 resource "null_resource" "deploy_stored_procedures" {
-  count = "${var.sp_names != "" && var.collection_name != "" ? 1 : 0}"
+  count = "${var.cosmos_db_sp_names != "" && var.cosmos_db_collection != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "pwsh ${path.module}/ensure_cosmosdb_sp.ps1 -AccountName ${var.cosmos_db_account} -DbName ${var.cosmos_db_name} -CollectionName \"${var.cosmos_db_collection}\" -SpNames \"${var.cosmos_db_sp_names}\" -VaultName ${var.cosmos_db_sp_names}"
+    command = "pwsh ${path.module}/ensure_cosmosdb_sp.ps1 -AccountName ${var.cosmos_db_account} -DbName ${var.cosmos_db_name} -CollectionName \"${var.cosmos_db_collection}\" -SpNames \"${var.cosmos_db_sp_names}\" -VaultName ${var.vault_name}"
   }
 
   triggers = {
