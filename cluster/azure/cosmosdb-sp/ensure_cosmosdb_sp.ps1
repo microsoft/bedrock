@@ -275,11 +275,19 @@ function FromBase64() {
 
 $AuthKey = $(az keyvault secret show --vault-name $VaultName --name "$($AccountName)-AuthKey" | ConvertFrom-Json).value
 $ResourceType = 'sprocs'
-$SpNameArray = $SpNames.Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)
+$SpNameSecretArray = $SpNames.Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)
 
-$SpNameArray | ForEach-Object {
-    $SpName = $_.Trim()
-    $SpDefinition = $(az keyvault secret show --vault-name $VaultName --name "$($SpName)-sp-def" | ConvertFrom-Json).value | FromBase64
+$SpNameSecretArray | ForEach-Object {
+    $SpNameSecretPair = $_.Trim().Split("=", [System.StringSplitOptions]::RemoveEmptyEntries)
+    $SpName = $SpNameSecretPair[0].Trim()
+    if ($SpNameSecretPair.Count -gt 1) {
+        $SpSecretName = $SpNameSecretPair[1]
+    }
+    else {
+        $SpSecretName = $SpName
+    }
+
+    $SpDefinition = $(az keyvault secret show --vault-name $VaultName --name $SpSecretName | ConvertFrom-Json).value | FromBase64
 
     Write-Host "Installing $ResourceType '$SpName' to Cosmos DB collection '$CollectionName' in database '$DbName'..."
     $createResult = SubmitCosmosDbApiRequest `

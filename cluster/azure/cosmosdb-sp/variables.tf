@@ -16,7 +16,7 @@ variable "cosmos_db_collection" {
 
 variable "cosmos_db_sp_names" {
   type        = "string"
-  description = "list of sp names are separated by ','"
+  description = "list of sp names and definition secret separated by ',', i.e. bulkDelete=products-bulk-delete,touchDocuments=products-touch-documents"
 }
 
 variable "cosmos_db_sp_versions" {
