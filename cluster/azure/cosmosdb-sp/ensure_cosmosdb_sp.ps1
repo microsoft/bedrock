@@ -291,13 +291,18 @@ $SpNameSecretArray | ForEach-Object {
 
     $SpDefinition = $(az keyvault secret show --vault-name $VaultName --name $SpSecretName | ConvertFrom-Json).value | FromBase64
 
+    $spJson = @{
+        id = $SpName
+        body = $spJson
+    } | ConvertTo-Json -Compress
+
     $createResult = SubmitCosmosDbApiRequest `
         -Verb 'POST' `
         -ResourceId "dbs/$DbName/colls/$CollectionName" `
         -ResourceType $ResourceType `
         -Url "https://$AccountName.documents.azure.com/dbs/$DbName/colls/$CollectionName/$ResourceType" `
         -Key $AuthKey `
-        -BodyJson $SpDefinition
+        -BodyJson $spJson
 
     # If that failed because the object already exists, update the object
     if ($createResult -eq 'AlreadyExists') {
@@ -308,6 +313,6 @@ $SpNameSecretArray | ForEach-Object {
             -ResourceType $ResourceType `
             -Url "https://$AccountName.documents.azure.com/dbs/$DbName/colls/$CollectionName/$ResourceType/$SpName" `
             -Key $AuthKey `
-            -BodyJson $SpDefinition | Out-Null
+            -BodyJson $spJson | Out-Null
     }
 }
