@@ -294,7 +294,7 @@ $SpNameSecretArray | ForEach-Object {
     $spJson = @{
         id = $SpName
         body = $SpDefinition
-    } | ConvertTo-Json -Compress
+    } | ConvertTo-Json 
 
     Write-Host $spJson
 
