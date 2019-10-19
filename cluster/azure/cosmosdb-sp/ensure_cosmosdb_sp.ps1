@@ -293,8 +293,10 @@ $SpNameSecretArray | ForEach-Object {
 
     $spJson = @{
         id = $SpName
-        body = $spJson
+        body = $SpDefinition
     } | ConvertTo-Json -Compress
+
+    Write-Host $spJson
 
     $createResult = SubmitCosmosDbApiRequest `
         -Verb 'POST' `
