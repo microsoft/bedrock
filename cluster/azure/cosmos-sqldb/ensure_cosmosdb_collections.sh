@@ -31,9 +31,10 @@ else
     echo "Input is valid"
 fi
 
-# echo "az login with terraform service principal"
-# echo "environment variables: clientId=$ARM_CLIENT_ID, tenantId=$ARM_TENANT_ID"
-# az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+
+AUTH_KEY=$(az cosmosdb keys list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME -o json | jq ".primaryMasterKey")
+AUTH_KEY=$(echo $AUTH_KEY | sed -e 's/^"//' -e 's/"$//') # it's base64-encoded, no need to wrap in quote
+
 echo "collections: \n$COLLECTIONS"
 
 COLLECTION_ARRAY=($(echo "$COLLECTIONS" | tr '*' '\n'))
@@ -59,7 +60,7 @@ do
         echo "created collection $COLLECTION_NAME"
     elif [ "$RECREATE" == "true" ]; then
         echo "removing collection $COLLECTION_NAME"
-        az cosmosdb collection delete --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME
+        az cosmosdb collection delete --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --key $AUTH_KEY
 
         if [ "$PARTITION_KEY" == "/_partitionKey" ]; then
             echo "recreating collection $COLLECTION_NAME without partition"
