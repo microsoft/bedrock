@@ -9,7 +9,7 @@ resource "null_resource" "cosmosdb_account" {
     cosmos_db_account   = "${var.cosmos_db_account}"
     resource_group_name = "${var.resource_group_name}"
     consistency_level   = "${var.consistency_level}"
-    recreate = "${var.recreate_cosmosdb_account}"
+    recreate            = "${var.recreate_cosmosdb_account}"
   }
 }
 
@@ -33,13 +33,14 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
   count = "${var.cosmos_db_collections != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c \"${var.cosmos_db_collections}\""
+    command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c \"${var.cosmos_db_collections}\" -b ${var.recreate_collections}"
   }
 
   triggers = {
     cosmos_db_account     = "${var.cosmos_db_account}"
     cosmos_db_name        = "${var.cosmos_db_name}"
     cosmos_db_collections = "${var.cosmos_db_collections}"
+    recreate_collections  = "${var.recreate_collections}"
   }
 
   depends_on = ["null_resource.cosmosdb_db"]
