@@ -14,6 +14,8 @@ assignees: ""
 
 **Describe the solution you'd like:**
 
+**Acceptance Criteria:**
+
 **Describe alternatives you've considered:**
 
 **Additional context:**
