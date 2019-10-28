@@ -28,3 +28,9 @@ variable "vault_name" {
   type        = "string"
   description = "key vault to store auth key of cosmosdb connection"
 }
+
+variable "recreate_collections" {
+  type        = "string"
+  description = "when turned on (true), existing collections will be removed and created again"
+  default     = "false"
+}
