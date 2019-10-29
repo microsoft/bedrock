@@ -43,8 +43,10 @@ data "azurerm_application_insights" "app_insights" {
   application_type    = "web"
 }
 
-resource "azurerm_monitor_metric_alert" "sev3" {
-  name                = "sev3_alert"
+resource "azurerm_monitor_metric_alert" "unhandled_exception_sev3" {
+  count = "${var.unhandled_exception_metric_name != "" && var.sev3_enabled == "true" ? 1 : 0}"
+
+  name                = "unhandled_exception_sev3"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -57,7 +59,7 @@ resource "azurerm_monitor_metric_alert" "sev3" {
 
   criteria {
     metric_namespace = "${var.metric_namespace}"
-    metric_name      = "${var.metric_name}"
+    metric_name      = "${var.unhandled_exception_metric_name}"
     aggregation      = "${var.aggregation}"
     operator         = "${var.operator}"
     threshold        = "${var.threshold_sev3}"
@@ -68,8 +70,10 @@ resource "azurerm_monitor_metric_alert" "sev3" {
   }
 }
 
-resource "azurerm_monitor_metric_alert" "sev2" {
-  name                = "sev2_alert"
+resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
+  count = "${var.unhandled_exception_metric_name != "" && var.sev2_enabled == "true" ? 1 : 0}"
+
+  name                = "unhandled_exception_sev2"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -82,7 +86,7 @@ resource "azurerm_monitor_metric_alert" "sev2" {
 
   criteria {
     metric_namespace = "${var.metric_namespace}"
-    metric_name      = "${var.metric_name}"
+    metric_name      = "${var.unhandled_exception_metric_name}"
     aggregation      = "${var.aggregation}"
     operator         = "${var.operator}"
     threshold        = "${var.threshold_sev2}"
@@ -93,7 +97,63 @@ resource "azurerm_monitor_metric_alert" "sev2" {
   }
 }
 
+resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
+  count = "${var.heartbeat_metric_name != "" && var.sev3_enabled == "true" ? 1 : 0}"
+
+  name                = "unhandled_exception_sev3"
+  resource_group_name = "${var.resource_group_name}"
+  scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
+  description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
+  auto_mitigate       = "${var.auto_mitigate}"
+  enabled             = "${var.sev3_enabled}"
+  frequency           = "${var.heartbeat_frequency}"
+  severity            = 3
+  window_size         = "${var.heartbeat_window_size}"
+  tags                = "${var.tags}"
+
+  criteria {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.heartbeat_metric_name}"
+    aggregation      = "Count"
+    operator         = "LessThanOrEqualTo"
+    threshold        = "${var.heartbeat_threshold_sev3}"
+  }
+
+  action {
+    action_group_id = "${azurerm_monitor_action_group.email-alert.id}"
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
+  count = "${var.heartbeat_metric_name != "" && var.sev2_enabled == "true" ? 1 : 0}"
+
+  name                = "unhandled_exception_sev2"
+  resource_group_name = "${var.resource_group_name}"
+  scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
+  description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
+  auto_mitigate       = "${var.auto_mitigate}"
+  enabled             = "${var.sev2_enabled}"
+  frequency           = "${var.heartbeat_frequency}"
+  severity            = 2
+  window_size         = "${var.heartbeat_window_size}"
+  tags                = "${var.tags}"
+
+  criteria {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.heartbeat_metric_name}"
+    aggregation      = "Count"
+    operator         = "LessThanOrEqualTo"
+    threshold        = "${var.heartbeat_threshold_sev2}"
+  }
+
+  action {
+    action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
+  }
+}
+
 resource "azurerm_application_insights_web_test" "ping" {
+  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
+
   name = "webtest"
   location = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
@@ -114,6 +174,8 @@ XML
 }
 
 resource "azurerm_metric_alertrule" "availability" {
+  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
+
   name                = "availability"
   resource_group_name = "${var.resource_group_name}"
   location            = "${var.location}"

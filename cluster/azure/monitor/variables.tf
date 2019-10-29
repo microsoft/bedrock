@@ -44,7 +44,11 @@ variable "metric_namespace" {
   type = "string"
 }
 
-variable "metric_name" {
+variable "unhandled_exception_metric_name" {
+  type = "string"
+}
+
+variable "heartbeat_metric_name" {
   type = "string"
 }
 
@@ -68,6 +72,26 @@ variable "threshold_sev2" {
   default = 50
 }
 
+variable "heartbeat_frequency" {
+  type = "string"
+  default = "PT1H"
+}
+
+variable "heartbeat_window_size" {
+  type = "string"
+  default = "PT6H"
+}
+
+variable "heartbeat_threshold_sev3" {
+  type = "string"
+  default = 5
+}
+
+variable "heartbeat_threshold_sev2" {
+  type = "string"
+  default = 0
+}
+
 variable "pingable" {
   type = "string"
   default = "false"
@@ -75,4 +99,5 @@ variable "pingable" {
 
 variable "status_url" {
   type = "string"
+  default = ""
 }
