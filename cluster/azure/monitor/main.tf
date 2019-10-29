@@ -65,17 +65,6 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev3" {
   action {
     action_group_id = "${azurerm_monitor_action_group.email-alert.id}"
   }
-
-  triggers = {
-    metric_namespace = "${var.metric_namespace}"
-    metric_name      = "${var.metric_name}"
-    aggregation      = "${var.aggregation}"
-    operator         = "${var.operator}"
-    threshold_sev3   = "${var.threshold_sev3}"
-    sev3_enabled     = "${var.sev3_enabled}"
-    frequency        = "${var.frequency}"
-    window_size      = "${var.window_size}"
-  }
 }
 
 resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
@@ -102,17 +91,6 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
 
   action {
     action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
-  }
-
-  triggers = {
-    metric_namespace = "${var.metric_namespace}"
-    metric_name      = "${var.metric_name}"
-    aggregation      = "${var.aggregation}"
-    operator         = "${var.operator}"
-    threshold_sev2   = "${var.threshold_sev2}"
-    sev2_enabled     = "${var.sev2_enabled}"
-    frequency        = "${var.frequency}"
-    window_size      = "${var.window_size}"
   }
 }
 
@@ -141,15 +119,6 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
   action {
     action_group_id = "${azurerm_monitor_action_group.email-alert.id}"
   }
-
-  triggers = {
-    metric_namespace      = "${var.metric_namespace}"
-    heartbeat_metric_name = "${var.heartbeat_metric_name}"
-    threshold_sev3        = "${var.heartbeat_threshold_sev3}"
-    sev3_enabled          = "${var.sev3_enabled}"
-    heartbeat_frequency   = "${var.heartbeat_frequency}"
-    heartbeat_window_size = "${var.heartbeat_window_size}"
-  }
 }
 
 resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
@@ -177,15 +146,6 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
   action {
     action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
   }
-
-  triggers = {
-    metric_namespace      = "${var.metric_namespace}"
-    heartbeat_metric_name = "${var.heartbeat_metric_name}"
-    threshold_sev2        = "${var.heartbeat_threshold_sev2}"
-    sev2_enabled          = "${var.sev2_enabled}"
-    heartbeat_frequency   = "${var.heartbeat_frequency}"
-    heartbeat_window_size = "${var.heartbeat_window_size}"
-  }
 }
 
 resource "azurerm_application_insights_web_test" "ping" {
@@ -208,12 +168,6 @@ resource "azurerm_application_insights_web_test" "ping" {
   </Items>
 </WebTest>
 XML
-
-  triggers = {
-    metric_namespace = "${var.metric_namespace}"
-    pingable         = "${var.pingable}"
-    status_url       = "${var.status_url}"
-  }
 }
 
 resource "azurerm_monitor_metric_alertrule" "availability" {
@@ -238,11 +192,5 @@ resource "azurerm_monitor_metric_alertrule" "availability" {
     custom_emails = [
       "1csdri@microsoft.com",
     ]
-  }
-
-  triggers = {
-    metric_namespace = "${var.metric_namespace}"
-    pingable         = "${var.pingable}"
-    status_url       = "${var.status_url}"
   }
 }
