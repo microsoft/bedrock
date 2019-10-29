@@ -60,8 +60,8 @@ resource "azurerm_monitor_metric_alert" "sev3" {
   criteria {
     metric_namespace = "${var.metric_namespace}"
     metric_name      = "${var.metric_name}"
-    aggregation      = "Count"
-    operator         = "GreaterThan"
+    aggregation      = "${var.aggregation}"
+    operator         = "${var.operator}"
     threshold        = "${var.threshold_sev3}"
   }
 
@@ -87,8 +87,8 @@ resource "azurerm_monitor_metric_alert" "sev2" {
   criteria {
     metric_namespace = "${var.metric_namespace}"
     metric_name      = "${var.metric_name}"
-    aggregation      = "Count"
-    operator         = "GreaterThan"
+    aggregation      = "${var.aggregation}"
+    operator         = "${var.operator}"
     threshold        = "${var.threshold_sev2}"
   }
 

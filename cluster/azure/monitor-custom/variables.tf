@@ -37,3 +37,13 @@ variable "threshold_sev2" {
   type = "string"
   default = 50
 }
+
+variable "aggregation" {
+  type = "string"
+  default = "Total"
+}
+
+variable "operator" {
+  type = "string"
+  default = "GreaterThan"
+}
