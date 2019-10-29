@@ -1,5 +1,5 @@
-data "azurerm_monitor_action_group" "email-alert" {
-  name                = "email-dri"
+resource "azurerm_monitor_action_group" "email-dri" {
+  name                = "email-dri-group"
   resource_group_name = "${var.resource_group_name}"
   short_name          = "email-dri"
 
@@ -14,8 +14,8 @@ data "azurerm_monitor_action_group" "email-alert" {
   }
 }
 
-data "azurerm_monitor_action_group" "sms-alert" {
-  name                = "sms-dri"
+resource "azurerm_monitor_action_group" "sms-oncall" {
+  name                = "sms-oncall"
   resource_group_name = "${var.resource_group_name}"
   short_name          = "sms-dri"
 
@@ -64,7 +64,7 @@ resource "azurerm_monitor_metric_alert" "sev3" {
   }
 
   action {
-    action_group_id = "${data.azurerm_monitor_action_group.email-alert.id}"
+    action_group_id = "${azurerm_monitor_action_group.email-dri.id}"
   }
 }
 
@@ -91,6 +91,6 @@ resource "azurerm_monitor_metric_alert" "sev2" {
   }
 
   action {
-    action_group_id = "${data.azurerm_monitor_action_group.sms-alert.id}"
+    action_group_id = "${azurerm_monitor_action_group.sms-oncall.id}"
   }
 }
