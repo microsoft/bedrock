@@ -10,6 +10,11 @@ variable "app_insights_name" {
   type = "string"
 }
 
+variable "service_name" {
+  type = "string"
+}
+
+
 variable "auto_mitigate" {
   type = "string"
   default = "true"
