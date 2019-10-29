@@ -44,7 +44,7 @@ data "azurerm_application_insights" "app_insights" {
 resource "azurerm_monitor_metric_alert" "unhandled_exception_sev3" {
   count = "${var.unhandled_exception_metric_name != "" && var.sev3_enabled == "true" ? 1 : 0}"
 
-  name                = "unhandled_exception_sev3"
+  name                = "${var.metric_namespace}_unhandled_exception_sev3"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -71,7 +71,7 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev3" {
 resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
   count = "${var.unhandled_exception_metric_name != "" && var.sev2_enabled == "true" ? 1 : 0}"
 
-  name                = "unhandled_exception_sev2"
+  name                = "${var.metric_namespace}_unhandled_exception_sev2"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -98,7 +98,7 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
 resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
   count = "${var.heartbeat_metric_name != "" && var.sev3_enabled == "true" ? 1 : 0}"
 
-  name                = "unhandled_exception_sev3"
+  name                = "${var.metric_namespace}_heartbeat_sev3"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -125,7 +125,7 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
 resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
   count = "${var.heartbeat_metric_name != "" && var.sev2_enabled == "true" ? 1 : 0}"
 
-  name                = "unhandled_exception_sev2"
+  name                = "${var.metric_namespace}_heartbeat_sev2"
   resource_group_name = "${var.resource_group_name}"
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
@@ -152,7 +152,7 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
 resource "azurerm_application_insights_web_test" "ping" {
   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
-  name = "webtest"
+  name = "${var.metric_namespace}_webtest"
   location = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
   application_insights_id = "${data.azurerm_application_insights.app_insights.id}"
@@ -174,7 +174,7 @@ XML
 resource "azurerm_monitor_metric_alertrule" "availability" {
   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
-  name                = "availability"
+  name                = "${var.metric_namespace}_availability"
   resource_group_name = "${var.resource_group_name}"
   location            = "${var.location}"
   description = "An alert rule to watch the status ping results"
