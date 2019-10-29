@@ -149,49 +149,49 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
   }
 }
 
-resource "azurerm_application_insights_web_test" "ping" {
-  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
+# resource "azurerm_application_insights_web_test" "ping" {
+#   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
-  name = "webtest"
-  location = "${var.location}"
-  resource_group_name = "${var.resource_group_name}"
-  application_insights_id = "${data.azurerm_application_insights.app_insights.id}"
-  kind = "ping"
-  frequency = 300
-  timeout = 15
-  enabled = "${var.pingable}"
-  geo_locations = ["us-ca-sjc-azr", "us-va-ash-azr"] # web test regions: https://github.com/Azure/azure-quickstart-templates/blob/master/201-dynamic-web-tests/README.md
+#   name = "webtest"
+#   location = "${var.location}"
+#   resource_group_name = "${var.resource_group_name}"
+#   application_insights_id = "${data.azurerm_application_insights.app_insights.id}"
+#   kind = "ping"
+#   frequency = 300
+#   timeout = 15
+#   enabled = "${var.pingable}"
+#   geo_locations = ["us-ca-sjc-azr", "us-va-ash-azr"] # web test regions: https://github.com/Azure/azure-quickstart-templates/blob/master/201-dynamic-web-tests/README.md
 
-  configuration = <<XML
-<WebTest Name="WebTest1" Id="ABD48585-0831-40CB-9069-682EA6BB3583" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="0" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="" ResultsLocale="">
-  <Items>
-    <Request Method="GET" Guid="a5f10126-e4cd-570d-961c-cea43999a200" Version="1.1" Url="http://google.com" ThinkTime="0" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
-  </Items>
-</WebTest>
-XML
-}
+#   configuration = <<XML
+# <WebTest Name="WebTest1" Id="ABD48585-0831-40CB-9069-682EA6BB3583" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="0" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="" ResultsLocale="">
+#   <Items>
+#     <Request Method="GET" Guid="a5f10126-e4cd-570d-961c-cea43999a200" Version="1.1" Url="http://google.com" ThinkTime="0" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+#   </Items>
+# </WebTest>
+# XML
+# }
 
-resource "azurerm_monitor_metric_alertrule" "availability" {
-  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
+# resource "azurerm_monitor_metric_alertrule" "availability" {
+#   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
-  name                = "availability"
-  resource_group_name = "${var.resource_group_name}"
-  location            = "${var.location}"
-  description = "An alert rule to watch the status ping results"
-  enabled = "${var.pingable}"
+#   name                = "availability"
+#   resource_group_name = "${var.resource_group_name}"
+#   location            = "${var.location}"
+#   description = "An alert rule to watch the status ping results"
+#   enabled = "${var.pingable}"
 
-  resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
-  metric_name = "availability"
-  operator    = "GreaterThan"
-  threshold   = 0.9
-  aggregation = "Average"
-  period      = "PT5M"
+#   resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
+#   metric_name = "availability"
+#   operator    = "GreaterThan"
+#   threshold   = 0.9
+#   aggregation = "Average"
+#   period      = "PT5M"
 
-  email_action {
-    send_to_service_owners = false
+#   email_action {
+#     send_to_service_owners = false
 
-    custom_emails = [
-      "1csdri@microsoft.com",
-    ]
-  }
-}
+#     custom_emails = [
+#       "1csdri@microsoft.com",
+#     ]
+#   }
+# }
