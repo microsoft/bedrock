@@ -160,7 +160,7 @@ resource "azurerm_application_insights_web_test" "ping" {
   frequency = 300
   timeout = 15
   enabled = "${var.pingable}"
-  geo_locations = ["west us", "east us"]
+  geo_locations = ["us-ca-sjc-azr", "us-va-ash-azr"] # web test regions: https://github.com/Azure/azure-quickstart-templates/blob/master/201-dynamic-web-tests/README.md
 
   configuration = <<XML
 <WebTest Name="WebTest1" Id="ABD48585-0831-40CB-9069-682EA6BB3583" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="0" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="" ResultsLocale="">
