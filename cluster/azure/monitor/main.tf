@@ -130,8 +130,8 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
   auto_mitigate       = "${var.auto_mitigate}"
   enabled             = "${var.sev2_enabled}"
-  frequency           = "${var.heartbeat_frequency}"
   severity            = 2
+  frequency           = "${var.heartbeat_frequency}"
   window_size         = "${var.heartbeat_window_size}"
   tags                = "${var.tags}"
 
@@ -170,27 +170,29 @@ resource "azurerm_application_insights_web_test" "ping" {
 XML
 }
 
-resource "azurerm_monitor_metric_alertrule" "availability" {
+resource "azurerm_monitor_metric_alert" "availability" {
   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
   name                = "${var.service_name}_availability"
   resource_group_name = "${var.resource_group_name}"
-  location            = "${var.location}"
+  scopes              = ["${azurerm_application_insights_web_test.ping[0].id}"]
   description         = "An alert rule to watch the status ping results"
+  auto_mitigate       = "${var.auto_mitigate}"
   enabled             = "${var.pingable}"
+  severity            = 2
+  frequency           = "PT5M"
+  window_size         = "PT15M"
+  tags                = "${var.tags}"
 
-  resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
-  metric_name = "availability"
-  operator    = "GreaterThan"
-  threshold   = 0.9
-  aggregation = "Average"
-  period      = "PT5M"
+  criteria {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.service_name}_webtest"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 1
+  }
 
-  email_action {
-    send_to_service_owners = false
-
-    custom_emails = [
-      "1csdri@microsoft.com",
-    ]
+  action {
+    action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
   }
 }
