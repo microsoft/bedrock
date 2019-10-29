@@ -1,0 +1,98 @@
+data "azurerm_monitor_action_group" "email-alert" {
+  name                = "email-dri"
+  resource_group_name = "${var.resource_group_name}"
+  short_name          = "email-dri"
+
+  email_receiver {
+    name          = "1csdri"
+    email_address = "1csdri@microsoft.com"
+  }
+
+  email_receiver {
+    name          = "xiaodoli"
+    email_address = "xiaodoli@microsoft.com"
+  }
+}
+
+data "azurerm_monitor_action_group" "sms-alert" {
+  name                = "sms-dri"
+  resource_group_name = "${var.resource_group_name}"
+  short_name          = "sms-dri"
+
+  email_receiver {
+    name          = "1csdri"
+    email_address = "1csdri@microsoft.com"
+  }
+
+  email_receiver {
+    name          = "xiaodoli"
+    email_address = "xiaodoli@microsoft.com"
+  }
+
+  sms_receiver {
+    name         = "oncall"
+    country_code = "1"
+    phone_number = "2407517601"
+  }
+}
+
+data "azurerm_application_insights" "app_insights" {
+  name                = "${var.app_insights_name}"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group_name}"
+  application_type    = "web"
+}
+
+resource "azurerm_monitor_metric_alert" "sev3" {
+  count = "${var.metric_name != "" && var.sev3_enabled == "true" ? 1 : 0}"
+
+  name                = "${var.metric_name}"
+  resource_group_name = "${var.resource_group_name}"
+  scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
+  description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
+  auto_mitigate       = "${var.auto_mitigate}"
+  enabled             = "${var.sev3_enabled}"
+  frequency           = "PT5M"
+  window_size         = "PT15M"
+  severity            = 3
+  tags                = "${var.tags}"
+
+  criteria {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.metric_name}"
+    aggregation      = "Count"
+    operator         = "GreaterThan"
+    threshold        = "${var.threshold_sev3}"
+  }
+
+  action {
+    action_group_id = "${data.azurerm_monitor_action_group.email-alert.id}"
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "sev2" {
+  count = "${var.metric_name != "" && var.sev2_enabled == "true" ? 1 : 0}"
+
+  name                = "unhandled_exception_sev2"
+  resource_group_name = "${var.resource_group_name}"
+  scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
+  description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
+  auto_mitigate       = "true"
+  enabled             = "${var.sev2_enabled}"
+  frequency           = "PT15M"
+  window_size         = "PT1H"
+  severity            = 2
+  tags                = "${var.tags}"
+
+  criteria {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.metric_name}"
+    aggregation      = "Count"
+    operator         = "GreaterThan"
+    threshold        = "${var.threshold_sev2}"
+  }
+
+  action {
+    action_group_id = "${data.azurerm_monitor_action_group.sms-alert.id}"
+  }
+}
