@@ -50,6 +50,7 @@ variable "unhandled_exception_metric_name" {
 
 variable "heartbeat_metric_name" {
   type = "string"
+  default = ""
 }
 
 variable "aggregation" {

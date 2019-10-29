@@ -52,8 +52,8 @@ resource "azurerm_monitor_metric_alert" "sev3" {
   description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
   auto_mitigate       = "${var.auto_mitigate}"
   enabled             = "${var.sev3_enabled}"
-  frequency           = "PT5M"
-  window_size         = "PT15M"
+  frequency           = "${var.frequency}"
+  window_size         = "${var.window_size}"
   severity            = 3
   tags                = "${var.tags}"
 
@@ -79,8 +79,8 @@ resource "azurerm_monitor_metric_alert" "sev2" {
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
   auto_mitigate       = "true"
   enabled             = "${var.sev2_enabled}"
-  frequency           = "PT15M"
-  window_size         = "PT1H"
+  frequency           = "${var.frequency}"
+  window_size         = "${var.window_size}"
   severity            = 2
   tags                = "${var.tags}"
 

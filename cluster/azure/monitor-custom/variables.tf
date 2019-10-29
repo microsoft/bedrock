@@ -47,3 +47,13 @@ variable "operator" {
   type = "string"
   default = "GreaterThan"
 }
+
+variable "frequency" {
+  type = "string"
+  default = "PT1H"
+}
+
+variable "window_size" {
+  type = "string"
+  default = "PT5H"
+}
