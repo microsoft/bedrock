@@ -49,7 +49,7 @@ resource "azurerm_monitor_metric_alert" "sev3" {
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev3 alert will be triggered when aggregated number goes beyond threshold within specified window"
   auto_mitigate       = "${var.auto_mitigate}"
-  enabled             = "${var.enabled}"
+  enabled             = "${var.sev3_enabled}"
   frequency           = "${var.frequency}"
   severity            = 3
   window_size         = "${var.window_size}"
@@ -74,7 +74,7 @@ resource "azurerm_monitor_metric_alert" "sev2" {
   scopes              = ["${data.azurerm_application_insights.app_insights.id}"]
   description         = "Sev2 alert will be triggered when aggregated number goes beyond threshold within specified window"
   auto_mitigate       = "${var.auto_mitigate}"
-  enabled             = "${var.enabled}"
+  enabled             = "${var.sev2_enabled}"
   frequency           = "${var.frequency}"
   severity            = 2
   window_size         = "${var.window_size}"

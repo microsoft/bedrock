@@ -15,9 +15,14 @@ variable "auto_mitigate" {
   default = "true"
 }
 
-variable "enabled" {
+variable "sev3_enabled" {
   type = "string"
   default = "true"
+}
+
+variable "sev2_enabled" {
+  type = "string"
+  default = "false"
 }
 
 variable "frequency" {
@@ -32,6 +37,7 @@ variable "window_size" {
 
 variable "tags" {
   type = "map"
+  default = {}
 }
 
 variable "metric_namespace" {
@@ -65,4 +71,8 @@ variable "threshold_sev2" {
 variable "pingable" {
   type = "string"
   default = "false"
+}
+
+variable "status_url" {
+  type = "string"
 }
