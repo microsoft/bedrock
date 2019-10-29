@@ -33,6 +33,11 @@ variable "metric_name" {
   type = "string"
 }
 
+variable "tags" {
+  type = "map"
+  default = {}
+}
+
 variable "threshold_sev3" {
   type = "string"
   default = 10
