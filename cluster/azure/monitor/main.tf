@@ -28,7 +28,6 @@ resource "azurerm_monitor_action_group" "sms-alert" {
     name          = "xiaodoli"
     email_address = "xiaodoli@microsoft.com"
   }
-
   sms_receiver {
     name         = "oncall"
     country_code = "1"
@@ -66,6 +65,17 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev3" {
   action {
     action_group_id = "${azurerm_monitor_action_group.email-alert.id}"
   }
+
+  triggers = {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.metric_name}"
+    aggregation      = "${var.aggregation}"
+    operator         = "${var.operator}"
+    threshold_sev3   = "${var.threshold_sev3}"
+    sev3_enabled     = "${var.sev3_enabled}"
+    frequency        = "${var.frequency}"
+    window_size      = "${var.window_size}"
+  }
 }
 
 resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
@@ -92,6 +102,17 @@ resource "azurerm_monitor_metric_alert" "unhandled_exception_sev2" {
 
   action {
     action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
+  }
+
+  triggers = {
+    metric_namespace = "${var.metric_namespace}"
+    metric_name      = "${var.metric_name}"
+    aggregation      = "${var.aggregation}"
+    operator         = "${var.operator}"
+    threshold_sev2   = "${var.threshold_sev2}"
+    sev2_enabled     = "${var.sev2_enabled}"
+    frequency        = "${var.frequency}"
+    window_size      = "${var.window_size}"
   }
 }
 
@@ -120,6 +141,15 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
   action {
     action_group_id = "${azurerm_monitor_action_group.email-alert.id}"
   }
+
+  triggers = {
+    metric_namespace      = "${var.metric_namespace}"
+    heartbeat_metric_name = "${var.heartbeat_metric_name}"
+    threshold_sev3        = "${var.heartbeat_threshold_sev3}"
+    sev3_enabled          = "${var.sev3_enabled}"
+    heartbeat_frequency   = "${var.heartbeat_frequency}"
+    heartbeat_window_size = "${var.heartbeat_window_size}"
+  }
 }
 
 resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
@@ -147,28 +177,43 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
   action {
     action_group_id = "${azurerm_monitor_action_group.sms-alert.id}"
   }
+
+  triggers = {
+    metric_namespace      = "${var.metric_namespace}"
+    heartbeat_metric_name = "${var.heartbeat_metric_name}"
+    threshold_sev2        = "${var.heartbeat_threshold_sev2}"
+    sev2_enabled          = "${var.sev2_enabled}"
+    heartbeat_frequency   = "${var.heartbeat_frequency}"
+    heartbeat_window_size = "${var.heartbeat_window_size}"
+  }
 }
 
 resource "azurerm_application_insights_web_test" "ping" {
   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
-  name = "${var.metric_namespace}_webtest"
-  location = "${var.location}"
-  resource_group_name = "${var.resource_group_name}"
+  name                    = "${var.metric_namespace}_webtest"
+  location                = "${var.location}"
+  resource_group_name     = "${var.resource_group_name}"
   application_insights_id = "${data.azurerm_application_insights.app_insights.id}"
-  kind = "ping"
-  frequency = 300
-  timeout = 15
-  enabled = "${var.pingable}"
-  geo_locations = ["us-ca-sjc-azr", "us-va-ash-azr"] # web test regions: https://github.com/Azure/azure-quickstart-templates/blob/master/201-dynamic-web-tests/README.md
+  kind                    = "ping"
+  frequency               = 300
+  timeout                 = 15
+  enabled                 = "${var.pingable}"
+  geo_locations           = ["us-ca-sjc-azr", "us-va-ash-azr"]                     # web test regions: https://github.com/Azure/azure-quickstart-templates/blob/master/201-dynamic-web-tests/README.md
 
   configuration = <<XML
 <WebTest Name="WebTest1" Id="ABD48585-0831-40CB-9069-682EA6BB3583" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="0" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="" ResultsLocale="">
   <Items>
-    <Request Method="GET" Guid="a5f10126-e4cd-570d-961c-cea43999a200" Version="1.1" Url="http://google.com" ThinkTime="0" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Request Method="GET" Guid="a5f10126-e4cd-570d-961c-cea43999a200" Version="1.1" Url="${var.status_url}" ThinkTime="0" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
   </Items>
 </WebTest>
 XML
+
+  triggers = {
+    metric_namespace = "${var.metric_namespace}"
+    pingable         = "${var.pingable}"
+    status_url       = "${var.status_url}"
+  }
 }
 
 resource "azurerm_monitor_metric_alertrule" "availability" {
@@ -177,8 +222,8 @@ resource "azurerm_monitor_metric_alertrule" "availability" {
   name                = "${var.metric_namespace}_availability"
   resource_group_name = "${var.resource_group_name}"
   location            = "${var.location}"
-  description = "An alert rule to watch the status ping results"
-  enabled = "${var.pingable}"
+  description         = "An alert rule to watch the status ping results"
+  enabled             = "${var.pingable}"
 
   resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
   metric_name = "availability"
@@ -193,5 +238,11 @@ resource "azurerm_monitor_metric_alertrule" "availability" {
     custom_emails = [
       "1csdri@microsoft.com",
     ]
+  }
+
+  triggers = {
+    metric_namespace = "${var.metric_namespace}"
+    pingable         = "${var.pingable}"
+    status_url       = "${var.status_url}"
   }
 }
