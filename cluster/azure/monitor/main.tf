@@ -3,10 +3,10 @@ resource "azurerm_monitor_action_group" "email-alert" {
   resource_group_name = "${var.resource_group_name}"
   short_name          = "email-dri"
 
-  email_receiver {
-    name          = "1csdri"
-    email_address = "1csdri@microsoft.com"
-  }
+  # email_receiver {
+  #   name          = "1csdri"
+  #   email_address = "1csdri@microsoft.com"
+  # }
 
   email_receiver {
     name          = "xiaodoli"
@@ -19,10 +19,10 @@ resource "azurerm_monitor_action_group" "sms-alert" {
   resource_group_name = "${var.resource_group_name}"
   short_name          = "sms-dri"
 
-  email_receiver {
-    name          = "1csdri"
-    email_address = "1csdri@microsoft.com"
-  }
+  # email_receiver {
+  #   name          = "1csdri"
+  #   email_address = "1csdri@microsoft.com"
+  # }
 
   email_receiver {
     name          = "xiaodoli"
