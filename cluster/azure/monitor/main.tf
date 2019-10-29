@@ -113,7 +113,7 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev3" {
     metric_namespace = "${var.metric_namespace}"
     metric_name      = "${var.heartbeat_metric_name}"
     aggregation      = "Count"
-    operator         = "LessThanOrEqualTo"
+    operator         = "LessThanOrEqual"
     threshold        = "${var.heartbeat_threshold_sev3}"
   }
 
@@ -140,7 +140,7 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
     metric_namespace = "${var.metric_namespace}"
     metric_name      = "${var.heartbeat_metric_name}"
     aggregation      = "Count"
-    operator         = "LessThanOrEqualTo"
+    operator         = "LessThanOrEqual"
     threshold        = "${var.heartbeat_threshold_sev2}"
   }
 
@@ -180,7 +180,7 @@ resource "azurerm_metric_alertrule" "availability" {
   description = "An alert rule to watch the status ping results"
   enabled = "${var.pingable}"
 
-  resource_id = "${azurerm_application_insights_web_test.ping.id}"
+  resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
   metric_name = "availability"
   operator    = "GreaterThan"
   threshold   = 0.9
