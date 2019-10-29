@@ -65,5 +65,5 @@ variable "frequency" {
 
 variable "window_size" {
   type = "string"
-  default = "PT5H"
+  default = "PT6H"
 }
