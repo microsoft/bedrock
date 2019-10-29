@@ -10,6 +10,11 @@ variable "app_insights_name" {
   type = "string"
 }
 
+variable "auto_mitigate" {
+  type = "string"
+  default = "true"
+}
+
 variable "sev3_enabled" {
   type = "string"
   default = "true"
