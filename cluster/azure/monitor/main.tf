@@ -171,7 +171,7 @@ resource "azurerm_application_insights_web_test" "ping" {
 XML
 }
 
-resource "azurerm_metric_alertrule" "availability" {
+resource "azurerm_monitor_metric_alertrule" "availability" {
   count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
 
   name                = "availability"
