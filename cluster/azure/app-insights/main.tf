@@ -1,3 +1,7 @@
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "azurerm_application_insights" "app_insights" {
   name                = "${var.name}"
   location            = "${var.location}"
