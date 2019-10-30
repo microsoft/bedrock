@@ -153,8 +153,6 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
 }
 
 resource "azurerm_application_insights_web_test" "ping" {
-  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
-
   name                    = "${var.service_name}_webtest"
   location                = "${var.location}"
   resource_group_name     = "${var.resource_group_name}"
