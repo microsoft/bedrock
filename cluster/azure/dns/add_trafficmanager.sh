@@ -1,17 +1,16 @@
 #!/bin/sh
 while getopts :s:g:z:t:e: option
 do
- case "${option}" in
- s) SUBSCRIPTION_ID=${OPTARG};;
- g) RESOURCE_GROUP=${OPTARG};;
- z) DNS_ZONE_NAME=${OPTARG};;
- t) TRAFFIC_MANAGER_NAME=${OPTARG};;
- e) SERVICE_NAMES=${OPTARG};;
- *) echo "Please refer to usage guide on GitHub" >&2
-    exit 1 ;;
- esac
+    case "${option}" in
+        s) SUBSCRIPTION_ID=${OPTARG};;
+        g) RESOURCE_GROUP=${OPTARG};;
+        z) DNS_ZONE_NAME=${OPTARG};;
+        t) TRAFFIC_MANAGER_NAME=${OPTARG};;
+        e) SERVICE_NAMES=${OPTARG};;
+        *) echo "Please refer to usage guide on GitHub" >&2
+            exit 1 ;;
+    esac
 done
-
 
 if [ -z $RESOURCE_GROUP ]; then
     echo "RESOURCE_GROUP is empty"
