@@ -32,3 +32,15 @@ variable "env_name" {
   default     = "dev"
   description = "name of targeting env"
 }
+
+variable "traffic_manager_name" {
+  type = "string"
+  description = "name of the traffic manager"
+  default = ""
+}
+
+variable "service_names" {
+  type = "string"
+  description = "comma-separated name of the services that expose to internet via ingress"
+  default = ""
+}

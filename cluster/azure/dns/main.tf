@@ -18,3 +18,22 @@ resource "null_resource" "dnszone" {
     env_name                    = "${var.env_name}"
   }
 }
+
+resource "null_resource" "cname_traffic_manager" {
+  count = "${var.traffic_manager_name != "" && var.service_endpoints != "" ? 1 : 0}"
+
+  provisioner "local-exec" {
+    command = "${path.module}/add_trafficmanager.sh -s ${var.dns_subscription_id} -g ${var.resource_group_name} -z ${var.name} -t ${var.traffic_manager_name} -e ${var.service_names}"
+  }
+
+  triggers = {
+    name                        = "${var.name}"
+    dns_subscription_id         = "${var.dns_subscription_id}"
+    resource_group_name         = "${var.resource_group_name}"
+    service_principal_object_id = "${var.service_principal_object_id}"
+    traffic_manager_name        = "${var.traffic_manager_name}"
+    service_names           = "${var.service_names}"
+  }
+
+  depends_on = ["null_resource.dnszone"]
+}
