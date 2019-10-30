@@ -1,3 +1,7 @@
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "azurerm_monitor_action_group" "email-dri" {
   name                = "email-dri-group"
   resource_group_name = "${var.resource_group_name}"

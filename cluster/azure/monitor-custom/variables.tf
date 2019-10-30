@@ -1,3 +1,8 @@
+variable "subscription_id" {
+  type = "string"
+  description = "azure subscription id where app insights is created"
+}
+
 variable "resource_group_name" {
   type = "string"
 }
