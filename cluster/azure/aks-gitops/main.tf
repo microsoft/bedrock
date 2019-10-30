@@ -1,3 +1,7 @@
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 data "azurerm_resource_group" "aksgitops" {
   name = "${var.resource_group_name}"
 }
@@ -5,6 +9,7 @@ data "azurerm_resource_group" "aksgitops" {
 module "aks" {
   source = "../../azure/aks"
 
+  subscription_id                 = "${var.subscription_id}"
   resource_group_name             = "${var.resource_group_name}"
   cluster_name                    = "${var.cluster_name}"
   kubernetes_version              = "${var.kubernetes_version}"

@@ -1,3 +1,7 @@
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "azurerm_monitor_action_group" "email-alert" {
   name                = "email-dri"
   resource_group_name = "${var.resource_group_name}"
@@ -179,7 +183,7 @@ resource "azurerm_monitor_metric_alertrule" "availability" {
   description         = "An alert rule to watch the status ping results"
   enabled             = "${var.pingable}"
 
-  resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
+  resource_id = "${azurerm_application_insights_web_test.ping.id}"
   metric_name = "availability"
   operator    = "GreaterThan"
   threshold   = 0.9

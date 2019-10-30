@@ -1,3 +1,8 @@
+variable "subscription_id" {
+  type = "string"
+  description = "azure subscription id where app insights is created"
+}
+
 variable "resource_group_name" {
   type = "string"
 }
@@ -31,9 +36,4 @@ variable "contributor_object_ids" {
   type = "string"
   description = "comma-separated object id of aad usersg or roups"
   default = ""
-}
-
-variable "subscription_id" {
-  type = "string"
-  description = "azure subscription id where app insights is created"
 }

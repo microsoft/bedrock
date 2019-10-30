@@ -2,6 +2,10 @@ module "azure-provider" {
   source = "../provider"
 }
 
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 data "azurerm_resource_group" "cluster" {
   name     = "${var.resource_group_name}"
 }
