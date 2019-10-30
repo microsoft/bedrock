@@ -20,7 +20,7 @@ resource "null_resource" "dnszone" {
 }
 
 resource "null_resource" "cname_traffic_manager" {
-  count = "${var.traffic_manager_name != "" && var.service_endpoints != "" ? 1 : 0}"
+  count = "${var.traffic_manager_name != "" && var.service_names != "" ? 1 : 0}"
 
   provisioner "local-exec" {
     command = "${path.module}/add_trafficmanager.sh -s ${var.dns_subscription_id} -g ${var.resource_group_name} -z ${var.name} -t ${var.traffic_manager_name} -e ${var.service_names}"

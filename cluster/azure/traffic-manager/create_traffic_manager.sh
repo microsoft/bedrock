@@ -22,16 +22,16 @@ elif [ -z $TRAFFIC_MANAGER_NAME ]; then
     exit 1;
 elif [ -z $SERVICE_NAMES ]; then
     echo "SERVICE_NAMES is empty"
-    exit 1;
+    SERVICE_NAMES=""
 elif [ -z $SERVICE_SUFFIX ]; then
     echo "SERVICE_SUFFIX is empty"
-    exit 1;
+    SERVICE_SUFFIX=""
 elif [ -z $DNS_ZONE_NAME ]; then
     echo "DNS_ZONE_NAME is empty"
     exit 1;
 elif [ -z $PROBE_PATH ]; then
     echo "PROBE_PATH is empty"
-    exit 1;
+    PROBE_PATH="/"
 else
     echo "Input is valid"
 fi
