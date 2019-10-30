@@ -1,5 +1,6 @@
 param(
     [string]$AccountName,
+    [string]$SubscriptionId,
     [string]$DbName,
     [string]$CollectionName,
     [string]$SpNames,
@@ -273,6 +274,10 @@ function FromBase64() {
     return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputString))
 }
 
+if ($null -ne $SubscriptionId -and $SubscriptionId -ne "") {
+    az account set -s $SubscriptionId
+}
+
 $AuthKey = $(az keyvault secret show --vault-name $VaultName --name "$($AccountName)-AuthKey" | ConvertFrom-Json).value
 $ResourceType = 'sprocs'
 $SpNameSecretArray = $SpNames.Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)
@@ -294,7 +299,7 @@ $SpNameSecretArray | ForEach-Object {
     $spJson = @{
         id = $SpName
         body = $SpDefinition
-    } | ConvertTo-Json 
+    } | ConvertTo-Json
 
     Write-Host $spJson
 

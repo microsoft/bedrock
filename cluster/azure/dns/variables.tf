@@ -1,5 +1,6 @@
-variable "subscription_name" {
-  type = "string"
+variable "dns_subscription_id" {
+  type    = "string"
+  default = ""       # reuse existing subscription if empty
 }
 
 variable "resource_group_name" {

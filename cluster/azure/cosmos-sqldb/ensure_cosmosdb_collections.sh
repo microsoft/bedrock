@@ -1,8 +1,9 @@
 #!/bin/bash
-while getopts :a:r:d:c:b: option
+while getopts :a:s:r:d:c:b: option
 do
  case "${option}" in
  a) ACCOUNT_NAME=${OPTARG};;
+ s) SUBSCRIPTION_ID=${OPTARG};;
  r) RESOURCE_GROUP_NAME=${OPTARG};;
  d) DB_NAME=${OPTARG};;
  c) COLLECTIONS=${OPTARG};;
@@ -31,6 +32,12 @@ else
     echo "Input is valid"
 fi
 
+if [ -z "$SUBSCRIPTION_ID" ]; then
+    echo "use current subscription for cosmosdb"
+else
+    echo "switch to use subscription $SUBSCRIPTION_ID for cosmosdb"
+    az account set -s $SUBSCRIPTION_ID
+fi
 
 AUTH_KEY=$(az cosmosdb keys list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME -o json | jq ".primaryMasterKey")
 AUTH_KEY=$(echo $AUTH_KEY | sed -e 's/^"//' -e 's/"$//') # it's base64-encoded, no need to wrap in quote

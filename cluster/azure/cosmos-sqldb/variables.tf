@@ -1,3 +1,18 @@
+variable "cosmosdb_subscription_id" {
+  type    = "string"
+  default = ""       # reuse existing subscription if empty
+}
+
+variable "vault_subscription_id" {
+  type    = "string"
+  default = ""       # reuse existing subscription if empty
+}
+
+variable "master_vault_subscription_id" {
+  type    = "string"
+  default = ""       # reuse existing subscription if empty
+}
+
 variable "resource_group_name" {
   type        = "string"
   description = "The resource group name for this cosmos db"

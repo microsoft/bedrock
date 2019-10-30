@@ -2,7 +2,7 @@
 while getopts :s:g:z:c:o:e: option
 do
  case "${option}" in
- s) SUBSCRIPTION_NAME=${OPTARG};;
+ s) SUBSCRIPTION_ID=${OPTARG};;
  g) RESOURCE_GROUP=${OPTARG};;
  z) DNS_ZONE_NAME=${OPTARG};;
  c) CAA_ISSUER_NAME=${OPTARG};;
@@ -13,11 +13,11 @@ do
  esac
 done
 
-if [ -z "$SUBSCRIPTION_NAME" ]; then
-    echo "use current subscription"
+if [ -z "$SUBSCRIPTION_ID" ]; then
+    echo "use current subscription for dns"
 else
-    echo "switch to use subscription $SUBSCRIPTION_NAME"
-    az account set -s $SUBSCRIPTION_NAME
+    echo "switch to use subscription $SUBSCRIPTION_ID for dns"
+    az account set -s $SUBSCRIPTION_ID
 fi
 
 echo "ensure dns zone is created"

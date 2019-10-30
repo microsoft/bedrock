@@ -4,6 +4,11 @@ variable "cosmos_db_account" {
   description = "name of cosmosdb account"
 }
 
+variable "cosmosdb_subscription_id" {
+  type    = "string"
+  default = ""       # reuse existing subscription if empty
+}
+
 variable "cosmos_db_name" {
   type        = "string"
   description = "CosmosDB name"
