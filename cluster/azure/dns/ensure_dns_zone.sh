@@ -1,7 +1,8 @@
 #!/bin/sh
-while getopts :g:z:c:o:e: option
+while getopts :s:g:z:c:o:e: option
 do
  case "${option}" in
+ s) SUBSCRIPTION_NAME=${OPTARG};;
  g) RESOURCE_GROUP=${OPTARG};;
  z) DNS_ZONE_NAME=${OPTARG};;
  c) CAA_ISSUER_NAME=${OPTARG};;
@@ -11,6 +12,13 @@ do
     exit 1 ;;
  esac
 done
+
+if [ -z "$SUBSCRIPTION_NAME" ]; then
+    echo "use current subscription"
+else
+    echo "switch to use subscription $SUBSCRIPTION_NAME"
+    az account set -s $SUBSCRIPTION_NAME
+fi
 
 echo "ensure dns zone is created"
 EXISTING_ZONES=$(az network dns zone list -g "$RESOURCE_GROUP")
