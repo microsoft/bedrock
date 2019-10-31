@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts :s:g:t:e:u:z:p option
+while getopts :s:g:t:e:u:z:p:l option
 do
     case "${option}" in
         s) SUBSCRIPTION_ID=${OPTARG};;
@@ -9,6 +9,7 @@ do
         u) SERVICE_SUFFIX=${OPTARG};;
         z) DNS_ZONE_NAME=${OPTARG};;
         p) PROBE_PATH=${OPTARG};;
+        l) LOCATION=${OPTARG};;
         *) echo "Please refer to usage guide on GitHub" >&2
             exit 1 ;;
     esac
@@ -32,6 +33,9 @@ elif [ -z $DNS_ZONE_NAME ]; then
 elif [ -z $PROBE_PATH ]; then
     echo "PROBE_PATH is empty"
     PROBE_PATH="/"
+elif [ -z $LOCATION ]; then
+    echo "LOCATION is empty"
+    exit 1;
 else
     echo "Input is valid"
 fi
@@ -62,17 +66,18 @@ for SERVICE_NAME in "${SERVICE_NAME_ARRAY[@]}"
 do
     SERVICE_TARGET="$SERVICE_NAME$SERVICE_SUFFIX.$DNS_ZONE_NAME"
     SERVICE_HOST_NAME="$SERVICE_NAME.$DNS_ZONE_NAME"
+    SERVICE_KEY="$SERVICE_NAME$SERVICE_SUFFIX"
 
-    $EXISTING_ENDPOINTS="$(az network traffic-manager endpoint list -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME --query "[?name=='$SERVICE_NAME']" -o json)"
+    $EXISTING_ENDPOINTS="$(az network traffic-manager endpoint list -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME --query "[?name=='$SERVICE_KEY']" -o json)"
     ENDPOINT_FOUND=$(echo "$EXISTING" | jq '. | length')
     if [ $ENDPOINT_FOUND -eq 0 ]; then
-        echo "creating traffic endpoint for $SERVICE_NAME targeting $SERVICE_TARGET with host $SERVICE_HOST_NAME"
+        echo "creating traffic endpoint for $SERVICE_KEY targeting $SERVICE_TARGET with host $SERVICE_HOST_NAME"
         az network traffic-manager endpoint create -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME \
-            -n $SERVICE_NAME --type externalEndpoints --endpoint-status enabled \
-            --target $SERVICE_TARGET --custom-headers host=$SERVICE_HOST_NAME
+            -n $SERVICE_KEY --type externalEndpoints --endpoint-status enabled \
+            --target $SERVICE_TARGET --endpoint-location $LOCATION --custom-headers host=$SERVICE_HOST_NAME
     else
-        echo "traffic endpoint for $SERVICE_NAME already exists"
-        az network traffic-manager endpoint update --name $SERVICE_NAME --profile-name $TRAFFIC_MANAGER_NAME --resource-group $RESOURCE_GROUP \
+        echo "traffic endpoint for $SERVICE_KEY already exists"
+        az network traffic-manager endpoint update --name $SERVICE_KEY --profile-name $TRAFFIC_MANAGER_NAME --resource-group $RESOURCE_GROUP \
             --target $SERVICE_TARGET --type externalEndpoints
     fi
 done
