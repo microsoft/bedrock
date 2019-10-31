@@ -47,5 +47,5 @@ variable "service_names" {
 
 variable "recreate_cname_records" {
   type = "string"
-  default = "yes"
+  default = "true"
 }
