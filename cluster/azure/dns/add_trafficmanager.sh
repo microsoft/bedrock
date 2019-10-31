@@ -52,7 +52,7 @@ do
         az network dns record-set txt delete -g $RESOURCE_GROUP -z $DNS_ZONE_NAME --name $SERVICE_NAME
     fi
 
-    az network dns record-set cname create -g $RESOURCE_GROUP -z $DNS_ZONE_NAME -n $SERVICE_NAME --if-none-match
+    az network dns record-set cname create -g $RESOURCE_GROUP -z $DNS_ZONE_NAME -n $SERVICE_NAME --ttl 3600 --if-none-match
 
     echo "set dns cname record $SERVICE_NAME with value $TRAFFIC_MANAGER_FQDN"
     az network dns record-set cname set-record -g $RESOURCE_GROUP -z $DNS_ZONE_NAME -n $SERVICE_NAME -c $TRAFFIC_MANAGER_FQDN

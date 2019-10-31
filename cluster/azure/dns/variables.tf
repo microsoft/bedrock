@@ -44,3 +44,8 @@ variable "service_names" {
   description = "comma-separated name of the services that expose to internet via ingress"
   default = ""
 }
+
+variable "recreate_cname_records" {
+  type = "string"
+  default = "yes"
+}

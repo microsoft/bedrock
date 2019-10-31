@@ -33,7 +33,7 @@ resource "null_resource" "cname_traffic_manager" {
     service_principal_object_id = "${var.service_principal_object_id}"
     traffic_manager_name        = "${var.traffic_manager_name}"
     service_names               = "${var.service_names}"
-    recreate_cname_records      = "true"
+    recreate_cname_records      = "${var.recreate_cname_records}"
   }
 
   depends_on = ["null_resource.dnszone"]
