@@ -57,8 +57,7 @@ if [ $FOUND -eq 0 ]; then
         --ttl 30 --protocol HTTPS --port 443 --path "$PROBE_PATH"
 else
     echo "traffic manager $TRAFFIC_MANAGER_NAME is already created"
-    az network traffic-manager profile create -g $RESOURCE_GROUP -n $TRAFFIC_MANAGER_NAME \
-        --routing-method Performance --unique-dns-name $TRAFFIC_MANAGER_NAME \
+    az network traffic-manager profile update -g $RESOURCE_GROUP -n $TRAFFIC_MANAGER_NAME \
         --set monitorConfig.path="$PROBE_PATH"
 fi
 
