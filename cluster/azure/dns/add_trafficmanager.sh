@@ -41,6 +41,17 @@ SERVICE_NAME_ARRAY=($(echo "$SERVICE_NAMES" | tr ',' '\n'))
 for SERVICE_NAME in "${SERVICE_NAME_ARRAY[@]}"
 do
     echo "creating dns cname record $SERVICE_NAME"
+    EXISTING_A_RECORDS="$(az network dns record-set a list -g $RESOURCE_GROUP -z $DNS_ZONE_NAME --query "[?name=='$SERVICE_NAME']" -o json)"
+    FOUND_A=$(echo "$EXISTING_A_RECORDS" | jq '. | length')
+    if [ $FOUND_A -gt 0 ]; then
+        az network dns record-set a delete -g $RESOURCE_GROUP -z $DNS_ZONE_NAME --name $SERVICE_NAME
+    fi
+    EXISTING_TXT_RECORDS="$(az network dns record-set txt list -g $RESOURCE_GROUP -z $DNS_ZONE_NAME --query "[?name=='$SERVICE_NAME']" -o json)"
+    FOUND_TXT=$(echo "$EXISTING_TXT_RECORDS" | jq '. | length')
+    if [ $FOUND_TXT -gt 0 ]; then
+        az network dns record-set txt delete -g $RESOURCE_GROUP -z $DNS_ZONE_NAME --name $SERVICE_NAME
+    fi
+
     az network dns record-set cname create -g $RESOURCE_GROUP -z $DNS_ZONE_NAME -n $SERVICE_NAME --if-none-match
 
     echo "set dns cname record $SERVICE_NAME with value $TRAFFIC_MANAGER_FQDN"
