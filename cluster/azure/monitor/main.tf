@@ -153,6 +153,8 @@ resource "azurerm_monitor_metric_alert" "heartbeat_sev2" {
 }
 
 resource "azurerm_application_insights_web_test" "ping" {
+  count = "${var.status_url != "" && var.pingable == "true" ? 1 : 0}"
+
   name                    = "${var.service_name}_webtest"
   location                = "${var.location}"
   resource_group_name     = "${var.resource_group_name}"
@@ -181,7 +183,7 @@ resource "azurerm_monitor_metric_alertrule" "availability" {
   description         = "An alert rule to watch the status ping results"
   enabled             = "${var.pingable}"
 
-  resource_id = "${azurerm_application_insights_web_test.ping.id}"
+  resource_id = "${azurerm_application_insights_web_test.ping[0].id}"
   metric_name = "availability"
   operator    = "GreaterThan"
   threshold   = 0.9
