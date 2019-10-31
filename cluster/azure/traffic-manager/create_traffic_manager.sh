@@ -58,6 +58,7 @@ if [ $FOUND -eq 0 ]; then
 else
     echo "traffic manager $TRAFFIC_MANAGER_NAME is already created"
     az network traffic-manager profile create -g $RESOURCE_GROUP -n $TRAFFIC_MANAGER_NAME \
+        --routing-method Performance --unique-dns-name $TRAFFIC_MANAGER_NAME \
         --set monitorConfig.path="$PROBE_PATH"
 fi
 
