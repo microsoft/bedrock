@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts :s:g:t:e:u:z:p:l option
+while getopts :s:g:t:e:u:z:p:l: option
 do
     case "${option}" in
         s) SUBSCRIPTION_ID=${OPTARG};;
