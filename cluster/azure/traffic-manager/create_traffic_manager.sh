@@ -68,8 +68,8 @@ do
     SERVICE_HOST_NAME="$SERVICE_NAME.$DNS_ZONE_NAME"
     SERVICE_KEY="$SERVICE_NAME$SERVICE_SUFFIX"
 
-    $EXISTING_ENDPOINTS="$(az network traffic-manager endpoint list -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME --query "[?name=='$SERVICE_KEY']" -o json)"
-    ENDPOINT_FOUND=$(echo "$EXISTING" | jq '. | length')
+    EXISTING_ENDPOINTS="$(az network traffic-manager endpoint list -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME --query "[?name=='$SERVICE_KEY']" -o json)"
+    ENDPOINT_FOUND=$(echo "$EXISTING_ENDPOINTS" | jq '. | length')
     if [ $ENDPOINT_FOUND -eq 0 ]; then
         echo "creating traffic endpoint for $SERVICE_KEY targeting $SERVICE_TARGET with host $SERVICE_HOST_NAME"
         az network traffic-manager endpoint create -g $RESOURCE_GROUP --profile-name $TRAFFIC_MANAGER_NAME \
