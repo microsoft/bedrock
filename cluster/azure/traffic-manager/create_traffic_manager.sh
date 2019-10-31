@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 while getopts :s:g:t:e:u:z option
 do
     case "${option}" in
