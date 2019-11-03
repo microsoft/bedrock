@@ -19,7 +19,7 @@ A Bedrock deployment follows three steps at a high level:
 2. Define a [Fabrikate](https://github.com/microsoft/fabrikate) high level deployment definition.
 3. [Setup a GitOps pipeline](./gitops/README.md) to automate deployments of this definition to this cluster based on typical application and cluster lifecycle events.
 
-The steps required to operationalize a production Kubernetes cluster can be pretty extensive, so we have also put togeter a [simple walkthrough for deploying a first cluster](./docs/azure-simple/README.md) that makes a great first step.
+The steps required to operationalize a production Kubernetes cluster can be pretty extensive, so we have also put together a [simple walkthrough for deploying a first cluster](./docs/azure-simple/README.md) that makes a great first step.
 
 ## Community
 
