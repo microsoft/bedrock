@@ -274,6 +274,40 @@ function FromBase64() {
     return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputString))
 }
 
+function Retry {
+    [CmdletBinding()]
+    param(
+        [int]$MaxRetries = 3,
+        [Parameter(Mandatory = $true)]
+        [scriptblock]$ScriptBlock,
+        [int]$RetryDelay = 10,
+        [bool]$LogError = $true
+    )
+
+    $isSuccessful = $false
+    $retryCount = 0
+    $prevErrorActionPref = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    while (!$IsSuccessful -and $retryCount -lt $MaxRetries) {
+        try {
+            $ScriptBlock.Invoke()
+            $isSuccessful = $true
+        }
+        catch {
+            $retryCount++
+
+            if ($LogError) {
+                LogInfo -Message $_.Exception.InnerException.Message
+                LogInfo -Message "failed after $retryCount attempt, wait $RetryDelay seconds and retry"
+            }
+
+            Start-Sleep -Seconds $RetryDelay
+        }
+    }
+    $ErrorActionPreference = $prevErrorActionPref
+    return $isSuccessful
+}
+
 if ($null -ne $SubscriptionId -and $SubscriptionId -ne "") {
     az account set -s $SubscriptionId
 }
@@ -314,12 +348,17 @@ $SpNameSecretArray | ForEach-Object {
     # If that failed because the object already exists, update the object
     if ($createResult -eq 'AlreadyExists') {
         Write-Host "$ObjectType already exists. Updating..."
-        SubmitCosmosDbApiRequest `
-            -Verb 'PUT' `
-            -ResourceId "dbs/$DbName/colls/$CollectionName/$ResourceType/$SpName" `
-            -ResourceType $ResourceType `
-            -Url "https://$AccountName.documents.azure.com/dbs/$DbName/colls/$CollectionName/$ResourceType/$SpName" `
-            -Key $AuthKey `
-            -BodyJson $spJson | Out-Null
+        $spUpdated = Retry(3) {
+            SubmitCosmosDbApiRequest `
+                -Verb 'PUT' `
+                -ResourceId "dbs/$DbName/colls/$CollectionName/$ResourceType/$SpName" `
+                -ResourceType $ResourceType `
+                -Url "https://$AccountName.documents.azure.com/dbs/$DbName/colls/$CollectionName/$ResourceType/$SpName" `
+                -Key $AuthKey `
+                -BodyJson $spJson | Out-Null
+        }
+        if (!$spUpdated) {
+            throw "Failed to update stored procedure $SpName"
+        }
     }
 }
