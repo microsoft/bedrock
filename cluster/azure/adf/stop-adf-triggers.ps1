@@ -8,10 +8,13 @@ Set-StrictMode -Version Latest
 $adfCreated = $false
 [array]$existingAdfs = az rest --method GET --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories?api-version=2018-06-01" | ConvertFrom-Json
 if ($null -ne $existingAdfs -and $existingAdfs.Count -gt 0) {
-    $adf = $_
-    Write-Host $adf
-    if ($adf.name -eq $AdfName) {
-        $adfCreated = $true
+    $existingAdfs | ForEach-Object {
+        $adf = $_
+        Write-Host $adf
+        if ($adf.name -eq $AdfName) {
+            $adfCreated = $true
+            Write-Host "Found adf: $adfCreated"
+        }
     }
 }
 
