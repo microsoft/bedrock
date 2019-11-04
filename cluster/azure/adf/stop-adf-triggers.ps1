@@ -10,11 +10,11 @@ $adfCreated = $false
 if ($null -ne $existingAdfs -and $existingAdfs.Count -gt 0) {
     $existingAdfs | ForEach-Object {
         $adf = $_
-        Write-Host $adf
-        if ($adf.name -eq $AdfName) {
-            $adfCreated = $true
-            Write-Host "Found adf: $adfCreated"
-        }
+        Write-Host ($adf | ConvertTo-Json)
+        # if ($adf.name -eq $AdfName) {
+        #     $adfCreated = $true
+        #     Write-Host "Found adf: $adfCreated"
+        # }
     }
 }
 
