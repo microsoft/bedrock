@@ -17,7 +17,7 @@ data "azurerm_key_vault_secret" "adxClientSecret" {
   key_vault_id = "${data.azurerm_key_vault.vault.id}"
 }
 
-resource "null_resource" "stop-adf-triggers-command" {
+resource "null_resource" "stop_adf_triggers_command" {
   provisioner "local-exec" {
     command = "pwsh ${path.module}/stop-adf-triggers.ps1 -AdfName ${var.datafactoryName} -ResourceGroupName ${var.resource_group_name}"
   }
@@ -41,13 +41,13 @@ resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
 
   deployment_mode = "Incremental"
 
-  depends_on = ["null_resource.stop-adf-triggers-command"]
+  depends_on = ["null_resource.stop_adf_triggers_command"]
 }
 
-resource "null_resource" "start-adf-triggers-command" {
+resource "null_resource" "start_adf_triggers_command" {
   provisioner "local-exec" {
     command = "pwsh ${path.module}/start-adf-triggers.ps1 -AdfName ${var.datafactoryName} -ResourceGroupName ${var.resource_group_name}"
   }
 
-  depends_on = ["azurerm_template_deployment.onees_azuredatafactory"]
+  depends_on = ["azurerm_template_deployment.adf_cosmos_to_kusto"]
 }
