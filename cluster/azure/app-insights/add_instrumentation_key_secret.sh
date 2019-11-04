@@ -54,17 +54,26 @@ if [ -z "$APP_INSIGHTS_NAME" ]; then
     exit 1
 fi
 
+echo "add secret $INSTRUMENTATION_KEY_SECRET_NAME to vault: $VAULT_NAME"
 az keyvault secret set --vault-name $VAULT_NAME --name $INSTRUMENTATION_KEY_SECRET_NAME --value $INSTRUMENTATION_KEY --output none
+echo "add secret $APP_ID_SECRET_NAME to vault: $VAULT_NAME"
 az keyvault secret set --vault-name $VAULT_NAME --name $APP_ID_SECRET_NAME --value $APP_ID --output none
 
 SCOPE_ID="subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Insights/components/$APP_INSIGHTS_NAME"
+echo "SCOPE_ID=$SCOPE_ID"
 
 CONTRIBUTORS_ARRAY=($(echo "$CONTRIBUTORS" | tr ',' '\n'))
 for contributor_object_id in "${CONTRIBUTORS_ARRAY[@]}"
 do
-    EXISTING_ASSIGNMENTS=$(az role assignment list --role Contributor --assignee $contributor_object_id --scope $SCOPE_ID)
+    echo "contributor_object_id=$contributor_object_id"
+    EXISTING_ASSIGNMENTS="$(az role assignment list --role Contributor --assignee $contributor_object_id --scope $SCOPE_ID -o json)"
     ASSIGNMENT_COUNT=$(echo "$EXISTING_ASSIGNMENTS" | jq ". | length")
     if [ $ASSIGNMENT_COUNT -eq 0 ]; then
-        az role assignment create --role Contributor --assignee-object-id $contributor_object_id --scope $SCOPE_ID
+        echo "add to app insights contributor"
+        if ! $(az role assignment create --role Contributor --assignee-object-id $contributor_object_id --scope $SCOPE_ID); then
+            echo "failed to set access control for app insights, bug: https://github.com/Azure/azure-cli/issues/11081"
+        fi
+    else
+        echo "contributor is already set"
     fi
 done
