@@ -1,0 +1,1 @@
+this module deploys ADF that copies data from cosmosdb to kusto

@@ -1,0 +1,1151 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "datafactoryName": {
+          "type": "string"
+      },
+      "cosmosDbAccountKey": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Key for Azure CosmosDb."
+          }
+      },
+      "cosmosDbAccount": {
+          "type": "string"
+      },
+      "adx_ClientId": {
+          "type": "string",
+          "metadata": {
+              "description": "AAD app for Kusto cluster"
+          }
+      },
+      "adx_ClientSecret": {
+          "type": "securestring",
+          "metadata": {
+              "description": "AAD app Secret"
+          }
+      },
+      "adx_Endpoint": {
+          "type": "string"
+      },
+      "adx_Database": {
+          "type": "string"
+      }
+  },
+  "variables": {
+      "template": "Onees-AzureDataFactory",
+      "subscriptionId": "[subscription().id]",
+      "dataFactoryLocation": "[resourceGroup().location]",
+      "dataFactoryName": "[parameters('datafactoryName')]",
+      "dataFactoryFullyQualifiedResourceId": "[concat(variables('subscriptionId'),'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.DataFactory/factories/', variables('dataFactoryName'))]",
+      "dataFactoryId": "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'))]",
+      "cosmosDbLinkedService": "cosmosDbLinkedService",
+      "cosmosDbLinkedService_ProductCatalogDatabase_ConnectionString": "[concat('AccountEndpoint=https://', parameters('cosmosDbAccount'), '.documents.azure.com:443/;AccountKey=', parameters('cosmosDbAccountKey'),';Database=product-catalog')]",
+      "adx_SinkLinkedService": "adx_SinkLinkedService",
+      "adx_DatabaseService": "adx_DatabaseService",
+      "productCatalogArtifacts_pipeline": "productCatalogArtifacts_pipeline",
+      "policyCatalogAuditEvents_pipeline": "policyCatalogAuditEvents_pipeline",
+      "policyCatalogSnapshots_pipeline": "policyCatalogSnapshots_pipeline",
+      "cosmosDb_Products_dataset": "cosmosDb_Products_dataset",
+      "cosmosDb_PolicyEvents_dataset": "cosmosDb_PolicyEvents_dataset",
+      "cosmosDb_PolicySnapshots_dataset": "cosmosDb_PolicySnapshots_dataset",
+      "adx_ProductArtifacts_VTemp_dataset": "adx_ProductArtifacts_VTemp_dataset",
+      "adx_PolicyAuditEvents_Staging_dataset": "adx_PolicyAuditEvents_Staging_dataset",
+      "adx_PolicySnapshots_Staging_dataset": "adx_PolicySnapshots_Staging_dataset",
+      "productCatalogArtifacts_pipeline_trigger": "productCatalogArtifacts_pipeline_trigger",
+      "policyCatalogAuditEvents_pipeline_trigger": "policyCatalogAuditEvents_pipeline_trigger",
+      "policyCatalogSnapshots_pipeline_trigger": "policyCatalogSnapshots_pipeline_trigger",
+      "actionGroupName": "emailDri",
+      "actionGroupShortName": "emailDri",
+      "actionGroupFullyQualifiedResourceId": "[concat(variables('subscriptionId'),'/resourcegroups/', resourceGroup().name, '/providers/microsoft.insights/actionGroups/', variables('actionGroupName'))]",
+      "productCatalogArtifacts_pipelineFailedAlertName": "productCatalogArtifacts_pipelineFailedAlert",
+      "policyCatalogAuditEvents_pipelineFailedAlertName": "policyCatalogAuditEvents_pipelineFailedAlert",
+      "policyCatalogSnapshots_pipelineFailedAlertName": "policyCatalogSnapshots_pipelineFailedAlert",
+      "productCatalogArtifacts_pipelineNotSucceededAlertName": "productCatalogArtifacts_pipelineNotSucceededAlert",
+      "policyCatalogAuditEvents_pipelineNotSucceededAlertName": "policyCatalogAuditEvents_pipelineNotSucceededAlert",
+      "policyCatalogSnapshots_pipelineNotSucceededAlertName": "policyCatalogSnapshots_pipelineNotSucceededAlert"
+  },
+  "resources": [
+      {
+          "name": "[variables('dataFactoryName')]",
+          "apiVersion": "2018-06-01",
+          "type": "Microsoft.DataFactory/factories",
+          "location": "[variables('dataFactoryLocation')]",
+          "identity": {
+              "type": "SystemAssigned"
+          },
+          "resources": [
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('productCatalogArtifacts_pipeline'))]",
+                  "type": "Microsoft.DataFactory/factories/pipelines",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "description": "Copy Product Catalog Mapping Data from CosmosDB to Azure Data Explorer",
+                      "activities": [
+                          {
+                              "name": "DropTempTable",
+                              "description": "Drop VTemp Table",
+                              "type": "KustoCommand",
+                              "dependsOn": [
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "database": "[parameters('adx_Database')]",
+                                  "command": ".drop table ProductArtifacts_VTemp_batrived ifexists",
+                                  "commandType": "Control"
+                              },
+                              "linkedServiceName": {
+                                  "referenceName": "[variables('adx_DatabaseService')]",
+                                  "type": "LinkedServiceReference"
+                              }
+                          },
+                          {
+                              "name": "UpsertTables",
+                              "description": "Upsert Tables as appropriate",
+                              "type": "KustoCommand",
+                              "dependsOn": [
+                                  {
+                                      "activity": "DropTempTable",
+                                      "dependencyConditions": [
+                                          "Succeeded"
+                                      ]
+                                  }
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "database": "[parameters('adx_Database')]",
+                                  "command": ".create tables \nProductArtifacts_VTemp_batrived(id:string, documentType:string, artifactType:string, artifactId:string, nodeId:string, createdWhen:int64, createdBy:string, modifiedWhen:int64, modifiedBy:string), ProductArtifacts_batrived(id:string, documentType:string, artifactType:string, artifactId:string, nodeId:string, createdWhen:int64, createdBy:string, modifiedWhen:int64, modifiedBy:string)",
+                                  "commandType": "Control"
+                              },
+                              "linkedServiceName": {
+                                  "referenceName": "[variables('adx_DatabaseService')]",
+                                  "type": "LinkedServiceReference"
+                              }
+                          },
+                          {
+                              "name": "CopyFromCosmosToADX",
+                              "description": "Copy Activity to move data from CosmosDb to ADX Temp table",
+                              "type": "Copy",
+                              "dependsOn": [
+                                  {
+                                      "activity": "UpsertTables",
+                                      "dependencyConditions": [
+                                          "Succeeded"
+                                      ]
+                                  }
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": true,
+                                  "secureInput": true
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "source": {
+                                      "type": "DocumentDbCollectionSource",
+                                      "query": "select c.id, c.documentType,\nc.artifactType, c.artifactId, c.nodeId,\nc.createdWhen, c.createdBy,\nc.modifiedWhen, c.modifiedBy from c where c.documentType = \"NodeMapping\"",
+                                      "nestingSeparator": ""
+                                  },
+                                  "sink": {
+                                      "type": "AzureDataExplorerSink"
+                                  },
+                                  "enableStaging": false,
+                                  "parallelCopies": 8,
+                                  "translator": {
+                                      "type": "TabularTranslator",
+                                      "columnMappings": {
+                                          "id": "id",
+                                          "documentType": "documentType",
+                                          "artifactType": "artifactType",
+                                          "artifactId": "artifactId",
+                                          "nodeId": "nodeId",
+                                          "createdWhen": "createdWhen",
+                                          "createdBy": "createdBy",
+                                          "modifiedWhen": "modifiedWhen",
+                                          "modifiedBy": "modifiedBy"
+                                      }
+                                  }
+                              },
+                              "inputs": [
+                                  {
+                                      "referenceName": "[variables('cosmosDb_Products_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ],
+                              "outputs": [
+                                  {
+                                      "referenceName": "[variables('adx_ProductArtifacts_VTemp_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ]
+                          },
+                          {
+                              "name": "RenameTables",
+                              "type": "KustoCommand",
+                              "dependsOn": [
+                                  {
+                                      "activity": "CopyFromCosmosToADX",
+                                      "dependencyConditions": [
+                                          "Succeeded"
+                                      ]
+                                  }
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "database": "[parameters('adx_Database')]",
+                                  "command": ".rename tables  ProductArtifacts_batrived=ProductArtifacts_VTemp_batrived, ProductArtifacts_VTemp_batrived =ProductArtifacts_batrived",
+                                  "commandType": "Control"
+                              },
+                              "linkedServiceName": {
+                                  "referenceName": "[variables('adx_DatabaseService')]",
+                                  "type": "LinkedServiceReference"
+                              }
+                          },
+                          {
+                              "name": "DropTempTable_End",
+                              "description": "Drop VTemp Table at the end",
+                              "type": "KustoCommand",
+                              "dependsOn": [
+                                  {
+                                      "activity": "RenameTables",
+                                      "dependencyConditions": [
+                                          "Succeeded"
+                                      ]
+                                  }
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "database": "[parameters('adx_Database')]",
+                                  "command": ".drop table ProductArtifacts_VTemp ifexists",
+                                  "commandType": "Control"
+                              },
+                              "linkedServiceName": {
+                                  "referenceName": "[variables('adx_DatabaseService')]",
+                                  "type": "LinkedServiceReference"
+                              }
+                          }
+                      ],
+                      "annotations": [
+                      ]
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('adx_DatabaseService'))]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('adx_ProductArtifacts_VTemp_dataset'))]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('cosmosDb_Products_dataset'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('adx_ProductArtifacts_VTemp_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "linkedServiceName": {
+                          "referenceName": "[variables('adx_SinkLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "AzureDataExplorerTable",
+                      "structure": [
+                          {
+                              "name": "id",
+                              "type": "String"
+                          },
+                          {
+                              "name": "documentType",
+                              "type": "String"
+                          },
+                          {
+                              "name": "artifactType",
+                              "type": "String"
+                          },
+                          {
+                              "name": "artifactId",
+                              "type": "String"
+                          },
+                          {
+                              "name": "nodeId",
+                              "type": "String"
+                          },
+                          {
+                              "name": "createdWhen",
+                              "type": "Int64"
+                          },
+                          {
+                              "name": "createdBy",
+                              "type": "String"
+                          },
+                          {
+                              "name": "modifiedWhen",
+                              "type": "Int64"
+                          },
+                          {
+                              "name": "modifiedBy",
+                              "type": "String"
+                          }
+                      ],
+                      "typeProperties": {
+                          "table": "ProductArtifacts_VTemp_batrived"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('adx_SinkLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('cosmosDb_Products_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "description": "Product Catalog CosmosDb Dataset",
+                      "linkedServiceName": {
+                          "referenceName": "[variables('cosmosDbLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "DocumentDbCollection",
+                      "structure": [
+                          {
+                              "name": "id",
+                              "type": "String"
+                          },
+                          {
+                              "name": "documentType",
+                              "type": "String"
+                          },
+                          {
+                              "name": "artifactType",
+                              "type": "String"
+                          },
+                          {
+                              "name": "artifactId",
+                              "type": "String"
+                          },
+                          {
+                              "name": "nodeId",
+                              "type": "String"
+                          },
+                          {
+                              "name": "createdWhen",
+                              "type": "Int64"
+                          },
+                          {
+                              "name": "createdBy",
+                              "type": "String"
+                          },
+                          {
+                              "name": "modifiedWhen",
+                              "type": "Int64"
+                          },
+                          {
+                              "name": "modifiedBy",
+                              "type": "String"
+                          }
+                      ],
+                      "typeProperties": {
+                          "collectionName": "products"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('cosmosDbLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('productCatalogArtifacts_pipeline_trigger'))]",
+                  "type": "Microsoft.DataFactory/factories/triggers",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "description": "Trigger Copy Data once an hour",
+                      "annotations": [
+                      ],
+                      "runtimeState": "Started",
+                      "pipelines": [
+                          {
+                              "pipelineReference": {
+                                  "referenceName": "[variables('productCatalogArtifacts_pipeline')]",
+                                  "type": "PipelineReference"
+                              },
+                              "parameters": {
+                              }
+                          }
+                      ],
+                      "type": "ScheduleTrigger",
+                      "typeProperties": {
+                          "recurrence": {
+                              "frequency": "Hour",
+                              "interval": 1,
+                              "startTime": "2019-04-03T04:05:00Z",
+                              "timeZone": "UTC"
+                          }
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/pipelines/', variables('productCatalogArtifacts_pipeline'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('adx_SinkLinkedService'))]",
+                  "type": "Microsoft.DataFactory/factories/linkedServices",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "annotations": [
+                      ],
+                      "type": "AzureDataExplorer",
+                      "typeProperties": {
+                          "endpoint": "[parameters('adx_Endpoint')]",
+                          "tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+                          "servicePrincipalId": "[parameters('adx_ClientId')]",
+                          "servicePrincipalKey": {
+                              "type": "SecureString",
+                              "value": "[parameters('adx_ClientSecret')]"
+                          },
+                          "database": "[parameters('adx_Database')]"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('adx_DatabaseService'))]",
+                  "type": "Microsoft.DataFactory/factories/linkedServices",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "annotations": [
+                      ],
+                      "type": "Kusto",
+                      "typeProperties": {
+                          "endpoint": "[parameters('adx_Endpoint')]",
+                          "tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+                          "servicePrincipalId": "[parameters('adx_ClientId')]",
+                          "servicePrincipalKey": {
+                              "type": "SecureString",
+                              "value": "[parameters('adx_ClientSecret')]"
+                          }
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "type": "Microsoft.DataFactory/factories/linkedServices",
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('cosmosDbLinkedService'))]",
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]"
+                  ],
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "type": "CosmosDb",
+                      "description": "Linked Service To access Product Catalog CosmosDb",
+                      "typeProperties": {
+                          "connectionString": {
+                              "value": "[variables('cosmosDbLinkedService_ProductCatalogDatabase_ConnectionString')]",
+                              "type": "SecureString"
+                          }
+                      }
+                  },
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('policyCatalogAuditEvents_pipeline'))]",
+                  "type": "Microsoft.DataFactory/factories/pipelines",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "description": "Transfers Policy Events from Cosmos DB to Azure Data Explorer for audit purposes.",
+                      "activities": [
+                          {
+                              "name": "CopyFromCosmosToADX",
+                              "type": "Copy",
+                              "dependsOn": [
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "source": {
+                                      "type": "DocumentDbCollectionSource",
+                                      "query": "select \nc.payload.id as id,\nc._ts as ts,\nc.payload._etag as etag,\nc.payload.type as type,\nc.operation as operation,\nc.changeTime as changeTime,\nc.payload.createdWhen as createdWhen,\nc.payload.createdBy as createdBy,\nc.payload.modifiedWhen as modifiedWhen,\nc.payload.modifiedBy as modifiedBy,\nc.payload.targetId as targetId,\nc.payload.isEnabled as isEnabled,\nc.payload.isBlocking as isBlocking,\nc.payload.isDeleted as isDeleted,\ntoString(c.payload.settings) as settings,\ntoString(c.payload.filter) as filter,\ntoString(c.payload.scope) as scope,\nc.payload.name??\"\" as name\n from c \nwhere c.partitionKey = \"Policy\"",
+                                      "nestingSeparator": "."
+                                  },
+                                  "sink": {
+                                      "type": "AzureDataExplorerSink"
+                                  },
+                                  "enableStaging": false,
+                                  "parallelCopies": 8
+                              },
+                              "inputs": [
+                                  {
+                                      "referenceName": "[variables('cosmosDb_PolicyEvents_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ],
+                              "outputs": [
+                                  {
+                                      "referenceName": "[variables('adx_PolicyAuditEvents_Staging_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ]
+                          }
+                      ],
+                      "annotations": [
+                      ]
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('cosmosDb_PolicyEvents_dataset'))]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('adx_PolicyAuditEvents_Staging_dataset'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('policyCatalogSnapshots_pipeline'))]",
+                  "type": "Microsoft.DataFactory/factories/pipelines",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "description": "Transfers Policy Events from Cosmos DB to Azure Data Explorer for audit purposes.",
+                      "activities": [
+                          {
+                              "name": "CopyFromCosmosToADX",
+                              "type": "Copy",
+                              "dependsOn": [
+                              ],
+                              "policy": {
+                                  "timeout": "7.00:00:00",
+                                  "retry": 0,
+                                  "retryIntervalInSeconds": 30,
+                                  "secureOutput": false,
+                                  "secureInput": false
+                              },
+                              "userProperties": [
+                              ],
+                              "typeProperties": {
+                                  "source": {
+                                      "type": "DocumentDbCollectionSource",
+                                      "query": "select \nc.id as id,\nc._ts as ts,\nc._etag as etag,\nc.partitionKey as partitionKey,\nc.projectId as projectId,\nc.organizationName as orgName,\nc.policyType as policyType,\ntoString(c.applicablePolicyIds)?? \"\" as applicablePolicies,\ntoString(c.policyConfiguration) as policyConfig \n from c",
+                                      "nestingSeparator": "."
+                                  },
+                                  "sink": {
+                                      "type": "AzureDataExplorerSink"
+                                  },
+                                  "enableStaging": false,
+                                  "parallelCopies": 8
+                              },
+                              "inputs": [
+                                  {
+                                      "referenceName": "[variables('cosmosDb_PolicySnapshots_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ],
+                              "outputs": [
+                                  {
+                                      "referenceName": "[variables('adx_PolicySnapshots_Staging_dataset')]",
+                                      "type": "DatasetReference",
+                                      "parameters": {
+                                      }
+                                  }
+                              ]
+                          }
+                      ],
+                      "annotations": [
+                      ]
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('cosmosDb_PolicySnapshots_dataset'))]",
+                      "[concat(variables('dataFactoryId'), '/datasets/', variables('adx_PolicySnapshots_Staging_dataset'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('cosmosDb_PolicyEvents_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "linkedServiceName": {
+                          "referenceName": "[variables('cosmosDbLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "DocumentDbCollection",
+                      "typeProperties": {
+                          "collectionName": "policy-events"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('cosmosDbLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('adx_PolicyAuditEvents_Staging_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "linkedServiceName": {
+                          "referenceName": "[variables('adx_SinkLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "AzureDataExplorerTable",
+                      "typeProperties": {
+                          "table": "PolicyAuditEvents_Staging_batrived"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('adx_SinkLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('cosmosDb_PolicySnapshots_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "linkedServiceName": {
+                          "referenceName": "[variables('cosmosDbLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "DocumentDbCollection",
+                      "typeProperties": {
+                          "collectionName": "policy-snapshots"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('cosmosDbLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('adx_PolicySnapshots_Staging_dataset'))]",
+                  "type": "Microsoft.DataFactory/factories/datasets",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "linkedServiceName": {
+                          "referenceName": "[variables('adx_SinkLinkedService')]",
+                          "type": "LinkedServiceReference"
+                      },
+                      "annotations": [
+                      ],
+                      "type": "AzureDataExplorerTable",
+                      "typeProperties": {
+                          "table": "PolicySnapshots_Staging_batrived"
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/linkedServices/', variables('adx_SinkLinkedService'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('policyCatalogAuditEvents_pipeline_trigger'))]",
+                  "type": "Microsoft.DataFactory/factories/triggers",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "annotations": [
+                      ],
+                      "runtimeState": "Started",
+                      "pipeline": {
+                          "pipelineReference": {
+                              "referenceName": "[variables('policyCatalogAuditEvents_pipeline')]",
+                              "type": "PipelineReference"
+                          },
+                          "parameters": {
+                          }
+                      },
+                      "type": "TumblingWindowTrigger",
+                      "typeProperties": {
+                          "frequency": "Hour",
+                          "interval": 1,
+                          "startTime": "2019-04-17T22:06:00.000Z",
+                          "delay": "00:00:00",
+                          "maxConcurrency": 1,
+                          "retryPolicy": {
+                              "intervalInSeconds": 30
+                          },
+                          "dependsOn": [
+                          ]
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/pipelines/', variables('policyCatalogAuditEvents_pipeline'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              },
+              {
+                  "name": "[concat(variables('dataFactoryName'), '/', variables('policyCatalogSnapshots_pipeline_trigger'))]",
+                  "type": "Microsoft.DataFactory/factories/triggers",
+                  "apiVersion": "2018-06-01",
+                  "properties": {
+                      "annotations": [
+                      ],
+                      "runtimeState": "Started",
+                      "pipeline": {
+                          "pipelineReference": {
+                              "referenceName": "[variables('policyCatalogSnapshots_pipeline')]",
+                              "type": "PipelineReference"
+                          },
+                          "parameters": {
+                          }
+                      },
+                      "type": "TumblingWindowTrigger",
+                      "typeProperties": {
+                          "frequency": "Hour",
+                          "interval": 1,
+                          "startTime": "2019-07-29T22:06:00.000Z",
+                          "delay": "00:00:00",
+                          "maxConcurrency": 1,
+                          "retryPolicy": {
+                              "intervalInSeconds": 30
+                          },
+                          "dependsOn": [
+                          ]
+                      }
+                  },
+                  "dependsOn": [
+                      "[variables('dataFactoryName')]",
+                      "[concat(variables('dataFactoryId'), '/pipelines/', variables('policyCatalogSnapshots_pipeline'))]"
+                  ],
+                  "tags": {
+                      "template": "[variables('template')]",
+                      "resourceType": "ADF"
+                  }
+              }
+          ],
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "ADF"
+          }
+      },
+      {
+          "type": "Microsoft.Insights/actionGroups",
+          "apiVersion": "2018-03-01",
+          "name": "[variables('actionGroupName')]",
+          "location": "Global",
+          "properties": {
+              "groupShortName": "[variables('actionGroupShortName')]",
+              "enabled": true,
+              "emailReceivers": [
+                  {
+                      "name": "Security & Compliance Engineering DRI",
+                      "emailAddress": "1csdri@microsoft.com"
+                  }
+              ]
+          }
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('productCatalogArtifacts_pipelineFailedAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there is a failure on productCatalogArtifactsPipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT1H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineFailedRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('productCatalogArtifacts_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "GreaterThan",
+                          "threshold": 0,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('productCatalogArtifacts_pipelineNotSucceededAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there are not enough successful runs of productCatalogArtifacts pipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT6H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineSucceededRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('productCatalogArtifacts_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "LessThan",
+                          "threshold": 3,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('policyCatalogAuditEvents_pipelineFailedAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there is a failure on policyCatalogAuditEventsPipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT1H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineFailedRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('policyCatalogAuditEvents_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "GreaterThan",
+                          "threshold": 0,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('policyCatalogAuditEvents_pipelineNotSucceededAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there are not enough successful runs of policyCatalogAuditEvents pipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT6H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineSucceededRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('policyCatalogAuditEvents_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "LessThan",
+                          "threshold": 3,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('policyCatalogSnapshots_pipelineFailedAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there is a failure on policyCatalogSnapshotsPipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT1H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineFailedRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('policyCatalogSnapshots_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "GreaterThan",
+                          "threshold": 0,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      },
+      {
+          "type": "Microsoft.Insights/metricAlerts",
+          "name": "[variables('policyCatalogSnapshots_pipelineNotSucceededAlertName')]",
+          "location": "global",
+          "apiVersion": "2018-03-01",
+          "properties": {
+              "description": "Raise an alert if there are not enough successful runs of policyCatalogSnapshots pipeline",
+              "severity": 3,
+              "enabled": true,
+              "scopes": [
+                  "[variables('dataFactoryFullyQualifiedResourceId')]"
+              ],
+              "evaluationFrequency": "PT30M",
+              "windowSize": "PT6H",
+              "criteria": {
+                  "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                  "allOf": [
+                      {
+                          "metricNamespace": "Microsoft.DataFactory/factories",
+                          "name": "failure criterion",
+                          "metricName": "PipelineSucceededRuns",
+                          "dimensions": [
+                              {
+                                  "name": "Name",
+                                  "operator": "Include",
+                                  "values": [
+                                      "[variables('policyCatalogSnapshots_pipeline')]"
+                                  ]
+                              }
+                          ],
+                          "operator": "LessThan",
+                          "threshold": 3,
+                          "timeAggregation": "Total"
+                      }
+                  ]
+              },
+              "actions": [
+                  {
+                      "actionGroupId": "[variables('actionGroupFullyQualifiedResourceId')]"
+                  }
+              ]
+          },
+          "tags": {
+              "template": "[variables('template')]",
+              "resourceType": "Metric Alert"
+          },
+          "dependsOn": [
+              "[variables('dataFactoryName')]"
+          ]
+      }
+  ]
+}
