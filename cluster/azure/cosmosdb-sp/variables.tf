@@ -1,4 +1,3 @@
-
 variable "cosmos_db_account" {
   type        = "string"
   description = "name of cosmosdb account"
@@ -25,7 +24,7 @@ variable "cosmos_db_sp_names" {
 }
 
 variable "cosmos_db_sp_versions" {
-  type = "string"
+  type        = "string"
   description = "list of kv versions for sp definitions, will trigger new deployment when it got changed"
 }
 
@@ -38,4 +37,10 @@ variable "recreate_collections" {
   type        = "string"
   description = "when turned on (true), existing collections will be removed and created again"
   default     = "false"
+}
+
+variable "cosmosdb_created" {
+  type        = "string"
+  default     = "false"
+  description = "output from cosmosdb module, must be true in order to proceed"
 }
