@@ -29,7 +29,7 @@ if ($null -ne $existingAdfs -and $null -ne $existingAdfs.value) {
 
 if ($foundAdf) {
     Write-Host "Deleting adf $AdfName"
-    az rest --method DELETE --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories/$AdfName?api-version=2018-06-01"
+    az rest --method DELETE --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories/$($AdfName)?api-version=2018-06-01"
 
     Write-Host "Ensure adf is removed"
     $adfIsDeleted = $false
