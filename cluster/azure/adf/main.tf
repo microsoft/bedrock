@@ -28,6 +28,17 @@ resource "null_resource" "stop_adf_triggers_command" {
   }
 }
 
+resource "null_resource" "remove_existing_adf" {
+  provisioner "local-exec" {
+    command = "pwsh ${path.module}/remove-adf.ps1 -AdfName ${var.datafactoryName} -ResourceGroupName ${var.resource_group_name}"
+  }
+
+  triggers = {
+    datafactoryName     = "${var.datafactoryName}"
+    resource_group_name = "${var.resource_group_name}"
+  }
+}
+
 resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
   name                = "ADF_ARM"
   resource_group_name = "${var.resource_group_name}"
