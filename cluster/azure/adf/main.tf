@@ -21,13 +21,17 @@ resource "null_resource" "stop_adf_triggers_command" {
   provisioner "local-exec" {
     command = "pwsh ${path.module}/stop-adf-triggers.ps1 -AdfName ${var.datafactoryName} -ResourceGroupName ${var.resource_group_name}"
   }
+
+  triggers = {
+    datafactoryName     = "${var.datafactoryName}"
+    resource_group_name = "${var.resource_group_name}"
+  }
 }
 
 resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
   name                = "ADF_ARM"
   resource_group_name = "${var.resource_group_name}"
-
-  template_body = "${path.module}/Onees-AzureDataFactory.Template.json"
+  template_body       = "${path.module}/Onees-AzureDataFactory.Template.json"
 
   parameters = {
     "cosmosDbAccount"    = "${var.cosmos_db_account}"
@@ -50,4 +54,9 @@ resource "null_resource" "start_adf_triggers_command" {
   }
 
   depends_on = ["azurerm_template_deployment.adf_cosmos_to_kusto"]
+
+  triggers = {
+    datafactoryName     = "${var.datafactoryName}"
+    resource_group_name = "${var.resource_group_name}"
+  }
 }
