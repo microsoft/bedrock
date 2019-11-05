@@ -36,6 +36,7 @@ resource "null_resource" "remove_existing_adf" {
   triggers = {
     datafactoryName     = "${var.datafactoryName}"
     resource_group_name = "${var.resource_group_name}"
+    forceRecreate       = "true"
   }
 
   depends_on = ["null_resource.stop_adf_triggers_command"]
