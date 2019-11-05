@@ -37,6 +37,8 @@ resource "null_resource" "remove_existing_adf" {
     datafactoryName     = "${var.datafactoryName}"
     resource_group_name = "${var.resource_group_name}"
   }
+
+  depends_on = ["null_resource.stop_adf_triggers_command"]
 }
 
 resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
@@ -56,7 +58,7 @@ resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
 
   deployment_mode = "Incremental"
 
-  depends_on = ["null_resource.stop_adf_triggers_command"]
+  depends_on = ["null_resource.remove_existing_adf"]
 }
 
 resource "null_resource" "start_adf_triggers_command" {
