@@ -7,7 +7,10 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
 $foundAdf = $false
-$existingAdfs = az rest --method GET --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories?api-version=2018-06-01" | ConvertFrom-Json
+$existingAdfs = az rest --method GET --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories?api-version=2018-06-01"
+
+Write-Host $existingAdfs
+
 if ($null -ne $existingAdfs -and $null -ne $existingAdfs.value) {
     if ($existingAdfs.value -is [array]) {
         $existingAdfs.value | ForEach-Object {
