@@ -18,6 +18,10 @@ if ($null -ne $existingAdfs -and $null -ne $existingAdfs.value) {
             }
         }
     }
+    elseif ($existingAdfs.value.name -eq $AdfName) {
+        $foundAdf = $true
+        Write-Host "found adf $($AdfName): $foundAdf"
+    }
 }
 
 if ($foundAdf) {
