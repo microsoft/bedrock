@@ -31,7 +31,7 @@ resource "null_resource" "stop_adf_triggers_command" {
 resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
   name                = "ADF_ARM"
   resource_group_name = "${var.resource_group_name}"
-  template_body       = "${path.module}/Onees-AzureDataFactory.Template.json"
+  template_body       = "${file("{path.module}/Onees-AzureDataFactory.Template.json")}"
 
   parameters = {
     "cosmosDbAccount"    = "${var.cosmos_db_account}"
