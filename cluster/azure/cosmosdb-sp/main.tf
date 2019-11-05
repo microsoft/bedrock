@@ -1,5 +1,5 @@
 resource "null_resource" "deploy_stored_procedures" {
-  count = "${var.cosmos_db_sp_names != "" && var.cosmos_db_collection != "" && var.cosmosdb_created != "" ? 1 : 0}"
+  count = "${var.cosmos_db_sp_names != "" && var.cosmos_db_collection != "" ? 1 : 0}"
 
   provisioner "local-exec" {
     command = "pwsh ${path.module}/ensure_cosmosdb_sp.ps1 -AccountName ${var.cosmos_db_account} -SubscriptionId ${var.cosmosdb_subscription_id} -DbName ${var.cosmos_db_name} -CollectionName \"${var.cosmos_db_collection}\" -SpNames \"${var.cosmos_db_sp_names}\" -VaultName ${var.vault_name}"
