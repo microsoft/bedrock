@@ -8,7 +8,7 @@ Set-StrictMode -Version Latest
 
 $foundAdf = $false
 $existingAdfs = az rest --method GET --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories?api-version=2018-06-01" | ConvertFrom-Json
-if ($null -ne $existingAdfs -and $null -ne $existingAdfs["value"]) {
+if ($null -ne $existingAdfs -and $null -ne $existingAdfs.value) {
     if ($existingAdfs.value -is [array]) {
         $existingAdfs.value | ForEach-Object {
             $adf = $_
@@ -23,7 +23,7 @@ if ($null -ne $existingAdfs -and $null -ne $existingAdfs["value"]) {
 if ($foundAdf) {
     $triggers = az rest --method GET --uri "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/$ResourceGroupName/providers/Microsoft.DataFactory/factories/$AdfName/triggers?api-version=2018-06-01" | ConvertFrom-Json
 
-    if ($null -ne $triggers -and $null -ne $triggers["value"]) {
+    if ($null -ne $triggers -and $null -ne $triggers.value) {
         if ($triggers.value -is [array]) {
             $triggers.value | ForEach-Object {
                 $triggerName = $_.name
