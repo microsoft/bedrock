@@ -14,7 +14,7 @@ if ($null -ne $existingAdfs -and $null -ne $existingAdfs.value) {
             $adf = $_
             if ($adf.name -eq $AdfName) {
                 $foundAdf = $true
-                Write-Host "Found adf: $($adfCreated): $foundAdf"
+                Write-Host "Found adf: $($AdfName): $foundAdf"
             }
         }
     }
