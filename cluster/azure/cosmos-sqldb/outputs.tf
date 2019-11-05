@@ -1,3 +1,3 @@
 output "cosmosdb_created" {
-  value = "true"
+  value = "${join("",null_resource.cosmosdb_account.*.id)}"
 }
