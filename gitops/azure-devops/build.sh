@@ -191,7 +191,7 @@ function git_connect() {
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
 
-    echo "GIT CLONE: https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+    echo "GIT CLONE: https://automated:<ACCESS_TOKEN_SECRET>@$repo_url"
     git clone "https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
 
     # Extract repo name from url
@@ -249,7 +249,7 @@ function git_push() {
     repo_url="${repo_url#http://}"
     repo_url="${repo_url#https://}"
 
-    echo "GIT PUSH: https://$ACCESS_TOKEN_SECRET@$repo_url"
+    echo "GIT PUSH: https://<ACCESS_TOKEN_SECRET>@$repo_url"
     git push "https://$ACCESS_TOKEN_SECRET@$repo_url"
     retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     echo "GIT STATUS"
