@@ -137,6 +137,52 @@ function fab_generate() {
     fi
 }
 
+# Obtain version for SPK
+# If the version number is not provided, then download the latest
+function get_spk_version() {
+    # shellcheck disable=SC2153
+    if [ -z "$VERSION" ]
+    then
+        # By default, the script will use the most recent non-prerelease, non-draft release SPK
+        VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+    else
+        echo "SPK Version: $VERSION"
+        VERSION_TO_DOWNLOAD=$VERSION
+    fi
+}
+
+# Obtain OS to download the appropriate version of SPK
+function get_os_spk() {
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        eval "$1='linux'"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        eval "$1='macos'"
+    elif [[ "$OSTYPE" == "msys" ]]; then
+        eval "$1='win.exe'"
+    else
+        eval "$1='linux'"
+    fi
+}
+
+# Download SPK
+function download_spk() {
+    echo "DOWNLOADING SPK"
+    echo "Latest SPK Version: $VERSION_TO_DOWNLOAD"
+    os=''
+    get_os_spk os
+    spk_wget=$(wget -SO- "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
+    if [[ $spk_wget == *"302 Found"* ]]; then
+    echo "SPK $VERSION_TO_DOWNLOAD downloaded successfully."
+    else
+        echo "There was an error when downloading SPK. Please check version number and try again."
+    fi
+    wget "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-$os"
+    mv spk-$os spk
+    chmod +x ./spk 
+
+    export PATH=$PATH:$HOME/spk
+}
+
 # Authenticate with Git
 function git_connect() {
     cd "$HOME"
