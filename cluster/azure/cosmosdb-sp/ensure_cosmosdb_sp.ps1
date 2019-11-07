@@ -297,8 +297,8 @@ function Retry {
             $retryCount++
 
             if ($LogError) {
-                LogInfo -Message $_.Exception.InnerException.Message
-                LogInfo -Message "failed after $retryCount attempt, wait $RetryDelay seconds and retry"
+                Write-Warning $_.Exception.InnerException.Message
+                Write-Warning "failed after $retryCount attempt, wait $RetryDelay seconds and retry"
             }
 
             Start-Sleep -Seconds $RetryDelay
