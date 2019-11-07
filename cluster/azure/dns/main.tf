@@ -2,6 +2,10 @@ module "azure-provider" {
   source = "../provider"
 }
 
+provider "azurerm" {
+  subscription_id = "${var.dns_subscription_id}"
+}
+
 resource "null_resource" "dnszone" {
   count = "${var.name != "" && var.resource_group_name != "" && var.service_principal_object_id != "" ? 1 : 0}"
 
