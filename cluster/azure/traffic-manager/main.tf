@@ -22,5 +22,6 @@ resource "null_resource" "traffic_manager" {
     service_suffix       = "${var.service_suffix}"
     dns_zone_name        = "${var.dns_zone_name}"
     probe_path           = "${var.probe_path}"
+    dnszone_created      = "${var.dnszone_created}"
   }
 }

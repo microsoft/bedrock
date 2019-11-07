@@ -41,6 +41,5 @@ variable "recreate_collections" {
 
 variable "cosmosdb_created" {
   type        = "string"
-  default     = "false"
   description = "output from cosmosdb module, must be true in order to proceed"
 }
