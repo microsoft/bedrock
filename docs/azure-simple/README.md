@@ -4,80 +4,76 @@ This document walks through a Bedrock deployment.  It does not include everythin
 
 This walkthrough consists of the following steps:
 
-- [A Walkthrough Deploying a Bedrock Environment](#a-walkthrough-deploying-a-bedrock-environment)
-  - [Prerequisites](#prerequisites)
-    - [Install the required tooling](#install-the-required-tooling)
-    - [Install the Azure CLI](#install-the-azure-cli)
-    - [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
-      - [Create an RSA Key Pair for a Deploy Key for the Flux Repository](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository)
-      - [Add Repository Key](#add-repository-key)
-  - [Create an Azure Service Principal](#create-an-azure-service-principal)
-    - [Create an RSA Key for Logging Into AKS Nodes](#create-an-rsa-key-for-logging-into-aks-nodes)
+- [Prerequisites](#prerequisites)
+  - [Install the required tooling](#install-the-required-tooling)
+  - [Install the Azure CLI](#install-the-azure-cli)
+- [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
+  - [Generate an RSA key pair to use as the manifest repository deploy key](#generate-an-rsa-key-pair-to-use-as-the-manifest-repository-deploy-key)
+  - [Grant deploy key access to the manifest repository](#grant-deploy-key-access-to-the-manifest-repository)
+- [Create an RSA Key Pair to use as node key](#create-an-rsa-key-pair--to-use-as-node-key)
+- [Create an Azure Service Principal](#create-an-azure-service-principal)
   - [Configure Terraform For Azure Access](#configure-terraform-for-azure-access)
-  - [Clone the Bedrock Repository](#clone-the-bedrock-repository)
+- [Clone the Bedrock Repository](#clone-the-bedrock-repository)
   - [Set Up Terraform Deployment Variables](#set-up-terraform-deployment-variables)
   - [Deploy the Template](#deploy-the-template)
     - [Terraform Init](#terraform-init)
     - [Terraform Plan](#terraform-plan)
     - [Terraform Apply](#terraform-apply)
     - [Terraform State](#terraform-state)
-  - [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
+- [Interact with the Deployed Cluster](#interact-with-the-deployed-cluster)
   - [Deploy an update using Kubernetes manifest](#deploy-an-update-using-kubernetes-manifest)
 
-## Prerequisites
+# Prerequisites
 
 Before starting the deployment, there are several required steps:
 
 - Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.12.6](https://releases.hashicorp.com/terraform/0.12.6/).
 - Enroll as an Azure subscriber.  The free trial subscription does not support enough cores to run this tutorial.
 - Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
-- Set up [Flux manifest repository](#set-up-flux-manifest-repository).
-- Create an [Azure Service Principal](https://github.com/microsoft/bedrock/tree/master/cluster/azure/service-principal).
-- Create an [RSA key for logging into AKS nodes](#create-an-rsa-key-for-logging-into-aks-nodes). 
 
 The following procedures complete the prerequisites and walk through the process of configuring Terraform and Bedrock scripts, deploying the cluster, and checking the deployed cluster's health. Then we add a new manifest file to demonstrate Flux update.
 
-### Install the required tooling
+## Install the required tooling
 
-This document assumes one is running a current version of Ubuntu.  Windows users can install the [Ubuntu Terminal](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) from the Microsoft Store.  The Ubuntu Terminal enables Linux command-line utilities, including bash, ssh, and git that will be useful for the following deployment.  
+This document assumes one is running a current version of Ubuntu.  Windows users can install the [Ubuntu Terminal](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) from the Microsoft Store.  The Ubuntu Terminal enables Linux command-line utilities, including bash, ssh, and git that will be useful for the following deployment.  *Note: You will need the Windows Subsystem for Linux installed to use the Ubuntu Terminal on Windows*.
 
-You can also turn on Windows Subsystem for Linux in settings:
+Ensure that the [required tools](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), are installed in your environment. Alternatively, there are [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`.  In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`.  The scripts install the tools into `/usr/local/bin`.  
 
-![Set up empty Flux repository](./images/Win_Subsys_Linux.png)
-
-Per Step 1. in [Prerequisites](#prerequisites) and [the Bedrock documentation](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), one must install `helm`, `terraform` and `kubectl`.  There are links for each in the documentation.
-
-There is also a set of [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`.  In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`.  The scripts, which were used for this document, install the tools into `/usr/local/bin`.  
-
-### Install the Azure CLI
+## Install the Azure CLI
 
 For information specific to your operating system, see the [Azure CLI install guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).  You can also use [this script](https://github.com/jmspring/bedrock-dev-env/blob/master/scripts/setup_azure_cli.sh) if running on a Unix based machine.
 
-### Set Up Flux Manifest Repository
+# Set Up Flux Manifest Repository
 
-Create an empty git repository.  We will deploy the Bedrock environment using the empty repo and then add a Kubernetes manifest that defines a simple Web application.  The change to the repo will automatically update the deployment.
+ We will deploy the Bedrock environment using the empty repo and then add a Kubernetes manifest that defines a simple Web application.  The change to the repo will automatically update the deployment.
 
-![Set up empty Flux repository](./images/empty_Repo.png)
+To prepare the Flux manifest repository, we must:
 
-To use the [Flux repository](https://github.com/andrebriggs/sample_app_manifests/tree/master/prod), we must:
+1. [Create the Flux Manifest Repository](#create-the-flux-manifest-repository)
+2. [Generate an RSA Key Pair to use as the Manifest Repository Deploy Key](#generate-an-rsa-key-pair-to-use-as-the-manifest-repository-deploy-key)
+3. [Grant Deploy Key access to the Manifest Repository](#grant-deploy-key-access-to-the-manifest-repository)
 
-1. In order to intialize this repo, do an empty commit, for example: `git commit --allow-empty -m "Hello"`.
-2. Create an RSA keypair for the Flux repository
-3. Add the keypair to the repository
+## Create the Flux Manifest Repository
+[Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `sample_app_manifests`.  
 
-#### Create an RSA Key Pair for a Deploy Key for the Flux Repository
+Flux requires that the git respository have at least one commit.  Initialize the repo with an empty commit. 
+```bash
+git commit --allow-empty -m "Initializing the Flux Manifest Repository"
+```
 
-Gererate the [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) using `ssh-keygen`.  The public portion will be installed as a deploy key.
+## Generate an RSA Key Pair to use as the Manifest Repository Deploy Key
 
-Run: `ssh-keygen -b 4096 -t rsa -f ~/.ssh/azure-simple-deploy-key'.
+Generate the [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) using `ssh-keygen`.  The public portion of the key pair will be uploaded to GitHub as a deploy key.
+
+Run: `ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key`.
 
 ```bash
-$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/azure-simple-deploy-key
+$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in /Users/jmspring/.ssh/azure-simple-deploy-key.
-Your public key has been saved in /Users/jmspring/.ssh/azure-simple-deploy-key.pub.
+Your identification has been saved in /Users/jmspring/.ssh/gitops-ssh-key.
+Your public key has been saved in /Users/jmspring/.ssh/gitops-ssh-key.pub.
 The key fingerprint is:
 SHA256:jago9v63j05u9WoiNExnPM2KAWBk1eTHT2AmhIWPIXM jmspring@kudzu.local
 The key's randomart image is:
@@ -97,16 +93,14 @@ kudzu:azure-simple jmspring$
 
 This will create public and private keys for the Flux repository. We will assign the public key under the following heading: [Adding the Repository Key](#adding-the-repository-key).  The private key is stored on the machine originating the deployment.
 
-#### Add Repository Key
+## Grant Deploy Key Access to the Manifest Repository
 
-Note: *If you do not own the repository, you will have to fork it*. Whether you own the repo or fork it, add the repository key as follows.
+The public key of the [RSA key pair](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository) previously created needs to be added as a deploy key.  Note: *If you do not own the repository, you will have to fork it before proceeding*.
 
-The public key of the [RSA key pair](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository) previously created needs to be added as a deploy key.  
-
-First, display the contents of the public key: `more ~/.ssh/azure-simple-deploy-key.pub`.
+First, display the contents of the public key: `more ~/.ssh/gitops-ssh-key.pub`.
 
 ```bash
-$ more ~/.ssh/azure-simple-deploy-key.pub 
+$ more ~/.ssh/gitops-ssh-key.pub 
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTNdGpnmztWRa8RofHl8dIGyNkEayNR6d7p2JtJ7+zMj0HRUJRc+DWvBML4DvT29AumVEuz1bsVyVS2f611NBmXHHKkbzAZZzv9gt2uB5sjnmm7LAORJyoBEodR/T07hWr8MDzYrGo5fdTDVagpoHcEke6JT04AL21vysBgqfLrkrtcEyE+uci4hRVj+FGL9twh3Mb6+0uak/UsTFgfDi/oTXdXOFIitQgaXsw8e3rkfbqGLbhb6o1muGd1o40Eip6P4xejEOuIye0cg7rfX461NmOP7HIEsUa+BwMExiXXsbxj6Z0TXG0qZaQXWjvZF+MfHx/J0Alb9kdO3pYx3rJbzmdNFwbWM4I/zN+ng4TFiHBWRxRFmqJmKZX6ggJvX/d3z0zvJnvSmOQz9TLOT4lqZ/M1sARtABPGwFLAvPHAkXYnex0v93HUrEi7g9EnM+4dsGU8/6gx0XZUdH17WZ1dbEP7VQwDPnWCaZ/aaG7BsoJj3VnDlFP0QytgVweWr0J1ToTRQQZDfWdeSBvoqq/t33yYhjNA82fs+bR/1MukN0dCWMi7MqIs2t3TKYW635E7VHp++G1DR6w6LoTu1alpAlB7d9qiq7o1c4N+gakXSUkkHL8OQbQBeLeTG1XtYa//A5gnAxLSzxAgBpVW15QywFgJlPk0HEVkOlVd4GzUw== sl;jlkjgl@kudzu.local
 ```
 
@@ -118,11 +112,18 @@ Click "Add key", and you should see:
 
 ![key result](./images/deployKeyResult.png)
 
+## Create Azure Resource Group
+Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group 
+
+```bash
+az group create -l westus2 -n testazuresimplerg
+```
+
 ## Create an Azure Service Principal
 
 We use a single [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for configuring Terraform and for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster being deployed.  In Bedrock, see the [Service Principal documention](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).  
 
-To create a Service Principal, [login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) using the `az login` command.  
+[Login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) using the `az login` command.  
 
 Get the Id of the subscription by running `az account show`. 
 
@@ -159,19 +160,17 @@ Take note of the following values.  They will be needed for configuring Terrafor
 - Client Id (appId): `7b6ab9ae-dead-abcd-8b52-0a8ecb5beef7`
 - Client Secret (password): `35591cab-13c9-4b42-8a83-59c8867bbdc2`
 
-### Create an RSA Key for Logging Into AKS Nodes
+## Create an RSA Key Pair to use as Node Key
 
-Use `ssh-keygen` to generate an RSA keypair.  The Terraform scripts use this key to setup log-in credentials on the nodes in the AKS cluster. We will use this key when setting up the Terraform deployment `variabled`.
-
-To generate the key, run `ssh-keygen -b 4096 -t rsa -f ~/.ssh/azure-simple-node-key`:
+The Terraform scripts use this node key to setup log-in credentials on the nodes in the AKS cluster. We will use this key when setting up the Terraform deployment variables.  To generate the node key, run `ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key`:
 
 ```bash
-$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/azure-simple-node-key
+$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in /home/jims/.ssh/azure-simple-node-key.
-Your public key has been saved in /home/jims/.ssh/azure-simple-node-key.pub.
+Your identification has been saved in /home/jims/.ssh/node-ssh-key.
+Your public key has been saved in /home/jims/.ssh/node-ssh-key.pub.
 The key fingerprint is:
 SHA256:+8pQ4MuQcf0oKT6LQkyoN6uswApLZQm1xXc+pp4ewvs jims@fubu
 The key's randomart image is:
@@ -257,20 +256,20 @@ total 32
 -rw-r--r--  1 jmspring  staff  2465 Jun 12 09:11 variables.tf
 ```
 
-The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields.  To get the ssh_public_key, run: `more ~/.ssh/azure-simple-node-key.pub`.  The path to the private key is `"/home/<user>/.ssh/azure-simple-deploy-key"`.
+The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields.  To get the ssh_public_key, run: `more ~/.ssh/node-ssh-key.pub`.  The path to the private key is `"/home/<user>/.ssh/gitops-ssh-key"`.
 
 ```bash
 $ cat terraform.tfvars
-resource_group_name="resource-group-name"
+resource_group_name="<resource-group-name>"
 resource_group_location="westus2"
-cluster_name="cluster-name"
+cluster_name="<cluster-name>"
 agent_vm_count = "3"
-dns_prefix="dns-prefix"
-service_principal_id = "client-id"
-service_principal_secret = "client-secret"
-ssh_public_key = "public-key"
-gitops_ssh_url = "git@github.com:timfpark/fabrikate-cloud-native-manifests.git"
-gitops_ssh_key = "<path to private gitops repo key>"
+dns_prefix="<dns-prefix>"
+service_principal_id = "<client-id>"
+service_principal_secret = "<client-secret>"
+ssh_public_key = "ssh-rsa ..." # from node-ssh-key.pub
+gitops_ssh_url = "git@github.com:<github-user>/<repo>.git" # ssh url to manifest repo
+gitops_ssh_key = "/home/<user>/.ssh/gitops-ssh-key" # path to private gitops repo key
 vnet_name = "<vnet name>"
 
 #--------------------------------------------------------------
@@ -318,7 +317,7 @@ service_principal_id = "7b6ab9ae-dead-abcd-8b52-0a8ecb5beef7"
 service_principal_secret = "35591cab-13c9-4b42-8a83-59c8867bbdc2"
 ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo5cFB/HiJB3P5s5kL3O24761oh8dVArCs9oMqdR09+hC5lD15H6neii4azByiMB1AnWQvVbk+i0uwBTl5riPgssj6vWY5sUS0HQsEAIRkzphik0ndS0+U8QI714mb3O0+qA4UYQrDQ3rq/Ak+mkfK0NQYL08Vo0vuE4PnmyDbcR8Pmo6xncj/nlWG8UzwjazpPCsP20p/egLldcvU59ikvY9+ZIsBdAGGZS29r39eoXzA4MKZZqXU/znttqa0Eed8a3pFWuE2UrntLPLrgg5hvliOmEfkUw0LQ3wid1+4H/ziCgPY6bhYJlMlf7WSCnBpgTq3tlgaaEHoE8gTjadKBk6bcrTaDZ5YANTEFAuuIooJgT+qlLrVql+QT2Qtln9CdMv98rP7yBiVVtQGcOJyQyG5D7z3lysKqCMjkMXOCH2UMJBrurBqxr6UDV3btQmlPOGI8PkgjP620dq35ZmDqBDfTLpsAW4s8o9zlT2jvCF7C1qhg81GuZ37Vop/TZDNShYIQF7ekc8IlhqBpbdhxWV6ap16paqNxsF+X4dPLW6AFVogkgNLJXiW+hcfG/lstKAPzXAVTy2vKh+29OsErIiL3SDqrXrNSmGmXwtFYGYg3XZLiEjleEzK54vYAbdEPElbNvOzvRCNdGkorw0611tpCntbpC79Q/+Ij6eyfQ== user"
 gitops_ssh_url = "git@github.com:<user>/bedrock-deploy-demo.git"
-gitops_ssh_key = "/home/<user>/.ssh/azure-simple-deploy-key"
+gitops_ssh_key = "/home/<user>/.ssh/gitops-ssh-key"
 vnet_name = "testazuresimplevnet"
 
 #--------------------------------------------------------------
@@ -665,7 +664,7 @@ module.aks-gitops.module.flux.null_resource.deploy_flux: Creating...
   triggers.enable_flux:   "" => "true"
   triggers.flux_recreate: "" => ""
 module.aks-gitops.module.flux.null_resource.deploy_flux: Provisioning with 'local-exec'...
-module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): Executing: ["/bin/sh" "-c" "echo 'Need to use this var so terraform waits for kubeconfig ' 6839616869196222748;KUBECONFIG=./output/bedrock_kube_config /home/jims/code/src/github.com/microsoft/bedrock/cluster/environments/azure-simple/.terraform/modules/7836162b7abd77fba9c644439dc54fd9/deploy_flux.sh -b 'master' -f 'https://github.com/weaveworks/flux.git' -g 'git@github.com:jmspring//manifests.git' -k '/home/jims/.ssh/azure-simple-deploy-key' -d 'testazuresimplecluster-flux' -c '5m' -e 'prod' -s 'true' -r 'docker.io/weaveworks/flux' -t '1.12.2'"]
+module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): Executing: ["/bin/sh" "-c" "echo 'Need to use this var so terraform waits for kubeconfig ' 6839616869196222748;KUBECONFIG=./output/bedrock_kube_config /home/jims/code/src/github.com/microsoft/bedrock/cluster/environments/azure-simple/.terraform/modules/7836162b7abd77fba9c644439dc54fd9/deploy_flux.sh -b 'master' -f 'https://github.com/weaveworks/flux.git' -g 'git@github.com:jmspring//manifests.git' -k '/home/jims/.ssh/gitops-ssh-key' -d 'testazuresimplecluster-flux' -c '5m' -e 'prod' -s 'true' -r 'docker.io/weaveworks/flux' -t '1.12.2'"]
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): Need to use this var so terraform waits for kubeconfig  6839616869196222748
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): flux repo root directory: testazuresimplecluster-flux
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): creating testazuresimplecluster-flux directory
@@ -692,7 +691,7 @@ module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): wrote ./ma
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): wrote ./manifests/flux/templates/memcached.yaml
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): creating kubernetes namespace flux if needed
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): namespace/flux created
-module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): creating kubernetes secret flux-ssh from key file path /home/jims/.ssh/azure-simple-deploy-key
+module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): creating kubernetes secret flux-ssh from key file path /home/jims/.ssh/gitops-ssh-key
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): secret/flux-ssh created
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): Applying flux deployment
 module.aks-gitops.module.flux.null_resource.deploy_flux (local-exec): deployment.apps/flux created
