@@ -1,3 +1,11 @@
+module "azure-provider" {
+  source = "../provider"
+}
+
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "azurerm_container_registry" "acr" {
   name                     = "${var.name}"
   resource_group_name      = "${var.resource_group_name}"
