@@ -2,7 +2,7 @@ module "azure-provider" {
   source = "../provider"
 }
 
-resource "null_resource" "create_k8s_secret" {
+resource "null_resource" "create_k8s_configmap" {
   count = "${var.k8s_configmap_name != "" && var.key_vault_name != "" && var.key_vault_secret_names != "" && var.k8s_configmap_keys != "" ? 1 : 0}"
 
   provisioner "local-exec" {
