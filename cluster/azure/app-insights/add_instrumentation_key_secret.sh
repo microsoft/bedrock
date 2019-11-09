@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-while getopts :i:a:v:n:s:c:d:r:m: option
+while getopts :i:a:v:n:s:c:d: option
 do
     case "${option}" in
     g) RESOURCE_GROUP=${OPTARG};;
