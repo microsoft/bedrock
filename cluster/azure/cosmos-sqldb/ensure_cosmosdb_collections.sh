@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts :a:s:r:d:c:b: option
+while getopts :a:s:r:d:c: option
 do
  case "${option}" in
  a) ACCOUNT_NAME=${OPTARG};;
@@ -7,7 +7,6 @@ do
  r) RESOURCE_GROUP_NAME=${OPTARG};;
  d) DB_NAME=${OPTARG};;
  c) COLLECTIONS=${OPTARG};;
- b) RECREATE=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -25,9 +24,6 @@ elif [ -z $DB_NAME ]; then
 elif [ -z $COLLECTIONS ]; then
     echo "COLLECTIONS is empty"
     exit 1;
-elif [ -z $RECREATE ]; then
-    echo "RECREATE is empty, set to false"
-    RECREATE="false"
 else
     echo "Input is valid"
 fi
@@ -62,18 +58,6 @@ do
             az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --throughput $THROUGH_PUT
         else
             echo "creating collection $COLLECTION_NAME with partition $PARTITION_KEY"
-            az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
-        fi
-        echo "created collection $COLLECTION_NAME"
-    elif [ "$RECREATE" == "true" ]; then
-        echo "removing collection $COLLECTION_NAME"
-        az cosmosdb collection delete --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --key $AUTH_KEY
-
-        if [ "$PARTITION_KEY" == "/_partitionKey" ]; then
-            echo "recreating collection $COLLECTION_NAME without partition"
-            az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --throughput $THROUGH_PUT
-        else
-            echo "recreating collection $COLLECTION_NAME with partition $PARTITION_KEY"
             az cosmosdb collection create --name $ACCOUNT_NAME --db-name $DB_NAME --collection-name $COLLECTION_NAME --resource-group $RESOURCE_GROUP_NAME --partition-key-path $PARTITION_KEY --throughput $THROUGH_PUT
         fi
         echo "created collection $COLLECTION_NAME"

@@ -33,11 +33,6 @@ variable "cosmos_db_account" {
   description = "name of cosmosdb account"
 }
 
-variable "recreate_cosmosdb_account" {
-  type    = "string"
-  default = "false"
-}
-
 variable "consistency_level" {
   type        = "string"
   description = "cosmosdb consistency level: BoundedStaleness, Eventual, Session, Strong, ConsistentPrefix"
@@ -78,10 +73,4 @@ variable "vault_name" {
 variable "master_vault_name" {
   type        = "string"
   description = "master key vault to store auth key of cosmosdb connection"
-}
-
-variable "recreate_collections" {
-  type        = "string"
-  description = "when turned on (true), existing collections will be removed and created again"
-  default     = "false"
 }
