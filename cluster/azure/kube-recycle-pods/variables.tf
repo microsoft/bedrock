@@ -1,6 +1,6 @@
 variable "k8s_namespace" {
-  type = "string"
-  default = "default"
+  type        = "string"
+  default     = "default"
   description = "k8s namespace"
 }
 
@@ -19,4 +19,9 @@ variable "kubeconfigadmin_done" {
 variable "output_directory" {
   type    = "string"
   default = "./output"
+}
+
+variable "all_configmaps_ready" {
+  type        = "string"
+  description = "concanation of outputs from all configmap changes, used as dependency"
 }
