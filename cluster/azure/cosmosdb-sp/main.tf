@@ -12,7 +12,6 @@ resource "null_resource" "deploy_stored_procedures" {
     cosmos_db_collection     = "${var.cosmos_db_collection}"
     cosmos_db_sp_names       = "${var.cosmos_db_sp_names}"
     cosmos_db_sp_versions    = "${var.cosmos_db_sp_versions}"
-    recreate_collections     = "${var.recreate_collections}"
     cosmosdb_created         = "${var.cosmosdb_created}"
   }
 }
