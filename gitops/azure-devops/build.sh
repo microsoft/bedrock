@@ -180,7 +180,7 @@ function download_spk() {
     mv spk-$os spk
     chmod +x ./spk 
     mv spk $HOME/spk
-    export PATH=$PATH:$HOME/spk
+    export PATH=$PATH:$HOME/
 }
 
 # Authenticate with Git
