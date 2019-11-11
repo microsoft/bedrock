@@ -179,7 +179,7 @@ function download_spk() {
     wget "https://github.com/mtarng/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-$os"
     mv spk-$os spk
     chmod +x ./spk 
-
+    mv spk $HOME/spk
     export PATH=$PATH:$HOME/spk
 }
 
