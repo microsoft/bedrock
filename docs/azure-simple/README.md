@@ -261,7 +261,6 @@ The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the
 ```bash
 $ cat terraform.tfvars
 resource_group_name="<resource-group-name>"
-resource_group_location="westus2"
 cluster_name="<cluster-name>"
 agent_vm_count = "3"
 dns_prefix="<dns-prefix>"
@@ -282,7 +281,7 @@ vnet_name = "<vnet name>"
 # network_plugin = "azure"
 ```
 
-From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough the defaults for `agent_vm_count=3` and `resource_group_location=westus2` are usable. 
+From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough use `agent_vm_count=3` as default 
 
 To get the gitopp_ssh_url, go back to the empty repository that was created in [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  This example uses SSH: `git@github.com:<user>/bedrock-deploy-demo.git`.
 
@@ -309,7 +308,6 @@ When complete `testazuresimple.tfvars` should resemble:
 ```bash
 $ cat testazuresimple.tfvars
 resource_group_name="testazuresimplerg"
-resource_group_location="westus2"
 cluster_name="testazuresimplecluster"
 agent_vm_count = "3"
 dns_prefix="testazuresimple"
