@@ -177,10 +177,11 @@ function download_spk() {
         echo "There was an error when downloading SPK. Please check version number and try again."
     fi
     wget "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-$os"
-    mv spk-$os spk
-    chmod +x ./spk 
+    mkdir spk
+    mv spk-$os spk/spk
+    chmod +x spk/spk 
 
-    export PATH=$PATH:$HOME
+    export PATH=$PATH:$HOME/spk
 }
 
 # Authenticate with Git
