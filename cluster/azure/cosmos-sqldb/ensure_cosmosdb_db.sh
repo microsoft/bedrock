@@ -31,7 +31,7 @@ else
     az account set -s $SUBSCRIPTION_ID
 fi
 
-$DB="$(az cosmosdb database list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$DB_NAME']" -o json | jq ".[].id")"
+DB="$(az cosmosdb database list --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME --query "[?id=='$DB_NAME']" -o json | jq ".[].id")"
 if [ -z $DB ]; then
     az cosmosdb database create --name $ACCOUNT_NAME --resource-group $RESOURCE_GROUP_NAME --db-name $DB_NAME
     echo "created db $DB_NAME"
