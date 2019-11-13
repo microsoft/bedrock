@@ -92,6 +92,7 @@ else
         CONTRIBUTORs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         CONTRIBUTORs_YAML+="\n    kind: User"
         CONTRIBUTORs_YAML+="\n    name: $contributor_id"
+        CONTRIBUTORs_YAML+="\n    namespace: default"
     done
 
     echo "contributor yaml file:"
@@ -131,6 +132,7 @@ else
         READERs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         READERs_YAML+="\n    kind: User"
         READERs_YAML+="\n    name: $reader_id"
+        READERs_YAML+="\n    namespace: default"
     done
 
     echo "reader yaml file:"
@@ -207,6 +209,7 @@ else
         CONTRIBUTORGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         CONTRIBUTORGROUPs_YAML+="\n    kind: Group"
         CONTRIBUTORGROUPs_YAML+="\n    name: $contributor_group_id"
+        CONTRIBUTORGROUPs_YAML+="\n    namespace: default"
     done
 
 
@@ -247,6 +250,7 @@ else
         READERGROUPs_YAML+="\n  - apiGroup: rbac.authorization.k8s.io"
         READERGROUPs_YAML+="\n    kind: Group"
         READERGROUPs_YAML+="\n    name: $reader_group_id"
+        READERGROUPs_YAML+="\n    namespace: default"
     done
 
     echo "reader groups yaml file:"
