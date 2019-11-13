@@ -43,6 +43,11 @@ variable "adx_database" {
   description = "Name of the database in the Kusto cluster"
 }
 
+variable "adx_table" {
+  type        = "string"
+  description = "Name of the table in the Kusto cluster"
+}
+
 variable "adx_clientId" {
   type        = "string"
   description = "AAD app which has access to Kusto cluster"

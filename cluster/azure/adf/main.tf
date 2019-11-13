@@ -52,6 +52,8 @@ resource "azurerm_template_deployment" "adf_cosmos_to_kusto" {
     "datafactoryName"    = "${var.datafactoryName}"
     "adx_Endpoint"       = "${var.adx_endpoint}"
     "adx_Database"       = "${var.adx_database}"
+    "adx_table"          = "${var.adx_table}"
+    "adx_table_staging"  = "${var.adx_table}_temp"
     "adx_ClientId"       = "${var.adx_clientId}"
     "adx_ClientSecret"   = "${data.azurerm_key_vault_secret.adxClientSecret.value}"
   }
