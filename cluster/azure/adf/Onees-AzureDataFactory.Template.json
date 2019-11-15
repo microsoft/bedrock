@@ -14,9 +14,6 @@
     "cosmosDbAccount": {
       "type": "string"
     },
-    "cosmosDbQuery": {
-      "type": "string"
-    },
     "adx_ClientId": {
       "type": "string",
       "metadata": {
