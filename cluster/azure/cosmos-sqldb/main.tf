@@ -13,23 +13,6 @@ resource "null_resource" "cosmosdb_account" {
   }
 }
 
-resource "null_resource" "cosmosdb_db" {
-  count = "${var.cosmos_db_account != "" && var.resource_group_name != "" && var.cosmos_db_name != "" ? 1 : 0}"
-
-  provisioner "local-exec" {
-    command = "${path.module}/ensure_cosmosdb_db.sh -a ${var.cosmos_db_account} -s \"${var.cosmosdb_subscription_id}\" -r ${var.resource_group_name} -d ${var.cosmos_db_name}"
-  }
-
-  triggers = {
-    cosmos_db_account        = "${var.cosmos_db_account}"
-    cosmosdb_subscription_id = "${var.cosmosdb_subscription_id}"
-    resource_group_name      = "${var.resource_group_name}"
-    cosmos_db_name           = "${var.cosmos_db_name}"
-  }
-
-  depends_on = ["null_resource.cosmosdb_account"]
-}
-
 resource "null_resource" "create_cosmosdb_sql_collections" {
   count = "${var.cosmos_db_settings != "" ? 1 : 0}"
 
@@ -43,7 +26,7 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
     cosmos_db_settings       = "${var.cosmos_db_settings}"
   }
 
-  depends_on = ["null_resource.cosmosdb_db"]
+  depends_on = ["null_resource.cosmosdb_account"]
 }
 
 resource "null_resource" "store_auth_key" {

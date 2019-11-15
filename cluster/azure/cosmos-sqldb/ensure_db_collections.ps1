@@ -20,7 +20,16 @@ if ($null -ne $SubscriptionId -and $SubscriptionId -ne "") {
 $dbSettingsArray | ForEach-Object {
     $dbSetting = $_
     $dbName = $dbSetting.name
-    Write-Host "provision cosmos db: $dbName"
+    Write-Host "ensure cosmos db: $dbName"
+
+    [array]$dbsFound = az cosmosdb database list --name $AccountName --resource-group $ResourceGroupName --query "[?id=='$dbName']" -o json | ConvertFrom-Json
+    if ($null -eq $dbsFound -or $dbsFound.Count -eq 0) {
+        Write-Host "creating cosmos db: $dbName"
+        az cosmosdb database create --name $AccountName --resource-group $ResourceGroupName --db-name $dbName
+    }
+    else {
+        Write-Host "cosmos db $dbName already created"
+    }
 
     $collections = $dbSetting.collections
     Write-Host "Total of $($collections.Count) collections found for db: $dbName"
