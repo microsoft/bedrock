@@ -36,6 +36,11 @@ resource "null_resource" "remove_existing_adf" {
   triggers = {
     datafactoryName     = "${var.datafactoryName}"
     resource_group_name = "${var.resource_group_name}"
+    cosmosDbAccount     = "${var.cosmos_db_account}"
+    adx_Endpoint        = "${var.adx_endpoint}"
+    adx_Database        = "${var.adx_database}"
+    adx_table           = "${var.adx_table}"
+    adx_ClientId"       = "${var.adx_clientId}"
   }
 
   depends_on = ["null_resource.stop_adf_triggers_command"]
