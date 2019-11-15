@@ -40,7 +40,7 @@ resource "null_resource" "remove_existing_adf" {
     adx_Endpoint        = "${var.adx_endpoint}"
     adx_Database        = "${var.adx_database}"
     adx_table           = "${var.adx_table}"
-    adx_ClientId"       = "${var.adx_clientId}"
+    adx_ClientId       = "${var.adx_clientId}"
   }
 
   depends_on = ["null_resource.stop_adf_triggers_command"]
