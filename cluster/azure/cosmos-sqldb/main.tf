@@ -34,14 +34,13 @@ resource "null_resource" "create_cosmosdb_sql_collections" {
   count = "${var.cosmos_db_collections != "" ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "${path.module}/ensure_cosmosdb_collections.sh -a ${var.cosmos_db_account} -s \"${var.cosmosdb_subscription_id}\" -r ${var.resource_group_name} -d ${var.cosmos_db_name} -c \"${var.cosmos_db_collections}\""
+    command = "pwsh ${path.module}/ensure_db_collections.ps1 -AccountName ${var.cosmos_db_account} -SubscriptionId \"${var.cosmosdb_subscription_id}\" -ResourceGroupName ${var.resource_group_name} -DbCollectionSettings \"${var.cosmos_db_settings}\""
   }
 
   triggers = {
     cosmos_db_account        = "${var.cosmos_db_account}"
     cosmosdb_subscription_id = "${var.cosmosdb_subscription_id}"
-    cosmos_db_name           = "${var.cosmos_db_name}"
-    cosmos_db_collections    = "${var.cosmos_db_collections}"
+    cosmos_db_settings       = "${var.cosmos_db_settings}"
   }
 
   depends_on = ["null_resource.cosmosdb_db"]

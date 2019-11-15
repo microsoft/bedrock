@@ -1,12 +1,11 @@
 #!/bin/bash
-while getopts :a:s:r:d:c: option
+while getopts :a:s:r:c: option
 do
  case "${option}" in
  a) ACCOUNT_NAME=${OPTARG};;
  s) SUBSCRIPTION_ID=${OPTARG};;
  r) RESOURCE_GROUP_NAME=${OPTARG};;
- d) DB_NAME=${OPTARG};;
- c) COLLECTIONS=${OPTARG};;
+ c) DB_COLLECTIONS=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -21,12 +20,14 @@ elif [ -z $RESOURCE_GROUP_NAME ]; then
 elif [ -z $DB_NAME ]; then
     echo "DB_NAME is empty"
     exit 1;
-elif [ -z $COLLECTIONS ]; then
-    echo "COLLECTIONS is empty"
+elif [ -z $DB_COLLECTIONS ]; then
+    echo "DB_COLLECTIONS is empty"
     exit 1;
 else
     echo "Input is valid"
 fi
+
+json=
 
 if [ -z "$SUBSCRIPTION_ID" ]; then
     echo "use current subscription for cosmosdb"

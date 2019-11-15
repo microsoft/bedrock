@@ -55,14 +55,9 @@ variable "cosmos_db_offer_type" {
   default = "Standard"
 }
 
-variable "cosmos_db_name" {
+variable "cosmos_db_settings" {
   type        = "string"
-  description = "CosmosDB name"
-}
-
-variable "cosmos_db_collections" {
-  type        = "string"
-  description = "collections are separated by ';', each entry takes the format: collection_name,partiton_key,throughput"
+  description = "map of dbname to collections in base64 format"
 }
 
 variable "vault_name" {
