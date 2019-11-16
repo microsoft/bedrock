@@ -1,7 +1,11 @@
 param(
+    [Parameter(Mandatory=$true)]
     [string]$EnvName,
+    [Parameter(Mandatory=$true)]
     [string]$ModuleFolder,
+    [Parameter(Mandatory=$true)]
     [string]$PodIdentityVersion,
+    [Parameter(Mandatory=$true)]
     [string]$PodIdentityNamespace
 )
 
@@ -23,4 +27,5 @@ if (-not (Test-Path $generatedYamlFolder -PathType Container)) {
     throw "Failed to generate yaml files using fabrikate component"
 }
 
+Write-Host "kubectl apply -f $generatedYamlFolder"
 kubectl apply -f $generatedYamlFolder
