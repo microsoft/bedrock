@@ -6,29 +6,17 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
-data "azurerm_resource_group" "cluster" {
-  name     = "${var.resource_group_name}"
-}
-
-resource "random_id" "workspace" {
-  keepers = {
-    group_name = "${data.azurerm_resource_group.cluster.name}"
-  }
-
-  byte_length = 8
-}
-
 resource "azurerm_log_analytics_workspace" "workspace" {
-  name                = "bedrock-k8s-workspace-${random_id.workspace.hex}"
-  location            = "${data.azurerm_resource_group.cluster.location}"
-  resource_group_name = "${data.azurerm_resource_group.cluster.name}"
+  name                = "${var.log_analytics_name}"
+  location            = "${var.log_analytics_resource_group_location}"
+  resource_group_name = "${var.log_analytics_resource_group_name}"
   sku                 = "PerGB2018"
 }
 
 resource "azurerm_log_analytics_solution" "solution" {
   solution_name         = "ContainerInsights"
-  location              = "${data.azurerm_resource_group.cluster.location}"
-  resource_group_name   = "${data.azurerm_resource_group.cluster.name}"
+  location              = "${var.log_analytics_resource_group_location}"
+  resource_group_name   = "${var.log_analytics_resource_group_name}"
   workspace_resource_id = "${azurerm_log_analytics_workspace.workspace.id}"
   workspace_name        = "${azurerm_log_analytics_workspace.workspace.name}"
 
@@ -40,8 +28,8 @@ resource "azurerm_log_analytics_solution" "solution" {
 
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
-  location            = "${data.azurerm_resource_group.cluster.location}"
-  resource_group_name = "${data.azurerm_resource_group.cluster.name}"
+  location            = "${var.aks_resource_group_location}"
+  resource_group_name = "${var.aks_resource_group_name}"
   dns_prefix          = "${var.dns_prefix}"
   kubernetes_version  = "${var.kubernetes_version}"
 

@@ -6,11 +6,23 @@ variable "subscription_id" {
   description = "azure subscription id where app insights is created"
 }
 
-variable "resource_group_name" {
+variable "log_analytics_resource_group_name" {
   type = "string"
 }
 
-variable "resource_group_location" {
+variable "log_analytics_resource_group_location" {
+  type = "string"
+}
+
+variable "log_analytics_name" {
+  type = "string"
+}
+
+variable "aks_resource_group_name" {
+  type = "string"
+}
+
+variable "aks_resource_group_location" {
   type = "string"
 }
 
@@ -188,11 +200,6 @@ variable "enable_azure_monitoring" {
 variable "enable_dev_spaces" {
   type    = "string"
   default = "false"
-}
-
-variable "space_name" {
-  type    = "string"
-  default = "bedrock-lab"
 }
 
 variable "dashboard_cluster_role" {
