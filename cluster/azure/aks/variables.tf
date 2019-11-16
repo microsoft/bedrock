@@ -160,3 +160,8 @@ variable "enable_dev_spaces" {
   type    = "string"
   default = "false"
 }
+
+variable "dev_space_name" {
+  type = "string"
+  default = "dev"
+}

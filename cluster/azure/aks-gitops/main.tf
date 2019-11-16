@@ -2,10 +2,6 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
-data "azurerm_resource_group" "aksgitops" {
-  name = "${var.resource_group_name}"
-}
-
 module "aks" {
   source = "../../azure/aks"
 
