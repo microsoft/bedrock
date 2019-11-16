@@ -238,22 +238,3 @@ variable "aks_reader_groups" {
   description = "comma separated aad group object id who are readers to aks"
   default = ""
 }
-
-############################################################
-# kv-reader                                                #
-############################################################
-
-variable "vault_name" {
-  type        = "string"
-  description = "Name of the keyvault to create"
-}
-
-variable "vault_reader_identity" {
-  description = "name of user assigned identity (MSI) that will be granted reader role to key vault. The identity name must be by unique within subscription"
-  type        = "string"
-}
-
-variable "aks_cluster_spn_name" {
-  type        = "string"
-  description = "name of AKS cluster service principal"
-}
