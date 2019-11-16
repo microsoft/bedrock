@@ -1,0 +1,10 @@
+config:
+  installIstioServices: false # Setup VirtualServices to work with Istio
+  mic:
+    image:
+      tag: {{.Values.podIdentity.version}}
+  nmi:
+    image:
+      tag: {{.Values.podIdentity.version}}
+namespace: {{.Values.podIdentity.namespace}}
+injectNamespace: true

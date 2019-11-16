@@ -1,0 +1,8 @@
+name: "fabrikate-aad-pod-identity"
+type: helm
+path: "./chart"
+hooks:
+  before-install:
+    - echo 'installing pod-identity'
+  after-install:
+    - echo 'installed pod-identity'

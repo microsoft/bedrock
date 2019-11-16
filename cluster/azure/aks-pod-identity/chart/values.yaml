@@ -1,0 +1,7 @@
+podIdentity:
+  mic:
+    image:
+      tag: 1.5.3
+  nmi:
+    image:
+      tag: 1.5.3
