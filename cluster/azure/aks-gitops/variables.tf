@@ -202,6 +202,11 @@ variable "enable_dev_spaces" {
   default = "false"
 }
 
+variable "dev_space_name" {
+  type = "string"
+  default = "dev"
+}
+
 variable "dashboard_cluster_role" {
   type    = "string"
   default = "cluster_reader" # allowed values: cluster_admin, cluster_reader
