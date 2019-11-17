@@ -18,6 +18,7 @@ resource "null_resource" "azure_identity" {
     kv_reader_identity_name = "${var.kv_reader_identity_name}"
     azure_identity_name     = "${var.azure_identity_name}"
     k8s_namespace           = "${var.k8s_namespace}"
+    pod_identity_created    = "${var.pod_identity_created}"
   }
 }
 

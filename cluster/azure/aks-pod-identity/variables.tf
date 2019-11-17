@@ -29,3 +29,7 @@ variable "pod_identity_namespace" {
   type = "string"
   default = "security"
 }
+
+variable "kvreader_created" {
+  type = "string"
+}

@@ -17,5 +17,6 @@ resource "null_resource" "pod_identity" {
     env_name               = "${var.env_name}"
     pod_identity_version   = "${var.pod_identity_version}"
     pod_identity_namespace = "${var.pod_identity_namespace}"
+    kvreader_created       = "${var.kvreader_created}"
   }
 }

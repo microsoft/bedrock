@@ -35,3 +35,7 @@ variable "azure_identity_binding_name" {
 variable "k8s_namespace" {
   type = "string"
 }
+
+variable "pod_identity_created" {
+  type = "string"
+}
