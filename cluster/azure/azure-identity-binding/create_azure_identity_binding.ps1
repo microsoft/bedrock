@@ -1,7 +1,7 @@
 param(
-    [string]$KVReaderIdentityName = "sace-dev-kv-reader",
-    [string]$AksResourceGroupName = "sace-dev-rg",
-    [string]$AzureIdentityName = "sace-dev-kv-reader",
+    [string]$KVReaderIdentityName = "sace-dev-dev1-kv-reader",
+    [string]$AksResourceGroupName = "sace-dev-dev1-rg",
+    [string]$AzureIdentityName = "sace-dev-dev1-kv-reader",
     [string]$AzureIdentityBindingName = "default-service-identity-binding",
     [string]$AzureBindingKubeNamespace = "default"
 )
@@ -33,11 +33,19 @@ if (!$foundPodIdentityCrd) {
 }
 
 Write-Host "Ensure azureidentity '$AzureIdentityName' is created"
-[array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io -o json | jq ".[].name"
+[array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io -o json | jq ".items[].metadata.name"
 if ($null -eq $existingAzureIdentities -or $existingAzureIdentities.Count -eq 0) {
     throw "azureidentity '$AzureIdentityName' is not found"
 }
-$azureIdentityFound = $existingAzureIdentities | Where-Object { $_ -eq $AzureIdentityName }
+$azureIdentityFound = $null
+$existingAzureIdentities | ForEach-Object {
+    [string]$currentIdentityName = $_
+    $currentIdentityName = $currentIdentityName.Trim('"')
+    if ($currentIdentityName -eq $AzureIdentityName) {
+        $azureIdentityFound = $currentIdentityName
+        Write-Host "azure identity '$azureIdentityFound' is deployed"
+    }
+}
 if ($null -eq $azureIdentityFound) {
     throw "azureidentity '$AzureIdentityName' is not found"
 }
