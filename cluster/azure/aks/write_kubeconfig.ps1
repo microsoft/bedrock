@@ -1,7 +1,7 @@
 param(
     [string]$ClusterName = "sacedev-dev1",
     [string]$ResourceGroupName = "sace-dev-dev1-rg",
-    [string]$KubeConfigFile,
+    [string]$KubeConfigFile = "/Users/xiaodongli/work/sace/deploy/scripts/temp/dev/terraform/output/admin_kube_config",
     [switch]$IsAdmin
 )
 
@@ -23,8 +23,8 @@ else {
     $contextName = $ClusterName
 }
 
-$kubeConfigFile = Join-Path (Join-Path $env:HOME ".kube") "config"
-$configs = Get-Content $KubeConfigFile -Raw | ConvertFrom-Yaml -Ordered
+$baseKubeConfigFile = Join-Path (Join-Path $env:HOME ".kube") "config"
+$configs = Get-Content $baseKubeConfigFile -Raw | ConvertFrom-Yaml -Ordered
 $clusterConfig = $configs.clusters | Where-Object { $_.name -eq $ClusterName }
 if ($null -eq $clusterConfig) {
     throw "invalid cluster name: $ClusterName"
@@ -48,5 +48,9 @@ $config = @{
     users = @($userConfig)
 }
 $configYaml = $config | ConvertTo-Yaml
+
+if (Test-Path $KubeConfigFile) {
+    Remove-Item $KubeConfigFile
+}
 
 [System.IO.File]::WriteAllText($kubeconfigfile, $configYaml)
