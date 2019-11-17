@@ -7,7 +7,7 @@ resource "null_resource" "pod_identity" {
       KUBECONFIG=${var.output_directory}/${var.kubeconfigadmin_filename} \
       pwsh ${path.module}/deploy_pod_identity.ps1 \
       -EnvName ${var.env_name} \
-      -ModuleFolder \"${path.module}\" \
+      -ModuleFolder ${path.module} \
       -PodIdentityVersion ${var.pod_identity_version} \
       -PodIdentityNamespace ${var.pod_identity_namespace}
     EOT

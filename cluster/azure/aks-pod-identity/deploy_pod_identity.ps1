@@ -9,7 +9,8 @@ param(
     [string]$PodIdentityNamespace
 )
 
-Write-Host "Applying configuration: version=$PodIdentityVersion, namespace=$PodIdentityNamespace"
+Write-Host "Applying configuration: EnvName=$EnvName, ModuleFolder=$ModuleFolder, PodIdentityVersion=$PodIdentityVersion, PodIdentityNamespace=$PodIdentityNamespace"
+
 $configFile = Join-Path (Join-Path $ModuleFolder "config") "common.yaml"
 if (-not (Test-Path $configFile)) {
     throw "Unable to find config file: $configFile"
