@@ -33,8 +33,12 @@ if (!$foundPodIdentityCrd) {
 }
 
 Write-Host "Ensure azureidentity '$AzureIdentityName' is created"
-[array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io --query "[?name=='$AzureIdentityName']" | ConvertFrom-Json
+[array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io -o json | jq ".[].name"
 if ($null -eq $existingAzureIdentities -or $existingAzureIdentities.Count -eq 0) {
+    throw "azureidentity '$AzureIdentityName' is not found"
+}
+$azureIdentityFound = $existingAzureIdentities | Where-Object { $_ -eq $AzureIdentityName }
+if ($null -eq $azureIdentityFound) {
     throw "azureidentity '$AzureIdentityName' is not found"
 }
 

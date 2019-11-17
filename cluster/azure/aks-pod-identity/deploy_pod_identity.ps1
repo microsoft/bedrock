@@ -1,11 +1,11 @@
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$EnvName,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$ModuleFolder,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$PodIdentityVersion,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$PodIdentityNamespace
 )
 
@@ -30,6 +30,13 @@ Set-Location $CurrentLocation
 $generatedYamlFolder = Join-Path (Join-Path $ModuleFolder "generated") $EnvName
 if (-not (Test-Path $generatedYamlFolder -PathType Container)) {
     throw "Failed to generate yaml files using fabrikate component"
+}
+
+Write-Host "Ensure k8s namespace '$PodIdentityNamespace'"
+$k8sNamespaces = kubectl get ns -o json | ConvertFrom-Json
+$nsFound = $k8sNamespaces.items | Where-Object { $_.metadata.name -eq $PodIdentityNamespace }
+if ($null -eq $nsFound) {
+    kubectl create namespace $PodIdentityNamespace
 }
 
 Write-Host "kubectl apply -f $generatedYamlFolder"
