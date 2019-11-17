@@ -40,7 +40,7 @@ if ($null -eq $userConfig) {
 
 $config = @{
     apiVersion = "v1"
-    kind = "config"
+    kind = "Config"
     preferences = @{}
     "current-context" = $contextName
     clusters = @($clusterConfig)
