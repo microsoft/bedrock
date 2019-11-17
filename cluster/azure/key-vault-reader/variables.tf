@@ -27,11 +27,6 @@ variable "aks_cluster_spn_object_id" {
   description = "object id of AKS cluster service principal"
 }
 
-variable "aks_cluster_location" {
-  type = "string"
-  description = "AKS resource group location"
-}
-
 variable "kubeconfigadmin_filename" {
   description = "Name of the admin kube config file saved to disk."
   type        = "string"
@@ -41,6 +36,7 @@ variable "kubeconfigadmin_filename" {
 variable "kubeconfigadmin_done" {
   description = "Allows flux to wait for the admin kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
   type        = "string"
+  default     = "true"
 }
 
 variable "output_directory" {
