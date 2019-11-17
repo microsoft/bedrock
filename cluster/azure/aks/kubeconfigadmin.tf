@@ -2,7 +2,14 @@ resource "null_resource" "cluster_credentials_admin" {
   count = "${var.kubeconfig_to_disk ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && kubeconfig=\"${azurerm_kubernetes_cluster.cluster.kube_admin_config_raw}\" kubeconfigfile=\"${var.output_directory}/${var.kubeconfigadmin_filename}\" ${path.module}/write_kubeconfig.ps1"
+    command = <<-EOT
+      if [ ! -e ${var.output_directory} ]; then mkdir -p ${var.output_directory}; fi && \
+      pwsh ${path.module}/write_kubeconfig.ps1 \
+      -ClusterName ${var.cluster_name} \
+      -ResourceGroupName ${var.aks_resource_group_name} \
+      -KubeConfigFile \"${var.output_directory}/${var.kubeconfig_filename}\" \
+      -IsAdmin
+    EOT
   }
 
   triggers = {

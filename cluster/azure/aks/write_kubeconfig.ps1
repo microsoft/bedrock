@@ -1,15 +1,52 @@
-$kubeconfig = [System.Environment]::GetEnvironmentVariable("kubeconfig", "process")
-if ($null -eq $kubeconfig -or $kubeconfig -eq "") {
-    throw "unable to find kubeconfig in environment varialbles"
+param(
+    [string]$ClusterName = "sacedev-dev1",
+    [string]$ResourceGroupName = "sace-dev-dev1-rg",
+    [string]$KubeConfigFile,
+    [switch]$IsAdmin
+)
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest
+Install-Module powershell-yaml -AllowClobber -Confirm:$false -Force
+Import-Module powershell-yaml -Force
+
+if ($IsAdmin) {
+    Write-Host "connect to aks as cluster admin"
+    az aks get-credentials -g $ResourceGroupName -n $ClusterName --admin --overwrite-existing
+    $userName = "clusterAdmin_$($ResourceGroupName)_$($ClusterName)"
+    $contextName = "$($ClusterName)-admin"
+}
+else {
+    Write-Host "connect to aks as cluster user"
+    az aks get-credentials -g $ResourceGroupName -n $ClusterName --admin --overwrite-existing
+    $userName = "clusterUser_$($ResourceGroupName)_$($ClusterName)"
+    $contextName = $ClusterName
 }
 
-$kubeconfigfile = [System.Environment]::GetEnvironmentVariable("kubeconfigfile", "process")
-if ($null -eq $kubeconfigfile -or $kubeconfigfile -eq "") {
-    throw "unable to find kubeconfigfile in environment varialbles"
+$kubeConfigFile = Join-Path (Join-Path $env:HOME ".kube") "config"
+$configs = Get-Content $KubeConfigFile -Raw | ConvertFrom-Yaml -Ordered
+$clusterConfig = $configs.clusters | Where-Object { $_.name -eq $ClusterName }
+if ($null -eq $clusterConfig) {
+    throw "invalid cluster name: $ClusterName"
+}
+$contextConfig = $configs.contexts | Where-Object { $_.name -eq $contextName }
+if ($null -eq $contextConfig) {
+    throw "invalid context name: $contextName"
+}
+$userConfig = $configs.users | Where-Object { $_.name -eq $userName }
+if ($null -eq $userConfig) {
+    throw "invalid user name: $userName"
 }
 
-if (Test-Path $kubeconfigfile) {
-    Remove-Item $kubeconfigfile -Force
+$config = @{
+    apiVersion = "v1"
+    kind = "config"
+    preferences = @{}
+    "current-context" = $contextName
+    clusters = @($clusterConfig)
+    contexts = @($contextConfig)
+    users = @($userConfig)
 }
+$configYaml = $config | ConvertTo-Yaml
 
-[System.IO.File]::WriteAllText($kubeconfigfile, $kubeconfig)
+[System.IO.File]::WriteAllText($kubeconfigfile, $configYaml)
