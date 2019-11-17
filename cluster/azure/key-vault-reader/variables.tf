@@ -22,9 +22,9 @@ variable "aks_cluster_name" {
   description = "name of AKS cluster"
 }
 
-variable "aks_cluster_spn_name" {
+variable "aks_cluster_spn_object_id" {
   type        = "string"
-  description = "name of AKS cluster service principal"
+  description = "object id of AKS cluster service principal"
 }
 
 variable "aks_cluster_location" {

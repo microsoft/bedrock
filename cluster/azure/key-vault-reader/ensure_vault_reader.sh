@@ -7,7 +7,7 @@ do
     n) IDENTITY_NAME=${OPTARG};;
     g) RESOURCE_GROUP_NAME=${OPTARG};;
     c) AKS_CLUSTER_NAME=${OPTARG};;
-    s) AKS_CLUSTER_SPN_NAME=${OPTARG};;
+    s) AKS_SPN_OBJECT_ID=${OPTARG};;
     l) AKS_CLUSTER_LOCATION=${OPTARG};;
     *) echo "ERROR: Please refer to usage guide on GitHub" >&2
         exit 1 ;;
@@ -26,6 +26,18 @@ if [ -z "$RESOURCE_GROUP_NAME" ]; then
     echo "usage: $0 -g <RESOURCE_GROUP_NAME>"
     exit 1
 fi
+if [ -z "$AKS_CLUSTER_NAME" ]; then
+    echo "usage: $0 -c <AKS_CLUSTER_NAME>"
+    exit 1
+fi
+if [ -z "$AKS_SPN_OBJECT_ID" ]; then
+    echo "usage: $0 -s <AKS_SPN_OBJECT_ID>"
+    exit 1
+fi
+if [ -z "$AKS_CLUSTER_LOCATION" ]; then
+    echo "usage: $0 -l <AKS_CLUSTER_LOCATION>"
+    exit 1
+fi
 
 KEY_VAULT=$(az keyvault show -n "$VAULT_NAME")
 AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id' | sed -e 's/^"//' -e 's/"$//')
@@ -38,10 +50,6 @@ UNDERSCORE="_"
 AKS_NODE_RESOURCE_GROUP="MC$UNDERSCORE$RESOURCE_GROUP_NAME$UNDERSCORE$AKS_CLUSTER_NAME$UNDERSCORE$AKS_CLUSTER_LOCATION"
 AKS_NODE_RESOURCE_GROUP_ID=$(az group show -n "$AKS_NODE_RESOURCE_GROUP" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "MC resource group id: $AKS_NODE_RESOURCE_GROUP_ID"
-
-EXISTING_AKS_SPNS=$(az ad sp list --display-name "$AKS_CLUSTER_SPN_NAME")
-AKS_SPN_OBJECT_ID=$(echo "$EXISTING_AKS_SPNS" | jq '.[0].objectId' | sed -e 's/^"//' -e 's/"$//')
-echo "AKS cluster spn app id: $AKS_SPN_OBJECT_ID"
 
 echo "Ensure msi $IDENTITY_NAME is created"
 EXISTING_IDENTTIIES="$(az identity list --resource-group "$RESOURCE_GROUP_NAME" --query "[?name=='$IDENTITY_NAME']" -o json)"
