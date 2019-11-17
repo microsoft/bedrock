@@ -13,20 +13,21 @@ variable "kubeconfigadmin_filename" {
 variable "kubeconfigadmin_done" {
   description = "Allows flux to wait for the admin kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
   type        = "string"
+  default     = "true"
 }
 
 variable "env_name" {
-  type = "string"
+  type        = "string"
   description = "target aks cluster env, allowed values: dev, int, test, ppe, prod"
 }
 
 variable "pod_identity_version" {
-  type = "string"
+  type    = "string"
   default = "1.5.3"
 }
 
 variable "pod_identity_namespace" {
-  type = "string"
+  type    = "string"
   default = "security"
 }
 
