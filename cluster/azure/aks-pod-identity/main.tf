@@ -1,4 +1,4 @@
-resource "null_resource" "pod-identity" {
+resource "null_resource" "pod_identity" {
   count = "${var.env_name != "" && var.pod_identity_version != "" && var.pod_identity_namespace != "" ? 1 : 0}"
 
   provisioner "local-exec" {
