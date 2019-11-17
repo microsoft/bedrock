@@ -22,7 +22,11 @@ Remove-Item $configFile -Force
 [System.IO.File]::WriteAllText($configFile, $configYaml)
 
 Write-Host "Generating pod-identity yaml for env $EnvName"
+$CurrentLocation = (Get-Location).Path
+Set-Location $ModuleFolder
 fab generate $EnvName
+Set-Location $CurrentLocation
+
 $generatedYamlFolder = Join-Path (Join-Path $ModuleFolder "generated") $EnvName
 if (-not (Test-Path $generatedYamlFolder -PathType Container)) {
     throw "Failed to generate yaml files using fabrikate component"
