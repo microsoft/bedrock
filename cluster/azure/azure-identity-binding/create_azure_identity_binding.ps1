@@ -1,9 +1,9 @@
 param(
-    [string]$KVReaderIdentityName = "sace-dev-dev1-kv-reader",
-    [string]$AksResourceGroupName = "sace-dev-dev1-rg",
-    [string]$AzureIdentityName = "sace-dev-dev1-kv-reader",
-    [string]$AzureIdentityBindingName = "default-service-identity-binding",
-    [string]$AzureBindingKubeNamespace = "default"
+    [string]$KVReaderIdentityName,
+    [string]$AksResourceGroupName,
+    [string]$AzureIdentityName,
+    [string]$AzureIdentityBindingName,
+    [string]$AzureBindingKubeNamespace
 )
 
 Write-Host "Ensure user-assigned identity is created"
