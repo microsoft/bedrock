@@ -36,6 +36,7 @@ Write-Host "Ensure azureidentity '$AzureIdentityName' is created"
 $totalRetries = 0
 $azureIdentityFound = $false
 while (!$azureIdentityFound -and $totalRetries -lt 10) {
+    kubectl get azureidentities.aadpodidentity.k8s.io 
     [array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io -o json | jq ".items[].metadata.name"
     if ($null -ne $existingAzureIdentities -or $existingAzureIdentities.Count -gt 0) {
         $existingAzureIdentities | ForEach-Object {
@@ -43,8 +44,8 @@ while (!$azureIdentityFound -and $totalRetries -lt 10) {
             $currentIdentityName = $currentIdentityName.Trim('"')
             if ($currentIdentityName -eq $AzureIdentityName) {
                 $azureIdentityFound = $true
-                Write-Host "azure identity '$azureIdentityFound' is deployed"
             }
+            Write-Host "azure identity '$currentIdentityName' is deployed: $azureIdentityFound"
         }
     }
 
@@ -55,7 +56,7 @@ while (!$azureIdentityFound -and $totalRetries -lt 10) {
     }
 }
 if (!$azureIdentityFound) {
-    throw "azureidentity '$AzureIdentityName' is not found"
+    Write-Warning "azureidentity '$AzureIdentityName' is not found"
 }
 
 Write-Host "Create azureidentitybinding '$AzureIdentityBindingName'"
