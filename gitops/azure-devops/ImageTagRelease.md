@@ -152,11 +152,25 @@ SUBCOMPONENT: the subcomponent within your Fabrikate HLD that should be manipula
 YAML_PATH: the yaml path to the subkey to set (e.g. data.replicas)
 YAML_PATH_VALUE: the value to the subkey
 ```
+Also add the following environment variable 
+```
+FAB_ENV_NAME: the value of environment this task belongs to for example DEV or QA or PROD etc.
+```
+This ensures that when release runs, fabrikate will update the right environment configuration as it executes
+```
+fab set --environment "$FAB_ENV_NAME" --subcomponent "$SUBCOMPONENT" "$YAML_PATH=$YAML_PATH_VALUE"
+```
+As the subcomponent definition is updated HLD build pipeline will trigger and update the manifest repo with changes only for a specific environment.
+
+Now add
+
 Inline Script:
 ```
 # Execute release.sh
 . release.sh
 ```
+
+Make sure to incorporate these changes for every stage in the pipeline above.
 
 ![Release Task 2](images/release-task2.png)
 
