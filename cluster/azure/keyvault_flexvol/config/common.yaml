@@ -1,0 +1,8 @@
+config:
+  installIstioServices: false # Setup VirtualServices to work with Istio
+  flexvol:
+    image:
+      name: mcr.microsoft.com/k8s/flexvolume/keyvault-flexvolume
+      tag: {{.Values.flexvol.version}}
+namespace: {{.Values.podIdentity.namespace}}
+injectNamespace: true # Namespace all templates

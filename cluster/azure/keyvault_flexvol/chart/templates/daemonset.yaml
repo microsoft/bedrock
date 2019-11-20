@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: keyvault-flexvolume
+  name: keyvault-flexvolume
+  namespace: {{.Release.Namespace}}
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: keyvault-flexvolume
+    spec:
+      containers:
+      - name: flexvol-driver-installer
+        image: "{{.Values.flexvol.image.name}}:{{.Values.flexvol.image.tag}}"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+        env:
+          # if you have used flex before on your cluster, use same directory
+          # set TARGET_DIR env var and mount the same directory to to the container
+        - name: TARGET_DIR
+          value: "/etc/kubernetes/volumeplugins"
+        volumeMounts:
+        - mountPath: "/etc/kubernetes/volumeplugins"
+          name: volplugins
+      volumes:
+      - hostPath:
+          # Modify this directory if your nodes are using a different one
+          # default is "/usr/libexec/kubernetes/kubelet-plugins/volume/exec"
+          # below is Azure default
+          path: "/etc/kubernetes/volumeplugins"
+        name: volplugins
+      nodeSelector:
+        beta.kubernetes.io/os: linux
