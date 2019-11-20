@@ -3,7 +3,7 @@ module "common-provider" {
 }
 
 resource "null_resource" "deploy_flexvol" {
-  count = "${var.enable_flexvol ? 1 : 0}"
+  count = "${var.env_name != "" && var.flexvol_version != "" && var.flexvol_namespace != "" ? 1 : 0}"
 
   provisioner "local-exec" {
     command = <<-EOT
