@@ -12,6 +12,7 @@ variable "kubeconfigadmin_filename" {
 variable "kubeconfig_complete" {
   description = "Allows flex volume deployment to wait for the kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
   type        = "string"
+  default     = "true"
 }
 
 variable "env_name" {
@@ -24,6 +25,6 @@ variable "flexvol_version" {
 }
 
 variable "flexvol_namespace" {
-  type = "string"
+  type    = "string"
   default = "kv"
 }
