@@ -29,13 +29,13 @@ variable "dns_prefix" {
 variable "flux_recreate" {
   description = "Make any change to this value to trigger the recreation of the flux execution script."
   type        = "string"
-  default     = ""
+  default     = "false"
 }
 
 variable "kubeconfig_recreate" {
   description = "Any change to this variable will recreate the kube config file to local disk."
   type        = "string"
-  default     = ""
+  default     = "false"
 }
 
 variable "gitops_ssh_url" {
