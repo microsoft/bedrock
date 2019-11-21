@@ -13,6 +13,7 @@ do
  r) FLUX_IMAGE_REPOSITORY=${OPTARG};;
  t) FLUX_IMAGE_TAG=${OPTARG};;
  z) GC_ENABLED=${OPTARG};;
+ l) GIT_LABEL=${OPTARG};;
  *) echo "Please refer to usage guide on GitHub" >&2
     exit 1 ;;
  esac
@@ -58,7 +59,7 @@ fi
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
 echo "generating flux manifests with helm template"
-if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED"; then
+if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set git.label="$GIT_LABEL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED"; then
     echo "ERROR: failed to helm template"
     exit 1
 fi
