@@ -7,7 +7,7 @@ This document describes a set of tools and requirements necessary to deploy infr
 - Service principal can be created that has ownership privileges on the subscription
 - Service principal will be created with limited privileges within the subscription
 
-Additionally, a separation of service principals will be highlighted, specifically a deployment service principal and an AKS service principal. 
+Additionally, a separation of service principals will be highlighted, specifically a deployment service principal and an AKS service principal.
 
 ## Determining Azure CLI User Role on Subscription
 
@@ -16,8 +16,8 @@ To drive the other sections of the discussion, the role of the user within the s
 For example, running the script locally might look like:
 
 ```bash
-$ ./determine_user_subscription_roles.sh 
-User roles for jaspring@microsoft.com on subscription 1234bca0-abcd-44bd-7da2-4bb1e9fa9876: 
+$ ./determine_user_subscription_roles.sh
+User roles for jaspring@microsoft.com on subscription 1234bca0-abcd-44bd-7da2-4bb1e9fa9876:
     - Owner
     - Contributor
 jaspring@microsoft.com has Owner level privileges on subscription.
@@ -30,7 +30,7 @@ A service principal with `Owner` privileges on the subscription has full control
 To create a service principal with `Owner` privileges on subscription `1234bca0-abcd-44bd-7da2-4bb1e9fa9876`, do the following:
 
 ```bash
-$ az ad sp create-for-rbac --role Owner --scopes /subscriptions/1234bca0-abcd-44bd-7da2-4bb1e9fa9876
+$ az ad sp create-for-rbac --role contributor --scopes /subscriptions/<subscription id>/resourceGroups/<resource group>
 {
   "appId": "6e2b7183-7efb-4f82-9250-3bc41234acdb",
   "displayName": "azure-cli-2019-04-11-23-11-42",

@@ -34,7 +34,7 @@ The following templates are currently available for deployment:
 
 The common steps necessary to deploy a cluster are:
 
-- [Build Fabrikate Definition for Container Deployment](../../docs/fabrikate/README.md) 
+- [Build Fabrikate Definition for Container Deployment](../../docs/fabrikate/README.md)
 - [Create an Azure service principal](#create-an-azure-service-principal)
 - [Configure Terraform CLI to use the Azure Service Principal](#configure-terraform-cli-for-azure)
 - [Create Terraform configuration files](#create-terraform-configuration-files)
@@ -57,7 +57,7 @@ Within each environment, the required resource groups that need to be created ar
 You can generate an Azure Service Principal using the [`az ad sp create-for-rbac`](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create) command with `--skip-assignment` option. The `--skip-assignment` parameter limits any additional permissions from being assigned the default [`Contributor`](https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles#azure-rbac-roles) role in Azure subscription.
 
 ```bash
-$ az ad sp create-for-rbac --subscription <id | name>
+$ az ad sp create-for-rbac --role contributor --scopes /subscriptions/<subscription id>/resourceGroups/<resource group>
 ```
 
 The output of the above commands will look something like this:
@@ -161,7 +161,7 @@ $ terraform init
 This will download all of the modules needed for the deployment.
 
 #### Importing existing resources
-If you need to create the cluster within an existing resource group and Vnet/Subnet combo because for example this subnet is connected to your on premise network using VPN then you need to import these existing resources. 
+If you need to create the cluster within an existing resource group and Vnet/Subnet combo because for example this subnet is connected to your on premise network using VPN then you need to import these existing resources.
 
 First add the required existing resources in ``main.tf`` in ``cluster/environments/<your new cluster name>/``
 

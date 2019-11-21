@@ -37,7 +37,7 @@ The following procedures complete the prerequisites and walk through the process
 
 This document assumes one is running a current version of Ubuntu.  Windows users can install the [Ubuntu Terminal](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) from the Microsoft Store.  The Ubuntu Terminal enables Linux command-line utilities, including bash, ssh, and git that will be useful for the following deployment.  *Note: You will need the Windows Subsystem for Linux installed to use the Ubuntu Terminal on Windows*.
 
-Ensure that the [required tools](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), are installed in your environment. Alternatively, there are [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`.  In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`.  The scripts install the tools into `/usr/local/bin`.  
+Ensure that the [required tools](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), are installed in your environment. Alternatively, there are [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`.  In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`.  The scripts install the tools into `/usr/local/bin`.
 
 ## Install the Azure CLI
 
@@ -54,13 +54,14 @@ To prepare the Flux manifest repository, we must:
 3. [Grant Deploy Key access to the Manifest Repository](#grant-deploy-key-access-to-the-manifest-repository)
 
 ## Create the Flux Manifest Repository
-[Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `sample_app_manifests`.  
+[Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `sample_app_manifests`.
 
-Flux requires that the git respository have at least one commit.  Initialize the repo with an empty commit. 
+Flux requires that the git respository have at least one commit.  Initialize the repo with an empty commit.
 ```bash
 git commit --allow-empty -m "Initializing the Flux Manifest Repository"
 ```
 
+More edocumentation around Service Principals are available in the [Bedrock documentation].
 ## Generate an RSA Key Pair to use as the Manifest Repository Deploy Key
 
 Generate the [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) using `ssh-keygen`.  The public portion of the key pair will be uploaded to GitHub as a deploy key.
@@ -70,8 +71,8 @@ Run: `ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key`.
 ```bash
 $ ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key
 Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in /Users/jmspring/.ssh/gitops-ssh-key.
 Your public key has been saved in /Users/jmspring/.ssh/gitops-ssh-key.pub.
 The key fingerprint is:
@@ -88,7 +89,7 @@ The key's randomart image is:
 |...  .o+.. .     |
 |  .o..===o.      |
 +----[SHA256]-----+
-kudzu:azure-simple jmspring$ 
+kudzu:azure-simple jmspring$
 ```
 
 This will create public and private keys for the Flux repository. We will assign the public key under the following heading: [Adding the Repository Key](#adding-the-repository-key).  The private key is stored on the machine originating the deployment.
@@ -100,7 +101,7 @@ The public key of the [RSA key pair](#create-an-rsa-key-pair-for-a-deploy-key-fo
 First, display the contents of the public key: `more ~/.ssh/gitops-ssh-key.pub`.
 
 ```bash
-$ more ~/.ssh/gitops-ssh-key.pub 
+$ more ~/.ssh/gitops-ssh-key.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTNdGpnmztWRa8RofHl8dIGyNkEayNR6d7p2JtJ7+zMj0HRUJRc+DWvBML4DvT29AumVEuz1bsVyVS2f611NBmXHHKkbzAZZzv9gt2uB5sjnmm7LAORJyoBEodR/T07hWr8MDzYrGo5fdTDVagpoHcEke6JT04AL21vysBgqfLrkrtcEyE+uci4hRVj+FGL9twh3Mb6+0uak/UsTFgfDi/oTXdXOFIitQgaXsw8e3rkfbqGLbhb6o1muGd1o40Eip6P4xejEOuIye0cg7rfX461NmOP7HIEsUa+BwMExiXXsbxj6Z0TXG0qZaQXWjvZF+MfHx/J0Alb9kdO3pYx3rJbzmdNFwbWM4I/zN+ng4TFiHBWRxRFmqJmKZX6ggJvX/d3z0zvJnvSmOQz9TLOT4lqZ/M1sARtABPGwFLAvPHAkXYnex0v93HUrEi7g9EnM+4dsGU8/6gx0XZUdH17WZ1dbEP7VQwDPnWCaZ/aaG7BsoJj3VnDlFP0QytgVweWr0J1ToTRQQZDfWdeSBvoqq/t33yYhjNA82fs+bR/1MukN0dCWMi7MqIs2t3TKYW635E7VHp++G1DR6w6LoTu1alpAlB7d9qiq7o1c4N+gakXSUkkHL8OQbQBeLeTG1XtYa//A5gnAxLSzxAgBpVW15QywFgJlPk0HEVkOlVd4GzUw== sl;jlkjgl@kudzu.local
 ```
 
@@ -113,7 +114,7 @@ Click "Add key", and you should see:
 ![key result](./images/deployKeyResult.png)
 
 ## Create Azure Resource Group
-Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group 
+Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group
 
 ```bash
 az group create -l westus2 -n testazuresimplerg
@@ -121,13 +122,13 @@ az group create -l westus2 -n testazuresimplerg
 
 ## Create an Azure Service Principal
 
-We use a single [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for configuring Terraform and for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster being deployed.  In Bedrock, see the [Service Principal documention](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).  
+We use a single [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for configuring Terraform and for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster being deployed.  In Bedrock, see the [Service Principal documention](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
 
-[Login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) using the `az login` command.  
+[Login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) using the `az login` command.
 
-Get the Id of the subscription by running `az account show`. 
+Get the Id of the subscription by running `az account show`.
 
-Then, create the Service Principal using `az ad sp create-for-rbac --subscription "7060bca0-1234-5-b54c-ab145dfaccef"` as follows:
+Then, create the Service Principal using `az ad sp create-for-rbac --role contributor --scopes "/subscriptions/7060bca0-1234-5-b54c-ab145dfaccef"` as follows:
 
 ```bash
 ~$ az account show
@@ -143,7 +144,7 @@ Then, create the Service Principal using `az ad sp create-for-rbac --subscriptio
     "type": "user"
   }
 }
-~$ az ad sp create-for-rbac --subscription "7060bca0-1234-5-b54c-ab145dfaccef"
+~$ az ad sp create-for-rbac --role contributor --scopes "/subscriptions/7060bca0-1234-5-b54c-ab145dfaccef"
 {
   "appId": "7b6ab9ae-dead-abcd-8b52-0a8ecb5beef7",
   "displayName": "azure-cli-2019-06-13-04-47-36",
@@ -167,8 +168,8 @@ The Terraform scripts use this node key to setup log-in credentials on the nodes
 ```bash
 $ ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key
 Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in /home/jims/.ssh/node-ssh-key.
 Your public key has been saved in /home/jims/.ssh/node-ssh-key.pub.
 The key fingerprint is:
@@ -189,7 +190,7 @@ The key's randomart image is:
 
 ## Configure Terraform For Azure Access
 
-Terraform supports a number of methods for authenticating with Azure.  Bedrock uses [authenticating with a Service Principal and client secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html).  This is done by setting a few environment variables via the Bash `export` command.  
+Terraform supports a number of methods for authenticating with Azure.  Bedrock uses [authenticating with a Service Principal and client secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html).  This is done by setting a few environment variables via the Bash `export` command.
 
 To set the variables, use the key created under the previous heading [Create an Azure Service Principal](#create-an-azure-service-principal).  (The ARM_CLIENT_ID is `app_id` from the previous procedure.  The ARM_SUBSCRIPTION_ID is account `id`.)
 
@@ -210,7 +211,7 @@ ARM_SUBSCRIPTION_ID=7060bca0-1234-5-b54c-ab145dfaccef
 ARM_TENANT_ID=72f984ed-86f1-41af-91ab-87acd01ed3ac
 ARM_CLIENT_SECRET=35591cab-13c9-4b42-8a83-59c8867bbdc2
 ARM_CLIENT_ID=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef7
-``` 
+```
 
 ## Clone the Bedrock Repository
 
@@ -240,7 +241,7 @@ drwxr-xr-x   7 jmspring  staff  224 Jun 12 09:11 azure-velero-restore
 drwxr-xr-x   3 jmspring  staff   96 Jun 12 09:11 minikube
 ```
 
-Each of the directories represent a common pattern supported within Bedrock.  For more information see the [Bedrock github repo](https://github.com/microsoft/bedrock/tree/master/cluster/azure).  
+Each of the directories represent a common pattern supported within Bedrock.  For more information see the [Bedrock github repo](https://github.com/microsoft/bedrock/tree/master/cluster/azure).
 
 ## Set Up Terraform Deployment Variables
 
@@ -281,7 +282,7 @@ vnet_name = "<vnet name>"
 # network_plugin = "azure"
 ```
 
-From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough use `agent_vm_count=3` as default 
+From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough use `agent_vm_count=3` as default
 
 To get the gitopp_ssh_url, go back to the empty repository that was created in [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  This example uses SSH: `git@github.com:<user>/bedrock-deploy-demo.git`.
 
@@ -292,7 +293,7 @@ Define the remainding fields:
 - `dns_prefix`: `testazuresimple`
 - `vnet_name`: `testazuresimplevnet`
 
-Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group 
+Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group
 
 ```bash
 az group create -l westus2 -n testazuresimplerg
@@ -301,7 +302,7 @@ az group create -l westus2 -n testazuresimplerg
 The, `gitops_ssh_key` is a *path* to the RSA private key we created under [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
 The `ssh_public_key` is the RSA public key that was created for [AKS node access](#create-an-rsa-key-for-logging-into-aks-nodes).
 
-Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy.  Next, using the values just defined, fill in the other values that were generated.  Then, remove the old terraform.tfvars file.  
+Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy.  Next, using the values just defined, fill in the other values that were generated.  Then, remove the old terraform.tfvars file.
 
 When complete `testazuresimple.tfvars` should resemble:
 
@@ -377,7 +378,7 @@ Terraform has been successfully initialized!
 
 You may now begin working with Terraform. All Terraform commands
 should work. Try running "terraform plan" to see
-any changes that are required for your infrastructure. 
+any changes that are required for your infrastructure.
 
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
@@ -387,7 +388,7 @@ commands will detect it and remind you to do so if necessary.
 Next, execute `terraform plan` and specify the location of our variables file: `$ terraform plan -var-file=testazuresimple.tfvars`
 
 ```bash
-$ terraform plan -var-file=testazuresimple.tfvars 
+$ terraform plan -var-file=testazuresimple.tfvars
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
 persisted to local or remote state storage.
@@ -507,12 +508,12 @@ can't guarantee that exactly these actions will be performed if
 As seen from the output, a number of objects have been defined for creation.
 
 ### Terraform Apply
-The final step is to issue `terraform apply -var-file=testazuresimple.tfvars` which uses the file containing the variables we defined above (if you run `terraform apply` without `-var-file=` it will take any `*.tfvars` file in the folder, for example, the sample *terraform.tfvars* file, if you didn't remove it, and start asking for the unspecified fields).  
+The final step is to issue `terraform apply -var-file=testazuresimple.tfvars` which uses the file containing the variables we defined above (if you run `terraform apply` without `-var-file=` it will take any `*.tfvars` file in the folder, for example, the sample *terraform.tfvars* file, if you didn't remove it, and start asking for the unspecified fields).
 
 The output for `terraform apply` is quite long, so the snippet below contains only the beginning and the end (sensitive output has been removed).  The full output can be found in [./extras/terraform_apply_log.txt](./extras/terraform_apply_log.txt).  Note the beginning looks similar to `terraform plan` and the output contains the status of deploying each component.  Based on dependencies, Terraform deploys components in the proper order derived from a dependency graph.
 
 ```bash
-$ terraform apply -var-file=testazuresimple.tfvars 
+$ terraform apply -var-file=testazuresimple.tfvars
 
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
@@ -737,7 +738,7 @@ tags.%                 = 1
 tags.environment       = azure-simple
 ```
 ## Interact with the Deployed Cluster
-After `terraform apply` finishes, there is one critical output artifact: the Kubernetes config file for the deployed cluster that is generated and saved in the `output` directory.  The default file is `output/bedrock_kube_config`.  The following steps use this file to interact with the deployed Bedrock AKS cluster.  
+After `terraform apply` finishes, there is one critical output artifact: the Kubernetes config file for the deployed cluster that is generated and saved in the `output` directory.  The default file is `output/bedrock_kube_config`.  The following steps use this file to interact with the deployed Bedrock AKS cluster.
 
 Using the config file `output/bedrock_kube_config`, one of the first things we can do is list all pods deployed within the cluster:
 
@@ -766,7 +767,7 @@ kube-system   kube-proxy-jsftr                        1/1     Running   0       
 kube-system   kubernetes-dashboard-69b6c88658-99xdf   1/1     Running   1          6m51s
 kube-system   metrics-server-766dd9f7fd-zs7l2         1/1     Running   1          6m51s
 kube-system   tunnelfront-6988c794b7-z2clv            1/1     Running   0          6m48s
-```  
+```
 
 Note that there is also a namespace `flux`.  As previously mentioned, Flux is managing the deployment of all of the resources into the cluster.  Taking a look at the description for the flux pod `flux-5897d4679b-tckth`, we see the following:
 
@@ -828,10 +829,10 @@ Containers:
       /var/run/secrets/kubernetes.io/serviceaccount from flux-token-d2h55 (ro)
 Conditions:
   Type              Status
-  Initialized       True 
-  Ready             True 
-  ContainersReady   True 
-  PodScheduled      True 
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
 Volumes:
   kubedir:
     Type:      ConfigMap (a volume populated by a ConfigMap)
@@ -848,7 +849,7 @@ Volumes:
   acr-credentials:
     Type:          HostPath (bare host directory volume)
     Path:          /etc/kubernetes/azure.json
-    HostPathType:  
+    HostPathType:
   flux-token-d2h55:
     Type:        Secret (a volume populated by a Secret)
     SecretName:  flux-token-d2h55
@@ -890,7 +891,7 @@ Flux automation makes it easy to upgrade services or infrastructure deployed by 
 
 When the .yaml file is complete we will push it to the repo, or simply drop it on GitHub.  Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.
 
-Create the following .yaml file and name it something like myWebApp.yaml. The image for this application is specified by the line: `image: andrebriggs/goserver:v1.2`.  
+Create the following .yaml file and name it something like myWebApp.yaml. The image for this application is specified by the line: `image: andrebriggs/goserver:v1.2`.
 
 ```yaml
 # mywebapp services
@@ -959,11 +960,11 @@ ts=2019-07-12T19:49:31.136091192Z caller=loop.go:441 component=sync-loop tag=flu
 ts=2019-07-12T19:49:31.411320788Z caller=loop.go:103 component=sync-loop event=refreshed url=git@github.com:MikeDodaro/bedrock-deploy-demo.git branch=master HEAD=e8b49abbc56f3a8d63a28da10aaf7366a92ff35a
 ts=2019-07-12T19:50:18.649194507Z caller=warming.go:206 component=warmer updated=andrebriggs/goserver successful=3 attempted=3
 ```
-In this output, Flux has found the repo `bedrock-deploy-demo` and created the new service: `"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`. 
+In this output, Flux has found the repo `bedrock-deploy-demo` and created the new service: `"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
 
 Open another bash window. When the new service is running, use `KUBECONFIG=./output/bedrock_kube_config kubectl get po --all-namespaces` to find the new namespaces in the deployment.
 
-Then run `KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces`.  The output will include the `EXTERNAL-IP` address and `PORT` of the `mywebapp` load balancer: 
+Then run `KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces`.  The output will include the `EXTERNAL-IP` address and `PORT` of the `mywebapp` load balancer:
 
 ```bash
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces
