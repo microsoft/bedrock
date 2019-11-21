@@ -158,12 +158,53 @@ From the directory of the cluster you defined above (eg. `environments/azure/<yo
 $ terraform init
 ```
 
-This will download all of the modules needed for the deployment.  You can then deploy the cluster with:
+This will download all of the modules needed for the deployment.
+
+#### Importing existing resources
+If you need to create the cluster within an existing resource group and Vnet/Subnet combo because for example this subnet is connected to your on premise network using VPN then you need to import these existing resources. 
+
+First add the required existing resources in ``main.tf`` in ``cluster/environments/<your new cluster name>/``
+
+An example block might look like
+```
+resource "azurerm_resource_group" "existing_rg" {
+ name = "My-Resource-Group"
+ location = "${var.resource_group_location}"
+ }
+
+resource "azurerm_virtual_network" "existing_vnet" {
+  name = "VNET"
+  address_space = ["subnet address 1", "subnet address 1"]
+  location = "${var.resource_group_location}"
+  resource_group_name = "${azurerm_resource_group.existing_rg.name}"
+  dns_servers = ["dns1", "dns2"]
+}
+
+resource "azurerm_subnet" "existing_subnet" {
+ name = "subnet1"
+ resource_group_name = "${azurerm_resource_group.existing_vnet.name}"
+ virtual_network_name = "${azurerm_virtual_network.existing_vnet.name}"
+ address_prefix = "subnet address 1"
+}
+```
+Then you can use ``terraform import`` so that terraform knows about these resources and can maintain references to these in terraform state.
+
+An example run might look like
+
+```
+terraform import azurerm_resource_group.existing_rg "/subscriptions/<<subscription_id>>/resourceGroups/My-Resource-Group"
+
+terraform import azurerm_virtual_network.existing_vnet /subscriptions/<<subscription_id>>/resourceGroups/My-Resource-Group/providers/Microsoft.Network/virtualNetworks/VNET
+
+terraform import azurerm_subnet.existing_subnet /subscriptions/<<subscription_id>>/resourceGroups/My-Resource-Group/providers/Microsoft.Network/virtualNetworks/VNET/subnets/subnet1
+```
+Be sure to replace the <<subscription_id>> with your own subscription id above.
+
+You can then deploy the cluster with:
 
 ```
 $ terraform apply
 ```
-
 This will display the plan for what infrastructure Terraform plans to deploy into your subscription and ask for your confirmation.
 
 Once you have confirmed the plan, Terraform will deploy the cluster, install [Flux](https://github.com/weaveworks/flux) in the cluster to kick off a [GitOps](https://www.weave.works/blog/GitOps-operations-by-pull-request) operator, and deploy any resource manifests in the `gitops_ssh_url`.
