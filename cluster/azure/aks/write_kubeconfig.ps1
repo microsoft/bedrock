@@ -2,7 +2,7 @@ param(
     [string]$ClusterName,
     [string]$ResourceGroupName,
     [string]$KubeConfigFile,
-    [bool]$IsAdmin = $true
+    [string]$IsAdmin = "true"
 )
 
 $ErrorActionPreference = "Stop"
@@ -10,7 +10,7 @@ Set-StrictMode -Version Latest
 Install-Module powershell-yaml -AllowClobber -Confirm:$false -Force
 Import-Module powershell-yaml -Force
 
-if ($IsAdmin) {
+if ($IsAdmin -ieq "true") {
     Write-Host "connect to aks as cluster admin"
     az aks get-credentials -g $ResourceGroupName -n $ClusterName --admin --overwrite-existing
     $userName = "clusterAdmin_$($ResourceGroupName)_$($ClusterName)"

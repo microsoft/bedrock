@@ -8,7 +8,7 @@ resource "null_resource" "cluster_credentials_admin" {
       -ClusterName ${var.cluster_name} \
       -ResourceGroupName ${var.aks_resource_group_name} \
       -KubeConfigFile "${var.output_directory}/${var.kubeconfig_filename}" \
-      -IsAdmin $true
+      -IsAdmin "true"
     EOT
   }
 
