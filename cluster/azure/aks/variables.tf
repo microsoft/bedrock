@@ -1,9 +1,14 @@
+variable "subscription_id" {
+  type = "string"
+  description = "azure subscription id where app insights is created"
+}
+
 # log analytics
-variable "log_analytics_subscription_id" {
+variable "log_analytics_resource_group_name" {
   type = "string"
 }
 
-variable "log_analytics_resource_group_name" {
+variable "log_analytics_resource_group_location" {
   type = "string"
 }
 
@@ -11,11 +16,7 @@ variable "log_analytics_name" {
   type = "string"
 }
 
-variable "subscription_id" {
-  type = "string"
-  description = "azure subscription id where app insights is created"
-}
-
+# aks
 variable "aks_resource_group_name" {
   type = "string"
 }
