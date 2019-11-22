@@ -8,7 +8,7 @@ param(
 
 az account set -s $SubscriptionId
 
-Write-Host "Ensure user-assigned identity is created"
+Write-Host "Ensure user-assigned identity '$KVReaderIdentityName' is created in '$AksResourceGroupName'"
 [array]$msisFound = az identity list --resource-group $AksResourceGroupName --query "[?name=='$($KVReaderIdentityName)']" | ConvertFrom-Json
 if ($null -eq $msisFound -or $msisFound.Count -eq 0) {
     throw "Unable to find kv reader identity '$($KVReaderIdentityName)' in '$AksResourceGroupName'"
