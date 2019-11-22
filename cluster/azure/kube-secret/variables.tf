@@ -1,4 +1,4 @@
-variable "subscription_id" {
+variable "aks_subscription_id" {
   type = "string"
 }
 
@@ -32,6 +32,10 @@ variable "k8s_secret_name" {
 variable "key_vault_secret_version" {
   type        = "string"
   description = "version of kv secret"
+}
+
+variable "vault_subscription_id" {
+  type = "string"
 }
 
 variable "key_vault_name" {

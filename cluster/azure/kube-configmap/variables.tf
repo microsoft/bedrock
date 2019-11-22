@@ -1,4 +1,4 @@
-variable "subscription_id" {
+variable "aks_subscription_id" {
   type = "string"
 }
 
@@ -32,6 +32,10 @@ variable "k8s_configmap_name" {
 variable "k8s_configmap_keys" {
   type = "string"
   description = "comma-separated keys used in configmap, length must be same as length of secret names"
+}
+
+variable "vault_subscription_id" {
+  type = "string"
 }
 
 variable "key_vault_name" {
