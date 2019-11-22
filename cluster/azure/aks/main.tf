@@ -47,7 +47,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   addon_profile {
     oms_agent {
       enabled                    = "${var.oms_agent_enabled}"
-      log_analytics_workspace_id = "subscriptions/${var.log_analytics_subscription_id}/resourceGroups/${var.log_analytics_resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/${var.log_analytics_name}"
+      log_analytics_workspace_id = "/subscriptions/${var.log_analytics_subscription_id}/resourceGroups/${var.log_analytics_resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/${var.log_analytics_name}"
     }
 
     http_application_routing {
