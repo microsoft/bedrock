@@ -1,3 +1,7 @@
+variable "aks_subscription_id" {
+  type = "string"
+}
+
 variable "output_directory" {
   type    = "string"
   default = "./output"

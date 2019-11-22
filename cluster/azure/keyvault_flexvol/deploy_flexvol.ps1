@@ -1,5 +1,7 @@
 param(
     [Parameter(Mandatory = $true)]
+    [string]$SubscriptionId,
+    [Parameter(Mandatory = $true)]
     [string]$EnvName,
     [Parameter(Mandatory = $true)]
     [string]$ModuleFolder,
@@ -9,6 +11,7 @@ param(
     [string]$FlexVolNamespace
 )
 
+az account set -s $SubscriptionId
 Write-Host "Applying configuration: EnvName=$EnvName, ModuleFolder=$ModuleFolder, FlexVolVersion=$FlexVolVersion, FlexVolNamespace=$FlexVolNamespace"
 
 $configFile = Join-Path (Join-Path $ModuleFolder "config") "common.yaml"
