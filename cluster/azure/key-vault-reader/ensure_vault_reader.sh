@@ -1,19 +1,33 @@
 #!/usr/bin/env bash
 
-while getopts :v:n:g:a:c:s:l: option
+while getopts :a:b:v:n:g:a:c:s:l: option
 do
     case "${option}" in
-    v) VAULT_NAME=${OPTARG};;
-    n) IDENTITY_NAME=${OPTARG};;
-    g) RESOURCE_GROUP_NAME=${OPTARG};;
-    c) AKS_CLUSTER_NAME=${OPTARG};;
-    s) AKS_SPN_OBJECT_ID=${OPTARG};;
-    l) AKS_CLUSTER_LOCATION=${OPTARG};;
-    *) echo "ERROR: Please refer to usage guide on GitHub" >&2
-        exit 1 ;;
+        a) AKS_SUBSCRIPTION_ID=${OPTARG};;
+        b) VAULT_SUBSCRIPTION_ID=${OPTARG};;
+        v) VAULT_NAME=${OPTARG};;
+        n) IDENTITY_NAME=${OPTARG};;
+        g) RESOURCE_GROUP_NAME=${OPTARG};;
+        c) AKS_CLUSTER_NAME=${OPTARG};;
+        s) AKS_SPN_OBJECT_ID=${OPTARG};;
+        l) AKS_CLUSTER_LOCATION=${OPTARG};;
+        *) echo "ERROR: Please refer to usage guide on GitHub" >&2
+            exit 1 ;;
     esac
 done
 
+if [ -z $AKS_SUBSCRIPTION_ID ]; then
+    echo "AKS_SUBSCRIPTION_ID is empty"
+    exit 1
+else
+    echo "AKS_SUBSCRIPTION_ID=$AKS_SUBSCRIPTION_ID"
+fi
+if [ -z $VAULT_SUBSCRIPTION_ID ]; then
+    echo "VAULT_SUBSCRIPTION_ID is empty"
+    exit 1
+else
+    echo "VAULT_SUBSCRIPTION_ID=$VAULT_SUBSCRIPTION_ID"
+fi
 if [ -z "$IDENTITY_NAME" ]; then
     echo "usage: $0 -n <IDENTITY_NAME>"
     exit 1
@@ -39,10 +53,12 @@ if [ -z "$AKS_CLUSTER_LOCATION" ]; then
     exit 1
 fi
 
+az account set -s $VAULT_SUBSCRIPTION_ID
 KEY_VAULT=$(az keyvault show -n "$VAULT_NAME")
 AZ_KEY_VAULT_ID=$(echo "$KEY_VAULT" | jq -r '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "Key vault id: $AZ_KEY_VAULT_ID"
 
+az account set -s $AKS_SUBSCRIPTION_ID
 RESOURCE_GROUP_ID=$(az group show -n "$RESOURCE_GROUP_NAME" | jq '.id' | sed -e 's/^"//' -e 's/"$//')
 echo "AKS resource group id: $RESOURCE_GROUP_ID"
 
@@ -77,10 +93,12 @@ echo "User-assigned identity client id: $MSI_CLIENT_ID"
 echo "Ensure appropriate permissions are granted to msi"
 MAX_RETRIES=5
 for ((i=0; i<$MAX_RETRIES; i++)); do
+    az account set -s $AKS_SUBSCRIPTION_ID &&
     echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AKS_NODE_RESOURCE_GROUP_ID\"" &&
     az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AKS_NODE_RESOURCE_GROUP_ID" &&
     echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$RESOURCE_GROUP_ID\"" &&
     az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$RESOURCE_GROUP_ID" &&
+    az account set -s $VAULT_SUBSCRIPTION_ID &&
     echo "az role assignment create --role \"Reader\" --assignee-object-id \"$MSI_PRINCIPAL_ID\" --scope \"$AZ_KEY_VAULT_ID\"" &&
     az role assignment create --role "Reader" --assignee-object-id "$MSI_PRINCIPAL_ID" --scope "$AZ_KEY_VAULT_ID" && break
 
@@ -91,11 +109,13 @@ done
 
 echo "Ensure Managed Identity Operator role is granted to aks spn"
 echo "az role assignment create --role \"Managed Identity Operator\" --assignee-object-id \"$AKS_SPN_OBJECT_ID\" --scope \"$MSI_ID\""
+az account set -s $AKS_SUBSCRIPTION_ID
 az role assignment create --role "Managed Identity Operator" --assignee-object-id "$AKS_SPN_OBJECT_ID" --scope "$MSI_ID"
 
 echo "Setup keyvault secret/certificate policy"
 # NOTE: there was a design flow that in order to use clientId, current login identity (spn) needs to have graph [directory.read.all] permission
 # which is used to query object-id, we can just pass in $MSI_PRINCIPAL_ID which is object_id
+az account set -s $VAULT_SUBSCRIPTION_ID
 echo "az keyvault set-policy -n \"$VAULT_NAME\" --secret-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
 az keyvault set-policy -n "$VAULT_NAME" --secret-permissions get list --object-id "$MSI_PRINCIPAL_ID"
 echo "az keyvault set-policy -n \"$VAULT_NAME\" --certificate-permissions get list --object-id \"$MSI_PRINCIPAL_ID\""
