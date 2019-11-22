@@ -1,3 +1,11 @@
+module "azure-provider" {
+  source = "../provider"
+}
+
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "null_resource" "enable_azure_monitoring" {
   count = "${var.enable_azure_monitoring ? 1 : 0}"
 
