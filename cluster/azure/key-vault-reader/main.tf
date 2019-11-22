@@ -3,7 +3,7 @@ module "azure-provider" {
 }
 
 provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
+  subscription_id = "${var.aks_subscription_id}"
 }
 
 data "azurerm_client_config" "current" {}
