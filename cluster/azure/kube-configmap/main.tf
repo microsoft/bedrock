@@ -2,6 +2,10 @@ module "azure-provider" {
   source = "../provider"
 }
 
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "null_resource" "create_k8s_configmap" {
   count = "${var.k8s_configmap_name != "" && var.key_vault_name != "" && var.key_vault_secret_names != "" && var.k8s_configmap_keys != "" ? 1 : 0}"
 
