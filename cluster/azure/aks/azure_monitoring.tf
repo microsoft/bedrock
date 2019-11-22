@@ -2,7 +2,7 @@ resource "null_resource" "enable_azure_monitoring" {
   count = "${var.enable_azure_monitoring ? 1 : 0}"
 
   provisioner "local-exec" {
-    command = "az aks enable-addons --resource-group ${var.aks_resource_group_name} --name ${var.cluster_name} --addons monitoring"
+    command = "pwsh ${path.module}/enable_aks_monitoring.ps1 -ResourceGroupName ${var.aks_resource_group_name} -ClusterName ${var.cluster_name}"
   }
 
   triggers = {
