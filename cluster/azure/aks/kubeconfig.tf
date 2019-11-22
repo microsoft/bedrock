@@ -7,7 +7,8 @@ resource "null_resource" "cluster_credentials" {
       pwsh ${path.module}/write_kubeconfig.ps1 \
       -ClusterName ${var.cluster_name} \
       -ResourceGroupName ${var.aks_resource_group_name} \
-      -KubeConfigFile \"${var.output_directory}/${var.kubeconfig_filename}\"
+      -KubeConfigFile "${var.output_directory}/${var.kubeconfig_filename}" \
+      -IsAdmin $false
     EOT
   }
 

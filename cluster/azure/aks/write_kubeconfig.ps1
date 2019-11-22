@@ -1,8 +1,8 @@
 param(
-    [string]$ClusterName = "sacedev-dev1",
-    [string]$ResourceGroupName = "sace-dev-dev1-rg",
-    [string]$KubeConfigFile = "/Users/xiaodongli/work/sace/deploy/scripts/temp/dev/terraform/output/admin_kube_config",
-    [switch]$IsAdmin
+    [string]$ClusterName,
+    [string]$ResourceGroupName,
+    [string]$KubeConfigFile,
+    [bool]$IsAdmin = $true
 )
 
 $ErrorActionPreference = "Stop"
