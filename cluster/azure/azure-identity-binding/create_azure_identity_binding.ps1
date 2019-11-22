@@ -1,10 +1,13 @@
 param(
+    [string]$SubscriptionId,
     [string]$KVReaderIdentityName,
     [string]$AksResourceGroupName,
     [string]$AzureIdentityName,
     [string]$AzureIdentityBindingName,
     [string]$AzureBindingKubeNamespace
 )
+
+az account set -s $SubscriptionId
 
 Write-Host "Ensure user-assigned identity is created"
 [array]$msisFound = az identity list --resource-group $AksResourceGroupName --query "[?name=='$($KVReaderIdentityName)']" | ConvertFrom-Json
@@ -36,7 +39,7 @@ Write-Host "Ensure azureidentity '$AzureIdentityName' is created"
 $totalRetries = 0
 $azureIdentityFound = $false
 while (!$azureIdentityFound -and $totalRetries -lt 10) {
-    kubectl get azureidentities.aadpodidentity.k8s.io 
+    kubectl get azureidentities.aadpodidentity.k8s.io
     [array]$existingAzureIdentities = kubectl get azureidentities.aadpodidentity.k8s.io -o json | jq ".items[].metadata.name"
     if ($null -ne $existingAzureIdentities -or $existingAzureIdentities.Count -gt 0) {
         $existingAzureIdentities | ForEach-Object {

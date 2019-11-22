@@ -1,9 +1,12 @@
 param(
-    [string]$KVReaderIdentityName = "sace-dev-kv-reader",
-    [string]$AksResourceGroupName = "sace-dev-rg",
-    [string]$AzureIdentityName = "sace-dev-kv-reader",
+    [string]$SubscriptionId,
+    [string]$KVReaderIdentityName,
+    [string]$AksResourceGroupName,
+    [string]$AzureIdentityName,
     [string]$AzureBindingKubeNamespace = "default"
 )
+
+az account set -s $SubscriptionId
 
 Write-Host "Ensure user-assigned identity is created"
 [array]$msisFound = az identity list --resource-group $AksResourceGroupName --query "[?name=='$($KVReaderIdentityName)']" | ConvertFrom-Json

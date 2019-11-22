@@ -14,6 +14,7 @@ resource "null_resource" "azure_identity" {
       echo 'Need to use this var so terraform waits for kubeconfig ' ${var.kubeconfigadmin_done}; \
       KUBECONFIG=${var.output_directory}/${var.kubeconfigadmin_filename} \
       pwsh ${path.module}/create_azure_identity.ps1 \
+      -SubscriptionId ${var.subscription_id}
       -KVReaderIdentityName ${var.kv_reader_identity_name} \
       -AksResourceGroupName ${var.aks_resource_group_name} \
       -AzureIdentityName ${var.azure_identity_name} \
@@ -38,6 +39,7 @@ resource "null_resource" "azure_identity_binding" {
       echo 'Need to use this var so terraform waits for kubeconfig ' ${var.kubeconfigadmin_done}; \
       KUBECONFIG=${var.output_directory}/${var.kubeconfigadmin_filename} \
       pwsh ${path.module}/create_azure_identity_binding.ps1 \
+      -SubscriptionId ${var.subscription_id}
       -KVReaderIdentityName ${var.kv_reader_identity_name} \
       -AksResourceGroupName ${var.aks_resource_group_name} \
       -AzureIdentityName ${var.azure_identity_name} \
