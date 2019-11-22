@@ -1,3 +1,8 @@
+variable "subscription_id" {
+  type = "string"
+  description = "azure subscription id where aks/kv-reader is created"
+}
+
 variable "resource_group_name" {
   description = "Default resource group name that the network will be created in."
 }

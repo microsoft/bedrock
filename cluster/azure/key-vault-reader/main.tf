@@ -2,6 +2,10 @@ module "azure-provider" {
   source = "../provider"
 }
 
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 data "azurerm_client_config" "current" {}
 
 resource "null_resource" "keyvault_reader" {

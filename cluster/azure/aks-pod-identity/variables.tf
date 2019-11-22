@@ -1,3 +1,7 @@
+variable "subscription_id" {
+  type = "string"
+  description = "azure subscription id where aks/kv-reader is created"
+}
 
 variable "output_directory" {
   type    = "string"

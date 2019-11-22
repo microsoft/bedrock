@@ -1,3 +1,11 @@
+module "azure-provider" {
+  source = "../provider"
+}
+
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "null_resource" "azure_identity" {
   count = "${var.aks_resource_group_name != "" && var.kv_reader_identity_name != "" && var.azure_identity_name != "" && var.k8s_namespace != "" ? 1 : 0}"
 

@@ -1,3 +1,11 @@
+module "azure-provider" {
+  source = "../provider"
+}
+
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+}
+
 resource "null_resource" "pod_identity" {
   count = "${var.env_name != "" && var.pod_identity_version != "" && var.pod_identity_namespace != "" ? 1 : 0}"
 
