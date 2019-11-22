@@ -1,4 +1,19 @@
 ############################################################
+# log analytics                                            #
+############################################################
+variable "log_analytics_subscription_id" {
+  type = "string"
+}
+
+variable "log_analytics_resource_group_name" {
+  type = "string"
+}
+
+variable "log_analytics_name" {
+  type = "string"
+}
+
+############################################################
 # aks                                                      #
 ############################################################
 variable "subscription_id" {

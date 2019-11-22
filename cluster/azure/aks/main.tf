@@ -6,11 +6,6 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
-data "azurerm_log_analytics_workspace" "workspace" {
-  name                = "${var.log_analytics_name}"
-  resource_group_name = "${var.log_analytics_resource_group_name}"
-}
-
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "${var.cluster_name}"
   location            = "${var.aks_resource_group_location}"
@@ -52,7 +47,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   addon_profile {
     oms_agent {
       enabled                    = "${var.oms_agent_enabled}"
-      log_analytics_workspace_id = "${data.azurerm_log_analytics_workspace.workspace.id}"
+      log_analytics_workspace_id = "subscriptions/${var.log_analytics_subscription_id}/resourceGroups/${var.log_analytics_resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/${var.log_analytics_name}"
     }
 
     http_application_routing {
