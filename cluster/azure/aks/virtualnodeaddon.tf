@@ -1,10 +1,3 @@
-module "azure-provider" {
-  source = "../provider"
-}
-
-provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
-}
 
 resource "null_resource" "enable_virtual_node_addon" {
   count = "${var.enable_virtual_node_addon ? 1 : 0}"

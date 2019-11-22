@@ -1,10 +1,3 @@
-module "azure-provider" {
-  source = "../provider"
-}
-
-provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
-}
 
 resource "null_resource" "cluster_credentials" {
   count = "${var.kubeconfig_to_disk ? 1 : 0}"
