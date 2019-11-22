@@ -6,9 +6,6 @@ module "aks" {
   source = "../../azure/aks"
 
   subscription_id                       = "${var.subscription_id}"
-  log_analytics_resource_group_name     = "${var.log_analytics_resource_group_name}"
-  log_analytics_resource_group_location = "${var.log_analytics_resource_group_location}"
-  log_analytics_name                    = "${var.log_analytics_name}"
   aks_resource_group_name               = "${var.aks_resource_group_name}"
   aks_resource_group_location           = "${var.aks_resource_group_location}"
   cluster_name                          = "${var.cluster_name}"
