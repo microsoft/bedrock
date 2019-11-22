@@ -16,8 +16,8 @@ resource "null_resource" "keyvault_reader" {
   }
 
   triggers = {
-    aks_subscription_id      = "${var.aks_subscription_id}"
-    vault_subscription_id    = "${var.vault_subscription_id}"
+    aks_subscription_id   = "${var.aks_subscription_id}"
+    vault_subscription_id = "${var.vault_subscription_id}"
     vault_reader_identity = "${var.vault_reader_identity}"
     vault_name            = "${var.vault_name}"
   }

@@ -1,4 +1,4 @@
-variable "subscription_id" {
+variable "aks_subscription_id" {
   type = "string"
   description = "azure subscription id where aks/kv-reader is created"
 }
