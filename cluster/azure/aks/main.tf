@@ -6,8 +6,16 @@ provider "azurerm" {
   subscription_id = "${var.subscription_id}"
 }
 
+resource "random_id" "workspace" {
+  keepers = {
+    group_name = "${var.log_analytics_resource_group_name}"
+  }
+
+  byte_length = 8
+}
+
 resource "azurerm_log_analytics_workspace" "workspace" {
-  name                = "${var.log_analytics_name}"
+  name                = "bedrock-k8s-workspace-${random_id.workspace.hex}"
   location            = "${var.log_analytics_resource_group_location}"
   resource_group_name = "${var.log_analytics_resource_group_name}"
   sku                 = "PerGB2018"
