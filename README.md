@@ -1,11 +1,11 @@
 # Bedrock
 
-Bedrock provides patterns, an implementation, and automation for operating production Kubernetes clusters based on a GitOps workflow, building on the best practices we have discovered in working with dozens of deployments with customers in operationalizing Kubernetes clusters.
+Bedrock provides patterns, implementation, and automation for operating production Kubernetes clusters based on a GitOps workflow, building on the best practices we have discovered in working with dozens of deployments with customers in operationalizing Kubernetes clusters.
 
 Bedrock helps you:
-* Define and maintain infrastructure deployment scripts across multiple cluster deployments.
-* Deploy an automated and secure GitOps workflow end to end.
-* Deploy and manage service workloads from source code to cluster deployment.
+* Define and maintain infrastructure deployments across multiple clusters.
+* Deploy and automate a secure end to end GitOps workflow.
+* Deploy and manage service workloads from source code to their deployment in-cluster.
 * Observe ongoing deployments across multiple services, their revisions, and multiple clusters utilizing those services.
 
 ## Getting Started
@@ -27,7 +27,7 @@ Bedrock helps you:
 
 ## Contributing
 
-We do not claim to have all the answers and would greatly appreciate your issues, ideas, and pull requests.
+We do not claim to have all the answers and would greatly appreciate your ideas, issues, and pull requests.
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us

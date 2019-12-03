@@ -1,6 +1,6 @@
 # A First Workload With Bedrock
 
-The best way to start learning about Bedrock is to see how its core GitOps mechanism works and how it makes deploying infrastructure easier, so let's do that with a walkthrough of that functionality.
+The best way to start learning about Bedrock is walk through the deployment of a cluster and a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
 
 In this walkthrough, we will:
 1. Create our GitOps resource manifest repo that will act as the source of truth for our in-cluster deployments.
@@ -9,7 +9,7 @@ In this walkthrough, we will:
 
 ## Create and Configure GitOps Resource Manifest Repo
 
-In a GitOps workflow, we designate a git repo as the definitive source of truth of what should be deployed in our cluster.  An operator in the Kubernetes cluster (Flux in the case of Bedrock) watches this repo and applies commits to the repo to the cluster such that the resources in the cluster exactly match the GitOps resource manifest repo.
+In a GitOps workflow, we designate a git repo as the definitive source of truth of what should be deployed in our cluster. An operator in the Kubernetes cluster (Flux in the case of Bedrock) watches this repo and applies changes as they are made to the cluster such that the resources in the cluster exactly match the GitOps resource manifest repo.
 
 Our next steps is to create and configure this repo for this workflow.
 
@@ -21,7 +21,7 @@ Our next steps is to create and configure this repo for this workflow.
 $ git clone https://github.com/myuser/app-cluster-manifests
 ```
 
-Flux requires that the git repository have at least one commit, so let's initialize the repo with an empty commit:
+Flux requires that the git resource manifest repository have at least one commit, so let's initialize the repo with an empty commit:
 
 ``` bash
 $ cd app-cluster-manifests
@@ -31,7 +31,7 @@ $ git push origin master
 
 ### Generate an SSH Key for the GitOps Resource Manifest Repo
 
-When Flux finishes reconciling the cluster state to match the resource manifest repo it pushes a tag to the repo to track the last commit it has reconciled against. This step requires authentication such that the repo can validate that you are authorized to push these tags.
+Flux pushes a tag to the git repo to track the last commit it has reconciled against once it finishes its reconcilitation of a commit. This operation requires authentication such that the repo can validate that Flux is authorized to push these tags.
 
 For a Github repo, this authentication is accomplished using an SSH key, so our next task is to create this GitOps SSH key.
 
@@ -41,7 +41,7 @@ We’ll do this using `ssh-keygen` but first let’s create a separate directory
 $ mkdir -p ~/cluster-deployment
 ```
 
-With this, let’s create a key pair for our GitOps workflow:
+Next, let’s create a key pair for our GitOps workflow:
 
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
@@ -71,11 +71,11 @@ This will create our keys for our GitOps workflow:
 1. The private key for Flux to authenticate against the GitOps repo and,
 2. The public key for the GitOps repo to validate the passed credentials.
 
-The public portion of the key pair will be uploaded to GitHub as a deploy key in the next step and we will retain the private portion of the key locally to provide to Flux during cluster deployment.
+The public portion of the key pair will be uploaded to GitHub as a deploy key in the next step and we will utilize the private portion of the key later during the cluster deployment of Flux.
 
 ### Grant Deploy Key Access to the Manifest Repository
 
-We next need to add the public key of this key pair to our repository. You will need ownership permissions to the git repo for this step.
+We next need to add the public key of this key pair to our repository (you will need ownership permissions to the git repo for this step).
 
 First, copy the contents of the public key to your clipboard using one of the two methods below as appropriate for the platform that you are using:
 
@@ -90,7 +90,7 @@ Ubuntu (including WSL)
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
 
-Next, on the Github repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`.  Give your key a title and paste in the contents of your public key and check the checkbox to allow the key to have `Write Access`.
+Next, on the Github repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`. Give your key a title and paste in the contents of your public key and check the checkbox to allow the key to have `Write Access`.
 
 ![enter key](./images/addDeployKey.png)
 
@@ -102,9 +102,9 @@ Click "Add key", and you should see:
 
 With our GitOps resource manifest repo and key pair created, let’s move on to scaffolding out our cluster deployment.
 
-Creating, managing, and maintaining infrastructure deployment templates is a real challenge, especially at scale, where a large scale deployment can consist of dozens of nearly identical clusters differentiated only by slight differences in config.
+Creating, managing, and maintaining infrastructure deployment templates is a real challenge, especially at scale, where a large scale deployment can consist of dozens of nearly identical clusters differentiated only by slight differences in config based on the cloud region they are operating in or otherwise.
 
-Bedrock helps your manage this complexity with infrastructure environment templates and definitions.  Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
+Bedrock helps your manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
 
 ```bash
 $ cd ~/cluster-deployment
@@ -159,17 +159,17 @@ Our next task is to fill all of the empty items in this template with config val
 
 ### Cluster name, DNS prefix, VNET name, and resource group
 
-First, choose a cluster name (for example: `myname-cluster`) and replace both `cluster_name` and `dns_prefix` with this.   This will be the name of the cluster that will be created in your subscription.
+First, choose a cluster name (for example: `myname-cluster`) and replace both `cluster_name` and `dns_prefix` with this. This will be the name of the cluster that will be created in your subscription.
 
 Likewise, update the value for `resource_group_name` to be a variant of this, like `myname-cluster-rg`, and update `vnet_name` with a variant as well, like `myname-vnet`. Probably unsurprisingly, your cluster will be created in this resource group and VNET.
 
 ### Configure GitOps Repo
 
-Next, let's update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github.  It should look something like this: `git@github.com:myuser/app-cluster-manifests.git`.
+Next, let's update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. It should look something like this: `git@github.com:myuser/app-cluster-manifests.git`.
 
-Our next step is to point `gitops_ssh_key` to the GitOps private key we created previously.  If you followed those steps, you can simply adjust this value to `../keys/gitops-ssh-key`.
+Our next step is to point `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can simply adjust this value to `../keys/gitops-ssh-key`.
 
-In multi-cluster scenarios, we often will keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are  only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
+In multi-cluster scenarios, we often will keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
 Given this, make `gitops_path` an empty string `""`.
 
@@ -436,7 +436,7 @@ Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 With that, you have successfully have deployed your first cluster with Bedrock!
 
-This possibly seems like a lot of overhead for creating a single cluster.  The real advantage to this approach comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios.  You can read in detail about these scenarios and in our infrastructure definitions documentation.
+This possibly seems like a lot of overhead for creating a single cluster. The real advantage to this approach comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
 
 ### Using Terraform State
 
@@ -514,7 +514,7 @@ kube-system   metrics-server-58b6fcfd54-c2w6x        1/1     Running   0        
 kube-system   tunnelfront-5787f6d67-f84zn            1/1     Running   0          18m
 ```
 
-As you can see, Flux was provisioned as part of cluster creation, and as such we can see the pods are running in the cluster.
+As you can see, Flux was provisioned as part of cluster creation, and we can see the pods are running in the cluster.
 
 Copying the name of the flux pod, let’s fetch the logs for it:
 
@@ -535,9 +535,9 @@ ts=2019-06-18T06:33:18.819404372Z caller=images.go:18 component=sync-loop msg="p
 
 ## Deploy an update using Kubernetes manifest
 
-The GitOps workflow we have established with Flux and Bedrock makes it easy to control the workflow that is running in the cluster.  As we discussed earlier, Flux watches the GitOps resource manifest repo and applies any changes we make there to the cluster.
+The GitOps workflow we have established with Flux and Bedrock makes it easy to control the workflow that is running in the cluster. As we discussed earlier, Flux watches the GitOps resource manifest repo and applies any changes we make there to the cluster.
 
-Let’s try this by creating a YAML file with a set of Kubernetes resources for a simple service and committing it to the resource manifest repo.  In your resource manifest git repo directory that we cloned earlier, create a file called `webapp.yaml` and place the following into it:
+Let’s try this by creating a YAML file with a set of Kubernetes resources for a simple service and committing it to the resource manifest repo. In your resource manifest git repo directory that we cloned earlier, create a file called `webapp.yaml` and place the following into it:
 
 ```yaml
 apiVersion: v1
@@ -595,7 +595,9 @@ Let’s then watch the Flux pod logs again, but this time tailing them so we get
 $ kubectl logs flux-5897d4679b-tckth -n flux -f
 ```
 
-Once Flux triggers its next sync, we should see at the end of the output that Flux has found the repo `bedrock-deploy-demo` and created the new service: `"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
+Once Flux starts its next reconcilation, we should see at the end of the output that Flux has found the repo `bedrock-deploy-demo` and created the new service:
+
+`"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
 
 Once applied, we should be able to see the web app pods running in our cluster:
 
@@ -623,13 +625,13 @@ kube-system   metrics-server         ClusterIP      10.0.189.185   <none>       
 
 External load balancers like this take time to provision, so if the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
 
-The EXTERNAL-IP, in the case above, is: 52.175.216.214.  Append the port and use http://52.175.216.214:8080 to run the service in a browser.
+The EXTERNAL-IP, in the case above, is: 52.175.216.214. By appending the port our service is hosted on we can use http://52.175.216.214:8080 to fetch the service in a browser.
 
 ![Deployed Web application running](./images/WebAppRunning.png)
 
-And that’s it.  We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
+And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
 
-As a final step, you probably want to delete your Kubernetes cluster to save money:
+As a final step, you probably want to delete your Kubernetes cluster to save on your wallet. Thankfully, Terraform has a command for that:
 
 ```bash
 $ cd ~/cluster-deployment/cluster-generated
