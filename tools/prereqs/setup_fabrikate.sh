@@ -46,3 +46,5 @@ curl -s -LO https://github.com/microsoft/fabrikate/releases/download/$FABRIKATE_
 unzip $FABRIKATE_FILE -d /usr/local/bin
 
 cd -
+
+echo "fab installed into /usr/local/bin"
