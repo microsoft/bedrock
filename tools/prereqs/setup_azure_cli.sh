@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 # load common functions
 SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
