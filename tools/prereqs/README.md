@@ -7,7 +7,8 @@ Working with Spk and Bedrock in general requires a set up prerequisites to be in
 - Helm
 - Fabrikate
 - Terraform
+- SPK
 
-In order to facilitate the ease of installing these requirements, a set of scripts has been created that will install each prereq individually.  Some of these scripts assume you are running upon an Ubuntu Linux system and they use `apt` to install the components.
+In order to facilitate the ease of installing these requirements, a set of scripts has been created that will install each prereq individually.  The majority of the install scripts install the executables into /usr/local/bin.  In the case of the Azure CLI, if the "manual" install method is used, you will be prompted where `az` will be installed.
 
 The scripts can be found [here](./).
