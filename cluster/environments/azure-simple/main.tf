@@ -35,6 +35,7 @@ module "aks-gitops" {
   gitops_ssh_key           = "${var.gitops_ssh_key}"
   gitops_path              = "${var.gitops_path}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
+  git_label            = "${var.git_label}"
   gitops_url_branch        = "${var.gitops_url_branch}"
   ssh_public_key           = "${var.ssh_public_key}"
   resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"

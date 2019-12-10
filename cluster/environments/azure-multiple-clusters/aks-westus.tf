@@ -42,6 +42,7 @@ module "west_aks_gitops" {
   gitops_path              = "${var.gitops_west_path}"
   gitops_url_branch        = "${var.gitops_west_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
+  git_label            = "${var.git_label}"
   resource_group_name      = "${local.west_rg_name}"
   service_cidr             = "${var.west_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
