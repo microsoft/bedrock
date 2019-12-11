@@ -16,11 +16,6 @@ variable "flux_image_tag" {
   default = "1.12.2"
 }
 
-variable "git_label" {
-  type = "string"
-  default = "flux-sync"
-}
-
 variable "gitops_path" {
   type = "string"
 }
