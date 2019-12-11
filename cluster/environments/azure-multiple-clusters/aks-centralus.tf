@@ -42,7 +42,7 @@ module "central_aks_gitops" {
   gitops_path              = "${var.gitops_central_path}"
   gitops_url_branch        = "${var.gitops_central_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
-  git_label            = "${var.git_label}"
+  git_label                = "${var.git_label}"
   resource_group_name      = "${local.central_rg_name}"
   service_cidr             = "${var.central_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
