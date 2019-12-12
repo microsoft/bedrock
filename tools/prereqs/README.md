@@ -1,6 +1,6 @@
 # Bedrock and SPK Prerequisites
 
-Working with Spk and Bedrock in general requires a set up prerequisites to be installed.  Those prerequisites are as follows:
+Bedrock builds on top of the work of a number of other tools.  As such, you'll need to install the following tool prerequistites if you haven't already.
 
 - Azure CLI
 - Kubectl
@@ -9,6 +9,42 @@ Working with Spk and Bedrock in general requires a set up prerequisites to be in
 - Terraform
 - SPK
 
-In order to facilitate the ease of installing these requirements, a set of scripts has been created that will install each prereq individually.  The majority of the install scripts install the executables into /usr/local/bin.  In the case of the Azure CLI, if the "manual" install method is used, you will be prompted where `az` will be installed.
+To make this easier, we provide an individual script for each prereq. NOTE: You do not need to use these scripts if you are already utilizing a package manager like `apt` or `brew` to install these. Most of the install scripts install the executables into /usr/local/bin.
 
-The scripts can be found [here](./).
+To use, clone the bedrock repository locally and then navigate to `tools/prereqs`.
+
+## Azure CLI
+
+```bash
+$ sudo ./setup_azure_cli.sh
+```
+
+## kubectl
+
+```bash
+$ sudo ./setup_kubectl.sh
+```
+
+## Helm
+
+```bash
+$ sudo ./setup_helm.sh
+```
+
+## Fabrikate
+
+```bash
+$ sudo ./setup_fabrikate.sh
+```
+
+## Terraform
+
+```bash
+$ sudo ./setup_terraform.sh
+```
+
+## SPK
+
+```bash
+$ sudo ./setup_spk.sh
+```

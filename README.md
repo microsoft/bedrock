@@ -10,7 +10,7 @@ Bedrock helps you:
 
 ## Getting Started
 * [Why GitOps?](./docs/whyGitops.md)
-* Installing Prerequisites
+* [Installing Prerequisites](./tools/prereqs/README.md)
 * [Deploying a First Workload with Bedrock](./docs/firstWorkload)
 
 ## Going to Production
