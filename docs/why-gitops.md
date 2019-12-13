@@ -30,6 +30,8 @@ In a GitOps based deployment, the cluster has an operator that is configured dur
 
 One such implementation of this approach (and the one we use in Bedrock) is Flux, a CNCF project. It periodically reconciles the commits made to this manifest repo and applies them to the Kubernetes cluster as shown in Figure 1.
 
+TODO: Add simple diagram with Flux pulling from git repo
+
 Figure 1: Kubernetes cluster with Flux pulling from a git repo
 
 There are two main security advantages to this pull based approach:

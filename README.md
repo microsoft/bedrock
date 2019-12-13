@@ -9,12 +9,12 @@ Bedrock helps you:
 * Observe ongoing deployments across multiple services, their revisions, and multiple clusters utilizing those services.
 
 ## Getting Started
-* [Why GitOps?](./docs/whyGitops.md)
+* [Why GitOps?](./docs/why-gitops.md)
 * [Installing Prerequisites](./tools/prereqs/README.md)
 * [Deploying a First Workload with Bedrock](./docs/firstWorkload)
 
 ## Going to Production
-* High Level Deployment Definitions
+* [High Level Deployment Definitions](./docs/high-level-definitions.md)
 * GitOps Deployment Pipeline
 * Deploying Services and Revisions
 * Introspecting GitOps Deployments
