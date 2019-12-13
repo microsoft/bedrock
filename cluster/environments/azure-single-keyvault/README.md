@@ -91,6 +91,8 @@ tenant_id = "<tenantId>"
 # gitops_poll_interval = "30s"
 
 # gitops_path = "prod"
+
+# gitops_label = "custom-flux-sync"
 ```
 
 To deploy the azure-single-keyvault environment, run the following commands in your environment directory:
