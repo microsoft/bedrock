@@ -1,6 +1,6 @@
 # Bedrock and SPK Prerequisites
 
-Bedrock utilizes many existing tools in the ecosystem, and if you haven't already, you'll need to install the following prerequistites:
+Bedrock utilizes existing tools from the cloud and cloud native ecosystem.  You'll need to install the following prerequisites if you haven't already:
 
 - Azure CLI
 - Kubectl
@@ -9,11 +9,11 @@ Bedrock utilizes many existing tools in the ecosystem, and if you haven't alread
 - Terraform
 - SPK
 
-To simplify this, we maintain an individual script for each prerequisite.
+We maintain an individual script for each prerequisite to make this easier.
 
 NOTE: You do not need to use these scripts if you are already utilizing a package manager like `apt` or `brew` to install these.
 
-To use, clone the bedrock repository locally and then navigate to `tools/prereqs` and execute the appropriate scripts for the prerequisites you need to install.
+To use this, clone the bedrock repository locally and then navigate to `tools/prereqs` and execute the appropriate scripts for the prerequisites you need to install:
 
 ## Azure CLI
 
