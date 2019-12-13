@@ -15,7 +15,7 @@ Bedrock helps you:
 
 ## Going to Production
 * [High Level Deployment Definitions](./docs/high-level-definitions.md)
-* GitOps Deployment Pipeline
+* [GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
 * Deploying Services and Revisions
 * Introspecting GitOps Deployments
 * Deploying and Maintaining Infrastructure
