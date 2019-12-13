@@ -18,7 +18,7 @@ Bedrock helps you:
 * [GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
 * Deploying Services and Revisions
 * Introspecting GitOps Deployments
-* Deploying and Maintaining Infrastructure
+* [Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
 * Ongoing Operations and Maintenance
 
 ## Community
