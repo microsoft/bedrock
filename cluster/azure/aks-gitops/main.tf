@@ -30,6 +30,7 @@ module "flux" {
   gitops_ssh_key       = "${var.gitops_ssh_key}"
   gitops_path          = "${var.gitops_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
+  gitops_label         = "${var.gitops_label}"
   gitops_url_branch    = "${var.gitops_url_branch}"
   enable_flux          = "${var.enable_flux}"
   flux_recreate        = "${var.flux_recreate}"

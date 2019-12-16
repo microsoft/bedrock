@@ -25,6 +25,11 @@ variable "gitops_poll_interval" {
   default = "5m"
 }
 
+variable "gitops_label" {
+  type    = "string"
+  default = "flux-sync"
+}
+
 variable "gitops_ssh_url" {
   description = "ssh git clone repository URL with Kubernetes manifests including services which runs in the cluster. Flux monitors this repo for Kubernetes manifest additions/changes preriodiaclly and apply them in the cluster."
   type        = "string"

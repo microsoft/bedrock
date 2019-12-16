@@ -57,6 +57,7 @@ module "central_flux" {
   flux_clone_dir       = "${local.central_flux_clone_dir}"
   gitops_path          = "${var.gitops_central_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
+  gitops_label         = "${var.gitops_label}"
 }
 
 module "central_tm_endpoint" {

@@ -34,6 +34,11 @@ variable "gitops_poll_interval" {
   default = "5m"
 }
 
+variable "gitops_label" {
+  type    = "string"
+  default = "flux-sync"
+}
+
 variable "gitops_ssh_url" {
   type = "string"
 }
