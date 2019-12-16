@@ -277,6 +277,7 @@ vnet_name = "<vnet name>"
 #--------------------------------------------------------------
 # gitops_url_branch = "release-123"
 # gitops_poll_interval = "30s"
+# gitops_label = "custom-flux-sync"
 # gitops_path = "prod"
 # network_policy = "calico"
 # network_plugin = "azure"

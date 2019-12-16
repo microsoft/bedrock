@@ -58,6 +58,7 @@ module "west_flux" {
   flux_clone_dir       = "${local.west_flux_clone_dir}"
   gitops_path          = "${var.gitops_west_path}"
   gitops_poll_interval = "${var.gitops_poll_interval}"
+  gitops_label         = "${var.gitops_label}"
 }
 
 # create a dynamic public ip and associate with traffic manger endpoint

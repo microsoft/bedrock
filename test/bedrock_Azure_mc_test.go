@@ -183,6 +183,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
 			"gitops_poll_interval":     "5m",
+			"gitops_label":             "flux-sync",
 			"keyvault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
 

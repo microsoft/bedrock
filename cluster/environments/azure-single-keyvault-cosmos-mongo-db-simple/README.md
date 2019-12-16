@@ -77,6 +77,7 @@ service_principal_secret = "<service principal secret>"
 # gitops_url_branch = "release-123"
 # gitops_poll_interval = "30s"
 # gitops_path = "prod"
+# gitops_label = "custom-flux-sync"
 
 ```
 
