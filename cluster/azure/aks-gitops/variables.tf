@@ -97,11 +97,6 @@ variable "kubeconfig_filename" {
   default     = "bedrock_kube_config"
 }
 
-variable "kubeconfig_recreate" {
-  description = "Any change to this variable will recreate the kube config file to local disk."
-  type        = "string"
-  default     = ""
-}
 variable "network_plugin" {
   default     = "azure"
   description = "Network plugin used by AKS. Either azure or kubenet."

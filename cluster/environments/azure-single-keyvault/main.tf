@@ -19,7 +19,8 @@ data "azurerm_subnet" "vnet" {
 }
 
 module "aks-gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  # source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
@@ -27,7 +28,6 @@ module "aks-gitops" {
   cluster_name             = "${var.cluster_name}"
   dns_prefix               = "${var.dns_prefix}"
   flux_recreate            = "${var.flux_recreate}"
-  kubeconfig_recreate      = "${var.kubeconfig_recreate}"
   gc_enabled               = "${var.gc_enabled}"
   gitops_ssh_url           = "${var.gitops_ssh_url}"
   gitops_ssh_key           = "${var.gitops_ssh_key}"

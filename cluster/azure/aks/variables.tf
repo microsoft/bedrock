@@ -63,12 +63,6 @@ variable "kubeconfig_to_disk" {
   default     = "true"
 }
 
-variable "kubeconfig_recreate" {
-  description = "Make any change to this value to trigger the recreation of the kube config file to disk."
-  type        = "string"
-  default     = ""
-}
-
 variable "kubeconfig_filename" {
   description = "Name of the kube config file saved to disk."
   type        = "string"

@@ -32,12 +32,6 @@ variable "flux_recreate" {
   default     = "false"
 }
 
-variable "kubeconfig_recreate" {
-  description = "Any change to this variable will recreate the kube config file to local disk."
-  type        = "string"
-  default     = "false"
-}
-
 variable "gitops_ssh_url" {
   type = "string"
 }

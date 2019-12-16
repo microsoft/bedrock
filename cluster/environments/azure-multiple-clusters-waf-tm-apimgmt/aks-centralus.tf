@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "centralrg" {
-  name     = "${var.central_resource_group_name}"
+  name = "${var.central_resource_group_name}"
 }
 
 # local variable with cluster and location specific
@@ -16,10 +16,10 @@ locals {
 module "central_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = "${local.central_rg_name}"
-  subnet_names    = ["${var.cluster_name}-aks-subnet"]
-  address_space   = "${var.central_address_space}"
-  subnet_prefixes = "${var.central_subnet_prefixes}"
+  resource_group_name = "${local.central_rg_name}"
+  subnet_names        = ["${var.cluster_name}-aks-subnet"]
+  address_space       = "${var.central_address_space}"
+  subnet_prefixes     = "${var.central_subnet_prefixes}"
 
   tags = {
     environment = "azure-multiple-clusters-waf-tm-apimgmt"
@@ -41,7 +41,6 @@ module "central_aks" {
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
