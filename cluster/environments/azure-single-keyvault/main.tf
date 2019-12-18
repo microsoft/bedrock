@@ -19,7 +19,8 @@ data "azurerm_subnet" "vnet" {
 }
 
 module "aks-gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"

@@ -6,6 +6,10 @@ data "azurerm_resource_group" "cluster" {
   name = "${var.resource_group_name}"
 }
 
+data "external" "kubernetes_version" {
+  program = ["${path.module}/default_kubernetes_version.sh","${data.azurerm_resource_group.cluster.location}"]
+}
+
 resource "random_id" "workspace" {
   keepers = {
     group_name = "${data.azurerm_resource_group.cluster.name}"
@@ -39,7 +43,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   location            = "${data.azurerm_resource_group.cluster.location}"
   resource_group_name = "${data.azurerm_resource_group.cluster.name}"
   dns_prefix          = "${var.dns_prefix}"
-  kubernetes_version  = "${var.kubernetes_version}"
+  kubernetes_version  = "${var.kubernetes_version != "" ? var.kubernetes_version : data.external.kubernetes_version.result.default_version}"
 
   linux_profile {
     admin_username = "${var.admin_user}"

@@ -24,7 +24,8 @@ resource "null_resource" "cloud_credentials" {
 }
 
 module "aks" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  source = "../../cluster/azure/aks"
 
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
