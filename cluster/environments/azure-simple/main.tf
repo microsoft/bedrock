@@ -21,8 +21,8 @@ module "vnet" {
 }
 
 module "aks-gitops" {
-  # source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
-  source                   = "../../azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
   agent_vm_size            = "${var.agent_vm_size}"
