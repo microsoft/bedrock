@@ -1,5 +1,5 @@
 resource_group_name      = "<resource-group-name>"
-cluster_name             = "<cluster-name-test>"
+cluster_name             = "<cluster-name>"
 agent_vm_count           = "3"
 dns_prefix               = "<dns-prefix>"
 service_principal_id     = "<client-id>"
