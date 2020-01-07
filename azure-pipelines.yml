@@ -87,7 +87,7 @@ stages:
           exit 1
         fi
       workingDirectory: '$(modulePath)/cluster'
-       displayName: 'Terraform lint check'
+      displayName: 'Terraform lint check'
     # - bash: |
     #     AZ_SIMPLE_TEST=$(Whitelist_Bedrock.AZ_SIMPLE_TEST)
     #     AZ_COMMON_MC_TEST=$(Whitelist_Bedrock.AZ_COMMON_MC_TEST)
