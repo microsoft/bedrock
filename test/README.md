@@ -31,7 +31,7 @@ In this example we are using the [`azure-simple`](/cluster/environments/azure-si
 
     `sudo snap install --classic go`
 
-1. Run `go get -m github.com/microsoft/bedrock/test` and navigate to the bedrock test repository in the `/go/src/github.com/microsoft/bedrock/test` directory in the `$GOPATH`
+1. Run `go get -d github.com/microsoft/bedrock/test` and navigate to the bedrock test repository in the `/go/src/github.com/microsoft/bedrock/test` directory in the `$GOPATH`
 
 1. Change _all_ instances of the module source in the `main.tf` file pointing to `github.com/Microsoft/bedrock/cluster` to be your local development path `../..`.
 
