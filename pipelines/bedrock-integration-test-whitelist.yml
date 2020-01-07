@@ -58,6 +58,7 @@ steps:
             AZ_COMMON_MC_TEST=true
         fi
     fi
+    echo "This are the values 1: $ALL_IT_TESTS 2: $AZ_SIMPLE_TEST 3: $AZ_COMMON_KV_TEST 4: $AZ_COMMON_MC_TEST"
     echo "##vso[task.setvariable variable=ALL_IT_TESTS;isOutput=true]$ALL_IT_TESTS"
     echo "##vso[task.setvariable variable=AZ_SIMPLE_TEST;isOutput=true]$AZ_SIMPLE_TEST"
     echo "##vso[task.setvariable variable=AZ_COMMON_KV_TEST;isOutput=true]$AZ_COMMON_KV_TEST"
