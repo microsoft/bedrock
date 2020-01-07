@@ -106,6 +106,7 @@ stages:
 ##  jobs:
   - job: Bedrock_Test_SIMPLE
     displayName: Bedrock_Build_Azure_Simple
+    dependsOn: Bedrock_Init_Validate
     condition: and(succeeded(), or(eq(variables['AZ_SIMPLE_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     #condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validation.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_SIMPLE_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validation.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
@@ -134,6 +135,7 @@ stages:
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
+    dependsOn: Bedrock_Init_Validate
     #condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
@@ -169,6 +171,7 @@ stages:
 
   - job: Bedrock_Test_MULTIPLE
     #condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
+    dependsOn: Bedrock_Init_Validate
     condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     displayName: Bedrock_Build_Azure_Multiple_Clusters
     timeoutInMinutes: 60
