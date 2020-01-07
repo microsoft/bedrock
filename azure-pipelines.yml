@@ -107,7 +107,7 @@ stages:
   - job: Bedrock_Test_SIMPLE
     displayName: Bedrock_Build_Azure_Simple
     # condition: and(succeeded(), or(eq(variables['AZ_SIMPLE_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
-    condition: and(succeeded(), or(eq('$[ dependencies.variables.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_SIMPLE_TEST']', 'true'), eq('$[ dependencies.variables.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS']', 'true')))
+    condition: and(succeeded(), or(eq(dependencies.variables.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_SIMPLE_TEST'], 'true'), eq(dependencies.variables.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
       vmImage: 'Ubuntu-16.04'
