@@ -137,7 +137,7 @@ stages:
     displayName: Bedrock_Build_Azure_Single_KeyVault
     dependsOn: Bedrock_Init_Validate
     #condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
-    condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
+    condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validate.outputs['AZ_COMMON_KV_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validate.outputs['ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
       vmImage: 'Ubuntu-16.04'
@@ -172,7 +172,7 @@ stages:
   - job: Bedrock_Test_MULTIPLE
     #condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     dependsOn: Bedrock_Init_Validate
-    condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
+    condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validate.outputs['AZ_COMMON_MC_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validate.outputs['ALL_IT_TESTS'], 'true')))
     displayName: Bedrock_Build_Azure_Multiple_Clusters
     timeoutInMinutes: 60
     pool:
