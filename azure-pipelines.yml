@@ -87,27 +87,26 @@ stages:
           exit 1
         fi
       workingDirectory: '$(modulePath)/cluster'
-      displayName: 'Terraform lint check'
-    - bash: |
-        AZ_SIMPLE_TEST=$(Whitelist_Bedrock.AZ_SIMPLE_TEST)
-        AZ_COMMON_MC_TEST=$(Whitelist_Bedrock.AZ_COMMON_MC_TEST)
-        ALL_IT_TESTS=$(Whitelist_Bedrock.ALL_IT_TESTS)
-        AZ_COMMON_KV_TEST=$(Whitelist_Bedrock.AZ_COMMON_KV_TEST)
-        mkdir -p $(Pipeline.Workspace)/variables
-        echo "This are the values 1: $ALL_IT_TESTS 2: $AZ_SIMPLE_TEST 3: $AZ_COMMON_KV_TEST 4: $AZ_COMMON_MC_TEST"
-        echo "$ALL_IT_TESTS" > $(Pipeline.Workspace)/variables/ALL_IT_TESTS
-        echo "$AZ_SIMPLE_TEST" > $(Pipeline.Workspace)/variables/AZ_SIMPLE_TEST
-        echo "$AZ_COMMON_KV_TEST" > $(Pipeline.Workspace)/variables/AZ_COMMON_KV_TEST
-        echo "$AZ_COMMON_MC_TEST" > $(Pipeline.Workspace)/variables/AZ_COMMON_MC_TEST
-      displayName: Exporting Integration Test Trigger Variables to Pipeline Workspace
-    - publish: $(Pipeline.Workspace)/variables
-      artifact: variables
-##- stage: Bedrock_Integration_Test_Validation
-##  jobs:
+    #   displayName: 'Terraform lint check'
+    # - bash: |
+    #     AZ_SIMPLE_TEST=$(Whitelist_Bedrock.AZ_SIMPLE_TEST)
+    #     AZ_COMMON_MC_TEST=$(Whitelist_Bedrock.AZ_COMMON_MC_TEST)
+    #     ALL_IT_TESTS=$(Whitelist_Bedrock.ALL_IT_TESTS)
+    #     AZ_COMMON_KV_TEST=$(Whitelist_Bedrock.AZ_COMMON_KV_TEST)
+    #     mkdir -p $(Pipeline.Workspace)/variables
+    #     echo "This are the values 1: $ALL_IT_TESTS 2: $AZ_SIMPLE_TEST 3: $AZ_COMMON_KV_TEST 4: $AZ_COMMON_MC_TEST"
+    #     echo "$ALL_IT_TESTS" > $(Pipeline.Workspace)/variables/ALL_IT_TESTS
+    #     echo "$AZ_SIMPLE_TEST" > $(Pipeline.Workspace)/variables/AZ_SIMPLE_TEST
+    #     echo "$AZ_COMMON_KV_TEST" > $(Pipeline.Workspace)/variables/AZ_COMMON_KV_TEST
+    #     echo "$AZ_COMMON_MC_TEST" > $(Pipeline.Workspace)/variables/AZ_COMMON_MC_TEST
+    #   displayName: Exporting Integration Test Trigger Variables to Pipeline Workspace
+    # - publish: $(Pipeline.Workspace)/variables
+    #   artifact: variables
+#- stage: Bedrock_Integration_Test_Validation
+#  jobs:
   - job: Bedrock_Test_SIMPLE
     displayName: Bedrock_Build_Azure_Simple
     dependsOn: Bedrock_Init_Validate
-    #condition: and(succeeded(), or(eq(variables['AZ_SIMPLE_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_SIMPLE_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
@@ -136,7 +135,6 @@ stages:
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
     dependsOn: Bedrock_Init_Validate
-    #condition: and(succeeded(), or(eq(variables['AZ_COMMON_KV_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_COMMON_KV_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS'], 'true')))
     timeoutInMinutes: 60
     pool:
@@ -170,7 +168,6 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
 
   - job: Bedrock_Test_MULTIPLE
-    #condition: and(succeeded(), or(eq(variables['AZ_COMMON_MC_TEST'], 'true'), eq(variables['ALL_IT_TESTS'], 'true')))
     dependsOn: Bedrock_Init_Validate
     condition: and(succeeded(), or(eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.AZ_COMMON_MC_TEST'], 'true'), eq(dependencies.Bedrock_Init_Validate.outputs['Whitelist_Bedrock.ALL_IT_TESTS'], 'true')))
     displayName: Bedrock_Build_Azure_Multiple_Clusters
