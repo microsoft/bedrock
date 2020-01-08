@@ -39,19 +39,10 @@ pr:
     - '**/*.md'
 
 variables:
-- group: CSE Bedrock CI Environment Variables for Azure
-- name: GOBIN
-  value: '$(GOPATH)/bin' # Go binaries path
-- name: GOROOT
-  value: '/usr/local/go1.13' # Go installation path
-- name: GOPATH
-  value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-- name: modulePath
-  value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-  # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-  # GOROOT: '/usr/local/go1.13' # Go installation path
-  # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-  # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+  GOBIN:  '$(GOPATH)/bin' # Go binaries path
+  GOROOT: '/usr/local/go1.13' # Go installation path
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
 stages:
 - stage: Bedrock_Init_Validation
@@ -148,20 +139,10 @@ stages:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
     variables:
-    - group: CSE Bedrock CI Environment Variables for Azure
-    - name: GOBIN
-      value: '$(GOPATH)/bin' # Go binaries path
-    - name: GOROOT
-      value: '/usr/local/go1.13' # Go installation path
-    - name: GOPATH
-      value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-    - name: modulePath
-      value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-
-      # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      # GOROOT: '/usr/local/go1.13' # Go installation path
-      # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+      GOBIN:  '$(GOPATH)/bin' # Go binaries path
+      GOROOT: '/usr/local/go1.13' # Go installation path
+      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
@@ -194,20 +175,10 @@ stages:
       timeoutInMinutes: 60
 
     variables:
-    - group: CSE Bedrock CI Environment Variables for Azure
-    - name: GOBIN
-      value: '$(GOPATH)/bin' # Go binaries path
-    - name: GOROOT
-      value: '/usr/local/go1.13' # Go installation path
-    - name: GOPATH
-      value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-    - name: modulePath
-      value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-
-      # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      # GOROOT: '/usr/local/go1.13' # Go installation path
-      # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+      GOBIN:  '$(GOPATH)/bin' # Go binaries path
+      GOROOT: '/usr/local/go1.13' # Go installation path
+      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
