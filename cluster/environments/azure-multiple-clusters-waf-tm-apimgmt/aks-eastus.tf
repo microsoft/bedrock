@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "eastrg" {
-  name     = "${var.east_resource_group_name}"
+  name = "${var.east_resource_group_name}"
 }
 
 # local variable with cluster and location specific
@@ -17,9 +17,9 @@ module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   resource_group_name = "${local.east_rg_name}"
-  subnet_names = ["${var.cluster_name}-aks-subnet"]
-  address_space   = "${var.east_address_space}"
-  subnet_prefixes = "${var.east_subnet_prefixes}"
+  subnet_names        = ["${var.cluster_name}-aks-subnet"]
+  address_space       = "${var.east_address_space}"
+  subnet_prefixes     = "${var.east_subnet_prefixes}"
 
   tags = {
     environment = "azure-multiple-clusters"
@@ -41,7 +41,6 @@ module "east_aks" {
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
-  kubeconfig_recreate      = ""
   kubeconfig_filename      = "${local.east_kubeconfig_filename}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }

@@ -1,6 +1,6 @@
 # A Walkthrough Deploying a Bedrock Environment
 
-This document walks through a Bedrock deployment.  It does not include everything available using the [gitops](../../gitops/README.md) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates.  After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
+This document walks through a Bedrock deployment. It does not include everything available using the [gitops](../../gitops/README.md) workflow. We deploy a Kubernetes cluster and create an empty repo for Flux updates. After the cluster is running we add a manifest file to the repo to demonstrate Flux automation.
 
 This walkthrough consists of the following steps:
 
@@ -27,25 +27,25 @@ This walkthrough consists of the following steps:
 
 Before starting the deployment, there are several required steps:
 
-- Install the required common tools (kubectl, helm, and terraform).  See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.12.6](https://releases.hashicorp.com/terraform/0.12.6/).
-- Enroll as an Azure subscriber.  The free trial subscription does not support enough cores to run this tutorial.
+- Install the required common tools (kubectl, helm, and terraform). See also [Required Tools](https://github.com/microsoft/bedrock/tree/master/cluster). Note: this tutorial currently uses [Terraform 0.12.6](https://releases.hashicorp.com/terraform/0.12.6/).
+- Enroll as an Azure subscriber. The free trial subscription does not support enough cores to run this tutorial.
 - Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
 
 The following procedures complete the prerequisites and walk through the process of configuring Terraform and Bedrock scripts, deploying the cluster, and checking the deployed cluster's health. Then we add a new manifest file to demonstrate Flux update.
 
 ## Install the required tooling
 
-This document assumes one is running a current version of Ubuntu.  Windows users can install the [Ubuntu Terminal](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) from the Microsoft Store.  The Ubuntu Terminal enables Linux command-line utilities, including bash, ssh, and git that will be useful for the following deployment.  *Note: You will need the Windows Subsystem for Linux installed to use the Ubuntu Terminal on Windows*.
+This document assumes one is running a current version of Ubuntu. Windows users can install the [Ubuntu Terminal](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) from the Microsoft Store. The Ubuntu Terminal enables Linux command-line utilities, including bash, ssh, and git that will be useful for the following deployment. _Note: You will need the Windows Subsystem for Linux installed to use the Ubuntu Terminal on Windows_.
 
-Ensure that the [required tools](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), are installed in your environment. Alternatively, there are [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`.  In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`.  The scripts install the tools into `/usr/local/bin`.
+Ensure that the [required tools](https://github.com/microsoft/bedrock/tree/master/cluster#required-tools), are installed in your environment. Alternatively, there are [scripts](https://github.com/jmspring/bedrock-dev-env/tree/master/scripts) that will install `helm`, `terraform` and `kubectl`. In this case, use `setup_kubernetes_tools.sh` and `setup_terraform.sh`. The scripts install the tools into `/usr/local/bin`.
 
 ## Install the Azure CLI
 
-For information specific to your operating system, see the [Azure CLI install guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).  You can also use [this script](https://github.com/jmspring/bedrock-dev-env/blob/master/scripts/setup_azure_cli.sh) if running on a Unix based machine.
+For information specific to your operating system, see the [Azure CLI install guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest). You can also use [this script](https://github.com/jmspring/bedrock-dev-env/blob/master/scripts/setup_azure_cli.sh) if running on a Unix based machine.
 
 # Set Up Flux Manifest Repository
 
- We will deploy the Bedrock environment using the empty repo and then add a Kubernetes manifest that defines a simple Web application.  The change to the repo will automatically update the deployment.
+We will deploy the Bedrock environment using the empty repo and then add a Kubernetes manifest that defines a simple Web application. The change to the repo will automatically update the deployment.
 
 To prepare the Flux manifest repository, we must:
 
@@ -54,17 +54,20 @@ To prepare the Flux manifest repository, we must:
 3. [Grant Deploy Key access to the Manifest Repository](#grant-deploy-key-access-to-the-manifest-repository)
 
 ## Create the Flux Manifest Repository
+
 [Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `sample_app_manifests`.
 
-Flux requires that the git respository have at least one commit.  Initialize the repo with an empty commit.
+Flux requires that the git respository have at least one commit. Initialize the repo with an empty commit.
+
 ```bash
 git commit --allow-empty -m "Initializing the Flux Manifest Repository"
 ```
 
 More edocumentation around Service Principals are available in the [Bedrock documentation].
+
 ## Generate an RSA Key Pair to use as the Manifest Repository Deploy Key
 
-Generate the [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) using `ssh-keygen`.  The public portion of the key pair will be uploaded to GitHub as a deploy key.
+Generate the [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) using `ssh-keygen`. The public portion of the key pair will be uploaded to GitHub as a deploy key.
 
 Run: `ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key`.
 
@@ -92,11 +95,11 @@ The key's randomart image is:
 kudzu:azure-simple jmspring$
 ```
 
-This will create public and private keys for the Flux repository. We will assign the public key under the following heading: [Adding the Repository Key](#adding-the-repository-key).  The private key is stored on the machine originating the deployment.
+This will create public and private keys for the Flux repository. We will assign the public key under the following heading: [Adding the Repository Key](#adding-the-repository-key). The private key is stored on the machine originating the deployment.
 
 ## Grant Deploy Key Access to the Manifest Repository
 
-The public key of the [RSA key pair](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository) previously created needs to be added as a deploy key.  Note: *If you do not own the repository, you will have to fork it before proceeding*.
+The public key of the [RSA key pair](#create-an-rsa-key-pair-for-a-deploy-key-for-the-flux-repository) previously created needs to be added as a deploy key. Note: _If you do not own the repository, you will have to fork it before proceeding_.
 
 First, display the contents of the public key: `more ~/.ssh/gitops-ssh-key.pub`.
 
@@ -105,7 +108,7 @@ $ more ~/.ssh/gitops-ssh-key.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTNdGpnmztWRa8RofHl8dIGyNkEayNR6d7p2JtJ7+zMj0HRUJRc+DWvBML4DvT29AumVEuz1bsVyVS2f611NBmXHHKkbzAZZzv9gt2uB5sjnmm7LAORJyoBEodR/T07hWr8MDzYrGo5fdTDVagpoHcEke6JT04AL21vysBgqfLrkrtcEyE+uci4hRVj+FGL9twh3Mb6+0uak/UsTFgfDi/oTXdXOFIitQgaXsw8e3rkfbqGLbhb6o1muGd1o40Eip6P4xejEOuIye0cg7rfX461NmOP7HIEsUa+BwMExiXXsbxj6Z0TXG0qZaQXWjvZF+MfHx/J0Alb9kdO3pYx3rJbzmdNFwbWM4I/zN+ng4TFiHBWRxRFmqJmKZX6ggJvX/d3z0zvJnvSmOQz9TLOT4lqZ/M1sARtABPGwFLAvPHAkXYnex0v93HUrEi7g9EnM+4dsGU8/6gx0XZUdH17WZ1dbEP7VQwDPnWCaZ/aaG7BsoJj3VnDlFP0QytgVweWr0J1ToTRQQZDfWdeSBvoqq/t33yYhjNA82fs+bR/1MukN0dCWMi7MqIs2t3TKYW635E7VHp++G1DR6w6LoTu1alpAlB7d9qiq7o1c4N+gakXSUkkHL8OQbQBeLeTG1XtYa//A5gnAxLSzxAgBpVW15QywFgJlPk0HEVkOlVd4GzUw== sl;jlkjgl@kudzu.local
 ```
 
-Next, on the repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`.  Give your key a title and paste in the contents of your public key.  Important: allow the key to have `Write Access`.
+Next, on the repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`. Give your key a title and paste in the contents of your public key. Important: allow the key to have `Write Access`.
 
 ![enter key](./images/addDeployKey.png)
 
@@ -114,6 +117,7 @@ Click "Add key", and you should see:
 ![key result](./images/deployKeyResult.png)
 
 ## Create Azure Resource Group
+
 Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group
 
 ```bash
@@ -122,7 +126,7 @@ az group create -l westus2 -n testazuresimplerg
 
 ## Create an Azure Service Principal
 
-We use a single [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for configuring Terraform and for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster being deployed.  In Bedrock, see the [Service Principal documention](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
+We use a single [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for configuring Terraform and for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster being deployed. In Bedrock, see the [Service Principal documention](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
 
 [Login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) using the `az login` command.
 
@@ -154,7 +158,7 @@ Then, create the Service Principal using `az ad sp create-for-rbac --role contri
 }
 ```
 
-Take note of the following values.  They will be needed for configuring Terraform as well as the deployment as described under the heading [Configure Terraform for Azure Access](#3.-configure-terraform-for-azure-access):
+Take note of the following values. They will be needed for configuring Terraform as well as the deployment as described under the heading [Configure Terraform for Azure Access](#3.-configure-terraform-for-azure-access):
 
 - Subscription Id (`id` from account): `7060bca0-1234-5-b54c-ab145dfaccef`
 - Tenant Id: `72f984ed-86f1-41af-91ab-87acd01ed3ac`
@@ -163,7 +167,7 @@ Take note of the following values.  They will be needed for configuring Terrafor
 
 ## Create an RSA Key Pair to use as Node Key
 
-The Terraform scripts use this node key to setup log-in credentials on the nodes in the AKS cluster. We will use this key when setting up the Terraform deployment variables.  To generate the node key, run `ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key`:
+The Terraform scripts use this node key to setup log-in credentials on the nodes in the AKS cluster. We will use this key when setting up the Terraform deployment variables. To generate the node key, run `ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key`:
 
 ```bash
 $ ssh-keygen -b 4096 -t rsa -f ~/.ssh/node-ssh-key
@@ -190,9 +194,9 @@ The key's randomart image is:
 
 ## Configure Terraform For Azure Access
 
-Terraform supports a number of methods for authenticating with Azure.  Bedrock uses [authenticating with a Service Principal and client secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html).  This is done by setting a few environment variables via the Bash `export` command.
+Terraform supports a number of methods for authenticating with Azure. Bedrock uses [authenticating with a Service Principal and client secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html). This is done by setting a few environment variables via the Bash `export` command.
 
-To set the variables, use the key created under the previous heading [Create an Azure Service Principal](#create-an-azure-service-principal).  (The ARM_CLIENT_ID is `app_id` from the previous procedure.  The ARM_SUBSCRIPTION_ID is account `id`.)
+To set the variables, use the key created under the previous heading [Create an Azure Service Principal](#create-an-azure-service-principal). (The ARM_CLIENT_ID is `app_id` from the previous procedure. The ARM_SUBSCRIPTION_ID is account `id`.)
 
 Set the variables as follows:
 
@@ -241,7 +245,7 @@ drwxr-xr-x   7 jmspring  staff  224 Jun 12 09:11 azure-velero-restore
 drwxr-xr-x   3 jmspring  staff   96 Jun 12 09:11 minikube
 ```
 
-Each of the directories represent a common pattern supported within Bedrock.  For more information see the [Bedrock github repo](https://github.com/microsoft/bedrock/tree/master/cluster/azure).
+Each of the directories represent a common pattern supported within Bedrock. For more information see the [Bedrock github repo](https://github.com/microsoft/bedrock/tree/master/cluster/azure).
 
 ## Set Up Terraform Deployment Variables
 
@@ -257,7 +261,7 @@ total 32
 -rw-r--r--  1 jmspring  staff  2465 Jun 12 09:11 variables.tf
 ```
 
-The inputs for a Terraform deployment are specified in a `.tfvars` file.  In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields.  To get the ssh_public_key, run: `more ~/.ssh/node-ssh-key.pub`.  The path to the private key is `"/home/<user>/.ssh/gitops-ssh-key"`.
+The inputs for a Terraform deployment are specified in a `.tfvars` file. In the `azure-simple` repository, a skeleton exists in the form of `terraform.tfvars` with the following fields. To get the ssh_public_key, run: `more ~/.ssh/node-ssh-key.pub`. The path to the private key is `"/home/<user>/.ssh/gitops-ssh-key"`.
 
 ```bash
 $ cat terraform.tfvars
@@ -283,9 +287,9 @@ vnet_name = "<vnet name>"
 # network_plugin = "azure"
 ```
 
-From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`.  For purposes of this walkthrough use `agent_vm_count=3` as default
+From previous procedures, we have values for `service_principal_id`, `service_principal_secret`, `ssh_public_key`, `gitops_ssh_key`. For purposes of this walkthrough use `agent_vm_count=3` as default
 
-To get the gitopp_ssh_url, go back to the empty repository that was created in [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  This example uses SSH: `git@github.com:<user>/bedrock-deploy-demo.git`.
+To get the gitopp_ssh_url, go back to the empty repository that was created in [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository). This example uses SSH: `git@github.com:<user>/bedrock-deploy-demo.git`.
 
 Define the remainding fields:
 
@@ -300,10 +304,10 @@ Note: You need to create a resource group in your subscription first before you 
 az group create -l westus2 -n testazuresimplerg
 ```
 
-The, `gitops_ssh_key` is a *path* to the RSA private key we created under [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
+The, `gitops_ssh_key` is a _path_ to the RSA private key we created under [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
 The `ssh_public_key` is the RSA public key that was created for [AKS node access](#create-an-rsa-key-for-logging-into-aks-nodes).
 
-Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy.  Next, using the values just defined, fill in the other values that were generated.  Then, remove the old terraform.tfvars file.
+Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy. Next, using the values just defined, fill in the other values that were generated. Then, remove the old terraform.tfvars file.
 
 When complete `testazuresimple.tfvars` should resemble:
 
@@ -332,7 +336,7 @@ vnet_name = "testazuresimplevnet"
 
 ## Deploy the Template
 
-With the Terraform variables file, [testazuresimple.tfvars](#set-up-terraform-deployment-variables), it is time to do the Terraform deployment.  There are three steps to this process:
+With the Terraform variables file, [testazuresimple.tfvars](#set-up-terraform-deployment-variables), it is time to do the Terraform deployment. There are three steps to this process:
 
 - `terraform init` which initializes the local directory with metadata and other necessities Terraform needs.
 - `terraform plan` which sanity checks your variables against the deployment
@@ -341,6 +345,7 @@ With the Terraform variables file, [testazuresimple.tfvars](#set-up-terraform-de
 Make sure you are in the `bedrock/cluster/environments/azure-simple` directory and that you know the path to `testazuresimple.tfvars` (it is assumed that is in the same directory as the `azure-simple` environment).
 
 ### Terraform Init
+
 First execute `terraform init`:
 
 ```bash
@@ -385,7 +390,9 @@ If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
+
 ### Terraform Plan
+
 Next, execute `terraform plan` and specify the location of our variables file: `$ terraform plan -var-file=testazuresimple.tfvars`
 
 ```bash
@@ -403,99 +410,166 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
-  + azurerm_resource_group.cluster_rg
-      id:                                         <computed>
-      location:                                   "westus2"
-      name:                                       "testazuresimplerg"
-      tags.%:                                     <computed>
+  # module.vnet.azurerm_subnet.subnet[0] will be created
+  + resource "azurerm_subnet" "subnet" {
+      + address_prefix       = "10.10.1.0/24"
+      + id                   = (known after apply)
+      + ip_configurations    = (known after apply)
+      + name                 = "testsimplecluster-aks-subnet"
+      + resource_group_name  = "testsimplerg"
+      + service_endpoints    = []
+      + virtual_network_name = "testsimplevnet"
+    }
 
-  + module.vnet.azurerm_resource_group.vnet
-      id:                                         <computed>
-      location:                                   "westus2"
-      name:                                       "testazuresimplerg"
-      tags.%:                                     <computed>
+  # module.vnet.azurerm_virtual_network.vnet will be created
+  + resource "azurerm_virtual_network" "vnet" {
+      + address_space       = [
+          + "10.10.0.0/16",
+        ]
+      + dns_servers         = []
+      + id                  = (known after apply)
+      + location            = "westus2"
+      + name                = "testsimplevnet"
+      + resource_group_name = "testsimplerg"
+      + tags                = {
+          + "environment" = "azure-simple"
+        }
 
-  + module.vnet.azurerm_subnet.subnet
-      id:                                         <computed>
-      address_prefix:                             "10.10.1.0/24"
-      ip_configurations.#:                        <computed>
-      name:                                       "testazuresimplecluster-aks-subnet"
-      resource_group_name:                        "testazuresimplerg"
-      service_endpoints.#:                        "1"
-      virtual_network_name:                       "testazuresimplevnet"
+      + subnet {
+          + address_prefix = (known after apply)
+          + id             = (known after apply)
+          + name           = (known after apply)
+          + security_group = (known after apply)
+        }
+    }
 
-  + module.vnet.azurerm_virtual_network.vnet
-      id:                                         <computed>
-      address_space.#:                            "1"
-      address_space.0:                            "10.10.0.0/16"
-      location:                                   "westus2"
-      name:                                       "testazuresimplevnet"
-      resource_group_name:                        "testazuresimplerg"
-      subnet.#:                                   <computed>
-      tags.%:                                     "1"
-      tags.environment:                           "azure-simple"
+  # module.aks-gitops.module.aks.azurerm_kubernetes_cluster.cluster will be created
+  + resource "azurerm_kubernetes_cluster" "cluster" {
+      + dns_prefix            = "testsimpledns"
+      + fqdn                  = (known after apply)
+      + id                    = (known after apply)
+      + kube_admin_config     = (known after apply)
+      + kube_admin_config_raw = (sensitive value)
+      + kube_config           = (known after apply)
+      + kube_config_raw       = (sensitive value)
+      + kubernetes_version    = "1.14.8"
+      + location              = "westus2"
+      + name                  = "testsimplecluster"
+      + node_resource_group   = (known after apply)
+      + resource_group_name   = "testsimplerg"
+      + tags                  = (known after apply)
 
-  + module.aks-gitops.module.aks.azurerm_kubernetes_cluster.cluster
-      id:                                         <computed>
-      addon_profile.#:                            <computed>
-      agent_pool_profile.#:                       "1"
-      agent_pool_profile.0.count:                 "3"
-      agent_pool_profile.0.dns_prefix:            <computed>
-      agent_pool_profile.0.fqdn:                  <computed>
-      agent_pool_profile.0.max_pods:              <computed>
-      agent_pool_profile.0.name:                  "default"
-      agent_pool_profile.0.os_disk_size_gb:       "30"
-      agent_pool_profile.0.os_type:               "Linux"
-      agent_pool_profile.0.type:                  "AvailabilitySet"
-      agent_pool_profile.0.vm_size:               "Standard_D2s_v3"
-      agent_pool_profile.0.vnet_subnet_id:        "${var.vnet_subnet_id}"
-      dns_prefix:                                 "testazuresimple"
-      fqdn:                                       <computed>
-      kube_admin_config.#:                        <computed>
-      kube_admin_config_raw:                      <computed>
-      kube_config.#:                              <computed>
-      kube_config_raw:                            <computed>
-      kubernetes_version:                         "1.13.5"
-      linux_profile.#:                            "1"
-      linux_profile.0.admin_username:             "k8sadmin"
-      linux_profile.0.ssh_key.#:                  "1"
-      linux_profile.0.ssh_key.0.key_data:         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo5cFB/HiJB3P5s5kL3O24761oh8dVArCs9oMqdR09+hC5lD15H6neii4azByiMB1AnWQvVbk+i0uwBTl5riPgssj6vWY5sUS0HQsEAIRkzphik0ndS0+U8QI714mb3O0+qA4UYQrDQ3rq/Ak+mkfK0NQYL08Vo0vuE4PnmyDbcR8Pmo6xncj/nlWG8UzwjazpPCsP20p/egLldcvU59ikvY9+ZIsBdAGGZS29r39eoXzA4MKZZqXU/znttqa0Eed8a3pFWuE2UrntLPLrgg5hvliOmEfkUw0LQ3wid1+4H/ziCgPY6bhYJlMlf7WSCnBpgTq3tlgaaEHoE8gTjadKBk6bcrTaDZ5YANTEFAuuIooJgT+qlLrVql+QT2Qtln9CdMv98rP7yBiVVtQGcOJyQyG5D7z3lysKqCMjkMXOCH2UMJBrurBqxr6UDV3btQmlPOGI8PkgjP620dq35ZmDqBDfTLpsAW4s8o9zlT2jvCF7C1qhg81GuZ37Vop/TZDNShYIQF7ekc8IlhqBpbdhxWV6ap16paqNxsF+X4dPLW6AFVogkgNLJXiW+hcfG/lstKAPzXAVTy2vKh+29OsErIiL3SDqrXrNSmGmXwtFYGYg3XZLiEjleEzK54vYAbdEPElbNvOzvRCNdGkorw0611tpCntbpC79Q/+Ij6eyfQ== jims@fubu"
-      location:                                   "westus2"
-      name:                                       "testazuresimplecluster"
-      network_profile.#:                          "1"
-      network_profile.0.dns_service_ip:           "10.0.0.10"
-      network_profile.0.docker_bridge_cidr:       "172.17.0.1/16"
-      network_profile.0.network_plugin:           "azure"
-      network_profile.0.network_policy:           "azure"
-      network_profile.0.pod_cidr:                 <computed>
-      network_profile.0.service_cidr:             "10.0.0.0/16"
-      node_resource_group:                        <computed>
-      resource_group_name:                        "testazuresimplerg"
-      role_based_access_control.#:                "1"
-      role_based_access_control.0.enabled:        "true"
-      service_principal.#:                        "1"
-      service_principal.3262013094.client_id:     "7b6ab9ae-7de4-4394-8b52-0a8ecb5d2bf7"
-      service_principal.3262013094.client_secret: <sensitive>
-      tags.%:                                     <computed>
+      + addon_profile {
 
-  + module.aks-gitops.module.aks.azurerm_resource_group.cluster
-      id:                                         <computed>
-      location:                                   "westus2"
-      name:                                       "testazuresimplerg"
-      tags.%:                                     <computed>
+          + oms_agent {
+              + enabled                    = false
+              + log_analytics_workspace_id = (known after apply)
+            }
+        }
 
-  + module.aks-gitops.module.aks.null_resource.cluster_credentials
-      id:                                         <computed>
-      triggers.%:                                 "2"
-      triggers.kubeconfig_recreate:               ""
-      triggers.kubeconfig_to_disk:                "true"
+      + agent_pool_profile {
+          + count           = 3
+          + dns_prefix      = (known after apply)
+          + fqdn            = (known after apply)
+          + max_pods        = (known after apply)
+          + name            = "default"
+          + os_disk_size_gb = 30
+          + os_type         = "Linux"
+          + type            = "AvailabilitySet"
+          + vm_size         = "Standard_D4s_v3"
+          + vnet_subnet_id  = (known after apply)
+        }
 
-  + module.aks-gitops.module.flux.null_resource.deploy_flux
-      id:                                         <computed>
-      triggers.%:                                 "2"
-      triggers.enable_flux:                       "true"
-      triggers.flux_recreate:                     ""
+      + linux_profile {
+          + admin_username = "k8sadmin"
 
+          + ssh_key {
+              + key_data = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo5cFB/HiJB3P5s5kL3O24761oh8dVArCs9oMqdR09+hC5lD15H6neii4azByiMB1AnWQvVbk+i0uwBTl5riPgssj6vWY5sUS0HQsEAIRkzphik0ndS0+U8QI714mb3O0+qA4UYQrDQ3rq/Ak+mkfK0NQYL08Vo0vuE4PnmyDbcR8Pmo6xncj/nlWG8UzwjazpPCsP20p/egLldcvU59ikvY9+ZIsBdAGGZS29r39eoXzA4MKZZqXU/znttqa0Eed8a3pFWuE2UrntLPLrgg5hvliOmEfkUw0LQ3wid1+4H/ziCgPY6bhYJlMlf7WSCnBpgTq3tlgaaEHoE8gTjadKBk6bcrTaDZ5YANTEFAuuIooJgT+qlLrVql+QT2Qtln9CdMv98rP7yBiVVtQGcOJyQyG5D7z3lysKqCMjkMXOCH2UMJBrurBqxr6UDV3btQmlPOGI8PkgjP620dq35ZmDqBDfTLpsAW4s8o9zlT2jvCF7C1qhg81GuZ37Vop/TZDNShYIQF7ekc8IlhqBpbdhxWV6ap16paqNxsF+X4dPLW6AFVogkgNLJXiW+hcfG/lstKAPzXAVTy2vKh+29OsErIiL3SDqrXrNSmGmXwtFYGYg3XZLiEjleEzK54vYAbdEPElbNvOzvRCNdGkorw0611tpCntbpC79Q/+Ij6eyfQ== jims@fubu"
+            }
+        }
+
+      + network_profile {
+          + dns_service_ip     = "10.0.0.10"
+          + docker_bridge_cidr = "172.17.0.1/16"
+          + load_balancer_sku  = "basic"
+          + network_plugin     = "azure"
+          + network_policy     = "azure"
+          + pod_cidr           = (known after apply)
+          + service_cidr       = "10.0.0.0/16"
+        }
+
+      + role_based_access_control {
+          + enabled = true
+        }
+
+      + service_principal {
+          + client_id     = "631b0647-b300-4611-8349-842864d1c301"
+          + client_secret = (sensitive value)
+        }
+    }
+
+  # module.aks-gitops.module.aks.azurerm_log_analytics_solution.solution will be created
+  + resource "azurerm_log_analytics_solution" "solution" {
+      + id                    = (known after apply)
+      + location              = "westus2"
+      + resource_group_name   = "testsimplerg"
+      + solution_name         = "ContainerInsights"
+      + workspace_name        = (known after apply)
+      + workspace_resource_id = (known after apply)
+
+      + plan {
+          + name      = (known after apply)
+          + product   = "OMSGallery/ContainerInsights"
+          + publisher = "Microsoft"
+        }
+    }
+
+  # module.aks-gitops.module.aks.azurerm_log_analytics_workspace.workspace will be created
+  + resource "azurerm_log_analytics_workspace" "workspace" {
+      + id                   = (known after apply)
+      + location             = "westus2"
+      + name                 = (known after apply)
+      + portal_url           = (known after apply)
+      + primary_shared_key   = (sensitive value)
+      + resource_group_name  = "testsimplerg"
+      + retention_in_days    = (known after apply)
+      + secondary_shared_key = (sensitive value)
+      + sku                  = "PerGB2018"
+      + tags                 = (known after apply)
+      + workspace_id         = (known after apply)
+    }
+
+  # module.aks-gitops.module.aks.local_file.cluster_credentials[0] will be created
+  + resource "local_file" "cluster_credentials" {
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "./output/bedrock_kube_config"
+      + id                   = (known after apply)
+      + sensitive_content    = (sensitive value)
+    }
+
+  # module.aks-gitops.module.aks.random_id.workspace will be created
+  + resource "random_id" "workspace" {
+      + b64         = (known after apply)
+      + b64_std     = (known after apply)
+      + b64_url     = (known after apply)
+      + byte_length = 8
+      + dec         = (known after apply)
+      + hex         = (known after apply)
+      + id          = (known after apply)
+      + keepers     = {
+          + "group_name" = "testsimplerg"
+        }
+    }
+
+  # module.aks-gitops.module.flux.null_resource.deploy_flux[0] will be created
+  + resource "null_resource" "deploy_flux" {
+      + id       = (known after apply)
+      + triggers = {
+          + "enable_flux"   = "true"
+          + "flux_recreate" = "false"
+        }
+    }
 
 Plan: 8 to add, 0 to change, 0 to destroy.
 
@@ -509,9 +583,10 @@ can't guarantee that exactly these actions will be performed if
 As seen from the output, a number of objects have been defined for creation.
 
 ### Terraform Apply
-The final step is to issue `terraform apply -var-file=testazuresimple.tfvars` which uses the file containing the variables we defined above (if you run `terraform apply` without `-var-file=` it will take any `*.tfvars` file in the folder, for example, the sample *terraform.tfvars* file, if you didn't remove it, and start asking for the unspecified fields).
 
-The output for `terraform apply` is quite long, so the snippet below contains only the beginning and the end (sensitive output has been removed).  The full output can be found in [./extras/terraform_apply_log.txt](./extras/terraform_apply_log.txt).  Note the beginning looks similar to `terraform plan` and the output contains the status of deploying each component.  Based on dependencies, Terraform deploys components in the proper order derived from a dependency graph.
+The final step is to issue `terraform apply -var-file=testazuresimple.tfvars` which uses the file containing the variables we defined above (if you run `terraform apply` without `-var-file=` it will take any `*.tfvars` file in the folder, for example, the sample _terraform.tfvars_ file, if you didn't remove it, and start asking for the unspecified fields).
+
+The output for `terraform apply` is quite long, so the snippet below contains only the beginning and the end (sensitive output has been removed). The full output can be found in [./extras/terraform_apply_log.txt](./extras/terraform_apply_log.txt). Note the beginning looks similar to `terraform plan` and the output contains the status of deploying each component. Based on dependencies, Terraform deploys components in the proper order derived from a dependency graph.
 
 ```bash
 $ terraform apply -var-file=testazuresimple.tfvars
@@ -604,10 +679,11 @@ Terraform will perform the following actions:
       tags.%:                                     <computed>
 
   + module.aks-gitops.module.aks.null_resource.cluster_credentials
-      id:                                         <computed>
-      triggers.%:                                 "2"
-      triggers.kubeconfig_recreate:               ""
-      triggers.kubeconfig_to_disk:                "true"
+      directory_permission = "0777"
+      file_permission      = "0777"
+      filename             = "./output/bedrock_kube_config"
+      id                   = (known after apply)
+      sensitive_content    = (sensitive value)
 
   + module.aks-gitops.module.flux.null_resource.deploy_flux
       id:                                         <computed>
@@ -706,9 +782,11 @@ module.aks-gitops.module.flux.null_resource.deploy_flux: Creation complete after
 
 Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 ```
+
 ### Terraform State
 
 The results of `terraform apply` are enumerated in the `terraform.tfstate` file. For an overview of resources created, run `terraform state list`:
+
 ```bash
 ~/bedrock/cluster/environments/azure-simple$ terraform state list
 
@@ -721,9 +799,11 @@ module.vnet.azurerm_resource_group.vnet
 module.vnet.azurerm_subnet.subnet
 module.vnet.azurerm_virtual_network.vnet
 ```
+
 To see all the details, run `terraform show`
 
 To see one element, for example, run `terraform state show module.vnet.azurerm_virtual_network.vnet`:
+
 ```bash
 ~/bedrock/cluster/environments/azure-simple$ terraform state show module.vnet.azurerm_virtual_network.vnet
 id                     = /subscriptions/b59451c1-cd43-41b3-b3a4-74155d8f6cf6/resourceGroups/tst-az-simple-rg/providers/Microsoft.Network/virtualNetworks/testazuresimplevnet
@@ -738,8 +818,10 @@ subnet.#               = 0
 tags.%                 = 1
 tags.environment       = azure-simple
 ```
+
 ## Interact with the Deployed Cluster
-After `terraform apply` finishes, there is one critical output artifact: the Kubernetes config file for the deployed cluster that is generated and saved in the `output` directory.  The default file is `output/bedrock_kube_config`.  The following steps use this file to interact with the deployed Bedrock AKS cluster.
+
+After `terraform apply` finishes, there is one critical output artifact: the Kubernetes config file for the deployed cluster that is generated and saved in the `output` directory. The default file is `output/bedrock_kube_config`. The following steps use this file to interact with the deployed Bedrock AKS cluster.
 
 Using the config file `output/bedrock_kube_config`, one of the first things we can do is list all pods deployed within the cluster:
 
@@ -770,7 +852,7 @@ kube-system   metrics-server-766dd9f7fd-zs7l2         1/1     Running   1       
 kube-system   tunnelfront-6988c794b7-z2clv            1/1     Running   0          6m48s
 ```
 
-Note that there is also a namespace `flux`.  As previously mentioned, Flux is managing the deployment of all of the resources into the cluster.  Taking a look at the description for the flux pod `flux-5897d4679b-tckth`, we see the following:
+Note that there is also a namespace `flux`. As previously mentioned, Flux is managing the deployment of all of the resources into the cluster. Taking a look at the description for the flux pod `flux-5897d4679b-tckth`, we see the following:
 
 ```bash
 $ KUBECONFIG=./output/bedrock_kube_config kubectl describe po/flux-5897d4679b-tckth --namespace=flux
@@ -869,7 +951,7 @@ Events:
   Normal  Started    2m57s  kubelet, aks-default-30249513-2  Started container
 ```
 
-What is more interesting is to take a look at the Flux logs, one can checkout the activities that `flux` is performing.  A fuller log can be found [here](./extras/flux_log.txt).  But a snippet:
+What is more interesting is to take a look at the Flux logs, one can checkout the activities that `flux` is performing. A fuller log can be found [here](./extras/flux_log.txt). But a snippet:
 
 ```bash
 KUBECONFIG=./output/bedrock_kube_config kubectl log po/flux-5897d4679b-tckth --namespace=flux
@@ -888,9 +970,10 @@ ts=2019-06-18T06:33:18.819404372Z caller=images.go:18 component=sync-loop msg="p
 ```
 
 ## Deploy an update using Kubernetes manifest
-Flux automation makes it easy to upgrade services or infrastructure deployed by Bedrock.  In this example Flux watches the repo we set up previously under the heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  Now we add a simple Web application to the running deployment by pushing a .yaml manifest to the repo.  The .yaml specification describes the service `mywebapp` and type: a `LoadBalancer`.  It specifies the source the Docker image that contains it: `image: andrebriggs/goserver:v1.2` and how many containers to run: `replicas: 3`.  The containers will be accessible through the load balancer.
 
-When the .yaml file is complete we will push it to the repo, or simply drop it on GitHub.  Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.
+Flux automation makes it easy to upgrade services or infrastructure deployed by Bedrock. In this example Flux watches the repo we set up previously under the heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository). Now we add a simple Web application to the running deployment by pushing a .yaml manifest to the repo. The .yaml specification describes the service `mywebapp` and type: a `LoadBalancer`. It specifies the source the Docker image that contains it: `image: andrebriggs/goserver:v1.2` and how many containers to run: `replicas: 3`. The containers will be accessible through the load balancer.
+
+When the .yaml file is complete we will push it to the repo, or simply drop it on GitHub. Flux is querying the repo for changes and will deploy the new service replicas as defined by this manifest.
 
 Create the following .yaml file and name it something like myWebApp.yaml. The image for this application is specified by the line: `image: andrebriggs/goserver:v1.2`.
 
@@ -906,12 +989,12 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
-    name: http
+    - port: 8080
+      name: http
   selector:
     app: mywebapp
 ---
-apiVersion: extensions/v1beta1  #TODO: Migrate to apps/v1
+apiVersion: extensions/v1beta1 #TODO: Migrate to apps/v1
 kind: Deployment
 metadata:
   name: mywebapp-v1
@@ -930,12 +1013,13 @@ spec:
         version: v1
     spec:
       containers:
-      - name: mywebapp
-        image: andrebriggs/goserver:v1.2
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
+        - name: mywebapp
+          image: andrebriggs/goserver:v1.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
 ---
+
 ```
 
 To see the changes as Flux picks them up and deploys them, open a bash command window and navigate to the `bedrock/cluster/environments/azure-simple` directory.
@@ -944,9 +1028,9 @@ Get your Flux pod name by running: `KUBECONFIG=./output/bedrock_kube_config kube
 
 Copy the name of the pod (the one that is not memcached).
 
-Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <Flux-pod-name> --namespace=flux`.  This will display a running log of the deployment.
+Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <Flux-pod-name> --namespace=flux`. This will display a running log of the deployment.
 
-Now, push or drop the myWebApp.yaml file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository).  You can click `Upload files` on the GitHub repo page and drop the .yaml file:
+Now, push or drop the myWebApp.yaml file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository). You can click `Upload files` on the GitHub repo page and drop the .yaml file:
 
 ![Set up empty Flux repository](./images/dropYAMLfile.png)
 
@@ -961,11 +1045,12 @@ ts=2019-07-12T19:49:31.136091192Z caller=loop.go:441 component=sync-loop tag=flu
 ts=2019-07-12T19:49:31.411320788Z caller=loop.go:103 component=sync-loop event=refreshed url=git@github.com:MikeDodaro/bedrock-deploy-demo.git branch=master HEAD=e8b49abbc56f3a8d63a28da10aaf7366a92ff35a
 ts=2019-07-12T19:50:18.649194507Z caller=warming.go:206 component=warmer updated=andrebriggs/goserver successful=3 attempted=3
 ```
+
 In this output, Flux has found the repo `bedrock-deploy-demo` and created the new service: `"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
 
 Open another bash window. When the new service is running, use `KUBECONFIG=./output/bedrock_kube_config kubectl get po --all-namespaces` to find the new namespaces in the deployment.
 
-Then run `KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces`.  The output will include the `EXTERNAL-IP` address and `PORT` of the `mywebapp` load balancer:
+Then run `KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces`. The output will include the `EXTERNAL-IP` address and `PORT` of the `mywebapp` load balancer:
 
 ```bash
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get svc --all-namespaces
@@ -978,6 +1063,7 @@ kube-system   kube-dns               ClusterIP      10.0.0.10      <none>       
 kube-system   kubernetes-dashboard   ClusterIP      10.0.222.104   <none>           80/TCP           44m
 kube-system   metrics-server         ClusterIP      10.0.189.185   <none>           443/TCP          44m
 ```
-The EXTERNAL-IP, in this case is: 52.175.216.214.  Append the port and use http://52.175.216.214:8080 to run the service in a browser.
+
+The EXTERNAL-IP, in this case is: 52.175.216.214. Append the port and use http://52.175.216.214:8080 to run the service in a browser.
 
 ![Deployed Web application running](./images/WebAppRunning.png)

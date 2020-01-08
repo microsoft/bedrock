@@ -102,8 +102,6 @@ stages:
       displayName: Exporting Integration Test Trigger Variables to Pipeline Workspace
     - publish: $(Pipeline.Workspace)/variables
       artifact: variables
-#- stage: Bedrock_Integration_Test_Validation
-#  jobs:
   - job: Bedrock_Test_SIMPLE
     displayName: Bedrock_Build_Azure_Simple
     dependsOn: Bedrock_Init_Validate
