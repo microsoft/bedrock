@@ -39,6 +39,7 @@ pr:
     - '**/*.md'
 
 variables:
+  group: CSE Bedrock CI Environment Variables for Azure
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
   GOROOT: '/usr/local/go1.13' # Go installation path
   GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
