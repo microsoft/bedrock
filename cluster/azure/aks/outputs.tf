@@ -9,5 +9,5 @@ output "kube_config" {
 }
 
 output "kubeconfig_done" {
-  value = "${join("",null_resource.cluster_credentials.*.id)}"
+  value = "${join("", local_file.cluster_credentials.*.id)}"
 }

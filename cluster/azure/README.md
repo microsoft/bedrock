@@ -258,6 +258,8 @@ It is also possible to use the config that was generated directly.  For instance
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux`
 ```
 
+__Note:__ To recreate/redownload credentials file from the cluster, simply delete the `bedrock_kube_config` file in the location specified by the variable `output_directory` and rerun `terraform apply`. 
+
 ### Verify that your AKS cluster is healthy
 
 It is possible to verify the health of the AKS cluster deployment by looking at the status of the `flux` pods that were deployed.  A standard deployment of `flux` creates two pods `flux` and `flux-memcached`.  To check the status, enter the command:
