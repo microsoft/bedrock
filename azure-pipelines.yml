@@ -196,13 +196,13 @@ stages:
     variables:
     - group: CSE Bedrock CI Environment Variables for Azure
     - name: GOBIN
-    value: '$(GOPATH)/bin' # Go binaries path
+      value: '$(GOPATH)/bin' # Go binaries path
     - name: GOROOT
-    value: '/usr/local/go1.13' # Go installation path
+      value: '/usr/local/go1.13' # Go installation path
     - name: GOPATH
-    value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+      value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
     - name: modulePath
-    value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+      value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
       # GOBIN:  '$(GOPATH)/bin' # Go binaries path
       # GOROOT: '/usr/local/go1.13' # Go installation path
