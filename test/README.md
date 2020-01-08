@@ -14,7 +14,7 @@ Included is an option to set up your environment using docker container to suppo
 
 Please [install bedrock required tools](/cluster/README.md/#required-tools) in addition to the following:
 
-- [Golang](https://golang.org/doc/install) 1.11 or later
+- [Golang](https://golang.org/doc/install) 1.13 or later
 - [Dep](https://github.com/golang/go/wiki/PackageManagementTools) Optional, but required for now in order for VSCode intellisense and linting to work. [See issue 2317](https://github.com/Microsoft/vscode-go/issues/2317#issuecomment-479106825).
 - An Azure subscription
 - A [service principal with `owner` role status](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
