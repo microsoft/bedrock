@@ -55,13 +55,13 @@ stages:
     - template: pipelines/bedrock-integration-test-whitelist.yml
     - bash: | 
         echo "This is a Sanity Test"
-        echo $ARM_CLIENT_ID
-        echo $ARM_CLIENT_SECRET
-        echo $ARM_SUBSCRIPTION_ID
-        echo $ARM_TENANT_ID
-        echo $ARM_BACKEND_STORAGE_NAME
-        echo $ARM_BACKEND_STORAGE_KEY
-        echo $ARM_BACKEND_STORAGE_CONTAINER
+        echo "CI: $ARM_CLIENT_ID"
+        echo "CS: $ARM_CLIENT_SECRET"
+        echo "ARM_SID: $ARM_SUBSCRIPTION_ID"
+        echo "ARM_TID: $ARM_TENANT_ID"
+        echo "ARM_BSN: $ARM_BACKEND_STORAGE_NAME"
+        echo "ARM_BSK: $ARM_BACKEND_STORAGE_KEY"
+        echo "ARM BSC: $ARM_BACKEND_STORAGE_CONTAINER"
     - task: ShellScript@2
       displayName: Validate GitOps pipeline
       inputs:
