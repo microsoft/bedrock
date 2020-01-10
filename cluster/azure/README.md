@@ -32,6 +32,7 @@ The following templates are currently available for deployment:
 - [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
 
+### Deploying Azure Cluster
 The common steps necessary to deploy a cluster are:
 
 - [Build Fabrikate Definition for Container Deployment](../../docs/fabrikate/README.md)
