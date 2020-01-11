@@ -148,6 +148,7 @@ stages:
         inputs:
           testResultsFormat: 'JUnit'
           testResultsFiles: '*.xml' 
+          searchFolder: $(modulePath)/test
         condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_SIMPLE'))
 
   - job: Bedrock_Test_KEYVAULT
@@ -203,6 +204,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '*.xml'
+        searchFolder: $(modulePath)/test
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_KEYVAULT'))
 
   - job: Bedrock_Test_MULTIPLE
@@ -259,6 +261,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '*.xml'
+        searchFolder: $(modulePath)/test
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_MULTIPLE'))
 
 
