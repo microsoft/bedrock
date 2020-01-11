@@ -149,7 +149,7 @@ stages:
           testResultsFormat: 'JUnit'
           testResultsFiles: '*.xml' 
           searchFolder: $(modulePath)/test
-        condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_SIMPLE'))
+        condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Simple'))
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -205,7 +205,7 @@ stages:
         testResultsFormat: 'JUnit'
         testResultsFiles: '*.xml'
         searchFolder: $(modulePath)/test
-      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_KEYVAULT'))
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Single_KeyVault'))
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -262,7 +262,7 @@ stages:
         testResultsFormat: 'JUnit'
         testResultsFiles: '*.xml'
         searchFolder: $(modulePath)/test
-      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_MULTIPLE'))
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Multiple_Clusters'))
 
 
 #     - script: |
