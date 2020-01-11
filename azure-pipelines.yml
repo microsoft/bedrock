@@ -147,7 +147,7 @@ stages:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'JUnit'
-          testResultsFiles: '*.xml' 
+          testResultsFiles: '**/report.xml' 
           searchFolder: $(modulePath)/test
         condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Simple'))
 
@@ -203,7 +203,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '*.xml'
+        testResultsFiles: '**/report.xml'
         searchFolder: $(modulePath)/test
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Single_KeyVault'))
 
@@ -260,7 +260,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '*.xml'
+        testResultsFiles: '**/report.xml'
         searchFolder: $(modulePath)/test
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Build_Azure_Multiple_Clusters'))
 
