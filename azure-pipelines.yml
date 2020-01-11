@@ -39,7 +39,7 @@ pr:
     - '**/*.md'
 
 variables:
-- group: Tests-vg
+- group: CSE Bedrock CI Environment Variables for Azure
 - name: GOBIN
   value: '$(GOPATH)/bin' # Go binaries path
 - name: GOROOT
@@ -160,7 +160,7 @@ stages:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
     variables:
-    - group: Tests-vg
+    - group: CSE Bedrock CI Environment Variables for Azure
     - name: GOBIN
       value: '$(GOPATH)/bin' # Go binaries path
     - name: GOROOT
@@ -217,7 +217,7 @@ stages:
       timeoutInMinutes: 60
 
     variables:
-    - group: Tests-vg
+    - group: CSE Bedrock CI Environment Variables for Azure
     - name: GOBIN
       value: '$(GOPATH)/bin' # Go binaries path
     - name: GOROOT
