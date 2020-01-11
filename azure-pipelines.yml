@@ -148,7 +148,7 @@ stages:
         inputs:
           testResultsFormat: 'JUnit'
           testResultsFiles: '**/report.xml' 
-        condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
+        condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_SIMPLE'))
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -203,7 +203,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/report.xml' 
-      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_KEYVAULT'))
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -259,7 +259,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/report.xml' 
-      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_MULTIPLE'))
 
 
 #     - script: |
