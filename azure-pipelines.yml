@@ -147,7 +147,7 @@ stages:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'JUnit'
-          testResultsFiles: '**/report.xml' 
+          testResultsFiles: '*.xml' 
         condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_SIMPLE'))
 
   - job: Bedrock_Test_KEYVAULT
@@ -202,7 +202,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/report.xml' 
+        testResultsFiles: '*.xml'
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_KEYVAULT'))
 
   - job: Bedrock_Test_MULTIPLE
@@ -258,7 +258,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/report.xml' 
+        testResultsFiles: '*.xml'
       condition: and(eq(variables['Agent.JobStatus'], 'Succeeded'), endsWith(variables['Agent.JobName'], 'Bedrock_Test_MULTIPLE'))
 
 
