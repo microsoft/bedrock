@@ -128,6 +128,7 @@ stages:
           export public_key=$(cat id_rsa.pub)
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
           go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s | tee TestIT_Bedrock_AzureSimple_Test.log
+          terratest_log_parser -testlog TestIT_Bedrock_AzureSimple_Test.log -outputdir single_test_output
         env:
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -140,7 +141,7 @@ stages:
         displayName: 'Integration Test: Bedrock_Azure-Simple'
       - task: PublishPipelineArtifact@1
         inputs:
-          path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureSimple_Test.log
+          path: $(modulePath)/test/single_test_output
           artifact: simple_test_logs
         condition: always()
 
@@ -176,6 +177,7 @@ stages:
         export public_key=$(cat id_rsa.pub)
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s | tee TestIT_Bedrock_AzureCommon_KV_Test.log
+        terratest_log_parser -testlog TestIT_Bedrock_AzureCommon_KV_Test.log -outputdir common_test_output
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -189,7 +191,7 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
     - task: PublishPipelineArtifact@1
       inputs:
-        path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureCommon_KV_Test.log
+        path: $(modulePath)/test/common_test_output
         artifact: common_test_logs
       condition: always()
 
@@ -226,6 +228,7 @@ stages:
         export public_key=$(cat id_rsa.pub)
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s | tee TestIT_Bedrock_AzureMC_Test.log
+        terratest_log_parser -testlog TestIT_Bedrock_AzureMC_Test.log -outputdir mc_test_output
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -239,7 +242,7 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
     - task: PublishPipelineArtifact@1
       inputs:
-        path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureMC_Test.log
+        path: $(modulePath)/test/mc_test_output
         artifact: mc_test_logs
       condition: always()
 
