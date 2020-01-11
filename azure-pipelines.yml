@@ -137,7 +137,12 @@ stages:
           ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
           ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
         workingDirectory: '$(modulePath)/test'
-        displayName: 'Integration Test: Bedrock_Azure-Simple '
+        displayName: 'Integration Test: Bedrock_Azure-Simple'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureSimple_Test.log
+          artifact: simple_test_logs
+        condition: always()
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -182,6 +187,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
+    - task: PublishPipelineArtifact@1
+      inputs:
+        path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureCommon_KV_Test.log
+        artifact: common_test_logs
+      condition: always()
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -227,6 +237,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+    - task: PublishPipelineArtifact@1
+      inputs:
+        path: $(System.DefaultWorkingDirectory)/TestIT_Bedrock_AzureMC_Test.log
+        artifact: mc_test_logs
+      condition: always()
 
 #     - script: |
 #         export ssh_key=$(readlink -f id_rsa.pub)
