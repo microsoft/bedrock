@@ -144,6 +144,11 @@ stages:
           path: $(modulePath)/test/single_test_output
           artifact: simple_test_logs
         condition: always()
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '**/report.xml' 
+        condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -194,6 +199,11 @@ stages:
         path: $(modulePath)/test/common_test_output
         artifact: common_test_logs
       condition: always()
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/report.xml' 
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -245,6 +255,12 @@ stages:
         path: $(modulePath)/test/mc_test_output
         artifact: mc_test_logs
       condition: always()
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/report.xml' 
+      condition: and(eq(variables['Agent.JobStatus'], 'Succeeded')
+
 
 #     - script: |
 #         export ssh_key=$(readlink -f id_rsa.pub)
