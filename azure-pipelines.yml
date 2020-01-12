@@ -48,10 +48,6 @@ variables:
   value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
 - name: modulePath
   value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-  # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-  # GOROOT: '/usr/local/go1.13' # Go installation path
-  # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-  # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
 stages:
 - stage: Bedrock_Init_Validation
@@ -169,10 +165,6 @@ stages:
       value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
     - name: modulePath
       value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-      # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      # GOROOT: '/usr/local/go1.13' # Go installation path
-      # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
@@ -226,10 +218,6 @@ stages:
       value: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
     - name: modulePath
       value: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-      # GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      # GOROOT: '/usr/local/go1.13' # Go installation path
-      # GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      # modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
