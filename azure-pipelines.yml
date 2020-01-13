@@ -125,6 +125,7 @@ stages:
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
           go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s | tee TestIT_Bedrock_AzureSimple_Test.log
           failed=$?
+          echo "This is failed $failed"
           terratest_log_parser -testlog TestIT_Bedrock_AzureSimple_Test.log -outputdir single_test_output
           if [ $failed -eq 0 ]
           then
@@ -243,6 +244,7 @@ stages:
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s | tee TestIT_Bedrock_AzureMC_Test.log
         failed=$?
+        echo "This is failed $failed"
         terratest_log_parser -testlog TestIT_Bedrock_AzureMC_Test.log -outputdir mc_test_output
         if [ $failed -eq 0 ]
         then
