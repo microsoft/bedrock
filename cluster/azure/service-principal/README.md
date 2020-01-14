@@ -1,6 +1,6 @@
 # Service Principals and Terraform Deployment
 
-Deploying Bedrock on Azure makes use of Service Princiapals.  Depending on the environment deployed, the Service Principal may require different permission levels or role assignments.  If the service principal being used has `Owner` privileges on the subscription, nothing special needs to be done.  For more information about Service Principals, RBAC and roles check [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview).
+Deploying Bedrock on Azure makes use of Service Principals.  Depending on the environment deployed, the Service Principal may require different permission levels or role assignments.  If the service principal being used has `Owner` privileges on the subscription, nothing special needs to be done.  For more information about Service Principals, RBAC and roles check [here](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview).
 
 This document describes a set of tools and requirements necessary to deploy infrastructure in various environments.  Cases addressed include:
 
