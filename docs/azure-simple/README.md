@@ -57,11 +57,11 @@ Set up the Flux manifest repository:
 
 1. [Create the Flux Manifest Repository](#create-the-flux-manifest-repository)
 2. [Generate the Manifest Repository Deploy Key](#generate-the-manifest-repository-deploy-key)
-3. [Grant Deploy Key access to the Manifest Repository](#grant-deploy-key-access-to-the-manifest-repository)
+3. [Add Deploy Key to the Manifest Repository](#add-deploy-key-to-the-manifest-repository)
 
 ## Create the Flux Manifest Repository
 
-[Create an empty git repository](https://github.com/new/). Choose a name that shows that the repo is used for the Flux manifests. For example `bedrock-deploy-demo`.
+[Create an empty git repository](https://github.com/new/). Choose a name to show the repo is used for the Flux manifests. For example `bedrock-deploy-demo`.
 
 Initialize the repo with an empty commit.
 
@@ -76,6 +76,7 @@ Generate the [deploy key](https://developer.github.com/v3/guides/managing-deploy
 Run: 
 `ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key`.
 
+Example:
 ```bash
 $ ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitops-ssh-key
 Generating public/private rsa key pair.
@@ -100,7 +101,7 @@ The key's randomart image is:
 kudzu:azure-simple jmspring$
 ```
 
-This will create public and private keys that are used by Flux and the Manifest Repository. The private key is stored on the machine originating the deployment. Follow the steps below to add the public key as a Deploy Key in the Manifest Repository.
+This creates public and private keys that are used by Flux and the Manifest Repository. The private key is stored on the machine originating the deployment. Follow the steps below to add the public key as a Deploy Key in the Manifest Repository.
 
 ### Add Deploy Key to the Manifest Repository
 1. Get the public key contents: `more ~/.ssh/gitops-ssh-key.pub`
@@ -264,8 +265,9 @@ Each of the directories represent a common pattern supported within Bedrock. For
 
 ## Set Up Terraform Deployment Variables
 
-We will be using the `azure-simple` environment. Changing to that directory and doing an `ls -l` command reveals:
+We will use the `azure-simple` environment. Change to that directory and do an `ls -l` command:
 
+Example:
 ```bash
 $ cd azure-simple
 $ ls -l
@@ -313,18 +315,18 @@ Set the remainding fields:
 - `dns_prefix`: `testazuresimple`
 - `vnet_name`: `testazuresimplevnet`
 
-Note: You need to create a resource group in your subscription first before you apply terraform. Use the following command to create a resource group
-
+Note: You need to create a resource group in your subscription first before you apply terraform.
+Create a resource group:
 ```bash
 az group create -l westus2 -n testazuresimplerg
 ```
 
 The, `gitops_ssh_key` is a _path_ to the RSA private key we created under [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository)
-The `ssh_public_key` is the RSA public key that was created for [AKS node access](#create-an-rsa-key-for-logging-into-aks-nodes).
+The `ssh_public_key` is the RSA public key that was created for [AKS node access](#generate-the-node-key).
 
-Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars` for a working copy. Next, using the values just defined, fill in the other values that were generated. Then, remove the old terraform.tfvars file.
+Make a copy of the `terraform.tfvars` file and name it `testazuresimple.tfvars`. Using the values just defined, fill in the other values that were generated. Remove the old terraform.tfvars file.
 
-When complete `testazuresimple.tfvars` should resemble:
+When complete, `testazuresimple.tfvars` should resemble:
 
 ```bash
 $ cat testazuresimple.tfvars
@@ -603,7 +605,7 @@ As seen from the output, a number of objects have been defined for creation.
 
 The final step is to issue `terraform apply -var-file=testazuresimple.tfvars`, this uses the variables file we defined above (if you run `terraform apply` without `-var-file=` it will take any `*.tfvars` file in the folder, for example, the sample _terraform.tfvars_ file, if you didn't remove it, and start asking for the unspecified fields).
 
-The output for `terraform apply` is quite long, so the snippet below contains only the beginning and the end (sensitive output has been removed). The full output can be found in [./extras/terraform_apply_log.txt](./extras/terraform_apply_log.txt). Note the beginning looks similar to `terraform plan` and the output contains the status of deploying each component. Based on dependencies, Terraform deploys components in the proper order derived from a dependency graph.
+The output for `terraform apply` is long. The snippet below contains only the beginning and the end (sensitive output has been removed). The full output can be found in [./extras/terraform_apply_log.txt](./extras/terraform_apply_log.txt). Note the beginning looks similar to `terraform plan` and the output contains the status of deploying each component. Based on dependencies, Terraform deploys components in the proper order derived from a dependency graph.
 
 ```bash
 $ terraform apply -var-file=testazuresimple.tfvars
@@ -1047,7 +1049,7 @@ Copy the name of the pod (the one that is not memcached).
 
 Then run the command: `KUBECONFIG=./output/bedrock_kube_config kubectl logs -f <Flux-pod-name> --namespace=flux`. This will display a running log of the deployment.
 
-Now, push or drop the `myWebApp.yaml` file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository). You can click `Upload files` on the GitHub repo page and drop the .yaml file:
+Now, push or drop the `myWebApp.yaml` file to the empty repo created under the previous heading [Set Up Flux Manifest Repository](#set-up-flux-manifest-repository). You can click `Upload files` on the GitHub repo page and drop the `.yaml` file:
 
 ![Set up empty Flux repository](./images/dropYAMLfile.png)
 
