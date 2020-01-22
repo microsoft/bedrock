@@ -111,45 +111,43 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This will fetch the specified deployment template, create a directory called `my-cluster`, and places a file called `definition.json` in it:
+This will fetch the specified deployment template, create a directory called `cluster`, and places a file called `definition.yaml` in it:
 
-```json
-{
-  "name": "cluster",
-  "source": "https://github.com/microsoft/bedrock",
-  "template": "cluster/environments/azure-simple",
-  "version": "master",
-  "variables": {
-    "agent_vm_count": "3",
-    "agent_vm_size": "Standard_D2s_v3",
-    "acr_enabled": "true",
-    "gc_enabled": "true",
-    "cluster_name": "<insert value>",
-    "dns_prefix": "<insert value>",
-    "flux_recreate": "false",
-    "kubeconfig_recreate": "false",
-    "gitops_ssh_url": "<insert value>",
-    "gitops_ssh_key": "<insert value>",
-    "gitops_path": "<insert value>",
-    "gitops_url_branch": "master",
-    "resource_group_name": "<insert value>",
-    "ssh_public_key": "<insert value>",
-    "service_principal_id": "<insert value>",
-    "service_principal_secret": "<insert value>",
-    "gitops_poll_interval": "5m",
-    "vnet_name": "<insert value>",
-    "service_cidr": "10.0.0.0/16",
-    "dns_ip": "10.0.0.10",
-    "docker_cidr": "172.17.0.1/16",
-    "address_space": "10.10.0.0/16",
-    "subnet_prefix": "10.10.1.0/24",
-    "network_policy": "azure",
-    "oms_agent_enabled": "false"
-  }
-}
+```yaml
+name: cluster
+source: 'https://github.com/microsoft/bedrock'
+template: cluster/environments/azure-simple
+version: master
+variables:
+  agent_vm_count: '3'
+  agent_vm_size: Standard_D2s_v3
+  acr_enabled: 'true'
+  gc_enabled: 'true'
+  cluster_name: <insert value>
+  dns_prefix: <insert value>
+  flux_recreate: 'false'
+  gitops_ssh_url: <insert value>
+  gitops_ssh_key: <insert value>
+  gitops_path: <insert value>
+  gitops_url_branch: master
+  resource_group_name: <insert value>
+  ssh_public_key: <insert value>
+  service_principal_id: <insert value>
+  service_principal_secret: <insert value>
+  gitops_poll_interval: 5m
+  gitops_label: flux-sync
+  vnet_name: <insert value>
+  service_cidr: 10.0.0.0/16
+  dns_ip: 10.0.0.10
+  docker_cidr: 172.17.0.1/16
+  address_space: 10.10.0.0/16
+  subnet_prefix: 10.10.1.0/24
+  network_plugin: azure
+  network_policy: azure
+  oms_agent_enabled: 'false'
 ```
 
-This `definition.json` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
+This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
 
 This template will form the base of our deployment. You probably noticed above that the `spk` tool has also extracted the variables for this Terraform template and provided them, with defaults (if available).
 
@@ -178,8 +176,8 @@ Given this, make `gitops_path` an empty string `""`.
 Our deployment specification includes references to values for the [Azure Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) for the [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster:
 
 ```
-        service_principal_id: ""
-        service_principal_secret: ""
+    service_principal_id: ""
+    service_principal_secret: ""
 ```
 
 For this walkthrough, we will use a single Service Principal for deploying with Terraform and for the AKS cluster itself and our next step is to provision this.
