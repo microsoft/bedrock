@@ -9,19 +9,19 @@ In this walkthrough, we will:
 
 ## Create and Configure GitOps Resource Manifest Repo
 
-In a GitOps workflow, we designate a git repo as the definitive source of truth of what should be deployed in our cluster. An operator in the Kubernetes cluster (Flux in the case of Bedrock) watches this repo and applies changes as they are made to the cluster such that the resources in the cluster exactly match the GitOps resource manifest repo.
+In a GitOps workflow, a git repo is the source of truth of what should be deployed in our cluster. An operator in the Kubernetes cluster (Flux in the case of Bedrock) watches this repo and applies changes as they are made to the cluster such that the resources in the cluster exactly match the GitOps resource manifest repo.
 
-Our next steps is to create and configure this repo for this workflow.
+Our next step is to create and configure this repo for this workflow.
 
 ### Create the Flux Manifest Repository
 
-[Create an empty git repository](https://github.com/new/) with a name that signifies that the repo is used for a GitOps workflow (eg.  `app-cluster-manifests`) and then clone it locally:
+[Create an empty git repository](https://github.com/new/), choose a name that shows the repo is used for a GitOps workflow (eg.  `app-cluster-manifests`) and then clone it locally:
 
 ```bash
 $ git clone https://github.com/myuser/app-cluster-manifests
 ```
 
-Flux requires that the git resource manifest repository have at least one commit, so let's initialize the repo with an empty commit:
+Initialize the repo with an empty commit:
 
 ``` bash
 $ cd app-cluster-manifests
@@ -29,19 +29,20 @@ $ git commit --allow-empty -m "Initializing GitOps Resource Manifest Repository"
 $ git push origin master
 ```
 
-### Generate an SSH Key for the GitOps Resource Manifest Repo
+### Generate an Deploy Key for the GitOps Resource Manifest Repo
 
 Flux pushes a tag to the git repo to track the last commit it has reconciled against once it finishes its reconcilitation of a commit. This operation requires authentication such that the repo can validate that Flux is authorized to push these tags.
 
-For a Github repo, this authentication is accomplished using an SSH key, so our next task is to create this GitOps SSH key.
+For a Github repo, an SSH key is used for authentication.
 
-We’ll do this using `ssh-keygen` but first let’s create a separate directory to store all of our infrastructure deployment artifacts in:
+To create a GitOps SSH key:
+1. Create a separate directory to store they key and other infrastructure deployment items:
 
 ```bash
 $ mkdir -p ~/cluster-deployment
 ```
 
-Next, let’s create a key pair for our GitOps workflow:
+2. Create a key pair for the GitOps workflow:
 
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
@@ -67,34 +68,37 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-This will create our keys for our GitOps workflow:
-1. The private key for Flux to authenticate against the GitOps repo and,
-2. The public key for the GitOps repo to validate the passed credentials.
+This creates the private and public keys for our GitOps workflow:
+1. Private key: for Flux to authenticate against the GitOps repo
+2. Public key: for the GitOps repo to validate the passed credentials.
 
-The public portion of the key pair will be uploaded to GitHub as a deploy key in the next step and we will utilize the private portion of the key later during the cluster deployment of Flux.
+The public key will be uploaded to GitHub as a deploy key. The private key will be used during the cluster deployment of Flux.
 
-### Grant Deploy Key Access to the Manifest Repository
+### Add Deploy Key to the Manifest Repository
+Prerequisites:
+- Ownership permissions to the git repo
 
-We next need to add the public key of this key pair to our repository (you will need ownership permissions to the git repo for this step).
+Steps:
+1. Copy the contents of the public key to your clipboard:
 
-First, copy the contents of the public key to your clipboard using one of the two methods below as appropriate for the platform that you are using:
+**MacOS**
 
-MacOS
 ```bash
 $ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
 ```
 
-Ubuntu (including WSL)
+**Ubuntu (including WSL)**
 
 ```bash
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
 
-Next, on the Github repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`. Give your key a title and paste in the contents of your public key and check the checkbox to allow the key to have `Write Access`.
+2. On the Github repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`. Set the title and paste the contents of the public key. Check the  **Allow Write Access** option.
+
 
 ![enter key](./images/addDeployKey.png)
 
-Click "Add key", and you should see:
+3. Click "Add key", and you should see:
 
 ![key result](./images/deployKeyResult.png)
 
@@ -102,16 +106,16 @@ Click "Add key", and you should see:
 
 With our GitOps resource manifest repo and key pair created, let’s move on to scaffolding out our cluster deployment.
 
-Creating, managing, and maintaining infrastructure deployment templates is a real challenge, especially at scale, where a large scale deployment can consist of dozens of nearly identical clusters differentiated only by slight differences in config based on the cloud region they are operating in or otherwise.
+Creating, managing, and maintaining infrastructure deployment templates is a challenge, especially at scale. Large scale deployments can consist of dozens of nearly identical clusters differentiated only by slight differences in config based on the cloud region they are operating in or otherwise.
 
-Bedrock helps your manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
+Bedrock helps manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
 
 ```bash
 $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This will fetch the specified deployment template, create a directory called `cluster`, and places a file called `definition.yaml` in it:
+This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it:
 
 ```yaml
 name: cluster
@@ -149,25 +153,25 @@ variables:
 
 This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
 
-This template will form the base of our deployment. You probably noticed above that the `spk` tool has also extracted the variables for this Terraform template and provided them, with defaults (if available).
+This template is the base of our deployment. Note: The `spk` tool also extracted the variables for this Terraform template and provided them, with defaults (if available).
 
 ## Completing our Deployment Definition
 
-Our next task is to fill all of the empty items in this template with config values.
+Next we'll fill all of the empty items in this template with config values.
 
 ### Cluster name, DNS prefix, VNET name, and resource group
 
-First, choose a cluster name (for example: `myname-cluster`) and replace both `cluster_name` and `dns_prefix` with this. This will be the name of the cluster that will be created in your subscription.
+Choose a cluster name (for example: `myname-cluster`) and replace both `cluster_name` and `dns_prefix` with this. This will be the name of the cluster to be created in your subscription.
 
-Likewise, update the value for `resource_group_name` to be a variant of this, like `myname-cluster-rg`, and update `vnet_name` with a variant as well, like `myname-vnet`. Probably unsurprisingly, your cluster will be created in this resource group and VNET.
+Update the value for `resource_group_name` to be a variant of this, like `myname-cluster-rg`, and update `vnet_name` with a variant as well, like `myname-vnet`. Your cluster will be created in this resource group and VNET.
 
 ### Configure GitOps Repo
 
-Next, let's update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. It should look something like this: `git@github.com:myuser/app-cluster-manifests.git`.
+Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@github.com:myuser/app-cluster-manifests.git`.
 
-Our next step is to point `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can simply adjust this value to `../keys/gitops-ssh-key`.
+Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `../keys/gitops-ssh-key`.
 
-In multi-cluster scenarios, we often will keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
+In multi-cluster scenarios, we will often keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
 Given this, make `gitops_path` an empty string `""`.
 
@@ -180,15 +184,15 @@ Our deployment specification includes references to values for the [Azure Servic
     service_principal_secret: ""
 ```
 
-For this walkthrough, we will use a single Service Principal for deploying with Terraform and for the AKS cluster itself and our next step is to provision this.
+For this walkthrough, we will use one Service Principal to deploy with Terraform and for the AKS cluster itself.
 
-If you haven’t yet, first [login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli):
+1. [login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli):
 
 ```bash
 $ az login
 ```
 
-Next, get the id for your subscription:
+2. Get the id for your subscription:
 
 ```bash
 $ az account show
@@ -206,7 +210,7 @@ $ az account show
 }
 ```
 
-Finally, create the Service Principal (using the subscription id above):
+3. Create the Service Principal (using the subscription id above):
 
 ```bash
 $ mkdir -p ~/cluster-deployment/sp
@@ -230,7 +234,7 @@ $ export ARM_CLIENT_SECRET=(password from Service Principal)
 $ export ARM_CLIENT_ID=(appId from Servive Principal)
 ```
 
-So, using the values from above, these environment variables would look like:
+Using the values from above, these environment variables would look like:
 
 ```bash
 $ export ARM_SUBSCRIPTION_ID=7060bca0-1234-5-b54c-ab145dfaccef
@@ -239,20 +243,22 @@ $ export ARM_CLIENT_SECRET=35591cab-13c9-4b42-8a83-59c8867bbdc2
 $ export ARM_CLIENT_ID=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
 ```
 
-For the Terraform template itself, we will also using environmental variables to specify the values of `service_principal_id` and `service_principal_secret`, so delete these values from the `definition.json` and then define the following environmental variables:
+3. In the `definition.json`, delete `service_principal_id` and `service_principal_secret`
+
+4. Define the `service_principal_id` and `service_principal_secret` environment variables:
 
 ```bash
 $ export TF_VAR_service_principal_id=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
 $ export TF_VAR_service_principal_secret=35591cab-13c9-4b42-8a83-59c8867bbdc2
 ```
 
-More documentation around Service Principals are available in the [Bedrock documentation](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
+Documentation about Service Principals is available in the [Bedrock documentation](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
 
-### Create an Node RSA Key Pair
+### Create a Node Key
 
 When you deploy an AKS cluster, you provide an SSH key pair that enables you, in rare circumstances, to shell into the nodes of the cluster.
 
-We’ll use the same process that we used to create a key pair for GitOps:
+1. We’ll use the same process that we used to create a key pair for GitOps:
 
 ```bash
 $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/node-ssh-key
@@ -277,7 +283,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-Copy the public key for this node key pair into your clipboard using the same method you did for the GitOps public key:
+2. Copy the public key for this node key pair into your clipboard using the same method you did for the GitOps public key:
 
 MacOS
 ```bash
@@ -289,11 +295,13 @@ Ubuntu (& WSL)
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
 
-Paste this into your `definition.json` file as the value for `ssh_public_key`.
+3. Paste this into your `definition.json` file as the value for `ssh_public_key`.
 
 ### Create Azure Resource Group
 
-You will also need an already created resource group in your subscription with the resource group name you chose above before you do a `terraform apply`. Use the following command to create this:
+You will need a resource group in your subscription before you do a `terraform apply`.
+
+To create a resource group:
 
 ```bash
 $ az group create -l westus2 -n myuser-cluster-rg
@@ -311,7 +319,7 @@ This reads our `definition.json` file, downloads the template referred to in it,
 
 ## Deploy Cluster
 
-From this `generated` directory we can then `init` our Terraform deployment to fetch all of the upstream Terraform module dependencies.
+From this `generated` directory we can `init` our Terraform deployment to fetch all of the upstream Terraform module dependencies.
 
 ```bash
 $ terraform init
@@ -432,9 +440,9 @@ azurerm_resource_group.cluster_rg: Creating...
 Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 ```
 
-With that, you have successfully have deployed your first cluster with Bedrock!
+You have successfully have deployed your first cluster with Bedrock!
 
-This possibly seems like a lot of overhead for creating a single cluster. The real advantage to this approach comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
+This might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
 
 ### Using Terraform State
 
@@ -533,7 +541,7 @@ ts=2019-06-18T06:33:18.819404372Z caller=images.go:18 component=sync-loop msg="p
 
 ## Deploy an update using Kubernetes manifest
 
-The GitOps workflow we have established with Flux and Bedrock makes it easy to control the workflow that is running in the cluster. As we discussed earlier, Flux watches the GitOps resource manifest repo and applies any changes we make there to the cluster.
+The GitOps workflow we established with Flux and Bedrock makes it easy to control the workflow that is running in the cluster. Flux watches the GitOps resource manifest repo and applies any changes we make there to the cluster.
 
 Let’s try this by creating a YAML file with a set of Kubernetes resources for a simple service and committing it to the resource manifest repo. In your resource manifest git repo directory that we cloned earlier, create a file called `webapp.yaml` and place the following into it:
 
@@ -579,7 +587,7 @@ spec:
 ---
 ```
 
-This defines a simple 3 pod deployment of a web service with the container `andrebriggs/goserver:v1.2` with a LoadBalanced service.  Let’s commit this file and push it to our remote GitOps repo:
+This defines a 3 pod deployment of a web service with the container `andrebriggs/goserver:v1.2` with a LoadBalanced service.  Commit this file and push it to our remote GitOps repo:
 
 ```bash
 $ git add webapp.yaml
@@ -587,13 +595,13 @@ $ git commit -m "Add simple web application"
 $ git push origin master
 ```
 
-Let’s then watch the Flux pod logs again, but this time tailing them so we get updates with `-f`:
+Watch the Flux pod logs again, but this time tailing them so we get updates with `-f`:
 
 ```bash
 $ kubectl logs flux-5897d4679b-tckth -n flux -f
 ```
 
-Once Flux starts its next reconcilation, we should see at the end of the output that Flux has found the repo `bedrock-deploy-demo` and created the new service:
+Once Flux starts its next reconcilation, we see at the end of the output that Flux found the repo `bedrock-deploy-demo` and created the new service:
 
 `"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
 
@@ -607,7 +615,7 @@ mywebapp-v1-749d754b4f-nshj5   1/1     Running   0          18m
 mywebapp-v1-749d754b4f-sj2hf   1/1     Running   0          18m
 ```
 
-And we should also see the LoadBalancer service by querying the set of services in the cluster:
+We should also see the LoadBalancer service by querying the set of services in the cluster:
 
 ```
 $ kubectl get services --all-namespaces
@@ -621,7 +629,7 @@ kube-system   kubernetes-dashboard   ClusterIP      10.0.222.104   <none>       
 kube-system   metrics-server         ClusterIP      10.0.189.185   <none>           443/TCP          44m
 ```
 
-External load balancers like this take time to provision, so if the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
+External load balancers like this take time to provision. If the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
 
 The EXTERNAL-IP, in the case above, is: 52.175.216.214. By appending the port our service is hosted on we can use http://52.175.216.214:8080 to fetch the service in a browser.
 
