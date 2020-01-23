@@ -234,6 +234,14 @@ $ export ARM_CLIENT_SECRET=(password from Service Principal)
 $ export ARM_CLIENT_ID=(appId from Servive Principal)
 ```
 
+or, with `jq` installed:
+```
+$ export ARM_SUBSCRIPTION_ID=$(az account show | jq -r .id)
+$ export ARM_TENANT_ID=$(cat ~/cluster-deployment/sp/sp.json | jq -r .tenant)
+$ export ARM_CLIENT_ID=$(cat ~/cluster-deployment/sp/sp.json | jq -r .appId)
+$ export ARM_CLIENT_SECRET=$(cat ~/cluster-deployment/sp/sp.json | jq -r .password)
+```
+
 Using the values from above, these environment variables would look like:
 
 ```bash
@@ -248,8 +256,8 @@ $ export ARM_CLIENT_ID=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
 4. Define the `service_principal_id` and `service_principal_secret` environment variables:
 
 ```bash
-$ export TF_VAR_service_principal_id=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
-$ export TF_VAR_service_principal_secret=35591cab-13c9-4b42-8a83-59c8867bbdc2
+$ export TF_VAR_service_principal_id=${ARM_CLIENT_ID}
+$ export TF_VAR_service_principal_secret=${ARM_CLIENT_SECRET}
 ```
 
 Documentation about Service Principals is available in the [Bedrock documentation](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal).
@@ -315,13 +323,14 @@ $ cd ~/cluster-deployment
 $ spk infra generate -p cluster
 ```
 
-This reads our `definition.json` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
+`spk` reads our `definition.json` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
 ## Deploy Cluster
 
 From this `generated` directory we can `init` our Terraform deployment to fetch all of the upstream Terraform module dependencies.
 
 ```bash
+$ cd ~/cluster-deployment/cluster-generated
 $ terraform init
 Initializing modules...
 Downloading github.com/microsoft/bedrock?ref=0.12.0//cluster/azure/aks-gitops for aks-gitops...
