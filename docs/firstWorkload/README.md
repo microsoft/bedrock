@@ -285,12 +285,12 @@ The key's randomart image is:
 
 2. Copy the public key for this node key pair into your clipboard using the same method you did for the GitOps public key:
 
-MacOS
+**MacOS**
 ```bash
 $ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
 ```
 
-Ubuntu (& WSL)
+**Ubuntu (& WSL)**
 ```bash
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
