@@ -29,7 +29,7 @@ $ git commit --allow-empty -m "Initializing GitOps Resource Manifest Repository"
 $ git push origin master
 ```
 
-### Generate an Deploy Key for the GitOps Resource Manifest Repo
+### Generate a Deploy Key for the GitOps Resource Manifest Repo
 
 Flux pushes a tag to the git repo to track the last commit it has reconciled against once it finishes its reconcilitation of a commit. This operation requires authentication such that the repo can validate that Flux is authorized to push these tags.
 
@@ -409,9 +409,11 @@ Plan: 8 to add, 0 to change, 0 to destroy.
 Note: You didn't specify an "-out" parameter to save this plan, so Terraform
 can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
+```
 
-Finally, since we are happy with these changes, we apply the Terraform template.
+Finally, since we are happy with these changes, we apply the Terraform template:
 
+```
 $ terraform apply -var-file=spk.tfvars
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
