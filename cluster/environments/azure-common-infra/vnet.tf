@@ -1,5 +1,6 @@
 module "vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../azure/vnet"
 
   vnet_name = "${var.vnet_name}"
 

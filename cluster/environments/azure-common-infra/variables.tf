@@ -1,27 +1,27 @@
 variable "address_space" {
-  type = "string"
+  type = string
 }
 
 variable "keyvault_name" {
-  type = "string"
+  type = string
 }
 
 variable "global_resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_id" {
-  type = "string"
+  type = string
 }
 
 variable "subnet_name" {
-  type = "string"
+  type = string
 }
 
 variable "subnet_prefix" {
-  type = "string"
+  type = string
 }
 
 variable "vnet_name" {
-  type = "string"
+  type = string
 }
