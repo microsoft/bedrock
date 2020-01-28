@@ -251,7 +251,7 @@ $ export ARM_CLIENT_SECRET=35591cab-13c9-4b42-8a83-59c8867bbdc2
 $ export ARM_CLIENT_ID=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
 ```
 
-3. In the `definition.json`, delete `service_principal_id` and `service_principal_secret`
+3. In the `definition.yaml`, delete `service_principal_id` and `service_principal_secret`
 
 4. Define the `service_principal_id` and `service_principal_secret` environment variables:
 
@@ -303,7 +303,7 @@ $ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
 
-3. Paste this into your `definition.json` file as the value for `ssh_public_key`.
+3. Paste this into your `definition.yaml` file as the value for `ssh_public_key`.
 
 ### Create Azure Resource Group
 
@@ -323,7 +323,7 @@ $ cd ~/cluster-deployment
 $ spk infra generate -p cluster
 ```
 
-`spk` reads our `definition.json` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
+`spk` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
 ## Deploy Cluster
 
