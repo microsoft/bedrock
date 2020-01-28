@@ -9,7 +9,7 @@ The Azure Single Cluster environment requires the creation of a single resource 
 ## Getting Started
 
 1. Copy this template directory to a repo of its own. Bedrock environments remotely reference the Terraform modules that they need and do not need be housed in the Bedrock repo.
-2. Follow the instructions on the [main Azure page](../../azure) in this repo to create your cluster and surrounding infrastructure. This environment is dependant on a deployment on [azure-common-infra](../azure-common-infra), so configure and deploy azure-common-ifra prior to deploying `azure-single-keyvault-cosmos-mongo-db-simple`.
+2. Follow the instructions on the [main Azure page](../../azure#Deploying-Azure-Cluster) in this repo to create your cluster and surrounding infrastructure. This environment is dependant on a deployment on [azure-common-infra](../azure-common-infra), so configure and deploy azure-common-ifra prior to deploying `azure-single-keyvault-cosmos-mongo-db-simple`.
 
 ## Deploy the Environment
 

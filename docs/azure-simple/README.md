@@ -55,7 +55,7 @@ To prepare the Flux manifest repository, we must:
 
 ## Create the Flux Manifest Repository
 
-[Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `sample_app_manifests`.
+[Create an empty git repository](https://github.com/new/) with a name that clearly signals that the repo is used for the Flux manifests. For example `bedrock-deploy-demo`.
 
 Flux requires that the git respository have at least one commit. Initialize the repo with an empty commit.
 
@@ -158,7 +158,7 @@ Then, create the Service Principal using `az ad sp create-for-rbac --role contri
 }
 ```
 
-Take note of the following values. They will be needed for configuring Terraform as well as the deployment as described under the heading [Configure Terraform for Azure Access](#3.-configure-terraform-for-azure-access):
+Take note of the following values. They will be needed for configuring Terraform as well as the deployment as described under the heading [Configure Terraform for Azure Access](#configure-terraform-for-azure-access):
 
 - Subscription Id (`id` from account): `7060bca0-1234-5-b54c-ab145dfaccef`
 - Tenant Id: `72f984ed-86f1-41af-91ab-87acd01ed3ac`
