@@ -17,7 +17,7 @@ Bedrock helps you:
 * [High Level Deployment Definitions](./docs/high-level-definitions.md)
 * [GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
 * Deploying Services and Revisions
-* Introspecting GitOps Deployments
+* [Introspecting GitOps Deployments](./docs/introspection.md)
 * [Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
 * Ongoing Operations and Maintenance
 
