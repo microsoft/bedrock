@@ -10,7 +10,7 @@ That said, a second problem that you have to address when you start to compose a
 
 While you could utilize shell scripts to do this or even create a large helm with subdependencies, this is brittle and not easy to share between deployments, something that is essential in large company contexts where they may have hundreds of clusters running and where reuse, leverage, and central maintenance is critical.
 
-In Bedrock, we’ve taken another approach, instead utilizing higher level components in our deployment, which collects one or more subcomponents such that can be referenced in a higher level deployment definition. Such a stack for the above EFK logging stack might look like:
+In Bedrock we utilize high level deployment definitions, which can themselves reference remote subcomponents.  In this way, you can compose the overall deployment out a set of common, centrally managed components. Such a stack for the above EFK logging stack might look like:
 
 ```json
 {
