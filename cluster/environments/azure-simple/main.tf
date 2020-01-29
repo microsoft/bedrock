@@ -36,6 +36,7 @@ module "aks-gitops" {
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_label             = "${var.gitops_label}"
   gitops_url_branch        = "${var.gitops_url_branch}"
+  kubernetes_version       = "${var.kubernetes_version}"
   ssh_public_key           = "${var.ssh_public_key}"
   resource_group_name      = "${data.azurerm_resource_group.cluster_rg.name}"
   service_principal_id     = "${var.service_principal_id}"

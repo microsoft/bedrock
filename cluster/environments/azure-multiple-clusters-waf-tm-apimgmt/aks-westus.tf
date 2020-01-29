@@ -38,6 +38,7 @@ module "west_aks" {
   service_cidr             = "${var.west_service_cidr}"
   dns_ip                   = "${var.west_dns_ip}"
   docker_cidr              = "${var.west_docker_cidr}"
+  kubernetes_version       = "${var.kubernetes_version}"
   ssh_public_key           = "${var.ssh_public_key}"
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"

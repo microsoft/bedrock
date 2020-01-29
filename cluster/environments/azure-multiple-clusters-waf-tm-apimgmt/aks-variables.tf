@@ -11,6 +11,11 @@ variable "dns_prefix" {
   type = "string"
 }
 
+variable "kubernetes_version" {
+  type    = "string"
+  default = "1.15.7"
+}
+
 variable "ssh_public_key" {
   type = "string"
 }

@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "centralrg" {
-  name     = "${var.central_resource_group_name}"
+  name = "${var.central_resource_group_name}"
 }
 
 # local variable with cluster and location specific
@@ -16,10 +16,10 @@ locals {
 module "central_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = "${local.central_rg_name }"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.central_address_space}"
-  subnet_prefixes         = "${var.central_subnet_prefixes}"
+  resource_group_name = "${local.central_rg_name}"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.central_address_space}"
+  subnet_prefixes     = "${var.central_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"
@@ -43,6 +43,7 @@ module "central_aks_gitops" {
   gitops_url_branch        = "${var.gitops_central_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_label             = "${var.gitops_label}"
+  kubernetes_version       = "${var.kubernetes_version}"
   resource_group_name      = "${local.central_rg_name}"
   service_cidr             = "${var.central_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"
