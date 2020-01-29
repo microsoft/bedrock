@@ -7,7 +7,7 @@ data "azurerm_resource_group" "cluster_rg" {
 }
 
 module "vnet" {
-  source = "github.com/timfpark/bedrock?ref=plumb_k8s_version//cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   vnet_name           = "${var.vnet_name}"
   address_space       = "${var.address_space}"
