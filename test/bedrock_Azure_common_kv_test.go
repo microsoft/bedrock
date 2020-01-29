@@ -2,16 +2,15 @@ package test
 
 import (
 	"fmt"
+	"github.com/gruntwork-io/terratest/modules/k8s"
+	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/otiai10/copy"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
-
-	"github.com/gruntwork-io/terratest/modules/k8s"
-	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/otiai10/copy"
 )
 
 func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
@@ -24,6 +23,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
 	k8sVersion := "1.15.7"
+
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
@@ -42,20 +42,20 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
 	//Create the resource group
-	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
-	err0 := cmd0.Run()
-	if err0 != nil {
-		fmt.Println("unable to login to azure cli")
-		log.Fatal(err0)
-		os.Exit(-1)
-	}
-	cmd1 := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
-	err1 := cmd1.Run()
-	if err1 != nil {
-		fmt.Println("failed to create resource group")
-		log.Fatal(err1)
-		os.Exit(-1)
-	}
+        cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
+        err0 := cmd0.Run()
+        if err0 != nil {
+                fmt.Println("unable to login to azure cli")
+                log.Fatal(err0)
+                os.Exit(-1)
+        }
+        cmd1 := exec.Command("az", "group", "create", "-n", kvRG, "-l", location)
+        err1 := cmd1.Run()
+        if err1 != nil {
+                fmt.Println("failed to create resource group")
+                log.Fatal(err1)
+                os.Exit(-1)
+        }
 
 	//Specify the test case folder and "-var" option mapping for the backend
 	common_backend_tfOptions := &terraform.Options{
