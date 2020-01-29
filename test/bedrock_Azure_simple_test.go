@@ -28,7 +28,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	tenantId := os.Getenv("ARM_TENANT_ID")
 	dnsprefix := k8sName + "-dns"
 	k8sRG := k8sName + "-rg"
-	k8sVersion := "1.15.4"
+	k8sVersion := "1.15.7"
 	location := os.Getenv("DATACENTER_LOCATION")
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
