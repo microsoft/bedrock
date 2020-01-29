@@ -70,6 +70,11 @@ variable "keyvault_resource_group" {
   type = "string"
 }
 
+variable "kubernetes_version" {
+  type    = "string"
+  default = ""
+}
+
 variable "resource_group_name" {
   type = "string"
 }

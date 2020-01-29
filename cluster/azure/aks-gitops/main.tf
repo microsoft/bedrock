@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "aksgitops" {
-    name = "${var.resource_group_name}"
+  name = "${var.resource_group_name}"
 }
 
 module "aks" {
@@ -17,6 +17,7 @@ module "aks" {
   service_cidr             = "${var.service_cidr}"
   dns_ip                   = "${var.dns_ip}"
   docker_cidr              = "${var.docker_cidr}"
+  kubernetes_version       = "${var.kubernetes_version}"
   kubeconfig_filename      = "${var.kubeconfig_filename}"
   network_policy           = "${var.network_policy}"
   network_plugin           = "${var.network_plugin}"
