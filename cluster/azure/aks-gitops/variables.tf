@@ -60,8 +60,7 @@ variable "gitops_url_branch" {
 }
 
 variable "kubernetes_version" {
-  type    = "string"
-  default = ""
+  type = "string"
 }
 
 variable "resource_group_name" {

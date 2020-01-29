@@ -72,7 +72,7 @@ variable "keyvault_resource_group" {
 
 variable "kubernetes_version" {
   type    = "string"
-  default = ""
+  default = "1.15.7"
 }
 
 variable "resource_group_name" {
