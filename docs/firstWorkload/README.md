@@ -169,7 +169,7 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@github.com:myuser/app-cluster-manifests.git`.
 
-Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `../keys/gitops-ssh-key`.
+Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key.pub`.
 
 In multi-cluster scenarios, we will often keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
