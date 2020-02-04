@@ -28,7 +28,7 @@ module "central_vnet" {
 
 # Creates aks cluster
 module "central_aks" {
-  source = "../../azure/aks"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
 
   resource_group_name      = "${local.central_rg_name}"
   cluster_name             = "${var.cluster_name}-central"

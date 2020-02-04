@@ -28,7 +28,7 @@ module "central_vnet" {
 
 # Creates central aks cluster, flux, kubediff
 module "central_aks_gitops" {
-  source = "../../azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
 
   acr_enabled              = "${var.acr_enabled}"
   agent_vm_count           = "${var.agent_vm_count}"
