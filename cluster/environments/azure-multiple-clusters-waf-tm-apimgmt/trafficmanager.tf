@@ -3,13 +3,14 @@ data "azurerm_resource_group" "tmrg" {
 }
 
 module "trafficmanager" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-profile"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-profile"
+  source = "../../azure/tm-profile"
 
-  resource_group_name              = "${data.azurerm_resource_group.tmrg.name}"
-  traffic_manager_profile_name     = "${var.traffic_manager_profile_name}"
-  traffic_manager_dns_name         = "${var.traffic_manager_dns_name}"
-  traffic_manager_monitor_protocol = "${var.traffic_manager_monitor_protocol}"
-  traffic_manager_monitor_port     = "${var.traffic_manager_monitor_port}"
+  resource_group_name              = data.azurerm_resource_group.tmrg.name
+  traffic_manager_profile_name     = var.traffic_manager_profile_name
+  traffic_manager_dns_name         = var.traffic_manager_dns_name
+  traffic_manager_monitor_protocol = var.traffic_manager_monitor_protocol
+  traffic_manager_monitor_port     = var.traffic_manager_monitor_port
 
   tags = {
     environment = "azure-multiple-clusters"

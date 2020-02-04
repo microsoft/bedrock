@@ -3,9 +3,10 @@
 #}
 
 module "provider" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+  source = "../../azure/provider"
 }
 
 data "azurerm_resource_group" "global_rg" {
-  name     = "${var.global_resource_group_name}"
+  name     = var.global_resource_group_name
 }
