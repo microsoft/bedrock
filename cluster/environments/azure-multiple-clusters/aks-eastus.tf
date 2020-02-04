@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "eastrg" {
-  name     = "${var.east_resource_group_name}"
+  name = "${var.east_resource_group_name}"
 }
 
 # local variable with cluster and location specific
@@ -16,10 +16,10 @@ locals {
 module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = "${local.east_rg_name }"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.east_address_space}"
-  subnet_prefixes         = "${var.east_subnet_prefixes}"
+  resource_group_name = "${local.east_rg_name}"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.east_address_space}"
+  subnet_prefixes     = "${var.east_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"
@@ -43,6 +43,7 @@ module "east_aks_gitops" {
   gitops_url_branch        = "${var.gitops_east_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_label             = "${var.gitops_label}"
+  kubernetes_version       = "${var.kubernetes_version}"
   resource_group_name      = "${local.east_rg_name}"
   service_cidr             = "${var.east_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"

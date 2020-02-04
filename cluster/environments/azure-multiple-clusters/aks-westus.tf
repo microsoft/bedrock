@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "westrg" {
-  name     = "${var.west_resource_group_name}"
+  name = "${var.west_resource_group_name}"
 }
 
 # local variable with cluster and location specific
@@ -16,10 +16,10 @@ locals {
 module "west_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = "${local.west_rg_name}"
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
-  address_space           = "${var.west_address_space}"
-  subnet_prefixes         = "${var.west_subnet_prefixes}"
+  resource_group_name = "${local.west_rg_name}"
+  subnet_names        = ["${var.cluster_name}_aks_subnet"]
+  address_space       = "${var.west_address_space}"
+  subnet_prefixes     = "${var.west_subnet_prefixes}"
 
   tags = {
     environment = "azure_multiple_clusters"
@@ -43,6 +43,7 @@ module "west_aks_gitops" {
   gitops_url_branch        = "${var.gitops_west_url_branch}"
   gitops_poll_interval     = "${var.gitops_poll_interval}"
   gitops_label             = "${var.gitops_label}"
+  kubernetes_version       = "${var.kubernetes_version}"
   resource_group_name      = "${local.west_rg_name}"
   service_cidr             = "${var.west_service_cidr}"
   service_principal_id     = "${var.service_principal_id}"

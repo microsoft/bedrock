@@ -42,6 +42,7 @@ module "central_aks" {
   service_principal_id     = "${var.service_principal_id}"
   service_principal_secret = "${var.service_principal_secret}"
   kubeconfig_filename      = "${local.central_kubeconfig_filename}"
+  kubernetes_version       = "${var.kubernetes_version}"
   oms_agent_enabled        = "${var.oms_agent_enabled}"
 }
 
