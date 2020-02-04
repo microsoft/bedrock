@@ -16,7 +16,7 @@ variable "location" {
 }
 
 variable "capacity" {
-  type    = number
+  type    = "number"
   default = 2
 }
 
