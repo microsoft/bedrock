@@ -30,8 +30,12 @@ variable "agent_vm_size" {
 }
 
 variable "kubernetes_version" {
+<<<<<<< HEAD
   type    = string
   default = "1.14.8"
+=======
+  type = "string"
+>>>>>>> origin/master
 }
 
 variable "admin_user" {

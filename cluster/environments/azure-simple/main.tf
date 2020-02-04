@@ -50,4 +50,5 @@ module "aks-gitops" {
   network_plugin           = var.network_plugin
   network_policy           = var.network_policy
   oms_agent_enabled        = var.oms_agent_enabled
+  kubernetes_version       = var.kubernetes_version
 }

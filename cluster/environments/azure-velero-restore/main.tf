@@ -32,6 +32,7 @@ module "aks" {
   agent_vm_size            = var.agent_vm_size
   cluster_name             = var.cluster_name
   dns_prefix               = var.dns_prefix
+  kubernetes_version       = var.kubernetes_version
   resource_group_name      = data.azurerm_resource_group.cluster_rg.name
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret

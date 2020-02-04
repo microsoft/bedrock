@@ -50,6 +50,11 @@ variable "gitops_url_branch" {
   default = "master"
 }
 
+variable "kubernetes_version" {
+  type    = "string"
+  default = "1.15.7"
+}
+
 variable "resource_group_name" {
   type = string
 }

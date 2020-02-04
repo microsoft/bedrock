@@ -34,6 +34,7 @@ module "central_aks" {
 
   resource_group_name      = local.central_rg_name
   cluster_name             = "${var.cluster_name}-central"
+
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
   vnet_subnet_id           = module.central_vnet.vnet_subnet_ids[0]
@@ -44,6 +45,7 @@ module "central_aks" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   kubeconfig_filename      = local.central_kubeconfig_filename
+  kubernetes_version       = var.kubernetes_version
   oms_agent_enabled        = var.oms_agent_enabled
 }
 

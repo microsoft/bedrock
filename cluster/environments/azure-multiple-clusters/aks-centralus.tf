@@ -53,6 +53,7 @@ module "central_aks_gitops" {
   vnet_subnet_id           = module.central_vnet.vnet_subnet_ids[0]
   dns_ip                   = var.central_dns_ip
   docker_cidr              = var.central_docker_cidr
+  kubernetes_version       = var.kubernetes_version
   kubeconfig_filename      = local.central_kubeconfig_filename
   oms_agent_enabled        = var.oms_agent_enabled
 }

@@ -34,6 +34,7 @@ module "east_aks" {
 
   resource_group_name      = local.east_rg_name
   cluster_name             = "${var.cluster_name}-east"
+
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
   vnet_subnet_id           = module.east_vnet.vnet_subnet_ids[0]
@@ -44,6 +45,7 @@ module "east_aks" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   kubeconfig_filename      = local.east_kubeconfig_filename
+  kubernetes_version       = var.kubernetes_version
   oms_agent_enabled        = var.oms_agent_enabled
 }
 

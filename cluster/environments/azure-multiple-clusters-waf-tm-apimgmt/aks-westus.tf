@@ -43,6 +43,7 @@ module "west_aks" {
   ssh_public_key           = var.ssh_public_key
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
+  kubernetes_version       = var.kubernetes_version
   kubeconfig_filename      = local.west_kubeconfig_filename
   oms_agent_enabled        = var.oms_agent_enabled
 }

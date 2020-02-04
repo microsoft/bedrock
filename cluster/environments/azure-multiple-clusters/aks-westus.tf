@@ -53,6 +53,7 @@ module "west_aks_gitops" {
   vnet_subnet_id           = module.west_vnet.vnet_subnet_ids[0]
   dns_ip                   = var.west_dns_ip
   docker_cidr              = var.west_docker_cidr
+  kubernetes_version       = var.kubernetes_version
   kubeconfig_filename      = local.west_kubeconfig_filename
   oms_agent_enabled        = var.oms_agent_enabled
 }
