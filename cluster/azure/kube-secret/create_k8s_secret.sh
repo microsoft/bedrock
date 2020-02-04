@@ -63,7 +63,9 @@ az account set -s $AKS_SUBSCRIPTION_ID
 NAMESPACE_ARRAY=($(echo "$NAMESPACES" | tr ',' '\n'))
 for ns in "${NAMESPACE_ARRAY[@]}"
 do
+    echo "ensure namespace $ns"
     if ! kubectl describe namespace $ns > /dev/null 2>&1; then
+        echo "creating namespace $ns"
         if ! kubectl create namespace $ns; then
             echo "ERROR: failed to create kubernetes namespace $ns"
             exit 1
