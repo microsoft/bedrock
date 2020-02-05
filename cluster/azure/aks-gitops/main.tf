@@ -5,7 +5,6 @@ data "azurerm_resource_group" "aksgitops" {
 module "aks" {
   source = "../../azure/aks"
 
-<<<<<<< HEAD
   resource_group_name      = data.azurerm_resource_group.aksgitops.name
   cluster_name             = var.cluster_name
   agent_vm_count           = var.agent_vm_count
