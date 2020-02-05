@@ -1,6 +1,5 @@
 module "west_waf_subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
-  source = "../../azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
 
   resource_group_name = data.azurerm_resource_group.westrg.name
   vnet_name           = module.west_vnet.vnet_name

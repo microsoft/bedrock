@@ -1,6 +1,5 @@
 module "central_waf_subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
-  source = "../../azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
 
   resource_group_name = data.azurerm_resource_group.centralrg.name
   vnet_name           = module.central_vnet.vnet_name
@@ -9,8 +8,7 @@ module "central_waf_subnet" {
 }
 
 module "central_waf" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/waf"
-  source = "../../azure/waf"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/waf"
 
   resource_group_name     = data.azurerm_resource_group.centralrg.name
   wafname                 = "${var.prefix}-central-waf"

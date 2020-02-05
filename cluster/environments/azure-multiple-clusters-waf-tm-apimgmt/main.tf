@@ -1,6 +1,5 @@
 module "provider" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
-  source = "../../azure/provider"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
 }
 
 # Read AKS cluster service principal (client) object to create a role assignment
