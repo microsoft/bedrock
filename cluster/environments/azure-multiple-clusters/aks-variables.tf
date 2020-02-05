@@ -16,7 +16,7 @@ variable "dns_prefix" {
 }
 
 variable "kubernetes_version" {
-  type    = "string"
+  type    = string
   default = "1.15.7"
 }
 
