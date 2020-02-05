@@ -1,11 +1,11 @@
 data "azurerm_resource_group" "wafrg" {
-  name     = "${var.resource_group_name}"
+  name     = var.resource_group_name
 }
 
 resource "azurerm_application_gateway" "waf" {
   name                = "${var.wafname}-waf"
-  resource_group_name = "${data.azurerm_resource_group.wafrg.name}"
-  location            = "${data.azurerm_resource_group.wafrg.location}"
+  resource_group_name = data.azurerm_resource_group.wafrg.name
+  location            = data.azurerm_resource_group.wafrg.location
 
   # WAF configuration
   sku {
@@ -23,7 +23,7 @@ resource "azurerm_application_gateway" "waf" {
 
   gateway_ip_configuration {
     name      = "ip-configuration"
-    subnet_id = "${var.subnet_id}"
+    subnet_id = var.subnet_id
   }
 
   frontend_port {
@@ -38,11 +38,11 @@ resource "azurerm_application_gateway" "waf" {
 
   frontend_ip_configuration {
     name                 = "${var.prefix}-feip"
-    public_ip_address_id = "${var.public_ip_address_id}"
+    public_ip_address_id = var.public_ip_address_id
   }
 
   backend_address_pool {
-    name = "${var.prefix}-beappool1"
+    name = var.prefix}-beappool1"
   }
 
   backend_http_settings {

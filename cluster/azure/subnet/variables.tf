@@ -1,15 +1,15 @@
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable vnet_name {
-  type = "string"
+  type = string
 }
 
 variable subnet_name {
-  type = "string"
+  type = string
 }
 
 variable address_prefix {
-  type = "string"
+  type = string
 }

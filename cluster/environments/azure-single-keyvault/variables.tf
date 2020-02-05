@@ -1,106 +1,106 @@
 variable "acr_enabled" {
-  type    = "string"
+  type    = string
   default = "true"
 }
 
 variable "address_space" {
-  type = "string"
+  type = string
 }
 
 variable "agent_vm_count" {
-  type = "string"
+  type = string
 }
 
 variable "agent_vm_size" {
-  type = "string"
+  type = string
 }
 
 variable "cluster_name" {
-  type = "string"
+  type = string
 }
 
 variable "dns_prefix" {
-  type = "string"
+  type = string
 }
 
 variable "flux_recreate" {
   description = "Make any change to this value to trigger the recreation of the flux execution script."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "gc_enabled" {
-  type    = "string"
+  type    = string
   default = "true"
 }
 
 variable "gitops_poll_interval" {
-  type    = "string"
+  type    = string
   default = "5m"
 }
 
 variable "gitops_label" {
-  type    = "string"
+  type    = string
   default = "flux-sync"
 }
 
 variable "gitops_ssh_url" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_url_branch" {
-  type    = "string"
+  type    = string
   default = "master"
 }
 
 variable "gitops_ssh_key" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_path" {
-  type    = "string"
+  type    = string
   default = ""
 }
 
 variable "keyvault_name" {
-  type = "string"
+  type = string
 }
 
 variable "keyvault_resource_group" {
-  type = "string"
+  type = string
 }
 
 variable "kubernetes_version" {
-  type    = "string"
+  type    = string
   default = "1.15.7"
 }
 
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "ssh_public_key" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_id" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_secret" {
-  type = "string"
+  type = string
 }
 
 variable "subnet_prefixes" {
-  type = "string"
+  type = string
 }
 
 variable "vnet_name" {
-  type = "string"
+  type = string
 }
 
 variable "subnet_name" {
-  type = "string"
+  type = string
 }
 
 variable "network_plugin" {
@@ -113,16 +113,16 @@ variable "network_policy" {
 }
 
 variable "oms_agent_enabled" {
-  type    = "string"
+  type    = string
   default = "false"
 }
 
 variable "enable_acr" {
-  type    = "string"
+  type    = string
   default = "false"
 }
 
 variable "acr_name" {
-  type    = "string"
+  type    = string
   default = ""
 }
