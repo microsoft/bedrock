@@ -30,7 +30,7 @@ variable "agent_vm_size" {
 }
 
 variable "kubernetes_version" {
-  type = "string"
+  type = string
 }
 
 variable "admin_user" {
