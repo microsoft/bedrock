@@ -11,6 +11,11 @@ variable "dns_prefix" {
   type = string
 }
 
+variable "msi_enabled" {
+  type = bool
+  default = false
+}
+
 variable "service_principal_id" {
   type = string
 }

@@ -2,6 +2,10 @@ module "azure-provider" {
   source = "../provider"
 }
 
+locals {
+  msi_identity_type = "SystemAssigned"
+}
+
 data "azurerm_resource_group" "cluster" {
   name = var.resource_group_name
 }
@@ -79,6 +83,16 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     oms_agent {
       enabled                    = var.oms_agent_enabled
       log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.id
+    }
+  }
+
+  # This dynamic block enables managed service identity for the cluster
+  # in the case that the following holds true:
+  #   1: the msi_enabled input variable is set to true
+  dynamic "identity" {
+    for_each = var.msi_enabled ? [local.msi_identity_type] : []
+    content {
+      type = identity.value
     }
   }
 }
