@@ -1,10 +1,9 @@
 provider "azurerm" {
-  version = "~>1.32.1"
+  version = "~>1.40.0"
 }
 
-# Needed for the traffic manager role assignment
 provider "azuread" {
-  version = "~>0.5.1"
+  version = "~>0.7.0"
 }
 
 # common modules
