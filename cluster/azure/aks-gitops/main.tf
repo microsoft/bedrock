@@ -12,6 +12,7 @@ module "aks" {
   dns_prefix               = var.dns_prefix
   vnet_subnet_id           = var.vnet_subnet_id
   ssh_public_key           = var.ssh_public_key
+  msi_enabled              = var.msi_enabled
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   service_cidr             = var.service_cidr

@@ -19,6 +19,11 @@ variable "cluster_name" {
   type = string
 }
 
+variable "msi_enabled" {
+  type = bool
+  default = false
+}
+
 variable "dns_prefix" {
   type = string
 }
