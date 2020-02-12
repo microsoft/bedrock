@@ -53,11 +53,10 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     }
   }
 
-  agent_pool_profile {
+  default_node_pool {
     name            = "default"
     count           = var.agent_vm_count
     vm_size         = var.agent_vm_size
-    os_type         = "Linux"
     os_disk_size_gb = 30
     vnet_subnet_id  = var.vnet_subnet_id
   }
