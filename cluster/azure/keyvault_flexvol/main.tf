@@ -8,7 +8,7 @@ data "azuread_service_principal" "flexvol" {
 
 data "azurerm_key_vault" "kv" {
   name                = var.keyvault_name
-  resource_group_name = "some-resource-group"
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_key_vault_access_policy" "flexvol" {
