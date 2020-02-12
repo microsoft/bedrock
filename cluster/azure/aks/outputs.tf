@@ -11,3 +11,7 @@ output "kube_config" {
 output "kubeconfig_done" {
   value = join("", local_file.cluster_credentials.*.id)
 }
+
+output "resource_id" {
+  value = azurerm_kubernetes_cluster.cluster.id
+}
