@@ -12,6 +12,10 @@ output "kubeconfig_done" {
   value = join("", local_file.cluster_credentials.*.id)
 }
 
-output "resource_id" {
-  value = azurerm_kubernetes_cluster.cluster.id
+output "msi_principal_id" {
+  value = azurerm_kubernetes_cluster.cluster.identity.principal_id
+}
+
+output "msi_tenant_id" {
+  value = azurerm_kubernetes_cluster.cluster.identity.tenant_id
 }
