@@ -15,7 +15,6 @@ resource "azurerm_key_vault_access_policy" "flexvol" {
   count = var.enable_flexvol ? 1 : 0
 
   key_vault_id        = data.azurerm_key_vault.kv.id
-  resource_group_name = var.resource_group_name
 
   tenant_id = var.tenant_id
   object_id = data.azuread_service_principal.flexvol.id
