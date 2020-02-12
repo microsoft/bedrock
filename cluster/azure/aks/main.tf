@@ -1,6 +1,6 @@
-# module "azure-provider" {
-#   source = "../provider"
-# }
+module "azure-provider" {
+  source = "../provider"
+}
 
 locals {
   msi_identity_type = "SystemAssigned"
