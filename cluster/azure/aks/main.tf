@@ -104,6 +104,6 @@ data "external" "msi_object_id" {
     "${path.module}/aks_msi_client_id_query.sh",
     var.cluster_name,
     data.azurerm_resource_group.cluster.name,
-    data.azurerm_subscription.current.id
+    data.azurerm_subscription.current.subscription_id
   ]
 }
