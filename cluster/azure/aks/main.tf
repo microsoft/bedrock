@@ -10,6 +10,8 @@ data "azurerm_resource_group" "cluster" {
   name = var.resource_group_name
 }
 
+data "azurerm_subscription" "current" {}
+
 resource "random_id" "workspace" {
   keepers = {
     group_name = data.azurerm_resource_group.cluster.name
@@ -101,6 +103,7 @@ data "external" "msi_object_id" {
   program = [
     "${path.module}/aks_msi_client_id_query.sh",
     var.cluster_name,
-    data.azurerm_resource_group.cluster.name
+    data.azurerm_resource_group.cluster.name,
+    data.azurerm_subscription.current.id
   ]
 }
