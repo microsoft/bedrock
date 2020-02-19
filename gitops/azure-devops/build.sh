@@ -24,7 +24,7 @@ function init() {
 # Initialize Helm
 function helm_init() {
     echo "RUN HELM INIT"
-    helm init
+    helm init --client-only
 }
 
 # Obtain version for Fabrikate
