@@ -1,42 +1,9 @@
-trigger:
-  batch: true
+schedules:
+- cron: "0 12 * * 5"
   branches:
-    include:
-    - master
-    - azure-pipelines
-    - bedrock-testing-v2
-    - bedrock_testing
-  paths:
-    include:
-    - /cluster/azure/*
-    - /cluster/common/*
-    - /cluster/environments/azure-simple/*
-    - /cluster/environments/azure-single-keyvault/*
-    - /cluster/environments/azure-common-infra/*
-    - /cluster/environments/azure-multiple-clusters/*
-    - /pipelines/*
-    - azure-pipelines.yml
-    exclude:
-    - gitops/*
-    - '**/*.md'
-pr:
-  autoCancel: false
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - /cluster/azure/*
-    - /cluster/common/*
-    - /cluster/environments/azure-simple/*
-    - /cluster/environments/azure-single-keyvault/*
-    - /cluster/environments/azure-common-infra/*
-    - /cluster/environments/azure-multiple-clusters/*
-    - /test/*
-    - gitops/*
-    - azure-pipelines.yml
-    exclude:
-    - '**/*.md'
+    include: [master]
+  displayName: F 12:00PM (UTC - 8:00) Pacific Weekly Build
+  always: true
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
@@ -200,3 +167,4 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+      
