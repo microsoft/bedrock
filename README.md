@@ -15,17 +15,29 @@ Bedrock helps you:
 
 ## Infrastructure Management
 * [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
+<<<<<<< HEAD
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
+=======
+* CLI Reference
+>>>>>>> upstream/docs_spk
 
 ## Services Management
 * Walkthrough: Deploying Services with GitOps
 * [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
 * [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
+<<<<<<< HEAD
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
 
 # Service Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
+=======
+* CLI Reference
+
+# Service Observability
+* [Walkthrough: Observing Service Deployments](./docs/introspection.md)
+* CLI Reference
+>>>>>>> upstream/docs_spk
 
 ## Community
 

@@ -47,7 +47,8 @@ $ mkdir -p ~/cluster-deployment
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
 $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/gitops-ssh-key
-Generating public/private rsa key pair.
+Generating 
+lic/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 Your identification has been saved in /Users/myuser/.ssh/gitops-ssh-key.
@@ -169,7 +170,7 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@github.com:myuser/app-cluster-manifests.git`.
 
-Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `../keys/gitops-ssh-key`.
+Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
 
 In multi-cluster scenarios, we will often keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
@@ -251,7 +252,7 @@ $ export ARM_CLIENT_SECRET=35591cab-13c9-4b42-8a83-59c8867bbdc2
 $ export ARM_CLIENT_ID=7b6ab9ae-dead-abcd-8b52-0a8ecb5beef
 ```
 
-3. In the `definition.json`, delete `service_principal_id` and `service_principal_secret`
+3. In the `definition.yaml`, delete `service_principal_id` and `service_principal_secret`
 
 4. Define the `service_principal_id` and `service_principal_secret` environment variables:
 
@@ -303,7 +304,7 @@ $ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
 
-3. Paste this into your `definition.json` file as the value for `ssh_public_key`.
+3. Paste this into your `definition.yaml` file as the value for `ssh_public_key`.
 
 ### Create Azure Resource Group
 
@@ -323,7 +324,7 @@ $ cd ~/cluster-deployment
 $ spk infra generate -p cluster
 ```
 
-`spk` reads our `definition.json` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
+`spk` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
 ## Deploy Cluster
 
