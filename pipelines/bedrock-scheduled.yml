@@ -17,7 +17,7 @@ stages:
 - stage: Bedrock_Init_Validation
   jobs:
   - job: Bedrock_Init_Validate
-    steps:
+    steps: 
     - checkout: self
       persistCredentials: true
       clean: true
@@ -109,7 +109,11 @@ stages:
       timeoutInMinutes: 60
     variables:
       GOBIN:  '$(GOPATH)/bin' # Go binaries path
+<<<<<<< HEAD
       GOROOT: '/usr/local/go1.13' # Go installation path
+=======
+      GOROOT: '/usr/local/go1.11' # Go installation path
+>>>>>>> Reorganize content to new progressive disclosure approach (#1048)
       GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
       modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
