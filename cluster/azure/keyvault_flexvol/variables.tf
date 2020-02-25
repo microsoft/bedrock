@@ -1,71 +1,71 @@
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_id" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_secret" {
-  type = "string"
+  type = string
 }
 
 variable "tenant_id" {
-  type = "string"
+  type = string
 }
 
 variable "flexvol_keyvault_key_permissions" {
   description = "Permissions that the AKS cluster has for accessing keys from KeyVault"
-  type        = "list"
+  type        = list
   default     = ["create", "delete", "get"]
 }
 
 variable "flexvol_keyvault_secret_permissions" {
   description = "Permissions that the AKS cluster has for accessing secrets from KeyVault"
-  type        = "list"
+  type        = list
   default     = ["set", "delete", "get"]
 }
 
 variable "flexvol_keyvault_certificate_permissions" {
   description = "Permissions that the AKS cluster has for accessing certificates from KeyVault"
-  type        = "list"
+  type        = list
   default     = ["create", "delete", "get"]
 }
 
 variable "flexvol_deployment_url" {
   description = "The url to the yaml file for deploying the KeyVault flex volume."
-  type        = "string"
+  type        = string
   default     = "https://raw.githubusercontent.com/Azure/kubernetes-keyvault-flexvol/31f593250045e8dc861e13a8e943284787b7f17e/deployment/kv-flexvol-installer.yaml"
 }
 
 variable "output_directory" {
-  type    = "string"
+  type    = string
   default = "./output"
 }
 
 variable "enable_flexvol" {
-  type    = "string"
+  type    = string
   default = "true"
 }
 
 variable "keyvault_name" {
   description = "The name of the keyvault that will be associated with the flex volume."
-  type        = "string"
+  type        = string
 }
 
 variable "flexvol_recreate" {
   description = "Make any change to this value to trigger the recreation of the flex volume execution script."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "kubeconfig_filename" {
   description = "Name of the kube config file saved to disk."
-  type        = "string"
+  type        = string
   default     = "bedrock_kube_config"
 }
 
 variable "kubeconfig_complete" {
   description = "Allows flex volume deployment to wait for the kubeconfig completion write to disk. Workaround for the fact that modules themselves cannot have dependencies."
-  type        = "string"
+  type        = string
 }

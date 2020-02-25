@@ -22,6 +22,8 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	addressSpace := "10.39.0.0/16"
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
+	k8sVersion := "1.15.7"
+
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
 	clientsecret := os.Getenv("ARM_CLIENT_SECRET")
@@ -129,6 +131,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"gitops_ssh_key":           sshkey,
 			"keyvault_name":            kvName,
 			"keyvault_resource_group":  kvRG,
+			"kubernetes_version":       k8sVersion,
 			"resource_group_name":      k8sRG,
 			"ssh_public_key":           publickey,
 			"service_principal_id":     clientid,

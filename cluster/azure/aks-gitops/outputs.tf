@@ -1,5 +1,5 @@
 output "kubeconfig_done" {
-  value = "${module.aks.kubeconfig_done}"
+  value = module.aks.kubeconfig_done
 }
 
 output "aks_flux_kubediff_done" {

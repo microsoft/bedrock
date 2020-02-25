@@ -4,24 +4,24 @@ variable "prefix" {
 }
 
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable wafname {
-  type = "string"
+  type = string
 }
 
 variable subnet_id {
-  type = "string"
+  type = string
 }
 
 variable public_ip_address_id {
-  type = "string"
+  type = string
 }
 
 variable "tags" {
   description = "The tags to associate with the public ip address."
-  type        = "map"
+  type        = map
 
   default = {
     tag1 = ""
