@@ -13,7 +13,3 @@ output "aks_resource_id" {
 output "aks_msi_principal_id" {
   value = module.aks.msi_principal_id
 }
-
-output "aks_msi_tenant_id" {
-  value = module.aks.msi_tenant_id
-}
