@@ -668,7 +668,7 @@ kube-system   metrics-server         ClusterIP      10.0.189.185   <none>       
 
 External load balancers like this take time to provision, so if the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
 
-The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:8080 to fetch the service in a browser.
+The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
 
 
 And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
