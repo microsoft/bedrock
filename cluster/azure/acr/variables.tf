@@ -1,12 +1,12 @@
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "enable_acr" {
-  type    = "string"
+  type    = string
   default = "false"
 }
 
 variable "acr_name" {
-  type = "string"
+  type = string
 }

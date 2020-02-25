@@ -1,42 +1,9 @@
-trigger:
-  batch: true
+schedules:
+- cron: "0 12 * * 5"
   branches:
-    include:
-    - master
-    - azure-pipelines
-    - bedrock-testing-v2
-    - bedrock_testing
-  paths:
-    include:
-    - /cluster/azure/*
-    - /cluster/common/*
-    - /cluster/environments/azure-simple/*
-    - /cluster/environments/azure-single-keyvault/*
-    - /cluster/environments/azure-common-infra/*
-    - /cluster/environments/azure-multiple-clusters/*
-    - /pipelines/*
-    - azure-pipelines.yml
-    exclude:
-    - gitops/*
-    - '**/*.md'
-pr:
-  autoCancel: false
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - /cluster/azure/*
-    - /cluster/common/*
-    - /cluster/environments/azure-simple/*
-    - /cluster/environments/azure-single-keyvault/*
-    - /cluster/environments/azure-common-infra/*
-    - /cluster/environments/azure-multiple-clusters/*
-    - /test/*
-    - gitops/*
-    - azure-pipelines.yml
-    exclude:
-    - '**/*.md'
+    include: [master]
+  displayName: F 12:00PM (UTC - 8:00) Pacific Weekly Build
+  always: true
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
@@ -52,7 +19,7 @@ stages:
     - checkout: self
       persistCredentials: true
       clean: true
-    - template: pipelines/bedrock-integration-test-whitelist.yml
+    - template: bedrock-integration-test-whitelist.yml
     - task: ShellScript@2
       displayName: Validate GitOps pipeline
       inputs:
@@ -60,7 +27,7 @@ stages:
       env:
         VERIFY_ONLY: 1
         HLD_PATH: git://github.com/Microsoft/fabrikate-production-cluster-demo.git
-    - template: pipelines/bedrock-test-init.yml
+    - template: bedrock-test-init.yml
     - bash: |
         # Fail if any of these files have warnings
         find . -path ./gopath -prune -o -path ./get_helm.sh -prune -o -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" \) -print |
@@ -111,8 +78,8 @@ stages:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
     steps:
-      - template: pipelines/bedrock-whitelist-artifact-embed.yml
-      - template: pipelines/bedrock-test-init.yml
+      - template: bedrock-whitelist-artifact-embed.yml
+      - template: bedrock-test-init.yml
       - script: |
           ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
           export ssh_key=$(readlink -f id_rsa.pub)
@@ -145,8 +112,8 @@ stages:
       modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
-    - template: pipelines/bedrock-whitelist-artifact-embed.yml
-    - template: pipelines/bedrock-test-init.yml
+    - template: bedrock-whitelist-artifact-embed.yml
+    - template: bedrock-test-init.yml
     - script: |
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
@@ -181,8 +148,8 @@ stages:
       modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
-    - template: pipelines/bedrock-whitelist-artifact-embed.yml
-    - template: pipelines/bedrock-test-init.yml
+    - template: bedrock-whitelist-artifact-embed.yml
+    - template: bedrock-test-init.yml
     - script: |
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
@@ -200,19 +167,4 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
-
-#     - script: |
-#         export ssh_key=$(readlink -f id_rsa.pub)
-#         export public_key=$(cat id_rsa.pub)
-#         find $(modulePath)/cluster/environments/azure-multiple-clusters-waf-tm-apimgmt -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-#         go test -v -run TestIT_Bedrock_AzureMC_APIM_Test -timeout 99999s
-#       env:
-#         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-#         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-#         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-#         ARM_TENANT_ID: $(ARM_TENANT_ID)
-#         ARM_BACKEND_STORAGE_NAME: $(ARM_BACKEND_STORAGE_NAME)
-#         ARM_BACKEND_STORAGE_KEY: $(ARM_BACKEND_STORAGE_KEY)
-#         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
-#       workingDirectory: '$(modulePath)/test'
-#       displayName: 'Integration Test: azure-multiple-clusters-waf-tm-apimgmt '
+      

@@ -9,17 +9,23 @@ Bedrock helps you:
 * Observe ongoing deployments across multiple services, their revisions, and multiple clusters utilizing those services.
 
 ## Getting Started
-* [Why GitOps?](./docs/why-gitops.md)
 * [Installing Prerequisites](./tools/prereqs/README.md)
-* [Deploying a First Workload with Bedrock](./docs/firstWorkload)
+* [Walkthrough: Deploying a First Workload with Bedrock](./docs/firstWorkload)
+* [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
-## Going to Production
-* [High Level Deployment Definitions](./docs/high-level-definitions.md)
-* [GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
-* Deploying Services and Revisions
-* Introspecting GitOps Deployments
-* [Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
-* Ongoing Operations and Maintenance
+## Infrastructure Management
+* [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
+
+## Services Management
+* Walkthrough: Deploying Services with GitOps
+* [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
+* [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
+
+# Service Observability
+* [Walkthrough: Observing Service Deployments](./docs/introspection.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
 
 ## Community
 

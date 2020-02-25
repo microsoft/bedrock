@@ -1,150 +1,160 @@
 variable "output_directory" {
-  type    = "string"
+  type    = string
   default = "./output"
 }
 
 variable "kubeconfig_filename" {
   description = "Name of the kube config file saved to disk."
-  type        = "string"
+  type        = string
   default     = "bedrock_kube_config"
 }
 
 variable "acr_enabled" {
-  type    = "string"
+  type    = string
   default = "true"
 }
 
 variable "address_space" {
-  type = "string"
+  type = string
 }
 
 variable "agent_vm_count" {
-  type = "string"
+  type = string
 }
 
 variable "agent_vm_size" {
-  type = "string"
+  type = string
 }
 
 variable "cluster_name" {
-  type = "string"
+  type = string
 }
 
 variable "dns_prefix" {
-  type = "string"
+  type = string
 }
 
 variable "flux_recreate" {
   description = "Make any change to this value to trigger the recreation of the flux execution script."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "gitops_poll_interval" {
-  type    = "string"
+  type    = string
   default = "5m"
 }
 
+variable "gitops_label" {
+  type    = string
+  default = "flux-sync"
+}
+
 variable "gitops_ssh_url" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_url_branch" {
-  type    = "string"
+  type    = string
   default = "master"
 }
 
 variable "gitops_ssh_key" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_path" {
-  type    = "string"
+  type    = string
   default = ""
 }
 
 variable "keyvault_name" {
-  type = "string"
+  type = string
 }
 
 variable "keyvault_resource_group" {
-  type = "string"
+  type = string
+}
+
+variable "kubernetes_version" {
+  type    = string
+  default = "1.15.7"
 }
 
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "resource_group_location" {
-  type = "string"
+  type = string
 }
 
 variable "ssh_public_key" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_id" {
-  type = "string"
+  type = string
 }
 
 variable "service_principal_secret" {
-  type = "string"
+  type = string
 }
 
 variable "subnet_prefixes" {
-  type = "string"
+  type = string
 }
 
 variable "vnet_subnet_id" {
-  type = "string"
+  type = string
 }
 
 variable "subscription_id" {
-  type = "string"
+  type = string
 }
 
 variable "tenant_id" {
-  type = "string"
+  type = string
 }
 
 variable "velero_provider" {
   description = "Set the provider (Azure, AWS, etc.)"
-  type        = "string"
+  type        = string
   default     = "azure"
 }
 
 variable "velero_bucket" {
   description = "Set the backup storage location bucket"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "velero_secrets" {
   description = "The location of the secrets file containing AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET & AZURE_RESOURCE_GROUP (azure only)"
-  type        = "string"
+  type        = string
   default     = "./credentials-velero"
 }
 
 variable "velero_backup_location_config" {
   description = "Set the backup storage location config. For Azure, it must have a resourceGroup and storageAccount."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "velero_volume_snapshot_location_config" {
   description = "Set the volume snapshot location config. For Azure, it must have at least apiTimeout."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "velero_backup_name" {
   description = "The name of the backup to restore from."
-  type        = "string"
+  type        = string
 }
 
 variable "velero_restore_name" {
   description = "The name of the restore you would like to set."
-  type        = "string"
+  type        = string
   default     = "disasterrecoveryrestore"
 }
 

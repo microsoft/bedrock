@@ -1,13 +1,13 @@
 variable "central_resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_central_path" {
-  type = "string"
+  type = string
 }
 
 variable "gitops_central_url_branch" {
-  type    = "string"
+  type    = string
   default = "master"
 }
 
@@ -24,13 +24,13 @@ variable "central_subnet_prefixes" {
 variable "central_service_cidr" {
   default     = "172.21.0.0/16"
   description = "Used to assign internal services in the AKS cluster an IP address. This IP address range should be an address space that isn't in use elsewhere in your network environment. This includes any on-premises network ranges if you connect, or plan to connect, your Azure virtual networks using Express Route or a Site-to-Site VPN connections."
-  type        = "string"
+  type        = string
 }
 
 variable "central_dns_ip" {
   default     = "172.21.0.10"
   description = "should be the .10 address of your service IP address range"
-  type        = "string"
+  type        = string
 }
 
 variable "central_docker_cidr" {

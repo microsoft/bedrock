@@ -32,6 +32,7 @@ The following templates are currently available for deployment:
 - [azure-single-keyvault](../environments/azure-single-keyvault): Single cluster with Azure Keyvault integration through flex volumes template.
 - [azure-multiple-clusters](../environments/azure-multiple-clusters/): Multiple cluster deployment with Traffic Manager.
 
+### Deploying Azure Cluster
 The common steps necessary to deploy a cluster are:
 
 - [Build Fabrikate Definition for Container Deployment](../../docs/fabrikate/README.md)
@@ -257,6 +258,8 @@ It is also possible to use the config that was generated directly.  For instance
 ```
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux`
 ```
+
+__Note:__ To recreate/redownload credentials file from the cluster, simply delete the `bedrock_kube_config` file in the location specified by the variable `output_directory` and rerun `terraform apply`. 
 
 ### Verify that your AKS cluster is healthy
 
