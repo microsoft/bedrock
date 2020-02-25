@@ -1,47 +1,47 @@
 variable "traffic_manager_profile_name" {
-  type = "string"
+  type = string
 }
 
 variable "traffic_manager_resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "public_ip_name" {
-  type = "string"
+  type = string
 }
 
 variable "endpoint_name" {
-  type = "string"
+  type = string
 }
 
 variable "resource_group_name" {
-  type = "string"
+  type = string
 }
 
 variable "ip_address_out_filename" {
-  type    = "string"
+  type    = string
   default = "bedrock_public_ip_address"
 }
 
 variable "ipaddress_to_disk" {
   description = "This disables or enables the ip address output file from being written to disk."
-  type        = "string"
+  type        = string
   default     = "true"
 }
 
 variable "output_directory" {
-  type    = "string"
+  type    = string
   default = "./output"
 }
 
 variable "allocation_method" {
-  type    = "string"
+  type    = string
   default = "Static"
 }
 
 variable "tags" {
   description = "The tags to associate with the public ip address."
-  type        = "map"
+  type        = map
 
   default = {
     tag1 = ""

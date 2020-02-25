@@ -1,21 +1,26 @@
 variable "vault_id" {
-  type = "string"
+  type = string
 }
 
 variable "tenant_id" {
-  type = "string"
+  type = string
 }
 
 variable "object_id" {
-  type = "string"
+  type = string
+}
+
+variable "enabled" {
+  type    = bool
+  default = true
 }
 
 variable "key_permissions" {
-  type    = "list"
+  type    = list
   default = ["create", "delete", "get"]
 }
 
 variable "secret_permissions" {
-  type    = "list"
+  type    = list
   default = ["delete", "get", "set"]
 }

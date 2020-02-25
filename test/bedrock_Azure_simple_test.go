@@ -28,6 +28,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 	tenantId := os.Getenv("ARM_TENANT_ID")
 	dnsprefix := k8sName + "-dns"
 	k8sRG := k8sName + "-rg"
+	k8sVersion := "1.15.7"
 	location := os.Getenv("DATACENTER_LOCATION")
 	publickey := os.Getenv("public_key")
 	sshkey := os.Getenv("ssh_key")
@@ -63,6 +64,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 			"dns_prefix":               dnsprefix,
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
 			"gitops_ssh_key":           sshkey,
+                        "kubernetes_version":       k8sVersion,
 			"resource_group_name":      k8sRG,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
