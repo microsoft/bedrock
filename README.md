@@ -29,7 +29,7 @@ Bedrock helps you:
 
 # Service Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
-* CLI Reference
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
 
 ## Community
 
