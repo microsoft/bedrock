@@ -96,7 +96,7 @@ $ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
 
-1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and selecting your avatar in the upper right of the user interface. Select Security in the menu that appears.
+1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and select your avatar in the upper right of the user interface. Select Security in the menu that appears.
 ![enter key](./images/ssh_profile_access.png)
 
 2. Select SSH public keys, and then select + New Key.
@@ -639,7 +639,7 @@ spec:
 ---
 ```
 
-This defines a multi-container application that includes a web front end and a Redis instance is run in the cluster. 
+This defines a multi-container application that includes a web front end and a Redis instance running in the cluster. 
 
 ![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
 
@@ -659,15 +659,15 @@ $ kubectl logs flux-5897d4679b-tckth -n flux -f
 
 Once Flux starts its next reconcilation, we should see at the end of the output that Flux has found the repo `app-cluster-manifests` and created the new service:
 
-`"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
+`"kubectl apply -f -" took=1.263687361s err=null output="service/azure-vote-front created\ndeployment.extensions/azure-vote-front created"`.
 
 Once applied, we should be able to see the web app pods running in our cluster:
 
 ```bash
 $ kubectl get pods
 NAME                                    READY   STATUS    RESTARTS   AGE
-vote-back-azure-vote-5988494c64-m5dqc   1/1     Running   0          21d
-vote-front-azure-vote-f57f4cb9d-pxzqt   1/1     Running   0          21d
+azure-vote-back-6d4b4776b6-pfdpt        1/1     Running   0          21d
+azure-vote-front-5ccf899cf6-wrtf4       1/1     Running   0          21d
 ```
 
 We should also see the LoadBalancer service by querying the set of services in the cluster:
@@ -675,9 +675,9 @@ We should also see the LoadBalancer service by querying the set of services in t
 ```
 $ kubectl get services --all-namespaces
 NAMESPACE     NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)          AGE
-default       azure-vote-front       LoadBalancer   10.0.6.209    52.143.80.54   80:30396/TCP    21d
+default       azure-vote-front       LoadBalancer   10.0.6.209     52.143.80.54     80:30396/TCP     21d
 default       kubernetes             ClusterIP      10.0.0.1       <none>           443/TCP          44m
-default       vote-back-azure-vote   ClusterIP      10.0.125.58   <none>         6379/TCP        21d
+default       azure-vote-back        ClusterIP      10.0.125.58    <none>           6379/TCP         21d
 flux          flux                   ClusterIP      10.0.139.133   <none>           3030/TCP         34m
 flux          flux-memcached         ClusterIP      10.0.246.230   <none>           11211/TCP        34m
 kube-system   kube-dns               ClusterIP      10.0.0.10      <none>           53/UDP,53/TCP    44m
@@ -689,6 +689,7 @@ External load balancers like this take time to provision. If the EXTERNAL-IP of 
 
 The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
 
+![voting app deployed](./images/azure-voting-deployed.png)
 
 And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
 
