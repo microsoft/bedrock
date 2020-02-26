@@ -129,7 +129,7 @@ $ git branch -a
 As you can see we now have a `spk-hld-init` branch.
 
 Go to the "Link to create a PR" that we got earlier after running the `spk hld init --git-push` command. You will see:
-![hld pr](./images/hld-pr.png)
+![hld new pr](./images/hld-new-pr.png)
 
 
 If you scroll down, you will see several files were added: `component.yaml` and `manifest-generation.yaml`. These files contain the information for our traefik component and for the pipeline.
