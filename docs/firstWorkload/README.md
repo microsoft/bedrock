@@ -174,7 +174,7 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 ### Configure GitOps Repo
 
-Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@github.com:myuser/app-cluster-manifests.git`.
+Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
 
 Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
 
