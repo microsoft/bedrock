@@ -32,7 +32,7 @@ This guide assumes a few things as requirements to use this automation:
 **Note**: If a user wishes to store helm charts in the application
    repositories, then all repositories (application, high level definition,
    materialized manifests) must be in the same Azure DevOps Organization AND
-   Project. This is what Step 7 and Step 8 highlight. 
+   Project. This is what Step 7 and Step 8 are doing. 
 
 ## Setup SPK
 
@@ -80,7 +80,6 @@ via flags.
 
 
 ## Repositories
-
 Our next step is to onboard the repositories that support the
 deployment of our services:
 
@@ -176,3 +175,9 @@ You can view the newly created pipeline in your Azure DevOps project:
 Once the pipeline finishes running successfully, you will see that the manifests have been generated and pushed to the `app-cluster-manifests` repository:
 ![manifest repo](./images/manifest-repo.png)
 
+After some time, flux will apply the changes:
+```
+$ kubectl get pods
+NAME                        READY   STATUS              RESTARTS   AGE
+traefik2-6f8ddc69cc-79n4g   0/1     ContainerCreating   0          8s
+```
