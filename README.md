@@ -10,20 +10,23 @@ Bedrock helps you:
 
 ## Getting Started
 * [Installing Prerequisites](./tools/prereqs/README.md)
-* [Walkthrough: Deploying a First Workload with Bedrock](./docs/firstWorkload)
+* [Walkthrough: Deploying a First Workload](./docs/firstWorkload)
 * [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
 ## Infrastructure Management
 * [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
-## Services Management
-* Walkthrough: Deploying Services with GitOps
+## GitOps Pipeline
+* Walkthrough: GitOps Pipeline
 * [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
 * [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
+
+## Service Deployment
+* Walkthrough: Service Deployment
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
 
-# Service Observability
+## End to End Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
 
