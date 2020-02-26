@@ -1,11 +1,11 @@
 # Setting up an HLD to Manifest pipeline
 
-In [First Workload](./firstWorkload/README.md) we deployed the Azure Vote App using a GitOps workflow by pushing the `azure-vote-all-in-one-redis.yaml` Kubernetes resource manifest file. In [High level Deployment Definitions](./high-level-definitions.md) we learned that, Kubernetes resource manifests that comprise an application definition are typically very complex. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
+In [First Workload](./firstWorkload/README.md) we deployed the Azure Voting App using a GitOps workflow by pushing the `azure-vote-all-in-one-redis.yaml` Kubernetes resource manifest file. In [High level Deployment Definitions](./high-level-definitions.md) we learned that, Kubernetes resource manifests that comprise an application definition are typically very complex. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
 
 We also learned that real world Kubernetes deployments tend to be composed of the combination of many Helm charts. Maintaining and generating various Helm charts can be a challenge. This is why Bedrock introduces High Level Deployment Definitions.
 
 In this walkthrough, we will:
-1. Set up an Azure DevOps pipeline that generates a resource manifest from an HLD definition for the Azure Vote App and pushes it to the Manifest Repository.
+1. Set up an Azure DevOps pipeline that generates a resource manifest from an HLD definition for the Azure Voting App and pushes it to the Manifest Repository.
 
 ## Requirements
 
