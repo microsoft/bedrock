@@ -181,3 +181,11 @@ $ kubectl get pods
 NAME                        READY   STATUS              RESTARTS   AGE
 traefik2-6f8ddc69cc-79n4g   0/1     ContainerCreating   0          8s
 ```
+
+And we can also confirm the service is available:
+```
+$ k get services
+NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE
+kubernetes   ClusterIP      10.0.0.1      <none>          443/TCP                      21h
+traefik2     LoadBalancer   10.0.209.68   137.135.15.52   80:31328/TCP,443:30149/TCP   19h
+```
