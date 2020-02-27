@@ -108,7 +108,7 @@ applied to the Kubernetes cluster by Flux.
 
 #### Initializing the High Level Definition Repository
 
-- Make sure your SPK config points to the HLD repo you created in Step 7 of [Requirements](#requirements). If you just added it, re-initialize SPK by running `spk init -f <spk-config.yaml>`. The value will look similar to this: `hld_repository: "https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds"`
+- Make sure your SPK config points to the HLD repo you created in Step 7 of [Requirements](#requirements). When you change the values in the SPK config, make sure you re-initialize SPK by running `spk init -f <spk-config.yaml>`.
 - [Clone the repository.](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#clone-the-repo-to-your-computer)
 - Initialize via `spk`, this will add the fabrikate
   [traefik2](https://github.com/microsoft/fabrikate-definitions/tree/master/definitions/traefik2)
@@ -149,7 +149,7 @@ If you scroll down, you will see several files were added: `component.yaml` and 
 Click "Create" to create the PR. Then click "Complete". Finally click "Complete merge":
 ![hld pr complete](./images/hld-pr-complete-merge.png)
 
-Your changes should now be in the `master` branch:
+Your changes should now be in the `master` branch. Pull the latest changes:
 ```
 $ git pull origin master
 remote: Azure Repos
