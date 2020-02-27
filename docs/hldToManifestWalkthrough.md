@@ -123,7 +123,6 @@ applied to the Kubernetes cluster by Flux.
 If the initialization succeeded, you will see a message similar to this:
 ```
 info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=spk-hld-init&targetRef=master
-
 ```
 
 This means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
