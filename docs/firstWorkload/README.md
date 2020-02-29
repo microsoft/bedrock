@@ -15,13 +15,15 @@ Our next step is to create and configure this repo for this workflow.
 
 ### Create the Flux Manifest Repository
 
-[Create an empty git repository](https://github.com/new/), choose a name that shows the repo is used for a GitOps workflow (eg.  `app-cluster-manifests`) and then clone it locally:
+Follow the instructions on [Create a project in Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page) to create a project in Azure DevOps and an empty git repository. **Note:** For the repository, use a name that signifies that the repo is used for a GitOps workflow (eg.  `app-cluster-manifests`) and then clone it locally:
 
 ```bash
-$ git clone https://github.com/myuser/app-cluster-manifests
+$ git clone https://myOrganization@dev.azure.com/myOrganization/myProject/_git/app-cluster-manifests
 ```
 
-Initialize the repo with an empty commit:
+You can find more detailed instructions on how to clone an Azure DevOps project [here](https://docs.microsoft.com/en-us/azure/devops/repos/git/clone?view=azure-devops&tabs=visual-studio).
+
+Flux requires that the git resource manifest repository have at least one commit, so let's initialize the repo with an empty commit:
 
 ``` bash
 $ cd app-cluster-manifests
@@ -94,14 +96,18 @@ $ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
 
-2. On the Github repository, select `Settings` -> `Deploy Keys` -> `Add deploy key`. Set the title and paste the contents of the public key. Check the  **Allow Write Access** option.
+1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and select your avatar in the upper right of the user interface. Select Security in the menu that appears.
+![enter key](./images/ssh_profile_access.png)
 
+2. Select SSH public keys, and then select + New Key.
+![new key](./images/ssh_accessing_security_key.png)
 
-![enter key](./images/addDeployKey.png)
+3. Copy the contents of the public key (for example, id_rsa.pub) that you generated into the Public Key Data field.
+![copy key](./images/ssh_key_input.png)
 
-3. Click "Add key", and you should see:
+4. Give the key a useful description (this description will be displayed on the SSH public keys page for your profile) so that you can remember it later. Select Save to store the public key. Once saved, you cannot change the key. You can delete the key or create a new entry for another key. There are no restrictions on how many keys you can add to your user profile.
 
-![key result](./images/deployKeyResult.png)
+For more information on adding an ssh key to Azure DevOps, see [Use SSH key authentication](https://docs.microsoft.com/en-us/azure/devops/repos/git/use-ssh-keys-to-authenticate?view=azure-devops&tabs=current-page#step-2--add-the-public-key-to-azure-devops-servicestfs).
 
 ## Scaffold Cluster Deployment
 
@@ -168,7 +174,7 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 ### Configure GitOps Repo
 
-Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@github.com:myuser/app-cluster-manifests.git`.
+Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
 
 Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
 
@@ -555,54 +561,92 @@ ts=2019-06-18T06:33:18.819404372Z caller=images.go:18 component=sync-loop msg="p
 
 The GitOps workflow we established with Flux and Bedrock makes it easy to control the workflow that is running in the cluster. Flux watches the GitOps resource manifest repo and applies any changes we make there to the cluster.
 
-Let’s try this by creating a YAML file with a set of Kubernetes resources for a simple service and committing it to the resource manifest repo. In your resource manifest git repo directory that we cloned earlier, create a file called `webapp.yaml` and place the following into it:
+Let’s try this by creating a YAML file with a set of Kubernetes resources for a simple service and committing it to the resource manifest repo. In your resource manifest git repo directory that we cloned earlier, create a file called `azure-vote-all-in-one-redis.yaml` and place the following into it:
 
 ```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: mywebapp
-  labels:
-    app: mywebapp
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 8080
-    name: http
-  selector:
-    app: mywebapp
----
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: mywebapp-v1
+  name: azure-vote-back
 spec:
-  replicas: 3
-  minReadySeconds: 10
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+  replicas: 1
   template:
     metadata:
       labels:
-        app: mywebapp
-        version: v1
+        app: azure-vote-back
     spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
       containers:
-      - name: mywebapp
-        image: andrebriggs/goserver:v1.2
-        imagePullPolicy: IfNotPresent
+      - name: azure-vote-back
+        image: redis
         ports:
-        - containerPort: 8080
+        - containerPort: 6379
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-vote-back
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: azure-vote-back
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: azure-vote-front
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: azure-vote-front
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: azure-vote-front
+        image: microsoft/azure-vote-front:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: REDIS
+          value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-vote-front
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: azure-vote-front
 ---
 ```
 
-This defines a 3 pod deployment of a web service with the container `andrebriggs/goserver:v1.2` with a LoadBalanced service.  Commit this file and push it to our remote GitOps repo:
+This defines a multi-container application that includes a web front end and a Redis instance running in the cluster. 
+
+![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
+
+Let’s commit this file and push it to our remote GitOps repo:
 
 ```bash
-$ git add webapp.yaml
+$ git add azure-vote-all-in-one-redis.yaml
 $ git commit -m "Add simple web application"
 $ git push origin master
 ```
@@ -613,18 +657,17 @@ Watch the Flux pod logs again, but this time tailing them so we get updates with
 $ kubectl logs flux-5897d4679b-tckth -n flux -f
 ```
 
-Once Flux starts its next reconcilation, we see at the end of the output that Flux found the repo `bedrock-deploy-demo` and created the new service:
+Once Flux starts its next reconcilation, we should see at the end of the output that Flux has found the repo `app-cluster-manifests` and created the new service:
 
-`"kubectl apply -f -" took=1.263687361s err=null output="service/mywebapp created\ndeployment.extensions/mywebapp-v1 created"`.
+`"kubectl apply -f -" took=1.263687361s err=null output="service/azure-vote-front created\ndeployment.extensions/azure-vote-front created"`.
 
 Once applied, we should be able to see the web app pods running in our cluster:
 
 ```bash
 $ kubectl get pods
-NAME                           READY   STATUS    RESTARTS   AGE
-mywebapp-v1-749d754b4f-k55pv   1/1     Running   0          18m
-mywebapp-v1-749d754b4f-nshj5   1/1     Running   0          18m
-mywebapp-v1-749d754b4f-sj2hf   1/1     Running   0          18m
+NAME                                    READY   STATUS    RESTARTS   AGE
+azure-vote-back-6d4b4776b6-pfdpt        1/1     Running   0          21d
+azure-vote-front-5ccf899cf6-wrtf4       1/1     Running   0          21d
 ```
 
 We should also see the LoadBalancer service by querying the set of services in the cluster:
@@ -632,8 +675,9 @@ We should also see the LoadBalancer service by querying the set of services in t
 ```
 $ kubectl get services --all-namespaces
 NAMESPACE     NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)          AGE
+default       azure-vote-front       LoadBalancer   10.0.6.209     52.143.80.54     80:30396/TCP     21d
 default       kubernetes             ClusterIP      10.0.0.1       <none>           443/TCP          44m
-default       mywebapp               LoadBalancer   10.0.96.208    52.175.216.214   8080:30197/TCP   23m
+default       azure-vote-back        ClusterIP      10.0.125.58    <none>           6379/TCP         21d
 flux          flux                   ClusterIP      10.0.139.133   <none>           3030/TCP         34m
 flux          flux-memcached         ClusterIP      10.0.246.230   <none>           11211/TCP        34m
 kube-system   kube-dns               ClusterIP      10.0.0.10      <none>           53/UDP,53/TCP    44m
@@ -643,9 +687,9 @@ kube-system   metrics-server         ClusterIP      10.0.189.185   <none>       
 
 External load balancers like this take time to provision. If the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
 
-The EXTERNAL-IP, in the case above, is: 52.175.216.214. By appending the port our service is hosted on we can use http://52.175.216.214:8080 to fetch the service in a browser.
+The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
 
-![Deployed Web application running](./images/WebAppRunning.png)
+![voting app deployed](./images/azure-voting-deployed.png)
 
 And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
 
