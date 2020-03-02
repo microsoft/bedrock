@@ -17,22 +17,22 @@ This guide assumes a few things as requirements to use this automation:
      [new Azure Devops Organization](https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=azure-devops),
      then
      [create a project](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page).
-2. The application will be packaged and run using container images hosted on
+2. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+3. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+4. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
-3. The user running `spk` has full access to the above resources.
-4. The user is running the latest `spk`
+5. The user running `spk` has full access to the above resources.
+6. The user is running the latest `spk`
    [release](https://github.com/catalystcode/spk/releases).
-5. The user has
+7. The user has
    [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
-6. The user is running [git](http://git-scm.org) version
+8. The user is running [git](http://git-scm.org) version
    [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
-7. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-8. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
   
 **Note**: If a user wishes to store helm charts in the application
    repositories, then all repositories (application, high level definition,
    materialized manifests) must be in the same Azure DevOps Organization AND
-   Project. This is what Step 7 and Step 8 are doing. 
+   Project. This is what Step 2 and Step 3 are doing. 
 
 ## Setup SPK
 
@@ -94,8 +94,8 @@ via flags.
 Our next step is to onboard the repositories that support the
 deployment of our services:
 
-1. The high level definition repository (Step 7 from the [Requirements](#requirements))
-2. The materialized manifest repository (Step 8 from the [Requirements](#requirements))
+1. The high level definition repository (Step 3 from the [Requirements](#requirements))
+2. The materialized manifest repository (Step 2 from the [Requirements](#requirements))
 
 ### High Level Definition Repository
 
@@ -108,7 +108,7 @@ applied to the Kubernetes cluster by Flux.
 
 #### Initializing the High Level Definition Repository
 
-- Make sure your SPK config points to the HLD repo you created in Step 7 of [Requirements](#requirements). When you change the values in the SPK config, make sure you re-initialize SPK by running `spk init -f <spk-config.yaml>`.
+- Make sure your SPK config points to the HLD repo you created in Step 3 of [Requirements](#requirements). When you change the values in the SPK config, make sure you re-initialize SPK by running `spk init -f <spk-config.yaml>`.
 - [Clone the repository.](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#clone-the-repo-to-your-computer)
 - Initialize via `spk`, this will add the fabrikate
   [traefik2](https://github.com/microsoft/fabrikate-definitions/tree/master/definitions/traefik2)
