@@ -22,7 +22,7 @@ Navigate to the root of the `project` (for the Azure Voting App example applicat
 ```
 $ spk project init
 $ git add -A
-$ git common -m "Onboarding project directory"
+$ git commit -m "Onboarding project directory"
 ```
 
 This creates a `bedrock.yaml` file that maintains the set of `services` that are part of this `project`.
