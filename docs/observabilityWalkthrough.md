@@ -42,9 +42,7 @@ it or use an existing one.
 
 **Option 1:**
 
-Use the
-[`spk deployment onboard`](https://github.com/CatalystCode/spk/blob/master/docs/service-introspection.md#onboard)
-command.
+Use the `spk deployment onboard` command.
 
 **Option 2:**
 
