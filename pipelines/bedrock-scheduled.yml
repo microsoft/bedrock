@@ -5,7 +5,8 @@ schedules:
   branches:
     include: [master]
   displayName: F 12:00PM (UTC - 8:00) Pacific Weekly Build
-  always: true
+  # Uncomment below if we want builds to run when the code has NOT changed
+  #always: true 
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
