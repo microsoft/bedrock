@@ -99,7 +99,7 @@ $ git push origin master
 Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
 ```
-$ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o tpark -r azure-vote -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
+$ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -r azure-vote -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
 This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the high-level-definition repo for this new image tag.
