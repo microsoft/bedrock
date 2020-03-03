@@ -1,8 +1,8 @@
 # Walkthrough: Service Management
 
-One the most common activities a modern service team performs on a Kubernetes cluster is deploying and updating a particular service -- or set of service. This walkthrough will cover onboarding and deploying an initial version of the service in the cluster using the automation that is available with Bedrock.
+One the most common activities a modern service team performs is deploying and updating a particular service -- or set of services. This walkthrough will cover onboarding and deploying an initial version of the service in the cluster using the automation available in Bedrock.
 
-This workflow centers around the repositories that hold application code, associated Dockerfile(s), and helm deployment charts along with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured. They can hold one (single service) or more (monorepository) applications depending on your development methodology.
+This workflow centers around the repositories that hold application code, associated Dockerfile(s), and helm deployment charts in conjunction with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured: they can hold one (single service) or more (monorepository) service depending on your source control methodology.
 
 ## Onboarding a Service Repository
 
@@ -10,10 +10,10 @@ Note: Our automation currently only supports Azure Devops and Azure Devops Repos
 
 In this walkthrough, we'll use the [Azure Voting App](https://github.com/Azure-Samples/azure-voting-app-redis) as an example service that we are deploying, but you can also swap in your own service.
 
-1. If you don't have an existing repository, [create one in the given Azure Devops Project](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#create-a-repo-using-the-web-portal)
+1. If you don't have an existing source code repository, [create one in the given Azure Devops Project](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#create-a-repo-using-the-web-portal)
 2. [Clone this repository to your local machine](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#clone-the-repo-to-your-computer)
 
-Our automation distinguishes between a `project` and a `service`.  A `project` in Bedrock terminology has a one to one relationship with a git repo that contains one or more `services`.
+Our automation distinguishes between a `project` and a `service`. A `project` in Bedrock terminology is the same as a git repo, which contains one or more `services`.
 
 ### Onboarding a Service Project
 
@@ -33,9 +33,9 @@ Finally, it creates a `maintainers.yaml` file with a list of the named maintaine
 
 ### Creating the Lifecycle Pipeline
 
-We next want to create the lifecycle pipeline for our `project`. When we add services (and rings of those services in advanced scenarios) we need to reconcile the addition of these to the high level deployment definition.
+We next want to create the lifecycle pipeline for our `project` which automatically manages adding services (and in advanced scenarios, rings) to our high level deployment definition.
 
-The first step is to create a common variable group in Azure Devops that contains a set of secrets that we will use in our pipeline:
+The first step to do that is to create a common variable group in Azure Devops that contains a set of secrets that we will use in our pipeline:
 
 ```
 $ export VARIABLE_GROUP_NAME=voting-app-vg
@@ -45,8 +45,7 @@ $ git commit -m "Adding Project Variable Group."
 $ git push -u origin --all
 ```
 
-where `ACR_NAME` is the name of the Azure Container Registry for
-the project, `SP_APP_ID` is the service principal's id,
+where `ACR_NAME` is the name of the Azure Container Registry for the project, `SP_APP_ID` is the service principal's id,
 `SP_PASS` is the service principal's password, and
 `SP_TENANT` is the service principal's tenant. This service principal is expected to have read and write access to the Azure Container Registry.
 
@@ -62,13 +61,13 @@ where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the na
 
 Note: If you are using a repo per service source control strategy you should run install-lifecycle-pipeline once for each repo.
 
-Once this lifecycle pipeline is created, it will run and create a pull request on your high level definition that adds the `project` as a component to your root.  Go to your high level definition repo and accept that pull request o add that to your high level definition.
+Once this lifecycle pipeline is created, it will run and create a pull request on your high level definition that adds the `project` as a component to your root.  Go to your high level definition repo and accept that pull request.
 
 ## Onboarding a Service
 
 With that, we have set up all of the pipelines for the project itself, so let's onboard our first service.
 
-We can do that with `spk service create` which we, like all of the spk service and project commands, run from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
+We can do that with `spk service create` which, like all of the spk service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
 
 ```
 $ spk service create azure-vote \
@@ -97,12 +96,12 @@ $ git add -A
 $ git push origin master
 ```
 
-Our final step is to create the build pipeline for our service.  We can do that with:
+Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
 ```
 $ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o tpark -r azure-vote -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
-This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the high-level-definition reop for this new image tag.
+This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the high-level-definition repo for this new image tag.
 
 Accept this and the azure-voting-app frontend application will be deployed into your cluster.
