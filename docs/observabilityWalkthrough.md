@@ -85,7 +85,34 @@ other than `4040`, add that entry in the settings instead.
 
 ## Configure the Pipelines
 The Bedrock GitOps pipelines need to be configured to start sending data to
-`spk` service introspection. This is done by adding a script snippet in each pipelines
-`yml` configuration file.
+`spk` service introspection. If you followed the guidelines from the (Prerequisites)[#prerequisites] each pipeline `yaml` will already have the script needed for introspection.
 
+To send data from Azure pipelines to the Azure Storage table created
+previously, a variable group needs to be configured in Azure DevOps (where the
+pipelines are).
+
+Create the following `introspection-values.yaml` file with the variables:
+```
+name: "introspection-vg"
+description: "Service introspection values"
+type: "Vsts"
+variables:
+    INTROSPECTION_ACCOUNT_KEY:
+        value: "Set this to the access key for your storage account"
+        isSecret: true
+    INTROSPECTION_ACCOUNT_NAME:
+        value: "Set this to the name of your storage account"
+    INTROSPECTION_PARTITION_KEY:
+        value: "This field can be a distinguishing key that recognizea your source repository in the storage for eg. in this example, we're using the name of the source repository `hello-bedrock`"
+    INTROSPECTION_TABLE_NAME:
+        value: "Set this to the name of the table you created previously in [Create a table](#create-a-table)"
+```
+
+To configure the variable group run:
+
+```
+$ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --personal-access-token $ACCESS_TOKEN
+```
+
+Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](hldToManifestWalkthrough.md) we created a personal access token. 
 
