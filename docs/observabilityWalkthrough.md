@@ -91,6 +91,7 @@ To send data from Azure pipelines to the Azure Storage table created
 previously, a variable group needs to be configured in Azure DevOps (where the
 pipelines are).
 
+### Create a variable group
 Create the following `introspection-values.yaml` file with the variables:
 ```
 name: "introspection-vg"
@@ -116,3 +117,52 @@ $ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAM
 
 Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](hldToManifestWalkthrough.md) we created a personal access token. 
 
+### Update the pipelines
+Next, we will update all the pipelines to include the variable group we created previously.
+
+```yaml
+variables:
+  - group: <your-variable-group-name>
+```
+
+First go to the pipelines on the Azure DevOps portal where you created your project:
+![Pipelines](images/pipelines.png)
+
+Next, click on the pipeline definition that you want to edit:
+![Edit pipeline](images/pipelines-edit.png)
+
+Add the name of the variable group you created in the file `introspection-values.yaml`. In this case, the name of the variable group we created was `introspection-vg`:
+![Edit pipeline](images/pipelines-edit-save.png)
+
+Repeat these steps for each pipeline definition.
+
+## Run the introspection tools
+Update the `spk-config.yaml` and populate the values for `introspection`.
+
+```yaml
+introspection:
+  dashboard:
+    image: "samiyaakhtar/spektate:prod" # Use this default docker image unless you would like to use a custom one
+    name: "spektate"
+  azure: # This is the storage account for the service introspection tool.
+    account_name: "storage-account-name" # Must be defined to run spk deployment commands
+    table_name: "storage-account-table-name" # Must be defined to run spk deployment commands
+    partition_key: "storage-account-table-partition-key" # Must be defined to run spk deployment commands
+    key: "storage-access-key" # Must be defined to run spk deployment commands. Use ${env:INTROSPECTION_STORAGE_ACCESS_KEY} and set it in .env file
+    source_repo_access_token: "source_repo_access_token" # Optional. Required only when source repository is private (in order to render the author column in dashboard)
+```
+
+Initialize `spk` to use these values:
+```
+$ spk init -f spk-config.yaml
+```
+
+Launch the dashboard:
+```
+$ spk deployment dashboard
+```
+
+Launch the command line tool:
+```
+$ spk deployment get
+```
