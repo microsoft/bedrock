@@ -300,14 +300,14 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	fmt.Println("Central Cluster IP: " + string(centralIP))
 
 	//Deploy app to all 3 clusters
-	configFile := "azure-vote.yaml"
+	// configFile := "azure-vote.yaml"
 
-	addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
-	k8s.KubectlApply(t, options, configFile)
-	addIPandRGtoYAML(configFile, string(eastIP), k8s_eastRG)
-	k8s.KubectlApply(t, options2, configFile)
-	addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
-	k8s.KubectlApply(t, options3, configFile)
+	// addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
+	// k8s.KubectlApply(t, options, configFile)
+	// addIPandRGtoYAML(configFile, string(eastIP), k8s_eastRG)
+	// k8s.KubectlApply(t, options2, configFile)
+	// addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
+	// k8s.KubectlApply(t, options3, configFile)
 
 	// //Test Case 7: Validate Traffic Manager
 	// testTM_URL := "http://" + tm_dnsprefix + ".trafficmanager.net"
