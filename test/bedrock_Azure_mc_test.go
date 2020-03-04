@@ -300,7 +300,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	fmt.Println("Central Cluster IP: " + string(centralIP))
 
 	//Deploy app to all 3 clusters
-	// configFile := "azure-vote.yaml"
+	configFile := "azure-vote.yaml"
 
 	// addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
 	k8s.KubectlApply(t, options, configFile)
