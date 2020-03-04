@@ -303,11 +303,11 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	// configFile := "azure-vote.yaml"
 
 	// addIPandRGtoYAML(configFile, string(westIP), k8s_westRG)
-	// k8s.KubectlApply(t, options, configFile)
+	k8s.KubectlApply(t, options, configFile)
 	// addIPandRGtoYAML(configFile, string(eastIP), k8s_eastRG)
-	// k8s.KubectlApply(t, options2, configFile)
+	k8s.KubectlApply(t, options2, configFile)
 	// addIPandRGtoYAML(configFile, string(centralIP), k8s_centralRG)
-	// k8s.KubectlApply(t, options3, configFile)
+	k8s.KubectlApply(t, options3, configFile)
 
 	// //Test Case 7: Validate Traffic Manager
 	// testTM_URL := "http://" + tm_dnsprefix + ".trafficmanager.net"
@@ -349,6 +349,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	// 	fmt.Println("Traffic Manager Validation successful")
 	// }
 	//Clean up Cluster load balancers
+	time.Sleep(120 * time.Second)
 	fmt.Println("Removing cluster load balancer and Destroying resources")
 	_clean, cleanErr := k8s.RunKubectlAndGetOutputE(t, options, "delete", "service", "azure-vote-front")
 	if cleanErr != nil || !strings.Contains(_clean, "delete") {

@@ -4,9 +4,8 @@ schedules:
 - cron: "0 12 * * 5"
   branches:
     include: [master]
-  displayName: F 12:00PM (UTC - 8:00) Pacific Weekly Build
   # Uncomment below if we want builds to run when the code has NOT changed
-  #always: true 
+  always: false 
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
