@@ -5,7 +5,7 @@ schedules:
   branches:
     include: [master]
   # Uncomment below if we want builds to run when the code has NOT changed
-  # always: true 
+  always: false 
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
