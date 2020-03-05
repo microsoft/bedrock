@@ -28,7 +28,7 @@ This walkthrough will cover how to set up introspection in your own deployments 
 This guideline assumes you have completed the following:
 
 1. Set up GitOps. Guideline: [A First Workload With Bedrock](./firstWorkload/README.md)
-2. Set up the HLD to Manifests pipeline. Guideline: [Setting up an HLD to Manifest pipeline](hldToManifestWalkthrough.md)
+2. Set up the HLD to Manifests pipeline. Guideline: [Setting up an HLD to Manifest pipeline](hldToManifest.md)
 3. Onboard a Service Repository. Guideline: [Service Management](services.md)
 
 
