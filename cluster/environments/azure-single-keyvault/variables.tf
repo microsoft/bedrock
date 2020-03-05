@@ -3,10 +3,6 @@ variable "acr_enabled" {
   default = "true"
 }
 
-variable "address_space" {
-  type = string
-}
-
 variable "agent_vm_count" {
   type = string
 }
@@ -88,10 +84,6 @@ variable "service_principal_id" {
 }
 
 variable "service_principal_secret" {
-  type = string
-}
-
-variable "subnet_prefixes" {
   type = string
 }
 
