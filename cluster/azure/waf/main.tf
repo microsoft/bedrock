@@ -42,11 +42,11 @@ resource "azurerm_application_gateway" "waf" {
   }
 
   backend_address_pool {
-    name = var.prefix}-beappool1
+    name = "${var.prefix}-beappool1"
   }
 
   backend_http_settings {
-    name                  = var.prefix-httpsetting1
+    name                  = "${var.prefix}-httpsetting1"
     cookie_based_affinity = "Disabled"
     port                  = 80
     protocol              = "Http"
@@ -54,17 +54,17 @@ resource "azurerm_application_gateway" "waf" {
   }
 
   http_listener {
-    name                           = var.prefix-httplstn1
-    frontend_ip_configuration_name = var.prefix-feip
-    frontend_port_name             = var.prefix-feport
+    name                           = "${var.prefix}-httplstn1"
+    frontend_ip_configuration_name = "${var.prefix}-feip"
+    frontend_port_name             = "${var.prefix}-feport"
     protocol                       = "Http"
   }
 
   request_routing_rule {
-    name                       = var.prefix-rule1
+    name                       = "${var.prefix}-rule1"
     rule_type                  = "Basic"
-    http_listener_name         = var.prefix-httplstn1
-    backend_address_pool_name  = var.prefix-beappool1
-    backend_http_settings_name = var.prefix-httpsetting1
+    http_listener_name         = "${var.prefix}-httplstn1"
+    backend_address_pool_name  = "${var.prefix}-beappool1"
+    backend_http_settings_name = "${var.prefix}-httpsetting1"
   }
 }
