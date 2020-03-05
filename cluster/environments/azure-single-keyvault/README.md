@@ -40,13 +40,9 @@ keyvault_name = "myVault"
 
 keyvault_resource_group = "myResourceGroup"
 
-address_space = "10.39.0.0/16"
-
-subnet_prefixes = "10.39.0.0/24"
-
 vnet_name = "myVnet"
 
-vnet_subnet_id = "/subscriptions/<subscriptionId>/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/mySubnet"
+subnet_name = "mySubnet"
 
 #--------------------------------------------------------------
 
