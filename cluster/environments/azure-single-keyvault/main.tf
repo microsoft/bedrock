@@ -57,7 +57,7 @@ module "keyvault_flexvolume_role" {
 
 # Deploy central keyvault flexvolume
 module "flex_volume" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
+  source = "../../../cluster/azure/keyvault_flexvol"
 
   resource_group_name      = data.azurerm_resource_group.keyvault.name
   service_principal_id     = var.service_principal_id

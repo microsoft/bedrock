@@ -5,9 +5,6 @@
 keyvault_name = "my-keyvault"
 keyvault_resource_group = "my-global-rg"
 
-address_space = "<cidr for cluster address space>"
-subnet_prefixes = "10.39.0.0/16"
-
 subnet_name = "<subnet name>"
 vnet_name = "<vnet name>"
 
