@@ -3,7 +3,7 @@ data "azurerm_resource_group" "wafrg" {
 }
 
 resource "azurerm_application_gateway" "waf" {
-  name                = var.wafname-waf
+  name                = "${var.wafname}-waf"
   resource_group_name = data.azurerm_resource_group.wafrg.name
   location            = data.azurerm_resource_group.wafrg.location
 
@@ -27,17 +27,17 @@ resource "azurerm_application_gateway" "waf" {
   }
 
   frontend_port {
-    name = var.prefix-feport443
+    name = "${var.prefix}-feport443"
     port = 443
   }
 
   frontend_port {
-    name = var.prefix-feport
+    name = "${var.prefix}-feport"
     port = 80
   }
 
   frontend_ip_configuration {
-    name                 = var.prefix-feip
+    name                 = "${var.prefix}-feip"
     public_ip_address_id = var.public_ip_address_id
   }
 
