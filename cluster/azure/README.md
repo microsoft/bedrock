@@ -77,6 +77,28 @@ Note: You may receive an error if you do not have sufficient permissions on your
 
 There are some environments that perform role assignments during the process of deployments.  In this case, the Service Principal requires Owner level access on the subscription.  Each environment where this is the case will document the requirements and whether or not there is a configuration option not requiring the Owner level privileges.
 
+### Assign Service Principal to Azure Container Registry (OPTIONAL)
+
+If you are using an Azure Container Registry (ACR) you will want to make sure the service principal associated with your AKS cluster also has permissions to pull images. Run the following commands to grant a role assignment to your ACR.
+
+```bash
+RESOURCE_GROUP="<NAME OF YOUR RESOURCE GROUP>"
+SERVICE_PRINCIPAL_ID="<APP ID OF SERVICE PRINCIPAL>"
+ACR_NAME="<NAME OF YOUR ACR>"
+# Obtain the full registry ID for subsequent command args
+ACR_REGISTRY_ID=$(az acr show --name $ACR_NAME -g $RESOURCE_GROUP --query id --output tsv)
+
+# Default permissions are for docker pull access. Modify the '--role'
+# argument value as desired:
+# acrpull:     pull only
+# acrpush:     push and pull
+# owner:       push, pull, and assign roles
+DESIRED_ROLE="<CHOOSE ROLE>"
+ROLE_INFO=$(az role assignment create --assignee $SERVICE_PRINCIPAL_ID --scope $ACR_REGISTRY_ID --role $DESIRED_ROLE)
+```
+
+**Note**: If you will be using the same service principal to push images to your ACR in the build process you may want to choose `acr push` or `owner` as desired role.
+
 ### Configure Terraform CLI for Azure
 
 Terraform allows for a few [different ways to configure](https://www.terraform.io/docs/providers/azurerm/index.html) `terraform` to interact with Azure.  Bedrock is using the [Service Principal with Client Secret](https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html) method specifically through the use of environment variables.
