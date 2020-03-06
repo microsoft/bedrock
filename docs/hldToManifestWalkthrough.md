@@ -2,14 +2,13 @@
 
 In [First Workload](./firstWorkload/README.md) we deployed the Azure Voting App using a GitOps workflow by pushing the `azure-vote-all-in-one-redis.yaml` Kubernetes resource manifest file. In [High level Deployment Definitions](./high-level-definitions.md) we learned that, Kubernetes resource manifests that comprise an application definition are typically very complex. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
 
-We also learned that real world Kubernetes deployments tend to be composed of the combination of many Helm charts. Maintaining and generating various Helm charts can be a challenge. This is why Bedrock introduces High Level Deployment Definitions.
+We also learned that real world Kubernetes deployments tend to be composed of the combination of many Helm charts. Maintaining and generating various Helm charts can be a challenge and why Bedrock introduced the concept of high level definitions to meet this complexity.
 
-In this walkthrough, we will:
-1. Set up an Azure DevOps pipeline that generates a resource manifest from an HLD definition for the Azure Voting App and pushes it to the Manifest Repository.
+In this walkthrough, we will set up an Azure DevOps pipeline that generates a resource manifest from an HLD definition for the Azure Voting App and pushes it to the Manifest Repository.
 
 ## Requirements
 
-This guide assumes a few things as requirements to use this automation:
+There are a few requirements to use this automation:
 
 1. The application code and supporting repositories are hosted on
    [Azure Devops](https://azure.microsoft.com/en-us/services/devops/).
@@ -28,11 +27,11 @@ This guide assumes a few things as requirements to use this automation:
    [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
 8. The user is running [git](http://git-scm.org) version
    [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
-  
+
 **Note**: If a user wishes to store helm charts in the application
    repositories, then all repositories (application, high level definition,
    materialized manifests) must be in the same Azure DevOps Organization AND
-   Project. This is what Step 2 and Step 3 are doing. 
+   Project. This is what Step 2 and Step 3 are doing.
 
 ## Setup SPK
 
@@ -175,7 +174,7 @@ the materialized manifests repo. Assuming you have configured `spk`, you can run
 this without flag parameters from your HLD repo root:
 
 ```
-$ spk hld install-manifest-pipeline
+$ spk hld install-manifest-pipeline -u $HLD_REPO -m $MANIFEST_REPO
 ```
 
 You can view the newly created pipeline in your Azure DevOps project:
