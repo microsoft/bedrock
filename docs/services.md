@@ -89,7 +89,21 @@ serviceName: "fabrikam"
 
 Once completed, `service create` will add the service to your `bedrock.yaml` file for the `project` and add a `build-update-hld.yaml` Azure Devops file to your `service`.
 
-Commit both of these and push them to your Azure Devops repo:
+For this first walkthrough, we are not going to utilize the more advanced ring management functionality that Bedrock provides, so we need to make a small edit to our bedrock.yaml file.  After the `displayName` line, add `disableRouteScaffold: true` to prevent scaffolding of ring routing:
+
+```yaml
+rings:
+  master:
+    isDefault: true
+services:
+  ./:
+    displayName: hello-service
+    disableRouteScaffold: true
+    helm:
+      chart:
+```
+
+Then commit all of these files and push them to your Azure Devops repo:
 
 ```
 $ git add -A
@@ -99,7 +113,7 @@ $ git push origin master
 Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
 ```
-$ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o tpark -r azure-vote -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
+$ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
 This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the high-level-definition repo for this new image tag.
