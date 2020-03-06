@@ -174,7 +174,7 @@ the materialized manifests repo. Assuming you have configured `spk`, you can run
 this without flag parameters from your HLD repo root:
 
 ```
-$ spk hld install-manifest-pipeline -u $HLD_REPO -m $MANIFEST_REPO
+$ spk hld install-manifest-pipeline
 ```
 
 You can view the newly created pipeline in your Azure DevOps project:
