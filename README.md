@@ -18,7 +18,7 @@ Bedrock helps you:
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## GitOps Pipeline
-* [Walkthrough: GitOps Pipeline](./docs/hldToManifestWalkthrough.md)
+* [Walkthrough: GitOps Pipeline](./docs/hldToManifest.md)
 * [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
 * [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
 
