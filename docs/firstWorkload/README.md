@@ -326,7 +326,7 @@ $ az group create -l westus2 -n myuser-cluster-rg
 With these prep steps completed, let’s generate Terraform templates from this cluster definition directory:
 
 ```bash
-$ cd ~/cluster-deployment
+$ cd ~/cluster-deployment/cluster
 $ spk infra generate -p cluster
 ```
 
