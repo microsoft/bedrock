@@ -103,7 +103,7 @@ HELM_BIN="$TMP_DIR/linux-amd64/helm"
 echo "generating flux manifests with helm template"
 if ! $HELM_BIN template $RELEASE_NAME . \
         --values values.yaml \
-	--namespace "$KUBE_NAMESPACE" \
+        --namespace "$KUBE_NAMESPACE" \
         --set image.repository="$FLUX_IMAGE_REPOSITORY" \
         --set image.tag="$FLUX_IMAGE_TAG" \
         --output-dir "./$FLUX_MANIFESTS" \
