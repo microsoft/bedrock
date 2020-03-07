@@ -97,7 +97,7 @@ rings:
     isDefault: true
 services:
   ./:
-    displayName: hello-service
+    displayName: azure-voting-frontend
     disableRouteScaffold: true
     helm:
       chart:
@@ -107,6 +107,7 @@ Then commit all of these files and push them to your Azure Devops repo:
 
 ```
 $ git add -A
+$ git commit -m "Onboard voting-app service"
 $ git push origin master
 ```
 

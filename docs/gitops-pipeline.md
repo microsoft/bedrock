@@ -2,11 +2,11 @@
 
 As we described in [“Why GitOps?”](./why-gitops.md), a [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow uses a git workflow to build, code review, and deploy operational changes to your system.
 
-We also have described how, in Bedrock, we define what should be deployed in your cluster via a [high level definition](./high-level-definitions.md) that is specified and built using [Fabrikate](https://github.com/Microsoft/fabrikate) to your resource manifest repo. This high level definition separates the structure of the deployment from its configuration, enabling it to be used across multiple cluster deployments, to be version controlled in a git repo, and have changes to be backed by the same solid engineering practices that we utilize for code changes like pull requests, code reviews, and automated validation and linting.
+We also have described how, in Bedrock, we define what should be deployed in your cluster via a [high level definition](./high-level-definitions.md) repo that is specified and built using [Fabrikate](https://github.com/Microsoft/fabrikate) to your deployment manifest repo. This high level definition separates the structure of the deployment from its configuration, enabling it to be used across multiple cluster deployments, to be version controlled in a git repo, and have changes to be backed by the same solid engineering practices that we utilize for code changes like pull requests, code reviews, and automated validation and linting.
 
-On a commit to the high level definition repo, a CI/CD system uses Fabrikate to generate the lower level Kubernetes resource manifests for the deployment.  These low level Kubernetes resource manifests are checked into a corresponding repo that serves as the operational "source of truth" for what should be deployed in the Kubernetes cluster. Finally, [Flux](https://github.com/weaveworks/flux), running inside of the Kubernetes cluster, watches for commits to this repo and reconciles the cluster to it.
+On a commit to the high level definition repo, a CI/CD system uses Fabrikate to generate the lower level Kubernetes resource manifests for the deployment. These low level Kubernetes resource manifests are checked into a corresponding repo that serves as the operational "source of truth" for what should be deployed in the Kubernetes cluster. Finally, [Flux](https://github.com/weaveworks/flux), running inside of the Kubernetes cluster, watches for commits to this repo and reconciles the cluster to it.
 
-![Example of manifest yaml generation pipeline](images/manifest-gen.png)
+![Deployment Manifest Generation Pipeline](images/manifest-gen.png)
 <p align="center"><i>Example of manifest yaml generation pipeline</i></p>
 
 ## Establishing a GitOps Workflow
