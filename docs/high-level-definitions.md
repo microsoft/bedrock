@@ -52,7 +52,8 @@ In Bedrock we utilize high level deployment definitions, which can themselves re
 
 Such a deployment specification requires tooling and the Bedrock project maintains a tool called Fabrikate to generate the low level resource manifests from these high level definitions. It is intended to be executed as part of a CI/CD pipeline that sits between a high level definition of your deployment and the resource manifest repo that Flux watches. This enables the components of a deployment to be written at a higher (and hence less error prone) level and to be able to share those components amongst deployments.
 
-TODO: Diagram of High Level Definition Repo, CI/CD, to Resource Manifest Repo
+![GitOps pipeline](images/manifest-gen.png)
+<p align="center"><i>GitOps Pipeline: High Level Definition to Resource Manifest Pipeline</i></p>
 
 A final problem that Fabrikate solves is that, in real world scale workloads, there are often multiple clusters deployed for the same workload for scale, reliability, and/or latency reasons. These clusters tend to only differ slightly in terms of their config and there is a strong desire to centralize the common config for these clusters such that it remains DRY.
 
@@ -118,4 +119,5 @@ Such a hierarchical approach to specifying deployments allows for the reuse of l
 
 As we mentioned previously, Fabrikate is typically used as part of a CI/CD pipeline with the high level definition at one end and the resource manifest repo at the other end.  Both the high level definition and resource manifest repos are backed by git repositories that provide an audit trail. The input git repo can follow a branch, commit, pull request model, and this approach makes it also easy to implement rollbacks.
 
-TODO: HLD to RM repo to Flux in-cluster Figure
+![End to End GitOps Pipeline](images/spk-resource-diagram.png)
+<p align="center"><i>End to End GitOps Pipeline</i></p>
