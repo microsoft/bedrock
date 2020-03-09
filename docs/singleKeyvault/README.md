@@ -220,7 +220,7 @@ Here, we will be using the manifest repo you created for the first workload. How
 Navigate to your devops repo folder that you cloned from First Walkthrough. Create a subdirectory named voting-manifest and copy azure-vote-all-in-one-redis.yaml to that subdirectory. In future walkthrough, we can have different subdirectories for each cluster with slight variations to the manifest. This step is in preparation for future walkthroughs. 
 
 ```
-$ mkdir voting-app
+$ mkdir prod
 $ cp azure-vote-all-in-one-redis.yaml
 $ git add .
 $ git commit -m "copy manifest to new folder"
@@ -247,7 +247,7 @@ variables:
   dns_prefix: 'spk'
   flux_recreate: 'false'
   gitops_ssh_url: 'git@ssh.dev.azure.com:v3/myorg/app-cluster-manifests'
-  gitops_path: 'voting-manifest'
+  gitops_path: 'prod'
   gitops_ssh_key: '~/cluster-deployment/keys'
   gitops_url_branch: master
   keyvault_name: 'mykeyvault'
