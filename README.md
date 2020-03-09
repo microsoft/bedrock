@@ -13,9 +13,8 @@ Bedrock helps you:
 * [Walkthrough: Deploying a First Workload](./docs/firstWorkload)
 * [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
-## Infrastructure Management
-* [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
+## First Cluster
+* [Walkthrough: First Cluster](./docs/singleKeyvault/README.md)
 
 ## GitOps Pipeline
 * [Walkthrough: GitOps Pipeline](./docs/hldToManifest.md)
@@ -34,6 +33,11 @@ Bedrock helps you:
 # Service Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
+
+# Day 2 Operations
+## Infrastructure Management
+* [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## Community
 
