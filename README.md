@@ -19,19 +19,14 @@ Bedrock helps you:
 
 ## GitOps Pipeline
 * [Walkthrough: GitOps Pipeline](./docs/hldToManifest.md)
-* [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
-* [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
+* [Deep Dive: The End to End Deployment Pipeline](./docs/gitops-pipeline.md)
 
 ## Service Management
 * [Walkthrough: Service Management](./docs/services.md)
 * [Deep Dive: Service Lifecycle Management](https://github.com/CatalystCode/spk/blob/master/guides/building-helm-charts-for-spk.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
 
-## End to End Observability
-* [Walkthrough: Observing Service Deployments](./docs/introspection.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
-
-## Service Observability
+## Deployment Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
 
