@@ -14,7 +14,7 @@ Bedrock helps you:
 * [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
 ## Infrastructure Management
-* [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
+* [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## GitOps Pipeline
