@@ -418,7 +418,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Finally, since we are happy with these changes, we apply the Terraform template: Please confirm with "yes" for a prompt to perform the actions. 
+Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions. 
 
 ```
 $ terraform apply -var-file=spk.tfvars
@@ -651,7 +651,7 @@ $ git commit -m "Add simple web application"
 $ git push origin master
 ```
 
-atch the Flux pod logs again, but this time tailing them so we get updates with `-f`. Please note that it may take upto 5 minutes for the update to be reflected.
+Watch the Flux pod logs again, but this time tailing them so we get updates with `-f`. Please note that it may take upto 5 minutes for the update to be reflected.
 
 ```bash
 $ kubectl logs flux-5897d4679b-tckth -n flux -f
