@@ -337,7 +337,7 @@ $ spk infra generate -p cluster
 From this `generated` directory we can `init` our Terraform deployment to fetch all of the upstream Terraform module dependencies.
 
 ```bash
-$ cd ~/cluster-deployment/cluster-generated
+$ cd ~/cluster-deployment/cluster-generated/cluster
 $ terraform init
 Initializing modules...
 Downloading github.com/microsoft/bedrock?ref=0.12.0//cluster/azure/aks-gitops for aks-gitops...
@@ -418,7 +418,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Finally, since we are happy with these changes, we apply the Terraform template:
+Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions. 
 
 ```
 $ terraform apply -var-file=spk.tfvars
@@ -651,7 +651,7 @@ $ git commit -m "Add simple web application"
 $ git push origin master
 ```
 
-Watch the Flux pod logs again, but this time tailing them so we get updates with `-f`:
+Watch the Flux pod logs again, but this time tailing them so we get updates with `-f`. Please note that it may take upto 5 minutes for the update to be reflected.
 
 ```bash
 $ kubectl logs flux-5897d4679b-tckth -n flux -f
