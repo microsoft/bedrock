@@ -6,7 +6,7 @@ Bedrock helps you:
 * Define and maintain infrastructure deployments across multiple clusters.
 * Deploy and automate a secure end to end GitOps workflow.
 * Deploy and manage service workloads from source code to their deployment in-cluster.
-* Observe ongoing deployments across multiple services, their revisions, and multiple clusters utilizing those services.
+* Observe ongoing deployments across multiple services and their revisions and multiple clusters deploying those services.
 
 ## Getting Started
 * [Installing Prerequisites](./tools/prereqs/README.md)
@@ -14,12 +14,12 @@ Bedrock helps you:
 * [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
 ## Infrastructure Management
-* [Walkthrough: Single Cluster Infrastructure Deployment](./docs/singleKeyvault/README.md)
+* [Walkthrough: Single Cluster Infrastructure Deployment](./docs/single-cluster.md)
 * [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## GitOps Pipeline
-* [Walkthrough: GitOps Pipeline](./docs/hldToManifest.md)
+* [Walkthrough: GitOps Pipeline](./docs/hld-to-manifest.md)
 * [Deep Dive: The End to End Deployment Pipeline](./docs/gitops-pipeline.md)
 
 ## Service Management

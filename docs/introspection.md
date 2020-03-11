@@ -28,7 +28,7 @@ This walkthrough will cover how to set up introspection in your own deployments 
 This guideline assumes you have completed the following:
 
 1. Set up GitOps. Guideline: [A First Workload With Bedrock](./firstWorkload/README.md)
-2. Set up the HLD to Manifests pipeline. Guideline: [Setting up an HLD to Manifest pipeline](hldToManifest.md)
+2. Set up the HLD to Manifests pipeline. Guideline: [Setting up an HLD to Manifest pipeline](./hld-to-manifest.md)
 3. Onboard a Service Repository. Guideline: [Service Management](services.md)
 
 
@@ -113,7 +113,7 @@ And then use spk's variable-group management to create the variable group:
 $ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --personal-access-token $ACCESS_TOKEN
 ```
 
-Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](hldToManifestWalkthrough.md) we created a personal access token.
+Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](./hld-to-manifest.md) we created a personal access token.
 
 ### Update the Pipelines
 Next, we will update all the pipelines to include the variable group we created previously.
