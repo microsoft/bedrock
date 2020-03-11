@@ -1,19 +1,19 @@
 # URL to get flux which will be installed in the Kubernetes cluster
 variable "flux_repo_url" {
   type    = string
-  default = "https://github.com/weaveworks/flux.git"
+  default = "https://github.com/fluxcd/flux.git"
 }
 
 # container registry to download flux image
 variable "flux_image_repository" {
   type    = string
-  default = "docker.io/weaveworks/flux"
+  default = "docker.io/fluxcd/flux"
 }
 
 # flux version to download source from git repo and container image from the registry
 variable "flux_image_tag" {
   type    = string
-  default = "1.12.2"
+  default = "1.18.0"
 }
 
 variable "gitops_path" {

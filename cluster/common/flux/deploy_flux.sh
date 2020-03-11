@@ -1,4 +1,42 @@
-#!/bin/sh
+#!/bin/bash
+set -x
+# create a temporary directory that is cleaned up after exection
+TMP_DIR=$(mktemp -d -t flux.XXXXXXXXXX) || { echo "Failed to create temp directory"; exit 1; }
+function finish {
+  rm -rf "$TMP_DIR"
+}
+trap finish EXIT
+cd $TMP_DIR
+
+fetch_helm () {
+  # grab helm.
+  # set HELM_TAG to a specific version, if needed
+  HELM_TAG=""
+  if [ -z "$HELM_TAG" ]; then
+    HELM_TAG=`curl -s https://github.com/helm/helm/releases/latest | sed -r 's/.*tag\/(v[1-9\.]+)\".*/\1/'`
+    if [ "$?" -ne "0" ]; then
+      echo "Failed to retrieve helm version"
+      exit 1
+    fi
+  fi
+
+  # fetch helm
+  curl -L -s --output helm.tgz https://get.helm.sh/helm-$HELM_TAG-linux-amd64.tar.gz
+  if [ "$?" -ne "0" ]; then
+    echo "unable to retrieve helm"
+    exit 1
+  fi
+
+  # expand helm
+  tar -xf helm.tgz
+  if [ "$?" -ne "0" ]; then
+    echo "unable to extract helm"
+    exit 1
+  fi
+
+  cd -
+}
+
 while getopts :b:f:g:k:d:e:c:l:s:r:t:z: option
 do
  case "${option}" in
@@ -26,6 +64,9 @@ CLONE_DIR="flux"
 REPO_DIR="$REPO_ROOT_DIR/$CLONE_DIR"
 FLUX_CHART_DIR="chart/flux"
 FLUX_MANIFESTS="manifests"
+
+# fetch helm
+fetch_helm
 
 echo "flux repo root directory: $REPO_ROOT_DIR"
 
@@ -58,8 +99,23 @@ fi
 #   release name: flux
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
+HELM_BIN="$TMP_DIR/linux-amd64/helm"
 echo "generating flux manifests with helm template"
-if ! helm template . --name "$RELEASE_NAME" --namespace "$KUBE_NAMESPACE" --values values.yaml --set image.repository="$FLUX_IMAGE_REPOSITORY" --set image.tag="$FLUX_IMAGE_TAG" --output-dir "./$FLUX_MANIFESTS" --set git.url="$GITOPS_SSH_URL" --set git.branch="$GITOPS_URL_BRANCH" --set git.secretName="$KUBE_SECRET_NAME" --set git.path="$GITOPS_PATH" --set git.pollInterval="$GITOPS_POLL_INTERVAL" --set git.label="$GITOPS_LABEL" --set registry.acr.enabled="$ACR_ENABLED" --set syncGarbageCollection.enabled="$GC_ENABLED"; then
+if ! $HELM_BIN template $RELEASE_NAME . \
+        --values values.yaml \
+        --namespace "$KUBE_NAMESPACE" \
+        --set image.repository="$FLUX_IMAGE_REPOSITORY" \
+        --set image.tag="$FLUX_IMAGE_TAG" \
+        --output-dir "./$FLUX_MANIFESTS" \
+        --set git.url="$GITOPS_SSH_URL" \
+        --set git.branch="$GITOPS_URL_BRANCH" \
+        --set git.secretName="$KUBE_SECRET_NAME" \
+        --set git.path="$GITOPS_PATH" \
+        --set git.pollInterval="$GITOPS_POLL_INTERVAL" \
+        --set git.label="$GITOPS_LABEL" \
+        --set registry.acr.enabled="$ACR_ENABLED" \
+        --set syncGarbageCollection.enabled="$GC_ENABLED"; then
+        --set serviceAccount.name="flux"
     echo "ERROR: failed to helm template"
     exit 1
 fi
