@@ -8,13 +8,21 @@ function finish {
 trap finish EXIT
 cd $TMP_DIR
 
+# are we running on macOs
+IS_MACOS=0
+HELM_ARCH="linux-amd64"
+uname -a | grep Darwin > /dev/null
+if [ "$?" -eq "0" ]; then
+  IS_MACOS=1
+  HELM_ARCH="darwin-amd64"
+fi
+
 fetch_helm () {
   # grab helm.
   # set HELM_TAG to a specific version, if needed
   HELM_TAG=""
   if [ -z "$HELM_TAG" ]; then
-    uname -a | grep Darwin > /dev/null
-    if [ "$?" -eq "0" ]; then
+    if [ "$IS_MACOS" -eq "1" ]; then
       # use sed compatible with MacOS
       HELM_TAG=$(curl -s https://github.com/helm/helm/releases/latest | sed -E 's/.*tag\/(v[1-9\.]+)\".*/\1/')
     else
@@ -27,7 +35,7 @@ fetch_helm () {
   fi
 
   # fetch helm
-  curl -L -s --output helm.tgz https://get.helm.sh/helm-$HELM_TAG-linux-amd64.tar.gz
+  curl -L -s --output helm.tgz https://get.helm.sh/helm-$HELM_TAG-$HELM_ARCH.tar.gz
   if [ "$?" -ne "0" ]; then
     echo "unable to retrieve helm"
     exit 1
@@ -105,7 +113,7 @@ fi
 #   release name: flux
 #   git url: where flux monitors for manifests
 #   git ssh secret: kubernetes secret object for flux to read/write access to manifests repo
-HELM_BIN="$TMP_DIR/linux-amd64/helm"
+HELM_BIN="$TMP_DIR/$HELM_ARCH/helm"
 echo "generating flux manifests with helm template"
 if ! $HELM_BIN template $RELEASE_NAME . \
         --values values.yaml \
