@@ -4,13 +4,15 @@ If you followed our first workload walkthrough you saw how Bedrock enables you t
 
 In upcoming advanced scenarios, we will be using the Bedrock automation to repeat the cluster creation process by scaffolding configurations to deploy multiple clusters. Since all these clusters use common resources like Keyvault, Storage Account and a Vnet, we will deploy these resources using azure-common-infra template. The environment provisioned using this template is a dependency for other environments (azure-single-keyvualt) we will be using in the subsequent walkthroughs.
 
+Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](../Firstworkload/README.md). 
+
 ## Deplying the common infrastructure:
 
-Before attempting to deploy the infrastructure environments, you will also need to create an Azure Storage Account. You can do this in Azure Portal, or by using the Azure CLI:
+Before you deploy infrastructure environments, you will need to create an Azure Storage Account. You can do this in Azure Portal, or by using the Azure CLI:
 
 ### Resource Group Requirement:
 
-This environment requires a single resource group be created.  The requisite variable is `global_resource_group_name`.  To use the Azure CLI to create the resource group, see [here](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
+This environment requires a resource group. The requisite variable is `global_resource_group_name`.  To use the Azure CLI to create the resource group, see [here](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
 
 To create a resource group, you can use the following command 
 
@@ -92,6 +94,7 @@ variables:
 `scaffold` has downloaded the template locally, extracted all of the variables for the template, and provided defaults where possible for all of the variables.
 
 Let's fill in the variables for common-infra infrastructure variables. 
+Note: `global_resource_group_name' is the resource group that was created in the [Resource Group Requirement](#Resource-Group-Requirement:).
 
 ```yaml
 name: westus
