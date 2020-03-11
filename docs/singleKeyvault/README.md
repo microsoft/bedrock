@@ -39,7 +39,7 @@ First, display your storage account keys by using the az storage account keys li
 
 ```
 az storage account keys list \
-    --account-name myStorageAccount \
+    --account-name mystorageaccount \
     --resource-group my-global-rg \
     --output table
 ```
@@ -47,7 +47,7 @@ az storage account keys list \
 Now, set the `AZURE_STORAGE_ACCOUNT` and `AZURE_STORAGE_KEY` environment variables. You can do this in the Bash shell by using the export command:
 
 ```
-export AZURE_STORAGE_ACCOUNT="mystorageaccountname"
+export AZURE_STORAGE_ACCOUNT="mystorageaccount"
 export AZURE_STORAGE_KEY="myStorageAccountKey"
 ```
 
@@ -169,7 +169,7 @@ This creates a directory named azure-single-keyvault and places global defintion
 $cd azure-single-keyvault
 $spk infra westus --name azure-single-keyvault --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
-This creates a subdirectory named westus inside azure-single-keyvault directory. Navigate to this directory and open definition.yaml file
+This creates a subdirectory named westus inside `azure-single-keyvault` directory. Navigate to this directory and open definition.yaml file
 
 ```yaml
 
@@ -216,11 +216,11 @@ variables:
 ```
 
 Next we'll fill all of the empty items in this template with config values.
-Note: Use `storage_account_name`, `access_key` , `container_name`, `keyvault_name`, `keyvault_resource_group` and `vnet_name` from previous "Deploying common infrastructure" step. 
+Note: Use `storage_account_name`, `access_key` , `container_name`, `keyvault_name`, `keyvault_resource_group` and `vnet_name` from the previous [Deploying common infrastructure](#Deploying-common-infrastructure:) step. 
 
-Here, we will be using the manifest repo you created for the first workload. However, let's copy the manifest file from the root directory to a subdirectory called voting-manifest
+Here, we will be using the manifest repo you created for the first workload. However, let's copy the manifest file from the root directory to a subdirectory called `prod`
 
-Navigate to your devops repo folder that you cloned from First Walkthrough. Create a subdirectory named voting-manifest and copy azure-vote-all-in-one-redis.yaml to that subdirectory. In future walkthrough, we can have different subdirectories for each cluster with slight variations to the manifest. This step is in preparation for future walkthroughs. 
+Navigate to your devops repo folder that you cloned from [first walkthrough](../Firstworkload/README.md). Create a subdirectory named prod and copy azure-vote-all-in-one-redis.yaml to that subdirectory. In a future walkthrough, we can have different subdirectories for each cluster with slight variations to the manifest. This step is in preparation for future walkthroughs. 
 
 ```
 $ mkdir prod
@@ -280,7 +280,7 @@ Navigate to azure-single-keyvault folder and use the following command to genera
 $cd ~/azure-single-keyvault
 $spk infra generate -p westus 
 ```
-spk reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated-westus folder. Now you are ready to provision the cluster using Terraform 
+spk reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated/westus folder. Now you are ready to provision the cluster using Terraform 
 
 ```
 $terraform init -backend-config=./backend.tfvars -var-file=spk.tfvars
@@ -307,7 +307,7 @@ It will take few miniutes to get the cluster deployed.
 
 ### Interacting with deployed cluster:
 
-`The azure-single-cluster` Terraform template we used in this walkthrough automatically copies the Kubernetes config file from the cluster into the output directory. This config file has all of the details we need to interact with our new cluster.
+The `azure-single-keyvault` Terraform template we used in this walkthrough automatically copies the Kubernetes config file from the cluster into the output directory. This config file has all of the details we need to interact with our new cluster.
 
 To utilize it, we first need to merge it into our own config file and make it the default configuration. We can do that with this:
 
@@ -360,7 +360,7 @@ kube-system   metrics-server         ClusterIP      10.0.208.44    <none>       
 
 External load balancers like this take time to provision. If the EXTERNAL-IP of service is still pending, keep trying periodically until it is provisioned.
 
-The EXTERNAL-IP, in the case above, is: 35.889.68.30. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
+The EXTERNAL-IP, in the case above, is: 35.889.68.30. By appending the port our service is hosted on we can use http://35.889.68.30:80 to fetch the service in a browser.
 
 ![voting app](../firstWorkload/images/voting-app-deployed-in-azure-kubernetes-service.png)
 
