@@ -85,8 +85,12 @@ To send data from Azure pipelines to the Azure Storage table created
 previously, a variable group needs to be configured in Azure DevOps (where the
 pipelines are).
 
-### Create a variable group
-Create the following `introspection-values.yaml` file with the variables:
+### Create a Variable Group
+
+We next want to create a variable group that contains the necessary configuration details that our pipelines need in order to push telemetry about the success of our pipelines for observability.
+
+Create the following `introspection-values.yaml` file with the configuration details:
+
 ```
 name: "introspection-vg"
 description: "Service introspection values"
@@ -103,7 +107,7 @@ variables:
         value: "Set this to the name of the table you created previously in [Create a table](#create-a-table)"
 ```
 
-To configure the variable group run:
+And then use spk's variable-group management to create the variable group:
 
 ```
 $ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --personal-access-token $ACCESS_TOKEN
@@ -111,7 +115,7 @@ $ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAM
 
 Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](hldToManifestWalkthrough.md) we created a personal access token.
 
-### Update the pipelines
+### Update the Pipelines
 Next, we will update all the pipelines to include the variable group we created previously.
 
 ```yaml
@@ -130,8 +134,9 @@ Add the name of the variable group you created in the file `introspection-values
 
 Repeat these steps for each pipeline definition.
 
-## Run the introspection tools
-Create a copy of `spk-config.yaml` from the starter
+## Run the Introspection Tools
+
+If you haven't already, create a copy of `spk-config.yaml` from the starter
 [template](./../spk-config.yaml) with the appropriate values for the
 `introspection` section.
 

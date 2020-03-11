@@ -1,4 +1,4 @@
-# Deploying and Maintaining Infrastructure
+# Multicluster and Day 2 Infrastructure Scenarios
 
 One of the central problems in any cloud deployment is managing the infrastructure that supports the workload. This task can be very difficult in many large organizations as they may have hundreds of workloads — but many fewer folks working in operations and reliability engineering roles to maintain that infrastructure.
 
@@ -6,11 +6,11 @@ The scale at which many of these organizations work also compounds this problem.
 
 They also need the ability to manage configuration across all of these clusters: centralizing config where possible such that it can be updated in one place while still being able to have per cluster config where it isn’t.
 
-If you followed our [first workload walkthrough](./firstWorkload) you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts.  We will expand on that workflow here to describe how Bedrock enables maintaining Kubernetes clusters at scale.
+If you followed our [single cluster infrastructure walkthrough](./singleKeyVault/README.md) you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts. We will expand on that here to describe how Bedrock makes maintaining multiple Kubernetes clusters at scale easier.
 
-As you may have already noticed, Bedrock leverages Terraform for infrastructure deployment and the project itself maintains a number of base environment templates for common cluster deployment scenarios. These are just Terraform scripts and can be used directly (or even independently) from the rest of Bedrock’s automation.
+Bedrock leverages Terraform for infrastructure deployment and the project itself maintains a number of base environment templates for common cluster deployment scenarios. These are just Terraform scripts and can be used directly (or even independently) from the rest of Bedrock’s automation.
 
-What Bedrock’s infrastructure automation adds is the ability to maintain cluster deployments at scale by separating the definition of the deployment from the Terraform template that are used for that deployment such that our Terraform scripts are generated from these two components at deploy time.
+What Bedrock’s infrastructure automation adds is the ability to maintain cluster deployments at scale by separating the definition of the deployment from the Terraform template used for that deployment such that our Terraform scripts are generated from these two components at deploy time.
 
 This approach has a couple of advantages:
 

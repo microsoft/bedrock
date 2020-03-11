@@ -1,66 +1,131 @@
 # The End to End GitOps Deployment Pipeline
 
-As we described in [“Why GitOps?”](./why-gitops.md), a [GitOps](https://www.weave.works/blog/gitops-operations-by-pull-request) workflow uses a git workflow to build, code review, and deploy operational changes to your system.
+This deep dive will cover the operational details around the core GitOps based pipeline in Bedrock. The average service devops person can be blissfully unware of the details because Bedrock largely automates these implementation details, but it is still helpful to understand how all of it functions and fits together. Its workflow centers around three repositories: the application repo, the high level definition repo, and the resource manifest repo:
 
-We also have described how, in Bedrock, we define what should be deployed in your cluster via a [high level definition](./high-level-definitions.md) repo that is specified and built using [Fabrikate](https://github.com/Microsoft/fabrikate) to your deployment manifest repo. This high level definition separates the structure of the deployment from its configuration, enabling it to be used across multiple cluster deployments, to be version controlled in a git repo, and have changes to be backed by the same solid engineering practices that we utilize for code changes like pull requests, code reviews, and automated validation and linting.
+![End to End GitOps Pipeline](images/spk-resource-diagram.png)
+<p align="center"><i>End to End GitOps Pipeline</i></p>
 
-On a commit to the high level definition repo, a CI/CD system uses Fabrikate to generate the lower level Kubernetes resource manifests for the deployment. These low level Kubernetes resource manifests are checked into a corresponding repo that serves as the operational "source of truth" for what should be deployed in the Kubernetes cluster. Finally, [Flux](https://github.com/weaveworks/flux), running inside of the Kubernetes cluster, watches for commits to this repo and reconciles the cluster to it.
+We will describe the high level definition repo in more detail later, but at a high level, it contains a higher level description of what should be deployed in a customer such that human pull request reviewers can better understand what is being proposed in an operational change.  The resource manifest repo, in contrast, is the raw YAML that is applied to Kubernetes to express the current state of the cluster.
 
-![Deployment Manifest Generation Pipeline](images/manifest-gen.png)
-<p align="center"><i>Example of manifest yaml generation pipeline</i></p>
+These repositories are linked together by Azure Devops pipelines.  Between the application repo and the high level definition repo we have two types of pipelines. The first is the lifecycle management pipeline, which manages the creation and deletion of services and rings through pull requests on the high level definition repo. The second type of pipeline is created for each service that is contained in the application repo.  This pipeline is responsible for building the container for the service and creating a pull request on the high level definition repo to release them. You can learn more about the automation around establishing these pipelines and performing day to day tasks in our [Service Management walkthrough](./services.md).
 
-## Establishing a GitOps Workflow
+Finally, the High Level Definition repository and the Resource Manifest repos are linked by a single pipeline that takes the high level definition of the deployment, builds it with Fabrikate, and checks the deployment YAML artifacts into the Resource Manifest repo.  You can learn more about automation around establishing this pipeline in our [GitOps Pipeline walkthrough](./gitops-pipeline.md).
 
-One of the biggest advantages of the GitOps workflow over other approaches is that, because we do not need to expose the Kubernetes API for operational tasks, it is more secure than alternative approaches.
+## Deep Dive: High Level Definitions
 
-That said, a GitOps workflow requires establishing a solid process for reviewing and securing the high level definition and resource manifests repos. In general, we recommend that every change to the high level definition repo be made via a pull request that is reviewed by at least one other team member before being merged into master. We also recommend automatically building pull requests such that you can verify the output in addition to the change.
+In [Why GitOps?](./why-gitops.md) we discussed how the git repo of record contains the low level Kubernetes resource manifests and that commits against this repo are reconciled with Kubernetes by Flux to bring the cluster into the same state. We also saw in our [first workload walkthrough](../firstWorkload) how we could commit a simple set of resource manifests to this repo and that Flux would reconcile that change with the cluster.
 
-We also strongly encourage blocking direct operational changes on the Kubernetes cluster via `kubectl`, the Kubernetes dashboard, `helm` via tiller, or other less secure approaches.  While it might be tempting to shortcircuit the process “just this once”, these changes are not auditable and you will lose the nonrepudiation benefits of the GitOps process.
+In the real world, however, the Kubernetes resource manifests that comprise an application definition are typically very complex. For example, the resource manifests needed to deploy ElasticSearch can run to 500+ lines and the complete deployment of an Elasticsearch / Fluentd / Kibana (EFK) logging stack can be over 1200 lines. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
 
-We also recommend enforcing branch policies on your repo such that:
-+ No direct pushes to master, only via a pull request.
-+ Required pull request approvers
-+ Automated gating checks on pull requests
+This has traditionally been solved in the Kubernetes ecosystem with higher level tools like [helm](http://helm.sh). Helm provides templating for the boilerplate inherent in these resource definitions and also provide a reasonable set of default configuration values. Helm continues to be the best way to generate the resource manifests for applications, and we use Helm in our GitOps CI/CD process, checking the generated resource manifests into the resource manifest git repo that we described previously.
 
-Links to how to set up branch policies on some git repository providers:
-+ [Azure Dev Ops](https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops)
-+ [GitHub](https://help.github.com/en/articles/configuring-protected-branches)
+That said, a second problem that you have to address when you start to compose a real world production Kubernetes deployment is that the resource manifests that describe the in-cluster workload tend to be composed of the combination of many Helm charts.  For example, to deploy the EFK logging stack above, you might want to generate resource manifests using four charts from helm/charts:  `stable/elasticsearch`, `stable/elasticsearch-curator`, `stable/fluentd-elasticsearch`, and `stable/grafana`.
 
-## Upstream Pipelines
+While you could utilize shell scripts to do this or even create a large helm with subdependencies, this is brittle and not easy to share between deployments, something that is essential in large company contexts where they may have hundreds of clusters running and where reuse, leverage, and central maintenance is critical.
 
-The high level definition to resource manifest generation pipeline is the core pipeline of Bedrock but it is often augmented with upstream pipelines to automate certain common operational tasks.
+In Bedrock we utilize high level deployment definitions, which can themselves reference remote subcomponents.  In this way, you can compose the overall deployment out a set of common, centrally managed components. Such a stack for the above EFK logging stack might look like:
 
-One frequently used example of this is a release pipeline that triggers on the push of a container to a container registry and automatically updates the image tag via a commit on a configuration file in the high level definition.
-
-The high-level steps of this automated container image tag update are:
-+ A build process that increments a build number and assigns a build image number as the image tag in a container registry.
-+ Updating a Fabrikate template config file in high-level definition repo with the relevant image tag gets updated and a manifest generation pipeline may automatically get run
-+ The cluster(s) should automatically get updated to the latest Kubernetes deployment
-
-This commit to the high level definition in turn triggers the core GitOps pipeline, which generates the resource manifests with this image tag change. Flux picks this up in its next sync with the resource manifest repo and changes the image tag for the deployment in the cluster, thus completing the deployment.
-
-Bedrock extensively utilizes these upstream pipelines to automate many operational tasks.
-
-While Bedrock offers a first class implementation of these automation pipelines in Azure DevOps, GitOps pipelines in Bedrock, by their nature, are abstracted from each other via an intermediate git repo. This means that we can use different pipeline orchestrators as necessary to fit the needs of the particular development and operations teams. For instance, a Jenkins augmentation pipeline can be the prefix to an Azure DevOps manifest generation pipeline, and visa versa.
-
-## Process
-
-At a high level, the steps for an operator of a Kubernetes cluster to make an operational change follow closely the model that one uses for making a code change in a pull request model.
-
-1. _Branch_: Create a branch and then make one or more commits for your desired changes to your high level definition.
-2. _Push_: Push this branch to your high level definition Git repo.
-3. _Pull Request_: Create a pull request for your change.  This enables you to have it it code reviewed by a member of your team while also enabling the CI/CD system to validate your changes.
-4. _Merge_: Merge your pull request into your high level definition's git repo master branch.  A CI/CD pipeline will trigger on this commit, build the low level Kubernetes resource manifests, check them into the resource manifest git repo, which [Flux](https://github.com/weaveworks/flux), running in your Kubernetes cluster and watching this repo, will deploy.
-5. _Monitor_: Monitor your normal operational metrics to verify that the change has not negatively impacted your application.
-6. _Repeat_
-
-## Rollbacks
-Sometimes — even with solid engineering practices like branching, pull requests, and code reviews — changes to your application configuration can yield undesired results. Having the ability to easily rollback to a previous state application code configuration is a must have.
-
-To maintain a commit history of every operation that has occurred on the cluster, we recommend doing a rollback that compensates for the changes that the wayward operation made.  For the last commit, you can do this in an automated manner with:
-
-```bash
-$ git revert HEAD
+```json
+{
+    "name": "elasticsearch-fluentd-kibana",
+    "type": "static",
+    "path": "./manifests",
+    "subcomponents": [
+        {
+            "name": "elasticsearch",
+            "type": "helm",
+            "source": "https://github.com/helm/charts",
+            "method": "git",
+            "path": "stable/elasticsearch"
+        },
+        {
+            "name": "elasticsearch-curator",
+            "type": "helm",
+            "source": "https://github.com/helm/charts",
+            "method": "git",
+            "path": "stable/elasticsearch-curator"
+        },
+        {
+            "name": "fluentd-elasticsearch",
+            "type": "helm",
+            "source": "https://github.com/helm/charts",
+            "method": "git",
+            "path": "stable/fluentd-elasticsearch"
+        },
+        {
+            "name": "kibana",
+            "type": "helm",
+            "source": "https://github.com/helm/charts",
+            "method": "git",
+            "path": "stable/kibana"
+        }
+    ]
+}
 ```
 
-This will create a compensating commit with the inverse of the previous commit.
+Such a deployment specification requires tooling and the Bedrock project maintains a tool called Fabrikate to generate the low level resource manifests from these high level definitions. It is intended to be executed as part of a CI/CD pipeline that sits between a high level definition of your deployment and the resource manifest repo that Flux watches. This enables the components of a deployment to be written at a higher (and hence less error prone) level and to be able to share those components amongst deployments.
+
+![GitOps pipeline](images/manifest-gen.png)
+<p align="center"><i>GitOps Pipeline: High Level Definition to Resource Manifest Pipeline</i></p>
+
+A final problem that Fabrikate solves is that, in real world scale workloads, there are often multiple clusters deployed for the same workload for scale, reliability, and/or latency reasons. These clusters tend to only differ slightly in terms of their config and there is a strong desire to centralize the common config for these clusters such that it remains DRY.
+
+Fabrikate solves this with composable configuration files. These configuration files are loaded and applied at generation time to build the final set of configuration values that are used during `helm template`. Using our EFK stack example from above, and since we know the different subcomponents that make up this stack, we can preconfigure the connections between these different subcomponents with config values with a configuration file that looks like this such that we can do this once in one spot:
+
+```yaml
+config:
+subcomponents:
+  elasticsearch:
+    namespace: elasticsearch
+    injectNamespace: true
+  elasticsearch-curator:
+    namespace: elasticsearch
+    injectNamespace: true
+    config:
+      cronjob:
+        successfulJobsHistoryLimit: 0
+      configMaps:
+        config_yml: |-
+          ---
+          client:
+            hosts:
+              - elasticsearch-master.elasticsearch.svc.cluster.local
+            port: 9200
+            use_ssl: False
+  fluentd-elasticsearch:
+    namespace: fluentd
+    injectNamespace: true
+    config:
+      elasticsearch:
+        host: "elasticsearch-master.elasticsearch.svc.cluster.local"
+  kibana:
+    namespace: kibana
+    injectNamespace: true
+    config:
+      elasticsearchHosts: "http://elasticsearch-master.elasticsearch.svc.cluster.local:9200"
+```
+
+Fabrikate also enables you to override configuration such that you can utilize the same high level definition with a `common` set of configuration, but also differentiate the configuration applied to the `prod-east` and `prod-west` clusters with specific `prod-east` and `prod-west` configuration that preempts this `common` configuration.
+
+Our EFK preconfigured stack above can be itself checked into a git repo and referenced from another high level deployment definition file.  For example, if we wanted to define a “cloud native” stack with all of the observability, service mesh, and management components included, we could express this with a deployment config that looks like:
+
+```yaml
+name: "cloud-native"
+type: static
+path: "./manifests"
+subcomponents:
+  - name: "elasticsearch-fluentd-kibana"
+    source: "../elasticsearch-fluentd-kibana"
+  - name: "prometheus-grafana"
+    source: "../prometheus-grafana"
+  - name: "linkerd2"
+    source: "../linkerd2"
+  - name: "kured"
+    source: "../kured"
+  - name: "jaeger"
+    source: "../jaeger-operator"
+  - name: "traefik"
+    source: "../traefik"
+```
+
+Such a hierarchical approach to specifying deployments allows for the reuse of lower level stacks (like the EFK example above) and for updates to these dependent stacks to be applied centrally at the source -- as opposed to having to make N downstream commits in each deployment repo.

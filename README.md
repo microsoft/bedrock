@@ -13,31 +13,23 @@ Bedrock helps you:
 * [Walkthrough: Deploying a First Workload](./docs/firstWorkload)
 * [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
-## First Cluster
-* [Walkthrough: First Cluster](./docs/singleKeyvault/README.md)
+## Infrastructure Management
+* [Walkthrough: Single Cluster Infrastructure Deployment](./docs/singleKeyvault/README.md)
+* [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## GitOps Pipeline
 * [Walkthrough: GitOps Pipeline](./docs/hldToManifest.md)
-* [Deep Dive: High Level Deployment Definitions](./docs/high-level-definitions.md)
-* [Deep Dive: GitOps Deployment Pipeline](./docs/gitops-pipeline.md)
+* [Deep Dive: The End to End Deployment Pipeline](./docs/gitops-pipeline.md)
 
 ## Service Management
 * [Walkthrough: Service Management](./docs/services.md)
 * [Deep Dive: Service Lifecycle Management](https://github.com/CatalystCode/spk/blob/master/guides/building-helm-charts-for-spk.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
 
-## End to End Observability
+## Deployment Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
 * [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
-
-# Service Observability
-* [Walkthrough: Observing Service Deployments](./docs/introspection.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
-
-# Day 2 Operations
-## Infrastructure Management
-* [Walkthrough: Deploying and Maintaining Infrastructure](./docs/infrastructure.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
 ## Community
 
