@@ -13,7 +13,13 @@ fetch_helm () {
   # set HELM_TAG to a specific version, if needed
   HELM_TAG=""
   if [ -z "$HELM_TAG" ]; then
-    HELM_TAG=`curl -s https://github.com/helm/helm/releases/latest | sed -r 's/.*tag\/(v[1-9\.]+)\".*/\1/'`
+    uname -a | grep Darwin > /dev/null
+    if [ "$?" -eq "0" ]; then
+      # use sed compatible with MacOS
+      HELM_TAG=$(curl -s https://github.com/helm/helm/releases/latest | sed -E 's/.*tag\/(v[1-9\.]+)\".*/\1/')
+    else
+      HELM_TAG=`curl -s https://github.com/helm/helm/releases/latest | sed -r 's/.*tag\/(v[1-9\.]+)\".*/\1/'`
+    fi
     if [ "$?" -ne "0" ]; then
       echo "Failed to retrieve helm version"
       exit 1
