@@ -130,32 +130,16 @@ source: 'https://github.com/microsoft/bedrock'
 template: cluster/environments/azure-simple
 version: master
 variables:
-  agent_vm_count: '3'
-  agent_vm_size: Standard_D2s_v3
-  acr_enabled: 'true'
-  gc_enabled: 'true'
-  cluster_name: <insert value>
+  cluster_name: <insert val>
   dns_prefix: <insert value>
-  flux_recreate: 'false'
   gitops_ssh_url: <insert value>
   gitops_ssh_key: <insert value>
   gitops_path: <insert value>
-  gitops_url_branch: master
   resource_group_name: <insert value>
   ssh_public_key: <insert value>
   service_principal_id: <insert value>
   service_principal_secret: <insert value>
-  gitops_poll_interval: 5m
-  gitops_label: flux-sync
   vnet_name: <insert value>
-  service_cidr: 10.0.0.0/16
-  dns_ip: 10.0.0.10
-  docker_cidr: 172.17.0.1/16
-  address_space: 10.10.0.0/16
-  subnet_prefix: 10.10.1.0/24
-  network_plugin: azure
-  network_policy: azure
-  oms_agent_enabled: 'false'
 ```
 
 This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
