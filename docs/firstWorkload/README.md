@@ -122,7 +122,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this and can be overridden by supplying new value as you will see in the next section. 
+This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section. 
 
 ```yaml
 name: cluster
