@@ -10,6 +10,10 @@ output "aks_resource_id" {
   value = module.aks.resource_id
 }
 
-output "aks_msi_principal_id" {
-  value = module.aks.msi_principal_id
+output "msi_client_id" {
+  value = module.aks.msi_client_id
+}
+
+output "kubelet_client_id" {
+  value = module.aks.kubelet_client_id
 }
