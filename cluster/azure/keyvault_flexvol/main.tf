@@ -42,7 +42,7 @@ resource "azurerm_key_vault_access_policy" "aks_kv_identity" {
   key_vault_id = data.azurerm_key_vault.kv.id
 
   tenant_id = var.tenant_id
-  object_id = data.azurerm_user_assigned_identity.aks_kv_user_identity.id
+  object_id = azurerm_user_assigned_identity.aks_kv_user_identity.principal_id
 
   key_permissions         = var.flexvol_keyvault_key_permissions
   secret_permissions      = var.flexvol_keyvault_secret_permissions
