@@ -16,6 +16,10 @@ output "resource_id" {
   value = azurerm_kubernetes_cluster.cluster.id
 }
 
-output "msi_principal_id" {
-  value = data.external.msi_object_id.result.client_id
+output "msi_client_id" {
+  value = data.external.msi_object_id.result.msi_client_id
+}
+
+output "kubelet_client_id" {
+  value = data.external.msi_object_id.result.kubelet_client_id
 }
