@@ -2,13 +2,27 @@ module "common-provider" {
   source = "../../common/provider"
 }
 
+locals {
+  identity_name = "${var.keyvault_name}-akskvidentity"
+}
+
 data "azuread_service_principal" "flexvol" {
   application_id = var.service_principal_id
+}
+
+data "azurerm_resource_group" "aksrg" {
+  name = var.resource_group_name
 }
 
 data "azurerm_key_vault" "kv" {
   name                = var.keyvault_name
   resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_user_assigned_identity" "aks_kv_user_identity" {
+  resource_group_name = var.resource_group_name
+  location            = data.azurerm_resource_group.aksrg.location
+  name                = local.identity_name
 }
 
 resource "azurerm_key_vault_access_policy" "flexvol" {
@@ -18,6 +32,17 @@ resource "azurerm_key_vault_access_policy" "flexvol" {
 
   tenant_id = var.tenant_id
   object_id = data.azuread_service_principal.flexvol.id
+
+  key_permissions         = var.flexvol_keyvault_key_permissions
+  secret_permissions      = var.flexvol_keyvault_secret_permissions
+  certificate_permissions = var.flexvol_keyvault_certificate_permissions
+}
+
+resource "azurerm_key_vault_access_policy" "aks_kv_identity" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+
+  tenant_id = var.tenant_id
+  object_id = data.azurerm_user_assigned_identity.aks_kv_user_identity.id
 
   key_permissions         = var.flexvol_keyvault_key_permissions
   secret_permissions      = var.flexvol_keyvault_secret_permissions
@@ -36,3 +61,4 @@ resource "null_resource" "deploy_flexvol" {
     flexvol_recreate = var.flexvol_recreate
   }
 }
+
