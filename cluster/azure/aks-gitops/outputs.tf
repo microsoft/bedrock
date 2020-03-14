@@ -17,3 +17,7 @@ output "msi_client_id" {
 output "kubelet_client_id" {
   value = module.aks.kubelet_client_id
 }
+
+output "kubelet_client_id" {
+  value = module.aks.kubelet_id
+}
