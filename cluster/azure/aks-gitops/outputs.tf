@@ -31,5 +31,5 @@ output "aks_user_identity_principal_id" {
 }
 
 output "aks_user_identity_client_id" {
-  value = module.aks..aks_user_identity.client_id
+  value = module.aks.client_id
 }
