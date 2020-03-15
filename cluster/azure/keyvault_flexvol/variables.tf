@@ -48,6 +48,12 @@ variable "enable_flexvol" {
   default = "true"
 }
 
+variable "aks_kv_identity_principal_id" {
+  description = "User managed identity utlilized for aks pod identity"
+  default     = ""
+  type        = string
+}
+
 variable "keyvault_name" {
   description = "The name of the keyvault that will be associated with the flex volume."
   type        = string

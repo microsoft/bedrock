@@ -21,3 +21,15 @@ output "kubelet_client_id" {
 output "kubelet_id" {
   value = module.aks.kubelet_id
 }
+
+output "aks_user_identity_id" {
+  value = module.aks.aks_user_identity.id
+}
+
+output "aks_user_identity_principal_id" {
+  value = module.aks.aks_user_identity.principal_id
+}
+
+output "aks_user_identity_client_id" {
+  value = module.aks..aks_user_identity.client_id
+}

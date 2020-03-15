@@ -2,27 +2,13 @@ module "common-provider" {
   source = "../../common/provider"
 }
 
-locals {
-  identity_name = "${var.keyvault_name}-akskvidentity"
-}
-
 data "azuread_service_principal" "flexvol" {
   application_id = var.service_principal_id
-}
-
-data "azurerm_resource_group" "aksrg" {
-  name = var.resource_group_name
 }
 
 data "azurerm_key_vault" "kv" {
   name                = var.keyvault_name
   resource_group_name = var.resource_group_name
-}
-
-resource "azurerm_user_assigned_identity" "aks_kv_user_identity" {
-  resource_group_name = var.resource_group_name
-  location            = data.azurerm_resource_group.aksrg.location
-  name                = local.identity_name
 }
 
 resource "azurerm_key_vault_access_policy" "flexvol" {
@@ -39,14 +25,22 @@ resource "azurerm_key_vault_access_policy" "flexvol" {
 }
 
 resource "azurerm_key_vault_access_policy" "aks_kv_identity" {
+  count        = var.aks_kv_identity_principal_id != "" ? 1 : 0
   key_vault_id = data.azurerm_key_vault.kv.id
 
   tenant_id = var.tenant_id
-  object_id = azurerm_user_assigned_identity.aks_kv_user_identity.principal_id
+  object_id = var.aks_kv_identity_principal_id
 
   key_permissions         = var.flexvol_keyvault_key_permissions
   secret_permissions      = var.flexvol_keyvault_secret_permissions
   certificate_permissions = var.flexvol_keyvault_certificate_permissions
+}
+
+resource "azurerm_role_assignment" "aks_kubelet_identity_kv" {
+  count                = var.aks_kv_identity_principal_id != "" ? 1 : 0
+  role_definition_name = "Reader"
+  principal_id         = var.aks_kv_identity_principal_id
+  scope                = data.azurerm_key_vault.kv.id
 }
 
 resource "null_resource" "deploy_flexvol" {

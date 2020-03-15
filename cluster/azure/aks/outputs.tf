@@ -27,3 +27,15 @@ output "kubelet_client_id" {
 output "kubelet_id" {
   value = data.external.msi_object_id.result.kubelet_id
 }
+
+output "aks_user_identity_id" {
+  value = azurerm_user_assigned_identity.aks_user_identity.id
+}
+
+output "aks_user_identity_principal_id" {
+  value = azurerm_user_assigned_identity.aks_user_identity.principal_id
+}
+
+output "aks_user_identity_client_id" {
+  value = azurerm_user_assigned_identity.aks_user_identity.client_id
+}
