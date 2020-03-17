@@ -680,6 +680,6 @@ And that’s it. We have created a GitOps resource manifest repo, scaffolded and
 As a final step, you probably want to delete your Kubernetes cluster to save on your wallet. Thankfully, Terraform has a command for that:
 
 ```bash
-$ cd ~/cluster-deployment/cluster-generated
+$ cd ~/cluster-deployment/cluster-generated/cluster
 $ terraform destroy -var-file=spk.tfvars
 ```
