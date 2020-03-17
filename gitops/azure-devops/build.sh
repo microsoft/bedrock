@@ -256,7 +256,7 @@ function git_commit_if_changes() {
 
     if [[ $(git status --porcelain) ]] || [[ $2 ]]; then
         echo "GIT COMMIT"
-        git commit -m "Updated k8s manifest files post commit: $1"
+        git commit -m "$1"
         retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     else
         echo "NOTHING TO COMMIT"
