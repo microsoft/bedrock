@@ -243,6 +243,26 @@ function git_commit() {
     git pull origin "$BRANCH_NAME"
 }
 
+# Checks for changes and only commits if there are changes staged. Optionally can be configured to fail if called to commit and no changes are staged.
+# First arg - commit message
+# Second arg - should fail if there is nothing to commit, any non 0 value.
+function git_commit_if_changes() {
+
+    echo "GIT STATUS"
+    git status
+
+    echo "GIT ADD"
+    git add -A
+
+    if [[ $(git status --porcelain) ]] || [[ $2 ]]; then
+        echo "GIT COMMIT"
+        git commit -m "Updated k8s manifest files post commit: $1"
+        retVal=$? && [ $retVal -ne 0 ] && exit $retVal
+    else
+        echo "NOTHING TO COMMIT"
+    fi
+}
+
 # Perform a Git push
 function git_push() {
     # Remove http(s):// protocol from URL so we can insert PA token

@@ -122,7 +122,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it:
+This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section. 
 
 ```yaml
 name: cluster
@@ -130,32 +130,16 @@ source: 'https://github.com/microsoft/bedrock'
 template: cluster/environments/azure-simple
 version: master
 variables:
-  agent_vm_count: '3'
-  agent_vm_size: Standard_D2s_v3
-  acr_enabled: 'true'
-  gc_enabled: 'true'
-  cluster_name: <insert value>
+  cluster_name: <insert val>
   dns_prefix: <insert value>
-  flux_recreate: 'false'
   gitops_ssh_url: <insert value>
   gitops_ssh_key: <insert value>
   gitops_path: <insert value>
-  gitops_url_branch: master
   resource_group_name: <insert value>
   ssh_public_key: <insert value>
   service_principal_id: <insert value>
   service_principal_secret: <insert value>
-  gitops_poll_interval: 5m
-  gitops_label: flux-sync
   vnet_name: <insert value>
-  service_cidr: 10.0.0.0/16
-  dns_ip: 10.0.0.10
-  docker_cidr: 172.17.0.1/16
-  address_space: 10.10.0.0/16
-  subnet_prefix: 10.10.1.0/24
-  network_plugin: azure
-  network_policy: azure
-  oms_agent_enabled: 'false'
 ```
 
 This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
@@ -696,6 +680,6 @@ And that’s it. We have created a GitOps resource manifest repo, scaffolded and
 As a final step, you probably want to delete your Kubernetes cluster to save on your wallet. Thankfully, Terraform has a command for that:
 
 ```bash
-$ cd ~/cluster-deployment/cluster-generated
+$ cd ~/cluster-deployment/cluster-generated/cluster
 $ terraform destroy -var-file=spk.tfvars
 ```

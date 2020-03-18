@@ -53,6 +53,9 @@ stages:
       persistCredentials: true
       clean: true
     - template: pipelines/bedrock-integration-test-whitelist.yml
+    - task: "HelmInstaller@1"
+      inputs:
+        helmVersionToInstall: "2.16.3"
     - task: ShellScript@2
       displayName: Validate GitOps pipeline
       inputs:
