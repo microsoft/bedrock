@@ -25,7 +25,6 @@ resource "azurerm_key_vault_access_policy" "flexvol" {
 }
 
 resource "azurerm_key_vault_access_policy" "aks_kv_identity" {
-  count        = var.aks_kv_identity_principal_id != "" ? 1 : 0
   key_vault_id = data.azurerm_key_vault.kv.id
 
   tenant_id = var.tenant_id
@@ -37,7 +36,6 @@ resource "azurerm_key_vault_access_policy" "aks_kv_identity" {
 }
 
 resource "azurerm_role_assignment" "aks_kubelet_identity_kv" {
-  count                = var.aks_kv_identity_principal_id != "" ? 1 : 0
   role_definition_name = "Reader"
   principal_id         = var.aks_kv_identity_principal_id
   scope                = data.azurerm_key_vault.kv.id
