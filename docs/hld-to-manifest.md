@@ -60,8 +60,8 @@ For help, follow the
 ## Create SPK config file
 
 Create a copy of `spk-config.yaml` from the starter
-[template](./../spk-config.yaml) with the appropriate values for the
-`azure_devops` section.
+[template](https://github.com/CatalystCode/spk/blob/master/spk-config.yaml) or using the [interactive mode](https://catalystcode.github.io/spk/commands/#master@init) for `spk init` command. Be sure to complete
+`azure_devops` section with the appropriate values.
 
 Your `azure_devops` section should look similar to this:
 ```yaml
