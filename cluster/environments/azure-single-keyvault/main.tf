@@ -19,7 +19,7 @@ module "subnet" {
   subnet_name          = [var.subnet_name]
   vnet_name            = var.vnet_name
   resource_group_name  = data.azurerm_resource_group.keyvault.name
-  address_prefix       = [var.subnet_address_prefix]
+  address_prefix       = [var.subnet_prefix]
 }
 
 module "aks-gitops" {
