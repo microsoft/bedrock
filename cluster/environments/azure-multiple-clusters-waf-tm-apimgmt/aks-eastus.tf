@@ -14,16 +14,26 @@ locals {
 
 # Creates vnet
 module "east_vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../../cluster/azure/vnet"
 
-  resource_group_name = local.east_rg_name
-  subnet_names        = ["${var.cluster_name}-aks-subnet"]
-  address_space       = var.east_address_space
-  subnet_prefixes     = var.east_subnet_prefixes
+  resource_group_name     = local.east_rg_name
+  vnet_name               = "${local.east_prefix}-vnet"
+  address_space           = var.east_address_space
 
   tags = {
-    environment = "azure-multiple-clusters"
+    environment = "azure_multiple_clusters"
   }
+}
+
+module "east_subnet" {
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../../cluster/azure/subnet"
+
+  subnet_name          = ["${local.east_prefix}-snet"]
+  vnet_name            = module.east_vnet.vnet_name
+  resource_group_name  = local.east_rg_name
+  address_prefix       = var.east_subnet_prefixes
 }
 
 # Creates aks cluster
@@ -35,7 +45,7 @@ module "east_aks" {
 
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = module.east_vnet.vnet_subnet_ids[0]
+  vnet_subnet_id           = tostring(element(module.east_subnet.subnet_ids, 0))
   service_cidr             = var.east_service_cidr
   dns_ip                   = var.east_dns_ip
   docker_cidr              = var.east_docker_cidr
