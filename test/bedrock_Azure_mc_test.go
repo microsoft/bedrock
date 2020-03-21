@@ -48,7 +48,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	tenantid := os.Getenv("ARM_TENANT_ID")
 
 	addressSpace := "10.39.0.0/16"
-	subnetName := k8sName + "-subnet"
 	vnetName := k8sName + "-vnet"
 
 	kvName := k8sName + "-kv"
@@ -100,8 +99,6 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 			"keyvault_name":              kvName,
 			"global_resource_group_name": kvRG,
 			"service_principal_id":       clientid,
-			"subnet_name":                subnetName,
-			"subnet_prefix":              addressSpace,
 			"vnet_name":                  vnetName,
 		},
 	}
