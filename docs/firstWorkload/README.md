@@ -49,12 +49,12 @@ $ mkdir -p ~/cluster-deployment
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
 $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/gitops-ssh-key
-Generating 
+Generating
 lic/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /Users/myuser/.ssh/gitops-ssh-key.
-Your public key has been saved in /Users/myuser/.ssh/gitops-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.pub.
 The key fingerprint is:
 SHA256:jago9v63j05u9WoiNExnPM2KAWBk1eTHT2AmhIWPIXM myuser@computer.local
 The key's randomart image is:
@@ -122,7 +122,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section. 
+This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -264,8 +264,8 @@ $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/node-ssh-key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.
-Your public key has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.pub.
 The key fingerprint is:
 SHA256:+8pQ4MuQcf0oKT6LQkyoN6uswApLZQm1xXc+pp4ewvs myuser@computer.local
 The key's randomart image is:
@@ -402,7 +402,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions. 
+Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions.
 
 ```
 $ terraform apply -var-file=spk.tfvars
@@ -588,7 +588,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  minReadySeconds: 5 
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -623,7 +623,7 @@ spec:
 ---
 ```
 
-This defines a multi-container application that includes a web front end and a Redis instance running in the cluster. 
+This defines a multi-container application that includes a web front end and a Redis instance running in the cluster.
 
 ![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
 
