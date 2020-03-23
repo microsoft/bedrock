@@ -87,14 +87,28 @@ Steps:
 **MacOS**
 
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (including WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
 
 ```bash
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | clip.exe
+```
+
 
 1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and select your avatar in the upper right of the user interface. Select Security in the menu that appears.
 ![enter key](./images/ssh_profile_access.png)
@@ -286,13 +300,28 @@ The key's randomart image is:
 
 **MacOS**
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (& WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
+
 ```bash
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | clip.exe
+```
+
 
 3. Paste this into your `definition.yaml` file as the value for `ssh_public_key`.
 
