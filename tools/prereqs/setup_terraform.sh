@@ -30,6 +30,7 @@ cd $tmp_dir
 ostype=`os_type`
 if [ "$ostype" == "linux" ]; then
     arch="linux_amd64"
+    sudo apt-get install unzip
 elif [ "$ostype" == "macos" ]; then
     arch="darwin_amd64"
 else
@@ -40,7 +41,6 @@ fi
 TERRAFORM_VERSION=`curl -L -s https://github.com/hashicorp/terraform/releases/latest | grep archive | grep zip | awk -F"/v" '{print $2}' | awk -F".zip" '{print $1}'`
 curl -LO -s https://releases.hashicorp.com/terraform/$TERRAFORM_VERSION/terraform_"$TERRAFORM_VERSION"_$arch.zip
 
-sudo apt-get install unzip
 unzip terraform_"$TERRAFORM_VERSION"_$arch.zip -d /usr/local/bin/
 
 echo "terraform installed in /usr/local/bin"
