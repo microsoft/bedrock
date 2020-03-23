@@ -49,7 +49,7 @@ $ mkdir -p ~/cluster-deployment
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
 $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/gitops-ssh-key
-Generating 
+Generating
 lic/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
@@ -87,14 +87,28 @@ Steps:
 **MacOS**
 
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (including WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
 
 ```bash
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | clip.exe
+```
+
 
 1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and select your avatar in the upper right of the user interface. Select Security in the menu that appears.
 ![enter key](./images/ssh_profile_access.png)
@@ -122,7 +136,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section. 
+This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -286,13 +300,28 @@ The key's randomart image is:
 
 **MacOS**
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (& WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
+
 ```bash
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | clip.exe
+```
+
 
 3. Paste this into your `definition.yaml` file as the value for `ssh_public_key`.
 
@@ -402,7 +431,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions. 
+Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions.
 
 ```
 $ terraform apply -var-file=spk.tfvars
@@ -588,7 +617,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  minReadySeconds: 5 
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -623,7 +652,7 @@ spec:
 ---
 ```
 
-This defines a multi-container application that includes a web front end and a Redis instance running in the cluster. 
+This defines a multi-container application that includes a web front end and a Redis instance running in the cluster.
 
 ![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
 
