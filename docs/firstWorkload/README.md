@@ -53,8 +53,8 @@ Generating
 lic/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /Users/myuser/.ssh/gitops-ssh-key.
-Your public key has been saved in /Users/myuser/.ssh/gitops-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.pub.
 The key fingerprint is:
 SHA256:jago9v63j05u9WoiNExnPM2KAWBk1eTHT2AmhIWPIXM myuser@computer.local
 The key's randomart image is:
@@ -278,8 +278,8 @@ $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/node-ssh-key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.
-Your public key has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.pub.
 The key fingerprint is:
 SHA256:+8pQ4MuQcf0oKT6LQkyoN6uswApLZQm1xXc+pp4ewvs myuser@computer.local
 The key's randomart image is:

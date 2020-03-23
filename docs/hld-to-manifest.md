@@ -1,4 +1,4 @@
-# Setting up an HLD to Manifest pipeline
+# GitOps Pipeline Walkthrough: Setting up an HLD to Manifest pipeline
 
 In [First Workload](./firstWorkload/README.md) we deployed the Azure Voting App using a GitOps workflow by pushing the `azure-vote-all-in-one-redis.yaml` Kubernetes resource manifest file. In [High level Deployment Definitions](./gitops-pipeline.md#deep-dive-high-level-definitions) we learned that, Kubernetes resource manifests that comprise an application definition are typically very complex. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
 
