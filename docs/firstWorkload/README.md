@@ -239,7 +239,23 @@ $ export ARM_CLIENT_SECRET=(password from Service Principal)
 $ export ARM_CLIENT_ID=(appId from Servive Principal)
 ```
 
-or, with `jq` installed:
+
+Optionally, you can install `jq` to parse json format output:
+
+**MacOS**
+
+```
+brew install jq
+```
+
+**Ubuntu/Debian/WSL**
+
+```
+sudo apt-get install jq
+```
+
+You may then run the following commands:
+
 ```
 $ export ARM_SUBSCRIPTION_ID=$(az account show | jq -r .id)
 $ export ARM_TENANT_ID=$(cat ~/cluster-deployment/sp/sp.json | jq -r .tenant)
