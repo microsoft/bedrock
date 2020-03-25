@@ -1,4 +1,4 @@
-# Setting up an HLD to Manifest pipeline
+# GitOps Pipeline Walkthrough: Setting up an HLD to Manifest pipeline
 
 In [First Workload](./firstWorkload/README.md) we deployed the Azure Voting App using a GitOps workflow by pushing the `azure-vote-all-in-one-redis.yaml` Kubernetes resource manifest file. In [High level Deployment Definitions](./gitops-pipeline.md#deep-dive-high-level-definitions) we learned that, Kubernetes resource manifests that comprise an application definition are typically very complex. These resource manifests, by their YAML nature, are typically very dense, context free, and very indentation sensitive -- making them a dangerous surface to directly edit without introducing a high risk for operational disaster.
 
@@ -60,8 +60,8 @@ For help, follow the
 ## Create SPK config file
 
 Create a copy of `spk-config.yaml` from the starter
-[template](./../spk-config.yaml) with the appropriate values for the
-`azure_devops` section.
+[template](https://github.com/CatalystCode/spk/blob/master/spk-config.yaml) or using the [interactive mode](https://catalystcode.github.io/spk/commands/#master@init) for `spk init` command. Be sure to complete
+`azure_devops` section with the appropriate values.
 
 Your `azure_devops` section should look similar to this:
 ```yaml
