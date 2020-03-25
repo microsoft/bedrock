@@ -79,8 +79,7 @@ function is_debian() {
 }
 
 function is_apt_system() {
-    local apt=$((`is_debian` + `is_ubuntu`))
-    if [ "$apt" -gt 0 ]; then
+    if [[ "$(is_debian)" != 0 ]] || [[ "$(is_ubuntu)" != 0 ]]; then
         return 1
     fi
     return 0
