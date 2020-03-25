@@ -77,8 +77,6 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"keyvault_name":                  kvName,
 			"global_resource_group_name":     kvRG,
 			"service_principal_id":           clientid,
-			"subnet_name":                    subnetName,
-			"subnet_prefix":                  addressSpace,
 			"vnet_name":                      vnetName,
 		},
 	}
@@ -140,8 +138,8 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 			"ssh_public_key":           publickey,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
-			"subnet_prefixes":          "10.39.0.0/16",
 			"subnet_name":              subnetName,
+			"subnet_prefix":            addressSpace,
 			"vnet_name":                vnetName,
 			"cosmos_db_name":           cosmos_db_name,
 			"mongo_db_name":            mongo_db_name,

@@ -16,14 +16,22 @@ locals {
 module "east_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = local.east_rg_name 
-  subnet_names            = ["${var.cluster_name}_aks_subnet"]
+  resource_group_name     = local.east_rg_name
+  vnet_name               = "${local.east_prefix}-vnet"
   address_space           = var.east_address_space
-  subnet_prefixes         = var.east_subnet_prefixes
 
   tags = {
     environment = "azure_multiple_clusters"
   }
+}
+
+module "east_subnet" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+
+  subnet_name          = ["${local.east_prefix}-snet"]
+  vnet_name            = module.east_vnet.vnet_name
+  resource_group_name  = local.east_rg_name
+  address_prefix       = var.east_subnet_prefixes
 }
 
 # Creates east aks cluster, flux, kubediff
@@ -48,7 +56,7 @@ module "east_aks_gitops" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   ssh_public_key           = var.ssh_public_key
-  vnet_subnet_id           = module.east_vnet.vnet_subnet_ids[0]
+  vnet_subnet_id           = tostring(element(module.east_subnet.subnet_ids, 0))
   dns_ip                   = var.east_dns_ip
   docker_cidr              = var.east_docker_cidr
   kubernetes_version       = var.kubernetes_version

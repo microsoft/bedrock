@@ -17,8 +17,3 @@ output "vnet_address_space" {
   description = "The address space of the vNet"
   value       = azurerm_virtual_network.vnet.address_space
 }
-
-output "vnet_subnet_ids" {
-  description = "The ids of subnets created inside the vNet"
-  value       = azurerm_subnet.subnet.*.id
-}
