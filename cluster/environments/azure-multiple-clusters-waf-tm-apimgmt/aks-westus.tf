@@ -14,8 +14,7 @@ locals {
 
 # Creates vnet
 module "west_vnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
-  source = "../../../cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   resource_group_name     = local.west_rg_name
   vnet_name               = "${local.west_prefix}-vnet"
@@ -27,8 +26,7 @@ module "west_vnet" {
 }
 
 module "west_subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
-  source = "../../../cluster/azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
 
   subnet_name          = ["${local.west_prefix}-snet"]
   vnet_name            = module.west_vnet.vnet_name

@@ -7,8 +7,7 @@ data "azurerm_resource_group" "cluster_rg" {
 }
 
 module "vnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
-  source = "../../../cluster/azure/vnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
   resource_group_name     = data.azurerm_resource_group.cluster_rg.name
   vnet_name               = var.vnet_name
@@ -20,8 +19,7 @@ module "vnet" {
 }
 
 module "subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
-  source = "../../../cluster/azure/subnet"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
 
   subnet_name          = ["${var.cluster_name}-aks-subnet"]
   vnet_name            = module.vnet.vnet_name
