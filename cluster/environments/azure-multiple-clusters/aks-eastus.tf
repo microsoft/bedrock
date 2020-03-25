@@ -36,7 +36,8 @@ module "east_subnet" {
 
 # Creates east aks cluster, flux, kubediff
 module "east_aks_gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../../cluster/azure/aks-gitops"
 
   acr_enabled              = var.acr_enabled
   agent_vm_count           = var.agent_vm_count
