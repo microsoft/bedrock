@@ -95,7 +95,7 @@ variable "service_principal_secret" {
   type = string
 }
 
-variable "subnet_prefixes" {
+variable "subnet_prefix" {
   type = string
 }
 

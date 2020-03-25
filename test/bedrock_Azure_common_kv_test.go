@@ -77,8 +77,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"keyvault_name":              kvName,
 			"global_resource_group_name": kvRG,
 			"service_principal_id":       clientid,
-			"subnet_name":                subnetName,
-			"subnet_prefix":              addressSpace,
 			"vnet_name":                  vnetName,
 		},
 	}
@@ -137,6 +135,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"service_principal_secret": clientsecret,
 			"subnet_name":              subnetName,
 			"vnet_name":                vnetName,
+			"subnet_prefix":            addressSpace,
 		},
 	}
 

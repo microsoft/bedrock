@@ -95,6 +95,10 @@ variable "subnet_name" {
   type = string
 }
 
+variable "subnet_prefix" {
+  type = string
+}
+
 variable "network_plugin" {
   default     = "azure"
   description = "Network plugin used by AKS. Either azure or kubenet."
