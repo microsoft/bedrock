@@ -26,7 +26,7 @@ module "central_vnet" {
 }
 
 module "central_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
 
   subnet_name          = ["${local.central_prefix}-snet"]
   vnet_name            = module.central_vnet.vnet_name

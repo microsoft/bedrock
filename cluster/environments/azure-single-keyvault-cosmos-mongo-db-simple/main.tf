@@ -13,7 +13,7 @@ data "azurerm_resource_group" "keyvault" {
 }
 
 module "subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
 
   subnet_name          = [var.subnet_name]
   vnet_name            = var.vnet_name
