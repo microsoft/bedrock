@@ -1,7 +1,3 @@
-module "azure-provider" {
-  source = "../provider"
-}
-
 data "azurerm_resource_group" "cluster" {
   name     = var.resource_group_name
 }
@@ -14,3 +10,4 @@ resource "azurerm_container_registry" "acr" {
   location = data.azurerm_resource_group.cluster.location
   sku = "Basic"
 }
+

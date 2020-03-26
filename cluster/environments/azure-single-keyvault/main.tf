@@ -1,6 +1,9 @@
 #terraform {
 #  backend "azurerm" {}
 #}
+module "provider" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+}
 
 data "azurerm_client_config" "current" {}
 
