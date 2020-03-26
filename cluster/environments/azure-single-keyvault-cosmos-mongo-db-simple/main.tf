@@ -1,5 +1,10 @@
-terraform {
-  backend "azurerm" {}
+#terraform {
+#  backend "azurerm" {}
+#}
+
+module "provider" {
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+  source = "../../../cluster/azure/provider"
 }
 
 data "azurerm_client_config" "current" {}
@@ -18,11 +23,12 @@ module "subnet" {
   subnet_name          = [var.subnet_name]
   vnet_name            = var.vnet_name
   resource_group_name  = data.azurerm_resource_group.keyvault.name
-  address_prefix       = [var.subnet_prefix]
+  address_prefix       = [var.subnet_address_prefix]
 }
 
 module "aks-gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../../cluster/azure/aks-gitops"
 
   acr_enabled              = var.acr_enabled
   agent_vm_count           = var.agent_vm_count

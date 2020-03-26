@@ -36,7 +36,8 @@ module "central_subnet" {
 
 # Creates aks cluster
 module "central_aks" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  source = "../../../cluster/azure/aks"
 
   resource_group_name      = local.central_rg_name
   cluster_name             = "${var.cluster_name}-central"

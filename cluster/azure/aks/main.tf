@@ -1,7 +1,3 @@
-module "azure-provider" {
-  source = "../provider"
-}
-
 data "azurerm_resource_group" "cluster" {
   name = var.resource_group_name
 }
@@ -49,11 +45,18 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     }
   }
 
-  agent_pool_profile {
+  # The windows_profile block should be optional.  However, there is a bug in the Terraform Azure provider
+  # that does not treat this block as optional -- even if no windows nodes are used.  If not present, any
+  # change that should result in an update to the cluster causes a replacement.
+  windows_profile {
+    admin_username = "azureuser"
+    admin_password = "Adm1nPa33++"
+  }
+
+  default_node_pool {
     name            = "default"
-    count           = var.agent_vm_count
+    node_count      = var.agent_vm_count
     vm_size         = var.agent_vm_size
-    os_type         = "Linux"
     os_disk_size_gb = 30
     vnet_subnet_id  = var.vnet_subnet_id
   }

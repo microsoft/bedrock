@@ -79,10 +79,6 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "resource_group_location" {
-  type = string
-}
-
 variable "ssh_public_key" {
   type = string
 }
@@ -95,7 +91,7 @@ variable "service_principal_secret" {
   type = string
 }
 
-variable "subnet_prefix" {
+variable "subnet_address_prefix" {
   type = string
 }
 

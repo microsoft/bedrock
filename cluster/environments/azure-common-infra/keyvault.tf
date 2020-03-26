@@ -1,7 +1,8 @@
 data "azurerm_client_config" "current" {}
 
 module "keyvault" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault"
+  source = "../../../cluster/azure/keyvault"
 
   keyvault_name       = "${var.keyvault_name}"
   resource_group_name = "${data.azurerm_resource_group.global_rg.name}"
