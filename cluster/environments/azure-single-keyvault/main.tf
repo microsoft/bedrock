@@ -2,8 +2,7 @@
 #  backend "azurerm" {}
 #}
 module "provider" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
-  source = "../../../cluster/azure/provider"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
 }
 
 data "azurerm_client_config" "current" {}
@@ -26,8 +25,7 @@ module "subnet" {
 }
 
 module "aks-gitops" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
-  source = "../../../cluster/azure/aks-gitops"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
 
   acr_enabled              = var.acr_enabled
   agent_vm_count           = var.agent_vm_count

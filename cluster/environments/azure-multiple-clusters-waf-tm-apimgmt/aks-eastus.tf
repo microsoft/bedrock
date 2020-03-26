@@ -36,8 +36,7 @@ module "east_subnet" {
 
 # Creates aks cluster
 module "east_aks" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
-  source = "../../../cluster/azure/aks"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
 
   resource_group_name      = local.east_rg_name
   cluster_name             = "${var.cluster_name}-east"

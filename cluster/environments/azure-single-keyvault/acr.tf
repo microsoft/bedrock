@@ -1,6 +1,5 @@
 module "acr" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/acr"
-  source = "../../../cluster/azure/acr"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/acr"
 
   acr_name                 = var.acr_name
   enable_acr               = var.enable_acr
