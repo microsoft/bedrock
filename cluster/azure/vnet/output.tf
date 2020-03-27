@@ -22,3 +22,8 @@ output "vnet_subnet_ids" {
   description = "The ids of subnets created inside the vNet"
   value       = azurerm_subnet.subnet.*.id
 }
+
+output "aks_vnet_subnet" {
+  description = "The id of the subnet created inside the vNet used by aks"
+  value       = azurerm_subnet.subnet[0].id
+}
