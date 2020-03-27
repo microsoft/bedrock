@@ -274,3 +274,17 @@ version: 1.1
 ```
 
 And then regenerating and applying the cluster definition in the same manner that we did above when we changed a deployment parameter.
+
+## Rotating / Updating a Service Principal
+
+It is a common practice to rotate secrets.  The environments deployed by Bedrock rely upon a Service Principal for authentication and other operations. Depending upon how the Service Principal was created, either it or it's password may expire. If the Service Principal was to get compromised, that might be another reason that the Service Principal needs rotating.  The general approach when using the Azure CLI is discussed [here](https://docs.microsoft.com/en-us/azure/aks/update-credentials).  However, for Bedrock and the Terraform deployment, the process is straight forward.
+
+First, per the [article](https://docs.microsoft.com/en-us/azure/aks/update-credentials) on updating credentials, create a new Service Principal (or password the existing Service Principal).  Next, update the section in your `definition.yaml`, specifically the following entries:
+
+```yaml
+  service_principal_id: "deadbeef-3703-4842-8a96-9d8b1b7ea442"
+  service_principal_secret: "a0927660-70f7-4306-8e0f-deadbeef"
+```
+
+Then follow the steps for [updating a deployment parameter](#updating-a-deployment-parameter) above.
+
