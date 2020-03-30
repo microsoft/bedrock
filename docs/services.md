@@ -4,6 +4,10 @@ One the most common activities a modern service team performs is deploying and u
 
 This workflow centers around the repositories that hold application code, associated Dockerfile(s), and helm deployment charts in conjunction with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured: they can hold one (single service) or more (monorepository) service depending on your source control methodology.
 
+## Prerequisites
+1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
+2. Complet of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
+
 ## Onboarding a Service Repository
 
 Note: Our automation currently only supports Azure Devops and Azure Devops Repos.
@@ -71,11 +75,10 @@ We can do that with `spk service create` which, like all of the spk service and 
 
 ```
 $ spk service create azure-vote \
---display-name azure-voting-frontend \
---helm-config-git https://github.com/edaena/helm-charts \
---helm-config-path charts/azure-vote \
---helm-config-branch master \
---k8s-backend azure-voting-frontend-svc
+--display-name azure-voting-app \
+--helm-config-git https://github.com/mtarng/helm-charts \
+--helm-config-path chart-source/azure-vote \
+--helm-config-branch master
 ```
 
 As part of service creation, we need to provide to SPK what we want it to deploy in the form of a helm chart. This helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
@@ -96,11 +99,20 @@ rings:
   master:
     isDefault: true
 services:
-  ./:
-    displayName: azure-voting-frontend
+  ./azure-vote:
     disableRouteScaffold: true
+    displayName: azure-voting-app
     helm:
       chart:
+        accessTokenVariable: ACCESS_TOKEN_SECRET
+        branch: master
+        git: 'https://github.com/mtarng/helm-charts'
+        path: chart-source/azure-vote
+    k8sBackend: ''
+    k8sBackendPort: 80
+    middlewares: []
+    pathPrefix: ''
+    pathPrefixMajorVersion: ''
 ```
 
 Then commit all of these files and push them to your Azure Devops repo:
@@ -111,12 +123,14 @@ $ git commit -m "Onboard voting-app service"
 $ git push origin master
 ```
 
+This addition to the project `bedrock.yaml` will cause the project's lifecycle pipeline to trigger. Once the pipeline runs to completion, it will open a Pull Request against the HLD (high-level-definition) repository. Merge this Pull Request to add the new service component to the HLD. Note that the service may not have a container for the cluster to pull until the build pipeline is installed and run; the next steps will cover this work.
+
 Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
 ```
 $ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
-This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the high-level-definition repo for this new image tag.
+This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the HLD repo for this new image tag.
 
-Accept this and the azure-voting-app frontend application will be deployed into your cluster.
+Merge this PR and the HLD to Manifest pipeline will trigger. Once this pipeline completes, the azure-voting-app application will be deployed into your cluster via flux.
