@@ -236,7 +236,7 @@ And then, cluster by cluster, plan and apply the templates:
 
 ```bash
 $ cd east
-$ terraform init --var-file=spa.tfvars
+$ terraform init --var-file=spa.tfvars -backend-config=./backend.tfvars
 $ terraform plan --var-file=spk.tfvars
 $ terraform apply --var-file=spk.tfvars
 ```
