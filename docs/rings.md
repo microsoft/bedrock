@@ -125,9 +125,9 @@ $ curl 52.243.22.233/azure-voting-app -H "Ring: master"
 
 ## Creating a new Ring
 
-Now that we have our default `master` ring live on our cluster, we'll look at adding another ring, `stage` onto our cluster.
+Now that we have our default `master` ring live on our cluster, we'll look at adding another ring, `stage`, onto our cluster.
 
-First, let's go back to our application repository and checkout the `master` branch. Our `master` branch is the source of truth of what rings should exist for a project as the lifecycle pipeline is set to trigger off only `master` and reads the values of `rings` from `bedrock.yaml` in that branch.
+First, let's go back to our application repository and checkout the `master` branch. Our `master` branch is the source of truth of what rings will exist for a project as the lifecycle pipeline is set to trigger off only the `master` branch and reads the values of `rings` from `bedrock.yaml` in that branch.
 
 In this sample, our application is in the `fabrikam2019` directory.
 ```sh
