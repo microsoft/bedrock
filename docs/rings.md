@@ -34,7 +34,6 @@ rings:
     isDefault: true
 services:
   ./azure-vote:
-    disableRouteScaffold: true
     displayName: azure-voting-app
     helm:
       chart:
