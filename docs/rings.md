@@ -8,7 +8,7 @@ This walkthrough will guide you through enabling Ringed deployments of your proj
 1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
 2. Completion of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
 3. Completion of the [Service Management Walkthrough](./docs/../services.md)
-4. `spk` version `v0.5.9` (actual version tbd once the lastest release is out.) or later. [SPK Releases](https://github.com/CatalystCode/spk/releases)
+4. `spk` version `v0.6.0` or later. Download the latest: [SPK Releases](https://github.com/CatalystCode/spk/releases)
 
 ## Enabling Ingress Routes
 [Traefik2](https://github.com/containous/traefik) is the default LoadBalancer utilized to route ingress traffic to a specific ring.
