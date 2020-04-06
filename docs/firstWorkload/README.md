@@ -35,7 +35,7 @@ $ git push origin master
 
 Flux pushes a tag to the git repo to track the last commit it has reconciled against once it finishes its reconcilitation of a commit. This operation requires authentication such that the repo can validate that Flux is authorized to push these tags.
 
-For a Github repo, an SSH key is used for authentication.
+For an Azure DevOps repo, an SSH key is used for authentication.
 
 To create a GitOps SSH key:
 1. Create a separate directory to store they key and other infrastructure deployment items:
@@ -75,7 +75,7 @@ This creates the private and public keys for our GitOps workflow:
 1. Private key: for Flux to authenticate against the GitOps repo
 2. Public key: for the GitOps repo to validate the passed credentials.
 
-The public key will be uploaded to GitHub as a deploy key. The private key will be used during the cluster deployment of Flux.
+The public key will be uploaded to Azure Devops as a deploy key. The private key will be used during the cluster deployment of Flux.
 
 ### Add Deploy Key to the Manifest Repository
 Prerequisites:
@@ -172,7 +172,7 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 ### Configure GitOps Repo
 
-Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
+Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Azure DevOps. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
 
 Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
 
@@ -670,8 +670,6 @@ spec:
 
 This defines a multi-container application that includes a web front end and a Redis instance running in the cluster.
 
-![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
-
 Let’s commit this file and push it to our remote GitOps repo:
 
 ```bash
@@ -718,7 +716,7 @@ External load balancers like this take time to provision. If the EXTERNAL-IP of 
 
 The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
 
-![voting app deployed](./images/azure-voting-deployed.png)
+![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
 
 And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
 
