@@ -320,3 +320,22 @@ Again, this method will result in the cluster being replaced, rather than just u
 ### Manually Updating SSH Keys
 
 The process to manually manage SSH keys in an AKS cluster can be found [here](https://docs.microsoft.com/en-us/azure/aks/ssh).  The process for setting or updating keys will depend on whether your AKS cluster is deployed as a VM Scale Set or or Availability Set.  In either case, the operations leverage the Azure CLI and modify the cluster in place, rather than replacing it.  It should be noted that this process will cause what is deployed to diverge from what the Terraform state is aware of.  So, while possible it is not recommended as subsequent updates to the AKS cluster that cause a "replacement" of the cluster instead of an "update" will over write the node keys with the one the Terraform state knows about.
+
+## Updating the Flux SSH Key
+
+Updating the Flux SSH key requires two steps.  First, the key must be added to the appropriate Azure DevOps or Github instance.  For Azure Devops, that process is outlined [here](https://github.com/microsoft/bedrock/tree/master/docs/firstWorkload#add-deploy-key-to-the-manifest-repository).  For Github, the process is described [here](https://help.github.com/en/enterprise/2.15/user/articles/adding-a-new-ssh-key-to-your-github-account).  Once that process is done, the next step is to udated your `tfvar` file as follows:
+
+```yaml
+  gitops_ssh_key="/home/jims/.ssh/gitopskey"
+```
+
+to:
+
+```yaml
+  gitops_ssh_key="/home/jims/.ssh/gitopskey_new"
+  flux_recreate=1
+```
+
+`flux_recreate` is necessary to force Terraform to redeploy Flux with the updated private key.  If `flux_recreate` is already set to `1`, change it to another value.  Once done, follow the steps for [updating a deployment parameter](#updating-a-deployment-parameter) above.
+
+Unfortunately, at this time, the automation of adding an SSH key to Azure DevOps is a manual process that must be done through the portal.
