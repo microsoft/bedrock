@@ -275,7 +275,7 @@ version: master
 ...
 ```
 
-This specifies that our deployment should use the `master` tag from the git repo specified in `source` such that our deployment template is not locked at a specfic version. 
+This specifies that our deployment should use the `master` tag from the git repo specified in `source` such that our deployment template is not locked at a specific version. 
 
 Version locking your deployment is important because you typically want to explicitly upgrade to new deployment templates versus have your deployment templates change underneath you while deploying an unrelated change as it would when specifying `master`.
 

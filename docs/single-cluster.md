@@ -115,7 +115,7 @@ variables:
   subnet_prefix: '10.8.0.0/24'
   vnet_name: 'myvnet'
 ```
-Now that we have these variables filled in, we will use 'spk generate' command to generate terraform tfvars file that we will use to provision the infrastructure. 
+Now that we have these variables filled in, we will use 'spk infra generate' command to generate terraform tfvars file that we will use to provision the infrastructure. 
 
 Navigate to `azure-common-infra/westus` folder and run the following command.
 
