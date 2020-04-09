@@ -19,12 +19,20 @@ This approach has a couple of advantages:
 
 ## Building a Multi-Cluster Definition
 
+### Pre-reqs
+
+- [Create Flux Manifest Respository](firstWorkload/README.md#create-and-configure-gitops-resource-manifest-repo)
+- [Create Service Principal for each cluster](firstWorkload/README.md#create-an-azure-service-principal)
+- Use [Deploying Common BedRock Infrastructure](single-cluster.md#deplying-the-common-infrastructure) to create two resource groups (`search-east-rg` and `search-west-rg`) and vnets (`search-east-vnet` and `search-east-vnet`) in both west and east locations (docs/single-cluster.md#deplying-the-common-infrastructure) which will be used below when filling in the east and west specific cluster information.
+
+### Setting up common configuration for clusters
+
 Let’s have a look at how this works in practice by building our first deployment definition for an application called `search` with two clusters in the `east` and `west` regions. We are going to use Bedrock’s `spk` tool to automate this — so [install Bedrock's prerequisites](../tools/prereqs) if you haven’t already.
 
 We we are going to leverage the `azure-single-keyvault` template from the Bedrock project, which provides a template for a single cluster with Azure Keyvault for secrets management. We can scaffold out our infrastructure definition with this template with the following command:
 
 ```bash
-$ spk infra scaffold --name search --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ spk infra scaffold --name search --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
 
 This `scaffold` command creates a directory called `search` and creates a definition.yaml file in it that looks like this:
@@ -33,7 +41,7 @@ This `scaffold` command creates a directory called `search` and creates a defini
 name: search
 source: 'https://github.com/microsoft/bedrock'
 template: cluster/environments/azure-single-keyvault
-version: 1.0
+version: master
 backend:
   storage_account_name: storage-account-name
   access_key: storage-account-access-key
@@ -78,7 +86,7 @@ We want to deploy multiple clusters and share common configuration values betwee
 name: search
 source: 'https://github.com/microsoft/bedrock'
 template: cluster/environments/azure-single-keyvault
-version: 1.0
+version: master
 backend:
   storage_account_name: "searchops"
   access_key: "7hDvyT4D2DNyD ... snip ... CiNvMEFYX1qTYHX3bT6XYva2tuN6Av+j+Kn259wQmA=="
@@ -93,23 +101,25 @@ variables:
   gitops_poll_interval: 60s
   gitops_ssh_url: git@ssh.dev.azure.com:v3/fabrikam/search/resource-manifests
   gitops_url_branch: master
-  gitops_ssh_key: "../keys/gitops_repo_key"
+  gitops_ssh_key: "../../keys/gitops_repo_key" #make sure this points to your ssh keys generated for [access to gitops manifest repository](firstWorkload/README.md#generate-a-deploy-key-for-the-gitops-resource-manifest-repo)
   keyvault_name: "search-keyvault"
   keyvault_resource_group: "search-global-rg"
   ssh_public_key: "ssh-rsa AAAAB3Nza ... snip ... lgodNP7GExxNLSLqcsZa9ZALc+P3FRjgYbLC/qMWtkzPH5TEHPU4P5KLbHr4ZN3kV2MiARTtjWOlYMnMnrGu6NYxCmjHsbZxfhhZ2rU3uIEvjUBo9rdtQ== johndoe@fabrikam.com"
-  service_principal_id: "deadbeef-3703-4842-8a96-9d8b1b7ea442"
-  service_principal_secret: "a0927660-70f7-4306-8e0f-deadbeef"
+  service_principal_id: "something-3703-4842-8a96-9d8b1b7ea442"
+  service_principal_secret: "a0927660-70f7-4306-8e0f-something"
   network_plugin: "azure"
   network_policy: "azure"
   oms_agent_enabled: "false"
   enable_acr: "true"
   acr_name: "fabrikam"
+  subnet_prefix: "10.8.0.0/24"
 ```
 
+### Setting up east cluster
 With our common definition completed, let’s scaffold out our first physical cluster in the `east` region from within our `search-cluster` directory:
 
 ```bash
-$ spk infra scaffold --name east --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ spk infra scaffold --name east --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
 
 Scaffolding this cluster also creates a directory (called `east`) and a `definition.yaml` within it. When we go to generate a deployment from this, however, the tool will layer this hierarchy, taking the values from our common `definition.yaml` and then overlaying the values from our `east` definition on top. This is the mechanism that Bedrock uses to [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) out our deployment definitions, enabling you to define common variables in one place and have them inherited in each of the cluster definitions in directories underneath this central definition.
@@ -121,22 +131,21 @@ name: east
 backend:
   key: "search-east"
 variables:
-  address_space: "10.7.0.0/16"
   cluster_name: "search-east"
   dns_prefix: "search-east"
   gitops_path: "azure-search-east"
   resource_group_name: "search-east-rg"
-  subnet_prefixes: "10.7.0.0/16"
   vnet_name: "search-east-vnet"
   subnet_name: "search-east-subnet"
 ```
 
 Note that we didn’t include the `template` and `version` in the cluster `definition.yaml`.  This, and several of the common backend configuration variables, are also shared amongst the clusters.
 
+### Setting up west cluster
 With our `east` cluster defined let’s scaffold out our final cluster:
 
 ```bash
-$ spk infra scaffold --name west --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ spk infra scaffold --name west --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
 
 And fill the cluster definition for this with variable specific to the `west` cluster:
@@ -146,12 +155,10 @@ name: west
 backend:
   key: "search-west"
 variables:
-  address_space: "10.8.0.0/16"
   cluster_name: "search-west"
   dns_prefix: "search-west"
   gitops_path: "azure-search-west"
   resource_group_name: "search-west-rg"
-  subnet_prefixes: "10.8.0.0/16"
   vnet_name: "search-west-vnet"
   subnet_name: "search-west-subnet"
 ```
@@ -179,24 +186,31 @@ $ spk infra generate --project east
 $ spk infra generate --project west
 ```
 
-This will generate the `east` and `west` cluster definitions, combining the per cluster config with the central common config, and generate the Terraform scripts for each of the clusters from on the base template that we specified such that our our directory structure now looks like this:
+This will generate the `search-generated/east` and `search-generated/west` cluster definitions, combining the per cluster config with the central common config, and generate the Terraform scripts for each of the clusters from on the base template that we specified such that our our directory structure now looks like this:
 
 ```
-.
-├── prod-blue
-│   ├── README.md
-│   ├── acr.tf
-│   ├── backend.tfvars
-│   ├── main.tf
-│   ├── spk.tfvars
-│   └── variables.tf
-└── prod-green
-    ├── README.md
-    ├── acr.tf
-    ├── backend.tfvars
-    ├── main.tf
-    ├── spk.tfvars
-    └── variables.tf
+├── search
+│   ├── definition.yaml
+│   ├── east
+│   │   └── definition.yaml
+│   ├── spk.log
+│   └── west
+│       └── definition.yaml
+├── search-generated
+│   ├── east
+│   │   ├── README.md
+│   │   ├── acr.tf
+│   │   ├── backend.tfvars
+│   │   ├── main.tf
+│   │   ├── spk.tfvars
+│   │   └── variables.tf
+│   └── west
+│       ├── README.md
+│       ├── acr.tf
+│       ├── backend.tfvars
+│       ├── main.tf
+│       ├── spk.tfvars
+│       └── variables.tf
 ```
 
 ## Deploying Cluster
@@ -204,7 +218,7 @@ This will generate the `east` and `west` cluster definitions, combining the per 
 With our clusters infrastructure templates created, we can now apply the templates.  Let’s start with the `east` cluster:
 
 ```bash
-$ cd east
+$ cd search-generated/east
 $ terraform init -var-file=spk.tfvars -backend-config=./backend.tfvars
 $ terraform plan -var-file=spk.tfvars
 $ terraform apply -var-file=spk.tfvars
@@ -213,7 +227,7 @@ $ terraform apply -var-file=spk.tfvars
 This deploys our `east` cluster.  We can naturally do the same thing for our `west` cluster with the same set of commands:
 
 ```bash
-$ cd west
+$ cd search-generated/west
 $ terraform init -var-file=spk.tfvars -backend-config=./backend.tfvars
 $ terraform plan -var-file=spk.tfvars
 $ terraform apply -var-file=spk.tfvars
@@ -257,13 +271,15 @@ If you were watching closely as we specified our `search` workload deployment, y
 name: search
 source: 'https://github.com/microsoft/bedrock'
 template: cluster/environments/azure-single-keyvault
-version: 1.0
+version: master
 ...
 ```
 
-This specifies that our deployment should use the `1.0` tag from the git repo specified in `source` such that our deployment template is locked at this particular version. Version locking your deployment like this is important because you typically want to explicitly upgrade to new deployment templates versus have your deployment templates change underneath you while deploying an unrelated change.
+This specifies that our deployment should use the `master` tag from the git repo specified in `source` such that our deployment template is not locked at a specfic version. 
 
-Let’s say that your central infrastructure team has released the `1.1` version of this same template. We can upgrade our definition to that template by simply this version value:
+Version locking your deployment is important because you typically want to explicitly upgrade to new deployment templates versus have your deployment templates change underneath you while deploying an unrelated change as it would when specifying `master`.
+
+Let’s say that your central infrastructure team has released the `1.1` version of this template and you want to stay at that version. We can upgrade our definition to that template by simply this version value:
 
 ```yaml
 name: search
@@ -273,7 +289,7 @@ version: 1.1
 ...
 ```
 
-And then regenerating and applying the cluster definition in the same manner that we did above when we changed a deployment parameter.
+And then regenerating (`spk infa generate --project west`) and applying the cluster definition in the same manner that we did above when we changed a [deployment parameter](#updating-a-deployment-parameter).
 
 ## Rotating / Updating a Service Principal
 
