@@ -33,7 +33,7 @@ rings:
   master:
     isDefault: true
 services:
-  ./azure-vote:
+  - path: ./azure-vote
     displayName: azure-voting-app
     helm:
       chart:
