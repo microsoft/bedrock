@@ -6,7 +6,7 @@ This workflow centers around the repositories that hold application code, associ
 
 ## Prerequisites
 1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
-2. Complet of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
+2. Completion of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
 
 ## Onboarding a Service Repository
 
@@ -23,7 +23,7 @@ Our automation distinguishes between a `project` and a `service`. A `project` in
 
 Navigate to the root of the `project` (for the Azure Voting App example application, this is the root directory) and run the `project init` command:
 
-```
+```sh
 $ spk project init
 $ git add -A
 $ git commit -m "Onboarding project directory"
@@ -41,7 +41,15 @@ We next want to create the lifecycle pipeline for our `project` which automatica
 
 The first step to do that is to create a common variable group in Azure Devops that contains a set of secrets that we will use in our pipeline:
 
-```
+```sh
+# If you're coming from the infrastructure deployment guides mentioned in
+# https://github.com/microsoft/bedrock#infrastructure-management you can reuse
+# the service principal values saved in sp.json via:
+$ export SP_TENANT=$(cat ~/cluster-deployment/sp/sp.json | jq -r .tenant)
+$ export SP_APP_ID=$(cat ~/cluster-deployment/sp/sp.json | jq -r .appId)
+$ export SP_PASS=$(cat ~/cluster-deployment/sp/sp.json | jq -r .password)
+
+# With all of $ACR_NAME $SP_APP_ID $SP_TENANT $SP_PASS set:
 $ export VARIABLE_GROUP_NAME=voting-app-vg
 $ spk project create-variable-group $VARIABLE_GROUP_NAME -r $ACR_NAME -u $SP_APP_ID -t $SP_TENANT -p $SP_PASS
 $ git add -A
@@ -57,7 +65,7 @@ This creates the variable group with Azure Devops and also adds it to our `bedro
 
 With this created, we can deploy the lifecycle-pipeline itself with:
 
-```
+```sh
 $ spk project install-lifecycle-pipeline --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --repo-url $VOTING_APP_REPO_URL --pipeline-name $PIPELINE_NAME
 ```
 
@@ -73,17 +81,17 @@ With that, we have set up all of the pipelines for the project itself, so let's 
 
 We can do that with `spk service create` which, like all of the spk service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
 
-```
+```sh
 $ spk service create azure-vote \
---display-name azure-voting-app \
---helm-config-git https://github.com/mtarng/helm-charts \
---helm-config-path chart-source/azure-vote \
---helm-config-branch master
+    --display-name azure-voting-app \
+    --helm-config-git https://github.com/mtarng/helm-charts \
+    --helm-config-path chart-source/azure-vote \
+    --helm-config-branch master
 ```
 
 As part of service creation, we need to provide to SPK what we want it to deploy in the form of a helm chart. This helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
 
-```
+```yaml
 image:
   tag: latest
   repository: some.acr.io/repo
@@ -99,7 +107,7 @@ rings:
   master:
     isDefault: true
 services:
-  ./azure-vote:
+  - path: ./azure-vote
     disableRouteScaffold: true
     displayName: azure-voting-app
     helm:
@@ -117,7 +125,7 @@ services:
 
 Then commit all of these files and push them to your Azure Devops repo:
 
-```
+```sh
 $ git add -A
 $ git commit -m "Onboard voting-app service"
 $ git push origin master
@@ -127,7 +135,7 @@ This addition to the project `bedrock.yaml` will cause the project's lifecycle p
 
 Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
-```
+```sh
 $ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
