@@ -16,14 +16,22 @@ locals {
 module "west_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name = local.west_rg_name
-  subnet_names        = ["${var.cluster_name}-aks-subnet"]
-  address_space       = var.west_address_space
-  subnet_prefixes     = var.west_subnet_prefixes
+  resource_group_name     = local.west_rg_name
+  vnet_name               = "${local.west_prefix}-vnet"
+  address_space           = var.west_address_space
 
   tags = {
-    environment = "azure-multiple-clusters"
+    environment = "azure_multiple_clusters"
   }
+}
+
+module "west_subnet" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+
+  subnet_name          = ["${local.west_prefix}-snet"]
+  vnet_name            = module.west_vnet.vnet_name
+  resource_group_name  = local.west_rg_name
+  address_prefix       = var.west_subnet_prefixes
 }
 
 # Creates aks cluster
@@ -34,7 +42,7 @@ module "west_aks" {
   cluster_name             = "${var.cluster_name}-west"
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = module.west_vnet.vnet_subnet_ids[0]
+  vnet_subnet_id           = tostring(element(module.west_subnet.subnet_ids, 0))
   service_cidr             = var.west_service_cidr
   dns_ip                   = var.west_dns_ip
   docker_cidr              = var.west_docker_cidr

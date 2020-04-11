@@ -3,23 +3,41 @@
 [![Build Status](https://dev.azure.com/epicstuff/bedrock/_apis/build/status/Microsoft.bedrock?branchName=master)](https://dev.azure.com/epicstuff/bedrock/_build/latest?definitionId=54&branchName=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/microsoft/bedrock)](https://goreportcard.com/report/github.com/microsoft/bedrock)
 
-Bedrock is automation and tooling for operationalizing production Kubernetes clusters with a [GitOps](./gitops) workflow.  GitOps enables you to build a workflow around your deployments and infrastructure similiar to that of a typical development workflow: pull request based operational changes, point in time auditability into what was deployed on the Kubernetes cluster, and providing nonrepudation about who made those changes.
+Bedrock provides patterns, implementation, and automation for operating production Kubernetes clusters based on a GitOps workflow, building on the best practices we have discovered in working with dozens of deployments with customers in operationalizing Kubernetes clusters.
 
-This GitOps workflow revolves around [Fabrikate](https://github.com/Microsoft/fabrikate) definitions that enable you to specify your deployments at a higher level of abstraction that separates structure from configuration.  This makes them easier to maintain versus directly specifying them in Kubernetes resource manifest YAML or cobbling together shell scripts to build Kubernetes resource manifests from templating solutions.  Fabrikate definitions also allow you to leverage common pieces across many deployments and to share structure amongst different clusters differentiated only by config.
-
-Bedrock also provides [guidance and automation](./gitops/README.md) for building GitOps pipelines with a variety of popular CI/CD orchestrators.
-
-Finally, Bedrock provides a set of Terraform environment templates for deploying your Kubernetes clusters, including automation for setting up the GitOps Operator [Flux](https://github.com/fluxcd/flux) in your cluster.
+Bedrock helps you:
+* Define and maintain infrastructure deployments across multiple clusters.
+* Deploy and automate a secure end to end GitOps workflow.
+* Deploy and manage service workloads from source code to their deployment in-cluster.
+* Observe ongoing deployments across multiple services and their revisions and multiple clusters deploying those services.
 
 ## Getting Started
+* [Installing Prerequisites](./tools/prereqs/README.md)
+* [Walkthrough: Deploying a First Workload](./docs/firstWorkload)
+* [Deep Dive: Why GitOps?](./docs/why-gitops.md)
 
-A Bedrock deployment follows three steps at a high level:
+## Infrastructure Management
+* [Walkthrough: Single Cluster Infrastructure Deployment](./docs/single-cluster.md)
+* [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
 
-1. [Create and deploy](./cluster/README.md) a GitOps enabled Kubernetes cluster.
-2. Define a [Fabrikate](https://github.com/microsoft/fabrikate) high level deployment definition.
-3. [Setup a GitOps pipeline](./gitops/README.md) to automate deployments of this definition to this cluster based on typical application and cluster lifecycle events.
+## GitOps Pipeline
+* [Walkthrough: GitOps Pipeline](./docs/hld-to-manifest.md)
+* [Deep Dive: The End to End Deployment Pipeline](./docs/gitops-pipeline.md)
 
-The steps required to operationalize a production Kubernetes cluster can be pretty extensive, so we have also put together a [simple walkthrough for deploying a first cluster](./docs/azure-simple/README.md) that makes a great first step.
+## Service Management
+* [Walkthrough: Service Management](./docs/services.md)
+* [Deep Dive: Helm Charts](https://github.com/CatalystCode/spk/blob/master/guides/building-helm-charts-for-spk.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
+
+## Rings Management
+* [Walkthrough: Rings](./docs/rings.md)
+* [Deep Dive: Manual Rings Management](https://github.com/CatalystCode/spk/blob/master/guides/manual-guide-to-rings.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/rings-101.md)
+
+## Deployment Observability
+* [Walkthrough: Observing Service Deployments](./docs/introspection.md)
+* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
 
 ## Community
 
@@ -27,7 +45,7 @@ The steps required to operationalize a production Kubernetes cluster can be pret
 
 ## Contributing
 
-We do not claim to have all the answers and would greatly appreciate your ideas and pull requests.
+We do not claim to have all the answers and would greatly appreciate your ideas, issues, and pull requests.
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us

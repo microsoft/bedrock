@@ -42,7 +42,7 @@ resource "azurerm_application_gateway" "waf" {
   }
 
   backend_address_pool {
-    name = var.prefix}-beappool1"
+    name = "${var.prefix}-beappool1"
   }
 
   backend_http_settings {

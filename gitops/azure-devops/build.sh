@@ -243,6 +243,35 @@ function git_commit() {
     git pull origin "$BRANCH_NAME"
 }
 
+# Checks for changes and only commits if there are changes staged. Optionally can be configured to fail if called to commit and no changes are staged.
+# First arg - commit message
+# Second arg - "should error if there is nothing to commit" flag. Set to 0 if this behavior should be skipped and it will not error when there are no changes.
+# Third arg - variable to check if changes were commited or not. Will be set to 1 if changes were made, 0 if not.
+function git_commit_if_changes() {
+
+    echo "GIT STATUS"
+    git status
+
+    echo "GIT ADD"
+    git add -A
+
+    commitSuccess=0
+    if [[ $(git status --porcelain) ]] || [ -z "$2" ]; then
+        echo "GIT COMMIT"
+        git commit -m "$1"
+        retVal=$?
+        if [[ "$retVal" != "0" ]]; then
+            echo "ERROR COMMITING CHANGES -- MAYBE: NO CHANGES STAGED"
+            exit $retVal
+        fi
+        commitSuccess=1
+    else
+        echo "NOTHING TO COMMIT"
+    fi
+    echo "commitSuccess=$commitSuccess"
+    printf -v $3 "$commitSuccess"
+}
+
 # Perform a Git push
 function git_push() {
     # Remove http(s):// protocol from URL so we can insert PA token

@@ -77,8 +77,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"keyvault_name":              kvName,
 			"global_resource_group_name": kvRG,
 			"service_principal_id":       clientid,
-			"subnet_name":                subnetName,
-			"subnet_prefix":              addressSpace,
 			"vnet_name":                  vnetName,
 		},
 	}
@@ -122,7 +120,6 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 		TerraformDir: azureSingleKeyvaultFolder,
 		Upgrade:      true,
 		Vars: map[string]interface{}{
-			"address_space":            addressSpace,
 			"agent_vm_count":           "3",
 			"agent_vm_size":            "Standard_D2s_v3",
 			"cluster_name":             k8sName,
@@ -136,9 +133,9 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 			"ssh_public_key":           publickey,
 			"service_principal_id":     clientid,
 			"service_principal_secret": clientsecret,
-			"subnet_prefixes":          "10.39.0.0/16",
 			"subnet_name":              subnetName,
 			"vnet_name":                vnetName,
+			"subnet_prefix":            addressSpace,
 		},
 	}
 
