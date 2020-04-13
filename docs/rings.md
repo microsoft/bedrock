@@ -1,6 +1,6 @@
 # Walkthrough: Rings deployment and management with automation
 
-If you're new to the concept of Rings, it is suggested you read through the [spk Rings guide](https://github.com/CatalystCode/spk/blob/master/guides/rings-101.md#what-are-deployment-rings). In short, in the context of Kubernetes, Rings are a way to encapsulate and deploy multiple environments in a single cluster.
+If you're new to the concept of Rings, it is suggested you read through the [spk Rings guide](https://github.com/microsoft/bedrock-cli/blob/master/guides/rings-101.md#what-are-deployment-rings). In short, in the context of Kubernetes, Rings are a way to encapsulate and deploy multiple environments in a single cluster.
 
 This walkthrough will guide you through enabling Ringed deployments of your project with automation through the `spk` tool. We will be utilizing the azure-vote example that was set up during the [Service Management Walkthrough](./docs/../services.md).
 
@@ -8,7 +8,7 @@ This walkthrough will guide you through enabling Ringed deployments of your proj
 1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
 2. Completion of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
 3. Completion of the [Service Management Walkthrough](./docs/../services.md)
-4. `spk` version `v0.6.0` or later. Download the latest: [SPK Releases](https://github.com/CatalystCode/spk/releases)
+4. `spk` version `v0.6.0` or later. Download the latest: [SPK Releases](https://github.com/microsoft/bedrock-cli/releases)
 
 ## Enabling Ingress Routes
 [Traefik2](https://github.com/containous/traefik) is the default LoadBalancer utilized to route ingress traffic to a specific ring.
@@ -263,7 +263,7 @@ And now we've validated that our default Ring is `stage`.
 
 ## Removing a Ring
 
-Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/CatalystCode/spk/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as spk currently does not remove services nor does it remove rings from the HLD repository.
+Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as spk currently does not remove services nor does it remove rings from the HLD repository.
 
 As we cannot delete the default ring, we need to first set the default Ring to `master` again:
 ```sh
