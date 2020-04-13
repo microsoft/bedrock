@@ -75,7 +75,7 @@ azure_devops:
 ```
 
 **Note:** This `spk-config.yaml` should not be commited anywhere, as it contains
-sensitive credentials. For an alternative approach on how to add secrets to `spk-config.yaml` using environment variables, see these [instructions](https://github.com/microsoft/bedrock-cli#environment-variables).
+sensitive credentials. For an alternative approach on how to add secrets to `spk-config.yaml` using environment variables, see these [instructions](https://github.com/microsoft/bedrock-cli/blob/master/guides/config-file.md#environment-variables).
 
 ## Initialize SPK
 
