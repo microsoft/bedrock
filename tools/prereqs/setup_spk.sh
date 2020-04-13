@@ -38,9 +38,9 @@ else
     exit 1
 fi
 
-SPK_VERSION=`curl -s -L https://github.com/catalystcode/spk/releases/latest | grep "spk\/archive" | grep zip | awk -F"archive/" '{print $2}' | awk -F ".zip" '{print $1}'`
+SPK_VERSION=`curl -s -L https://github.com/microsoft/bedrock-cli/releases/latest | grep "spk\/archive" | grep zip | awk -F"archive/" '{print $2}' | awk -F ".zip" '{print $1}'`
 
-curl -s -LO https://github.com/catalystcode/spk/releases/download/$SPK_VERSION/spk-$arch
+curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION/spk-$arch
 cp spk-$arch /usr/local/bin/spk
 chmod +x /usr/local/bin/spk
 
