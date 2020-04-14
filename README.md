@@ -19,7 +19,7 @@ Bedrock helps you:
 ## Infrastructure Management
 * [Walkthrough: Single Cluster Infrastructure Deployment](./docs/single-cluster.md)
 * [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/cloud-infra-management.md)
+* [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/cloud-infra-management.md)
 
 ## GitOps Pipeline
 * [Walkthrough: GitOps Pipeline](./docs/hld-to-manifest.md)
@@ -27,17 +27,17 @@ Bedrock helps you:
 
 ## Service Management
 * [Walkthrough: Service Management](./docs/services.md)
-* [Deep Dive: Helm Charts](https://github.com/CatalystCode/spk/blob/master/guides/building-helm-charts-for-spk.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-management.md)
+* [Deep Dive: Helm Charts](https://github.com/microsoft/bedrock-cli/blob/master/guides/building-helm-charts-for-spk.md)
+* [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/service-management.md)
 
 ## Rings Management
 * [Walkthrough: Rings](./docs/rings.md)
-* [Deep Dive: Manual Rings Management](https://github.com/CatalystCode/spk/blob/master/guides/manual-guide-to-rings.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/rings-101.md)
+* [Deep Dive: Manual Rings Management](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md)
+* [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/rings-101.md)
 
 ## Deployment Observability
 * [Walkthrough: Observing Service Deployments](./docs/introspection.md)
-* [CLI Reference](https://github.com/CatalystCode/spk/blob/master/guides/service-introspection.md)
+* [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/service-introspection.md)
 
 ## Community
 

@@ -30,7 +30,7 @@ az storage account create \
     --resource-group my-global-rg \
     --location eastus \
     --sku Standard_LRS \
-    --encryption blob
+    --encryption-services blob
 ```
 
 The Azure CLI needs your storage account credentials for most of the commands in this tutorial. While there are several options for doing so, one of the easiest ways to provide them is to set `AZURE_STORAGE_ACCOUNT` and `AZURE_STORAGE_KEY` environment variables.

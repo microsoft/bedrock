@@ -144,7 +144,7 @@ function get_spk_version() {
     if [ -z "$VERSION" ]
     then
         # By default, the script will use the most recent non-prerelease, non-draft release SPK
-        SPK_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+        SPK_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     else
         echo "SPK Version: $VERSION"
         SPK_VERSION_TO_DOWNLOAD=$VERSION
@@ -170,13 +170,13 @@ function download_spk() {
     echo "Latest SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_spk os
-    spk_wget=$(wget -SO- "https://github.com/CatalystCode/spk/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
+    spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
     if [[ $spk_wget == *"302 Found"* ]]; then
     echo "SPK $SPK_VERSION_TO_DOWNLOAD downloaded successfully."
     else
         echo "There was an error when downloading SPK. Please check version number and try again."
     fi
-    wget "https://github.com/CatalystCode/spk/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
+    wget "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
     mkdir spk
     mv spk-$os spk/spk
     chmod +x spk/spk 
