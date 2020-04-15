@@ -8,13 +8,15 @@ resource "azurerm_user_assigned_identity" "aks_user_identity" {
   name                = local.identity_name
 }
 
-resource "azurerm_role_assignment" "aks_kubelet_operator" {
+ resource "azurerm_role_assignment" "aks_kubelet_operator" {
+  count                = var.msi_enabled ? 1 : 0
   role_definition_name = "Managed Identity Operator"
   principal_id         = azurerm_user_assigned_identity.aks_user_identity.principal_id
   scope                = data.external.msi_object_id.result.kubelet_id
 }
 
 resource "azurerm_role_assignment" "aks_kubelet_reader" {
+  count                = var.msi_enabled ? 1 : 0
   role_definition_name = "Reader"
   principal_id         = azurerm_user_assigned_identity.aks_user_identity.principal_id
   scope                = data.external.msi_object_id.result.kubelet_id
