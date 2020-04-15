@@ -137,7 +137,7 @@ Repeat these steps for each pipeline definition.
 ## Run the Introspection Tools
 
 If you haven't already, create a copy of `spk-config.yaml` from the starter
-[template](./../spk-config.yaml) with the appropriate values for the
+[template](https://raw.githubusercontent.com/microsoft/bedrock-cli/master/spk-config.yaml) with the appropriate values for the
 `introspection` section.
 
 ```yaml
