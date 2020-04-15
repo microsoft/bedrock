@@ -60,7 +60,7 @@ For help, follow the
 ## Create SPK config file
 
 Create a copy of `spk-config.yaml` from the starter
-[template](https://github.com/microsoft/bedrock-cli/blob/master/spk-config.yaml) or using the [interactive mode](https://catalystcode.github.io/spk/commands/#master@init) for `spk init` command. Be sure to complete
+[template](https://github.com/microsoft/bedrock-cli/blob/master/spk-config.yaml) or using the [interactive mode](https://microsoft.github.io/bedrock-cli//commands/#master@init) for `spk init` command. Be sure to complete
 `azure_devops` section with the appropriate values.
 
 Your `azure_devops` section should look similar to this:

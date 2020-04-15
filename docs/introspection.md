@@ -58,7 +58,7 @@ Where:
 - `$SP_TENANT`: Azure AD tenant id of service principal
 - `$SUBSCRIPTION`: Azure subscription id
 
-More information about its usage can be found [here](https://catalystcode.github.io/spk/commands/index.html#master@deployment_onboard).
+More information about its usage can be found [here](https://microsoft.github.io/bedrock-cli//commands/index.html#master@deployment_onboard).
 
 ### Storage account CORS settings
 
