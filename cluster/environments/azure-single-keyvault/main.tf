@@ -2,6 +2,10 @@ terraform {
   backend "azurerm" {}
 }
 
+module "provider" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
+}
+
 data "azurerm_client_config" "current" {}
 
 data "azurerm_resource_group" "cluster_rg" {
@@ -12,10 +16,13 @@ data "azurerm_resource_group" "keyvault" {
   name = var.keyvault_resource_group
 }
 
-data "azurerm_subnet" "vnet" {
-  name                 = var.subnet_name
-  virtual_network_name = var.vnet_name
+module "subnet" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+
+  subnet_name          = [var.subnet_name]
+  vnet_name            = var.vnet_name
   resource_group_name  = data.azurerm_resource_group.keyvault.name
+  address_prefix       = [var.subnet_prefix]
 }
 
 module "aks-gitops" {
@@ -39,7 +46,7 @@ module "aks-gitops" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   ssh_public_key           = var.ssh_public_key
-  vnet_subnet_id           = data.azurerm_subnet.vnet.id
+  vnet_subnet_id           = element(module.subnet.subnet_ids, 0)
   network_plugin           = var.network_plugin
   network_policy           = var.network_policy
   oms_agent_enabled        = var.oms_agent_enabled

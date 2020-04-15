@@ -1,6 +1,6 @@
-#terraform {
-#  backend "azurerm" {}
-#}
+terraform {
+  backend "azurerm" {}
+}
 
 module "provider" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
