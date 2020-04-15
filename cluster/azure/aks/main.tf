@@ -75,9 +75,15 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     enabled = true
   }
 
-  service_principal {
-    client_id     = var.service_principal_id
-    client_secret = var.service_principal_secret
+  dynamic "service_principal" {
+    for_each = !var.msi_enabled ? [{
+      client_id     = var.service_principal_id
+      client_secret = var.service_principal_secret
+    }] : []
+    content = {
+      client_id     = value.client_id
+      client_secret = value.client_secret
+    }
   }
 
   addon_profile {
