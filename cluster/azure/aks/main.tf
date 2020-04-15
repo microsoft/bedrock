@@ -80,7 +80,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       client_id     = var.service_principal_id
       client_secret = var.service_principal_secret
     }] : []
-    content = {
+    content {
       client_id     = value.client_id
       client_secret = value.client_secret
     }
