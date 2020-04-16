@@ -22,6 +22,10 @@ output "kubelet_id" {
   value = module.aks.kubelet_id
 }
 
+output "kubelet_resource_id" {
+  value = module.aks.kubelet_resource_id
+}
+
 output "aks_user_identity_id" {
   value = module.aks.aks_user_identity_id
 }

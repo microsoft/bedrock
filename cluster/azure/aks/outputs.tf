@@ -39,3 +39,7 @@ output "aks_user_identity_principal_id" {
 output "aks_user_identity_client_id" {
   value = azurerm_user_assigned_identity.aks_user_identity.client_id
 }
+
+output "kubelet_resource_id" {
+  value = data.external.msi_object_id.result.kubelet_resource_id
+}
