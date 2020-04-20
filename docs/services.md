@@ -89,6 +89,8 @@ $ spk service create azure-vote \
     --helm-config-branch master
 ```
 
+For more custom Dockerfiles that may require passing in arguments as build variables, please visit [here](https://github.com/microsoft/bedrock-cli/blob/master/guides/project-service-management-guide.md#passing-variables-as-dockerfile-build-arguments).
+
 As part of service creation, we need to provide to SPK what we want it to deploy in the form of a helm chart. This helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
 
 ```yaml
