@@ -2,12 +2,12 @@
 
 If you're new to the concept of Rings, it is suggested you read through the [spk Rings guide](https://github.com/microsoft/bedrock-cli/blob/master/guides/rings-101.md#what-are-deployment-rings). In short, in the context of Kubernetes, Rings are a way to encapsulate and deploy multiple environments in a single cluster.
 
-This walkthrough will guide you through enabling Ringed deployments of your project with automation through the `spk` tool. We will be utilizing the azure-vote example that was set up during the [Service Management Walkthrough](./docs/../services.md).
+This walkthrough will guide you through enabling Ringed deployments of your project with automation through the `spk` tool. We will be utilizing the azure-vote example that was set up during the [Service Management Walkthrough](./services.md).
 
 ## Prerequisites
-1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
-2. Completion of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
-3. Completion of the [Service Management Walkthrough](./docs/../services.md)
+1. Completion of the [First Workload guide](./firstWorkload/README.md) to setup an AKS cluster configured with flux.
+2. Completion of the [GitOps Pipeline Walkthrough](./hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
+3. Completion of the [Service Management Walkthrough](./services.md)
 4. `spk` version `v0.6.0` or later. Download the latest: [SPK Releases](https://github.com/microsoft/bedrock-cli/releases)
 
 ## Enabling Ingress Routes
