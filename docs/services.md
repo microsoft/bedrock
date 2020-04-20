@@ -5,8 +5,8 @@ One the most common activities a modern service team performs is deploying and u
 This workflow centers around the repositories that hold application code, associated Dockerfile(s), and helm deployment charts in conjunction with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured: they can hold one (single service) or more (monorepository) service depending on your source control methodology.
 
 ## Prerequisites
-1. Completion of the [First Workload guide](./firstWorkload/README.md) to setup an AKS cluster configured with flux.
-2. Completion of the [GitOps Pipeline Walkthrough](./hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
+1. Completion of the [First Workload guide](./tree/master/docs/firstWorkload) to setup an AKS cluster configured with flux.
+2. Completion of the [GitOps Pipeline Walkthrough](./blob/master/docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
 
 ## Onboarding a Service Repository
 
