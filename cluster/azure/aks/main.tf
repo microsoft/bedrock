@@ -72,7 +72,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   dynamic "service_principal" {
-    for_each = !var.msi_enabled ? [{
+    for_each = !var.msi_enabled && var.service_principal_id != "" ? [{
       client_id     = var.service_principal_id
       client_secret = var.service_principal_secret
     }] : []
