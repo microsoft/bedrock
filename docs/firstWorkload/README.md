@@ -1,6 +1,6 @@
 # A First Workload With Bedrock
 
-The best way to start learning about Bedrock is walk through the deployment of a cluster and a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
+The best way to start learning about Bedrock is to walk through the deployment of a cluster and try a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
 
 In this walkthrough, we will:
 1. Create our GitOps resource manifest repo that will act as the source of truth for our in-cluster deployments.
@@ -136,7 +136,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section.
+This tool fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expected behavior for the `spk infra scaffold` command. This behavior can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -162,7 +162,7 @@ This template is the base of our deployment. Note: The `spk` tool also extracted
 
 ## Completing our Deployment Definition
 
-Next we'll fill all of the empty items in this template with config values.
+Next, we'll fill all of the empty items in this template with config values.
 
 ### Cluster name, DNS prefix, VNET name, and resource group
 
@@ -494,7 +494,7 @@ Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 You have successfully have deployed your first cluster with Bedrock!
 
-This might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
+These steps might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
 
 ### Using Terraform State
 
