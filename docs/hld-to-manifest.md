@@ -28,10 +28,10 @@ There are a few requirements to use this automation:
 8. The user is running [git](http://git-scm.org) version
    [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
 
-**Note**: If a user wishes to store helm charts in the application
+**Note**: If a user wishes to store Helm charts in the application
    repositories, then all repositories (application, high level definition,
    materialized manifests) must be in the same Azure DevOps Organization AND
-   Project. This is what Step 2 and Step 3 are doing.
+   Project. This behavior is what Step 2 and Step 3 are doing.
 
 ## Setup SPK
 
@@ -124,7 +124,7 @@ If the initialization succeeded, you will see a message similar to this:
 info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=spk-hld-init&targetRef=master
 ```
 
-This means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
+This message means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
 
 To verify run:
 ```
