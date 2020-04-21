@@ -26,14 +26,6 @@ output "kubelet_resource_id" {
   value = module.aks.kubelet_resource_id
 }
 
-output "aks_user_identity_id" {
-  value = module.aks.aks_user_identity_id
-}
-
-output "aks_user_identity_principal_id" {
-  value = module.aks.aks_user_identity_principal_id
-}
-
-output "aks_user_identity_client_id" {
-  value = module.aks.aks_user_identity_client_id
+output "node_resource_group" {
+  value = module.aks.node_resource_group
 }
