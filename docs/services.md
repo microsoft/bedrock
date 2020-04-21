@@ -2,7 +2,7 @@
 
 One the most common activities a modern service team performs is deploying and updating a particular service -- or set of services. This walkthrough will cover onboarding and deploying an initial version of the service in the cluster using the automation available in Bedrock.
 
-This workflow centers around the repositories that hold application code, associated Dockerfile(s), and helm deployment charts in conjunction with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured: they can hold one (single service) or more (monorepository) service depending on your source control methodology.
+This workflow centers around the repositories that hold application code, associated Dockerfile(s), and Helm deployment charts in conjunction with the high level definition repo we have already established. We do not take a very opinionated view of how these repositories are structured: they can hold one (single service) or more (monorepository) services depending on your source control methodology.
 
 ## Prerequisites
 1. Completion of the [First Workload guide](./firstWorkload/README.md) to setup an AKS cluster configured with flux.
@@ -10,7 +10,7 @@ This workflow centers around the repositories that hold application code, associ
 
 ## Onboarding a Service Repository
 
-Note: Our automation currently only supports Azure Devops and Azure Devops Repos.
+Note: Our automation currently supports only Azure Devops and Azure Devops Repos.
 
 In this walkthrough, we'll use the [Azure Voting App](https://github.com/Azure-Samples/azure-voting-app-redis) as an example service that we are deploying, but you can also swap in your own service.
 
@@ -29,7 +29,7 @@ $ git add -A
 $ git commit -m "Onboarding project directory"
 ```
 
-This creates a `bedrock.yaml` file that maintains the set of `services` that are part of this `project`.
+This step creates a `bedrock.yaml` file that maintains the set of `services` that are part of this `project`.
 
 It also creates a `hld-lifecycle.yaml` Azure Devops definition that manages the lifecycle of this `project` in the high level definition.
 
@@ -37,7 +37,7 @@ Finally, it creates a `maintainers.yaml` file with a list of the named maintaine
 
 ### Creating the Lifecycle Pipeline
 
-We next want to create the lifecycle pipeline for our `project` which automatically manages adding services (and in advanced scenarios, rings) to our high level deployment definition.
+Next, we want to create the lifecycle pipeline for our `project` which automatically manages adding services (and in advanced scenarios, [rings](https://github.com/microsoft/bedrock/blob/caa5942fecffa3adf9c0de245fe1e0512297d70e/docs/rings.md)) to our high level deployment definition.
 
 The first step to do that is to create a common variable group in Azure Devops that contains a set of secrets that we will use in our pipeline:
 
@@ -61,7 +61,7 @@ where `ACR_NAME` is the name of the Azure Container Registry for the project, `S
 `SP_PASS` is the service principal's password, and
 `SP_TENANT` is the service principal's tenant. This service principal is expected to have read and write access to the Azure Container Registry.
 
-This creates the variable group with Azure Devops and also adds it to our `bedrock.yaml` and `hld-lifecycle.yaml` such that it will be used by the pipeline.
+This step creates the variable group with Azure Devops and also adds it to our `bedrock.yaml` and `hld-lifecycle.yaml` such that it will be used by the pipeline.
 
 With this created, we can deploy the lifecycle-pipeline itself with:
 
@@ -91,7 +91,7 @@ $ spk service create azure-vote \
 
 For more custom Dockerfiles that may require passing in arguments as build variables, please visit [here](https://github.com/microsoft/bedrock-cli/blob/master/guides/project-service-management-guide.md#passing-variables-as-dockerfile-build-arguments).
 
-As part of service creation, we need to provide to SPK what we want it to deploy in the form of a helm chart. This helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
+As part of service creation, we need to provide to SPK what we want it to deploy in the form of a Helm chart. This Helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
 
 ```yaml
 image:
@@ -102,7 +102,7 @@ serviceName: "fabrikam"
 
 Once completed, `service create` will add the service to your `bedrock.yaml` file for the `project` and add a `build-update-hld.yaml` Azure Devops file to your `service`.
 
-For this first walkthrough, we are not going to utilize the more advanced ring management functionality that Bedrock provides, so we need to make a small edit to our bedrock.yaml file.  After the `displayName` line, add `disableRouteScaffold: true` to prevent scaffolding of ring routing:
+For this first walkthrough, we are not going to utilize the more advanced [ring](https://github.com/microsoft/bedrock/blob/caa5942fecffa3adf9c0de245fe1e0512297d70e/docs/rings.md) management functionality that Bedrock provides, so we need to make a small edit to our bedrock.yaml file.  After the `displayName` line, add `disableRouteScaffold: true` to prevent scaffolding of ring routing:
 
 ```yaml
 rings:
@@ -141,6 +141,6 @@ Our final step is to create the source code to container build pipeline for our 
 $ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
-This should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the HLD repo for this new image tag.
+This step should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the HLD repo for this new image tag.
 
 Merge this PR and the HLD to Manifest pipeline will trigger. Once this pipeline completes, the azure-voting-app application will be deployed into your cluster via flux.
