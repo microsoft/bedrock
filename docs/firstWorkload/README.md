@@ -1,6 +1,6 @@
 # A First Workload With Bedrock
 
-The best way to start learning about Bedrock is walk through the deployment of a cluster and a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
+The best way to start learning about Bedrock is to walk through the deployment of a cluster and try a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
 
 In this walkthrough, we will:
 1. Create our GitOps resource manifest repo that will act as the source of truth for our in-cluster deployments.
@@ -35,7 +35,7 @@ $ git push origin master
 
 Flux pushes a tag to the git repo to track the last commit it has reconciled against once it finishes its reconcilitation of a commit. This operation requires authentication such that the repo can validate that Flux is authorized to push these tags.
 
-For a Github repo, an SSH key is used for authentication.
+For an Azure DevOps repo, an SSH key is used for authentication.
 
 To create a GitOps SSH key:
 1. Create a separate directory to store they key and other infrastructure deployment items:
@@ -49,12 +49,12 @@ $ mkdir -p ~/cluster-deployment
 ```bash
 $ mkdir -p ~/cluster-deployment/keys
 $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/gitops-ssh-key
-Generating 
+Generating
 lic/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /Users/myuser/.ssh/gitops-ssh-key.
-Your public key has been saved in /Users/myuser/.ssh/gitops-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/gitops-ssh-key.pub.
 The key fingerprint is:
 SHA256:jago9v63j05u9WoiNExnPM2KAWBk1eTHT2AmhIWPIXM myuser@computer.local
 The key's randomart image is:
@@ -75,7 +75,7 @@ This creates the private and public keys for our GitOps workflow:
 1. Private key: for Flux to authenticate against the GitOps repo
 2. Public key: for the GitOps repo to validate the passed credentials.
 
-The public key will be uploaded to GitHub as a deploy key. The private key will be used during the cluster deployment of Flux.
+The public key will be uploaded to Azure Devops as a deploy key. The private key will be used during the cluster deployment of Flux.
 
 ### Add Deploy Key to the Manifest Repository
 Prerequisites:
@@ -87,14 +87,28 @@ Steps:
 **MacOS**
 
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/gitops-ssh-key.pub
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (including WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
 
 ```bash
 $ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/gitops-ssh-key.pub | clip.exe
+```
+
 
 1. Next, on AzureDevOps repository, open your security settings by browsing to the web portal and select your avatar in the upper right of the user interface. Select Security in the menu that appears.
 ![enter key](./images/ssh_profile_access.png)
@@ -122,7 +136,7 @@ $ cd ~/cluster-deployment
 $ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section. 
+This tool fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expected behavior for the `spk infra scaffold` command. This behavior can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -148,7 +162,7 @@ This template is the base of our deployment. Note: The `spk` tool also extracted
 
 ## Completing our Deployment Definition
 
-Next we'll fill all of the empty items in this template with config values.
+Next, we'll fill all of the empty items in this template with config values.
 
 ### Cluster name, DNS prefix, VNET name, and resource group
 
@@ -158,9 +172,14 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 ### Configure GitOps Repo
 
-Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Github. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
+Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Azure DevOps. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
 
-Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
+Set the `gitops_ssh_key` to the full path to the GitOps private key we created previously. If you followed those steps, you can find the full path by running:
+```
+$ cd ~/cluster-deployment
+$ echo $(pwd)/keys/gitops-ssh-key
+/Users/demo/cluster-deployment/keys/gitops-ssh-key
+```
 
 In multi-cluster scenarios, we will often keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
@@ -225,7 +244,23 @@ $ export ARM_CLIENT_SECRET=(password from Service Principal)
 $ export ARM_CLIENT_ID=(appId from Servive Principal)
 ```
 
-or, with `jq` installed:
+
+Optionally, you can install `jq` to parse json format output:
+
+**MacOS**
+
+```
+brew install jq
+```
+
+**Ubuntu/Debian/WSL**
+
+```
+sudo apt-get install jq
+```
+
+You may then run the following commands:
+
 ```
 $ export ARM_SUBSCRIPTION_ID=$(az account show | jq -r .id)
 $ export ARM_TENANT_ID=$(cat ~/cluster-deployment/sp/sp.json | jq -r .tenant)
@@ -264,8 +299,8 @@ $ ssh-keygen -b 4096 -t rsa -f ~/cluster-deployment/keys/node-ssh-key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.
-Your public key has been saved in /home/myuser/cluster-deployment/keys/node-ssh-key.pub.
+Your identification has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.
+Your public key has been saved in /Users/myuser/cluster-deployment/keys/node-ssh-key.pub.
 The key fingerprint is:
 SHA256:+8pQ4MuQcf0oKT6LQkyoN6uswApLZQm1xXc+pp4ewvs myuser@computer.local
 The key's randomart image is:
@@ -286,13 +321,28 @@ The key's randomart image is:
 
 **MacOS**
 ```bash
-$ pbcopy < ~/cluster-deployment/keys/node-ssh-key.pub
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | pbcopy
 ```
 
-**Ubuntu (& WSL)**
+**Ubuntu/Debian**
+Make sure [xclip](https://github.com/astrand/xclip) is installed:
+
+```
+sudo apt-get update
+sudo apt-get install xclip
+```
+
+Then run:
+
 ```bash
 $ cat ~/cluster-deployment/keys/node-ssh-key.pub | xclip
 ```
+
+**WSL**
+```bash
+$ cat ~/cluster-deployment/keys/node-ssh-key.pub | clip.exe
+```
+
 
 3. Paste this into your `definition.yaml` file as the value for `ssh_public_key`.
 
@@ -402,7 +452,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions. 
+Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions.
 
 ```
 $ terraform apply -var-file=spk.tfvars
@@ -444,7 +494,7 @@ Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 You have successfully have deployed your first cluster with Bedrock!
 
-This might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
+These steps might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
 
 ### Using Terraform State
 
@@ -588,7 +638,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  minReadySeconds: 5 
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -623,9 +673,7 @@ spec:
 ---
 ```
 
-This defines a multi-container application that includes a web front end and a Redis instance running in the cluster. 
-
-![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
+This defines a multi-container application that includes a web front end and a Redis instance running in the cluster.
 
 Let’s commit this file and push it to our remote GitOps repo:
 
@@ -673,13 +721,13 @@ External load balancers like this take time to provision. If the EXTERNAL-IP of 
 
 The EXTERNAL-IP, in the case above, is: 52.143.80.54. By appending the port our service is hosted on we can use http://52.143.80.54:80 to fetch the service in a browser.
 
-![voting app deployed](./images/azure-voting-deployed.png)
+![voting app](./images/voting-app-deployed-in-azure-kubernetes-service.png)
 
 And that’s it. We have created a GitOps resource manifest repo, scaffolded and deployed an AKS cluster, and used GitOps to deploy a web app workload to it.
 
 As a final step, you probably want to delete your Kubernetes cluster to save on your wallet. Thankfully, Terraform has a command for that:
 
 ```bash
-$ cd ~/cluster-deployment/cluster-generated
+$ cd ~/cluster-deployment/cluster-generated/cluster
 $ terraform destroy -var-file=spk.tfvars
 ```

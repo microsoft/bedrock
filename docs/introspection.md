@@ -58,7 +58,7 @@ Where:
 - `$SP_TENANT`: Azure AD tenant id of service principal
 - `$SUBSCRIPTION`: Azure subscription id
 
-More information about its usage can be found [here](https://catalystcode.github.io/spk/commands/index.html#master@deployment_onboard).
+More information about its usage can be found [here](https://microsoft.github.io/bedrock-cli/commands/index.html#master@deployment_onboard).
 
 ### Storage account CORS settings
 
@@ -137,7 +137,7 @@ Repeat these steps for each pipeline definition.
 ## Run the Introspection Tools
 
 If you haven't already, create a copy of `spk-config.yaml` from the starter
-[template](./../spk-config.yaml) with the appropriate values for the
+[template](https://raw.githubusercontent.com/microsoft/bedrock-cli/master/spk-config.yaml) with the appropriate values for the
 `introspection` section.
 
 ```yaml

@@ -9,15 +9,22 @@ data "azurerm_resource_group" "cluster_rg" {
 module "vnet" {
   source = "../../azure/vnet"
 
-  vnet_name           = var.vnet_name
-  address_space       = var.address_space
-  resource_group_name = data.azurerm_resource_group.cluster_rg.name
-  subnet_names        = ["${var.cluster_name}-aks-subnet"]
-  subnet_prefixes     = [var.subnet_prefix]
+  resource_group_name     = data.azurerm_resource_group.cluster_rg.name
+  vnet_name               = var.vnet_name
+  address_space           = var.address_space
 
   tags = {
     environment = "azure-simple"
   }
+}
+
+module "subnet" {
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+
+  subnet_name          = ["${var.cluster_name}-aks-subnet"]
+  vnet_name            = module.vnet.vnet_name
+  resource_group_name  = data.azurerm_resource_group.cluster_rg.name
+  address_prefix       = [var.subnet_prefix]
 }
 
 module "aks-gitops" {
@@ -40,7 +47,7 @@ module "aks-gitops" {
   resource_group_name      = data.azurerm_resource_group.cluster_rg.name
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
-  vnet_subnet_id           = tostring(element(module.vnet.vnet_subnet_ids, 0))
+  vnet_subnet_id           = tostring(element(module.subnet.subnet_ids, 0))
   service_cidr             = var.service_cidr
   dns_ip                   = var.dns_ip
   docker_cidr              = var.docker_cidr

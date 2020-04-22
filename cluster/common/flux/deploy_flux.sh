@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 # create a temporary directory that is cleaned up after exection
 TMP_DIR=$(mktemp -d -t flux.XXXXXXXXXX) || { echo "Failed to create temp directory"; exit 1; }
 function finish {
@@ -20,7 +20,7 @@ fi
 fetch_helm () {
   # grab helm.
   # set HELM_TAG to a specific version, if needed
-  HELM_TAG=""
+  HELM_TAG="v3.1.2"
   if [ -z "$HELM_TAG" ]; then
     if [ "$IS_MACOS" -eq "1" ]; then
       # use sed compatible with MacOS

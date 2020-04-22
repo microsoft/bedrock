@@ -15,7 +15,7 @@ trap finish EXIT
 
 # prompt for confirmation
 echo "This script will install the latest version of Terraform from github."
-read -p "Do you wish to continue? " -n 1 -r
+read -p "Do you wish to continue? (y or n)" -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -30,6 +30,7 @@ cd $tmp_dir
 ostype=`os_type`
 if [ "$ostype" == "linux" ]; then
     arch="linux_amd64"
+    sudo apt-get install unzip
 elif [ "$ostype" == "macos" ]; then
     arch="darwin_amd64"
 else

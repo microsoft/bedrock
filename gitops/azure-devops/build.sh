@@ -144,7 +144,7 @@ function get_spk_version() {
     if [ -z "$VERSION" ]
     then
         # By default, the script will use the most recent non-prerelease, non-draft release SPK
-        SPK_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+        SPK_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     else
         echo "SPK Version: $VERSION"
         SPK_VERSION_TO_DOWNLOAD=$VERSION
@@ -170,13 +170,13 @@ function download_spk() {
     echo "Latest SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_spk os
-    spk_wget=$(wget -SO- "https://github.com/CatalystCode/spk/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
+    spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
     if [[ $spk_wget == *"302 Found"* ]]; then
     echo "SPK $SPK_VERSION_TO_DOWNLOAD downloaded successfully."
     else
         echo "There was an error when downloading SPK. Please check version number and try again."
     fi
-    wget "https://github.com/CatalystCode/spk/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
+    wget "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
     mkdir spk
     mv spk-$os spk/spk
     chmod +x spk/spk 
@@ -245,7 +245,8 @@ function git_commit() {
 
 # Checks for changes and only commits if there are changes staged. Optionally can be configured to fail if called to commit and no changes are staged.
 # First arg - commit message
-# Second arg - should fail if there is nothing to commit, any non 0 value.
+# Second arg - "should error if there is nothing to commit" flag. Set to 0 if this behavior should be skipped and it will not error when there are no changes.
+# Third arg - variable to check if changes were commited or not. Will be set to 1 if changes were made, 0 if not.
 function git_commit_if_changes() {
 
     echo "GIT STATUS"
@@ -254,13 +255,21 @@ function git_commit_if_changes() {
     echo "GIT ADD"
     git add -A
 
-    if [[ $(git status --porcelain) ]] || [[ $2 ]]; then
+    commitSuccess=0
+    if [[ $(git status --porcelain) ]] || [ -z "$2" ]; then
         echo "GIT COMMIT"
-        git commit -m "Updated k8s manifest files post commit: $1"
-        retVal=$? && [ $retVal -ne 0 ] && exit $retVal
+        git commit -m "$1"
+        retVal=$?
+        if [[ "$retVal" != "0" ]]; then
+            echo "ERROR COMMITING CHANGES -- MAYBE: NO CHANGES STAGED"
+            exit $retVal
+        fi
+        commitSuccess=1
     else
         echo "NOTHING TO COMMIT"
     fi
+    echo "commitSuccess=$commitSuccess"
+    printf -v $3 "$commitSuccess"
 }
 
 # Perform a Git push

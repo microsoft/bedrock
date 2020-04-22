@@ -236,7 +236,7 @@ And then, cluster by cluster, plan and apply the templates:
 
 ```bash
 $ cd east
-$ terraform init --var-file=spa.tfvars
+$ terraform init --var-file=spk.tfvars -backend-config=./backend.tfvars
 $ terraform plan --var-file=spk.tfvars
 $ terraform apply --var-file=spk.tfvars
 ```
@@ -274,3 +274,68 @@ version: 1.1
 ```
 
 And then regenerating and applying the cluster definition in the same manner that we did above when we changed a deployment parameter.
+
+## Rotating / Updating a Service Principal
+
+It is a common practice to rotate secrets.  The environments deployed by Bedrock rely upon a Service Principal for authentication and other operations. Depending upon how the Service Principal was created, either it or it's password may expire. If the Service Principal was to get compromised, that might be another reason that the Service Principal needs rotating.  The general approach when using the Azure CLI is discussed [here](https://docs.microsoft.com/en-us/azure/aks/update-credentials).  However, for Bedrock and the Terraform deployment, the process is straight forward.
+
+First, per the [article](https://docs.microsoft.com/en-us/azure/aks/update-credentials) on updating credentials, create a new Service Principal (or password the existing Service Principal).  Next, update the section in your `definition.yaml`, specifically the following entries:
+
+```yaml
+  service_principal_id: "deadbeef-3703-4842-8a96-9d8b1b7ea442"
+  service_principal_secret: "a0927660-70f7-4306-8e0f-deadbeef"
+```
+
+Then follow the steps for [updating a deployment parameter](#updating-a-deployment-parameter) above.
+
+## Updating Cluster Node SSH Keys
+
+When setting up the AKS cluster, one specifies the public component of an SSH key using the variable `ssh_public_key`.  This value is used to configure each of the nodes within the AKS cluster for SSH key authentication to log into the cluster nodes (using the private key).  Periodically, there will be a need to rotate these keys for security or other purposes.
+
+Currently, there are two methods for updating the SSH keys:
+
+- Update the `ssh_public_key` value and using Terraform
+- Manually updating the keys using the Azure CLI
+
+As of the writing of this document, each method has tradeoffs.
+
+### Update SSH Key Using Terraform
+
+Updating the SSH key using Terraform is not much different than updating other values like the Service Principal (above).  However, updating the SSH key using Terraform will result in the cluster being replaced by a new cluster rather than updating the current cluster in place.  To update the SSH key, one would modify your `tfvar` file by updating the `ssh_public_key`, say from:
+
+```yaml
+  ssh_public_key="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDnpMloFHq5DO+w9UrdIKmVECSTlPAqSSmWCBshgFLfIcH93SCvR1mbYDqy2mIxj2Pzp2iUUPZNcI/YBWaX/Ck/hpLWGqYCnNRmWBaBoVPXozq0e0N2753mFFt95FZilExDG3q2kEP48Q8ZJJEMaRYRdEwu3hEXU4pIOeEWRsKDg+9OF8Tb4j3rA4tCLQVbBtlokkUfcTPFOpyWvG1GEE4r+sLwWUxQ2Nqh6ZHVUphVfOvK3Ub0Edkbx1oAa7hlJ5NrSqNmOnzBAr/WvOyLzFJ6DDURN8IvyikfjlQpPyYZv/lW5hDNeNy95JCW/dw0S+wMTUjX5/QKI1lP/kHnWMS7 jims@dooder"
+```
+
+to:
+
+```yaml
+  ssh_public_key="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC49yM9rOBzopU9eSMkxi9YxV9UueAqTXEmQzGuadxlMRbtPHVvES3TIq+TfG+EmKCOeWf1eoHEfD/XhbywXvkoLVWtx+OEiRaKMP9vQfqJ0cuUgoX23vdkUD+zX/GgPiwK/t6Bc0lWlpfaH3YEPhZbClC62vjHbDGcWNhmyIkFcWAs+COZtd+PG72XdmNjQ6Ob7Zb9a4PHhAH56qEZB+TrKJae8YsOuOrCcdxL8RnzF1IjBzkUmJUWJVBKXoES801oS4y2TmqPUqT4JRVOE6iOFITdj6raZ1h0ZTi79hSZcPj5s183dg87r2yOmRrOExUZdt0YVMxAH/szjMqTrcat jims@lostsierra"
+```
+
+One would then follow the steps for [updating a deployment parameter](#updating-a-deployment-parameter) above.
+
+Again, this method will result in the cluster being replaced, rather than just updated.
+
+### Manually Updating SSH Keys
+
+The process to manually manage SSH keys in an AKS cluster can be found [here](https://docs.microsoft.com/en-us/azure/aks/ssh).  The process for setting or updating keys will depend on whether your AKS cluster is deployed as a VM Scale Set or or Availability Set.  In either case, the operations leverage the Azure CLI and modify the cluster in place, rather than replacing it.  It should be noted that this process will cause what is deployed to diverge from what the Terraform state is aware of.  So, while possible it is not recommended as subsequent updates to the AKS cluster that cause a "replacement" of the cluster instead of an "update" will over write the node keys with the one the Terraform state knows about.
+
+## Updating the Flux SSH Key
+
+Updating the Flux SSH key requires two steps.  First, the key must be added to the appropriate Azure DevOps or Github instance.  For Azure Devops, that process is outlined [here](https://github.com/microsoft/bedrock/tree/master/docs/firstWorkload#add-deploy-key-to-the-manifest-repository).  For Github, the process is described [here](https://help.github.com/en/enterprise/2.15/user/articles/adding-a-new-ssh-key-to-your-github-account).  Once that process is done, the next step is to udated your `tfvar` file as follows:
+
+```yaml
+  gitops_ssh_key="/home/jims/.ssh/gitopskey"
+```
+
+to:
+
+```yaml
+  gitops_ssh_key="/home/jims/.ssh/gitopskey_new"
+  flux_recreate=1
+```
+
+`flux_recreate` is necessary to force Terraform to redeploy Flux with the updated private key.  If `flux_recreate` is already set to `1`, change it to another value.  Once done, follow the steps for [updating a deployment parameter](#updating-a-deployment-parameter) above.
+
+Unfortunately, at this time, the automation of adding an SSH key to Azure DevOps is a manual process that must be done through the portal.
