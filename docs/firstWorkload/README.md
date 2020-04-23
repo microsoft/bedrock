@@ -71,6 +71,8 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
+**Do not enter a passphrase**, as Flux will be unable to sign with a passphrase protected private key.
+
 This creates the private and public keys for our GitOps workflow:
 1. Private key: for Flux to authenticate against the GitOps repo
 2. Public key: for the GitOps repo to validate the passed credentials.

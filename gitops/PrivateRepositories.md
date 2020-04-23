@@ -71,7 +71,7 @@ To test that this workflow works, you may:
 While Personal Access Tokens offer a reliable way to read and clone Git repositories on behalf of a user, they can become unwieldy to use in practice. For an Azure DevOps scenario, imagine if a component's subcomponents were spread across multiple Organizations - a user supplying a Personal Access Token would have to provide one for every organization the component depends on. For example, given the following component.yaml:
 
 ```
-name: episerver-cluster-hld
+name: fabrikam-cluster-hld
 type: component
 subcomponents:
 - name: private-component
