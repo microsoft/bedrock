@@ -29,7 +29,7 @@ output "kubelet_id" {
 }
 
 output "node_resource_group" {
-  value = data.external.msi_object_id.node_resource_group
+  value = data.external.msi_object_id.result.node_resource_group
 }
 
 output "kubelet_resource_id" {
