@@ -137,22 +137,31 @@ function fab_generate() {
     fi
 }
 
-# Obtain version for SPK
-# If the version number is not provided, then download the latest
+# Support backward compat for a bit
 function get_spk_version() {
+    # shellcheck disable=SC2153  
+    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `get_spk_version` is DEPRECATED and will be removed. ****\n**** Please use `get_bedrock_cli_version` ****"
+    echo "##vso[task.logissue type=warning]Ignoring VERSION env var and using v0.6.3"
+    # Last version of spk. Please use get_bedrock_cli_version instead. 
+    SPK_VERSION_TO_DOWNLOAD="v0.6.3"
+}
+
+# Obtain version for Bedrock CLI
+# If the version number is not provided, then download the latest
+function get_bedrock_cli_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
-        # By default, the script will use the most recent non-prerelease, non-draft release SPK
-        SPK_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+        # By default, the script will use the most recent non-prerelease, non-draft release Bedrock CLI
+        CLI_VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     else
-        echo "SPK Version: $VERSION"
-        SPK_VERSION_TO_DOWNLOAD=$VERSION
+        echo "Bedrock CLI Version: $VERSION"
+        CLI_VERSION_TO_DOWNLOAD=$VERSION
     fi
 }
 
-# Obtain OS to download the appropriate version of SPK
-function get_os_spk() {
+# Obtain OS to download the appropriate version of Bedrock CLI
+function get_os_bedrock() {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         eval "$1='linux'"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -164,10 +173,11 @@ function get_os_spk() {
     fi
 }
 
-# Download SPK
+# Support backward compat for a bit
 function download_spk() {
-    echo "DOWNLOADING SPK"
-    echo "Latest SPK Version: $SPK_VERSION_TO_DOWNLOAD"
+    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `download_spk` is DEPRECATED and will be removed. ****\n**** Please use `download_bedrock_cli` ****"
+    echo "##vso[task.logissue type=warning]DOWNLOADING deprecated SPK"
+    echo "##vso[task.logissue type=warning]Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_spk os
     spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
@@ -182,6 +192,26 @@ function download_spk() {
     chmod +x spk/spk 
 
     export PATH=$PATH:$HOME/spk
+}
+
+# Download Bedrock CLI
+function download_bedrock_cli() {
+    echo "DOWNLOADING BEDROCK CLI"
+    echo "Latest CLI Version: $CLI_VERSION_TO_DOWNLOAD"
+    os=''
+    get_os_bedrock os
+    bedrock_cli_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os" 2>&1 | grep -E -i "302")
+    if [[ $bedrock_cli_wget == *"302 Found"* ]]; then
+    echo "Bedrock CLI $CLI_VERSION_TO_DOWNLOAD downloaded successfully."
+    else
+        echo "There was an error when downloading Bedrock CLI. Please check version number and try again."
+    fi
+    wget "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
+    mkdir bedrock
+    mv bedrock-$os bedrock/bedrock
+    chmod +x bedrock/bedrock 
+
+    export PATH=$PATH:$HOME/bedrock
 }
 
 # Authenticate with Git
