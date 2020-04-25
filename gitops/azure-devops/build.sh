@@ -140,15 +140,15 @@ function fab_generate() {
 # Support backward compat for a bit
 function get_spk_version() {
     # shellcheck disable=SC2153  
-    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `get_spk_version` is DEPRECATED and will be removed. ****\n**** Please use `get_bedrock_cli_version` ****"
+    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `get_spk_version` is DEPRECATED and will be removed. ****\n**** Please use `get_bedrock_version` ****"
     echo "##vso[task.logissue type=warning]Ignoring VERSION env var and using v0.6.3"
-    # Last version of spk. Please use get_bedrock_cli_version instead. 
+    # Last version of spk. Please use get_bedrock_version instead. 
     SPK_VERSION_TO_DOWNLOAD="v0.6.3"
 }
 
 # Obtain version for Bedrock CLI
 # If the version number is not provided, then download the latest
-function get_bedrock_cli_version() {
+function get_bedrock_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
