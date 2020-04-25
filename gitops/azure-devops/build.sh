@@ -175,7 +175,7 @@ function get_os_bedrock() {
 
 # Support backward compat for a bit
 function download_spk() {
-    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `download_spk` is DEPRECATED and will be removed. ****\n**** Please use `download_bedrock_cli` ****"
+    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `download_spk` is DEPRECATED and will be removed. ****\n**** Please use `download_bedrock` ****"
     echo "##vso[task.logissue type=warning]DOWNLOADING deprecated SPK"
     echo "##vso[task.logissue type=warning]Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
@@ -195,7 +195,7 @@ function download_spk() {
 }
 
 # Download Bedrock CLI
-function download_bedrock_cli() {
+function download_bedrock() {
     echo "DOWNLOADING BEDROCK CLI"
     echo "Latest CLI Version: $CLI_VERSION_TO_DOWNLOAD"
     os=''
