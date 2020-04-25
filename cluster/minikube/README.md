@@ -14,7 +14,7 @@ Install the correct version of [Docker Desktop](https://www.docker.com/products/
 
 Install [Homebrew](https://brew.sh/).
 
-In the terminal, install Minikube by typing: 
+In the terminal, install Minikube by typing:
 
 ```bash
 $ brew cask install virtualbox
@@ -46,7 +46,7 @@ kubectl: Correctly Configured: pointing to minikube-vm at {ip address}
 
 [Enable](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v) the Hyper-V hypervisor.
 
-In the Hyper-V administration tool, create a virtual switch (which creates a network) for minikube to operate on. 
+In the Hyper-V administration tool, create a virtual switch (which creates a network) for minikube to operate on.
 
 Open an administrative Powershell, and install [Chocolatey](https://chocolatey.org/).
 
@@ -77,13 +77,13 @@ kubectl: Correctly Configured: pointing to minikube-vm at {ip address}
 Flux watches a Git repository containing the resource manifests that should be deployed into the Kubernetes cluster, and, as such, we need to configure that repo and give Flux permissions to access it at cluster creation time.
 
 1.  Create the repo to use for Gitops (this example will assume that you are using Github, but Gitlab and Azure Devops are also supported).
-2.  Create/choose a SSH key pair that will be given permission to do read/write access to the repository.  You can create an ssh key pair with the following:
+2.  Create/choose a SSH key pair that will be given permission to do read/write access to the repository. **Do not enter a passphrase** when creating a SSH key, as Flux will be unable to sign with a passphrase protected private key. You can create an ssh key pair with the following:
 
 ```bash
 $ ssh-keygen -b 2048 -t rsa -f gitops_repo_key
 Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in gitops_repo_key.
 Your public key has been saved in gitops_repo_key.pub.
 The key fingerprint is:
@@ -107,7 +107,7 @@ $ ls -l gitops_repo_key*
 
 3.  Add the SSH key to the repository
 
-Flux requires read and write access to the resource manifest git repository. For Github, the process to add a deploy key is documented 
+Flux requires read and write access to the resource manifest git repository. For Github, the process to add a deploy key is documented
 [here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
 
 ## Creating a Cluster Environment
