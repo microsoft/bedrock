@@ -130,9 +130,9 @@ function fab_generate() {
     # generated folder should still not be empty
     if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
         export manifest_files_location=$(pwd)
-        echo "Manifest files have been generated in `pwd`."
+        echo "Manifest files have been generated in 'pwd'."
     else
-        echo "Manifest files could not be generated in `pwd`, quitting..."
+        echo "Manifest files could not be generated in 'pwd', quitting..."
         exit 1
     fi
 }
@@ -140,8 +140,8 @@ function fab_generate() {
 # Support backward compat for a bit
 function get_spk_version() {
     # shellcheck disable=SC2153  
-    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `get_spk_version` is DEPRECATED and will be removed. ****\n**** Please use `get_bedrock_version` ****"
-    echo "##vso[task.logissue type=warning]Ignoring VERSION env var and using v0.6.3"
+    echo -e "WARNING: ACTION REQUIRED\n**** 'get_spk_version' is DEPRECATED and will be removed. ****\n**** Please use 'get_bedrock_version' ****"
+    echo "Ignoring VERSION env var and using v0.6.3"
     # Last version of spk. Please use get_bedrock_version instead. 
     SPK_VERSION_TO_DOWNLOAD="v0.6.3"
 }
@@ -175,9 +175,9 @@ function get_os_bedrock() {
 
 # Support backward compat for a bit
 function download_spk() {
-    echo "##vso[task.logissue type=warning]WARNING: ACTION REQUIRED\n**** `download_spk` is DEPRECATED and will be removed. ****\n**** Please use `download_bedrock` ****"
-    echo "##vso[task.logissue type=warning]DOWNLOADING deprecated SPK"
-    echo "##vso[task.logissue type=warning]Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
+    echo -e "WARNING: ACTION REQUIRED\n**** 'download_spk' is DEPRECATED and will be removed. ****\n**** Please use 'download_bedrock' ****"
+    echo "DOWNLOADING deprecated SPK"
+    echo "Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_spk os
     spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
