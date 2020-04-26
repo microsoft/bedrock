@@ -179,7 +179,7 @@ function download_spk() {
     echo "DOWNLOADING deprecated SPK"
     echo "Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
-    get_os_spk os
+    get_os_bedrock os
     spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
     if [[ $spk_wget == *"302 Found"* ]]; then
     echo "SPK $SPK_VERSION_TO_DOWNLOAD downloaded successfully."
