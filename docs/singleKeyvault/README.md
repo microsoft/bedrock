@@ -115,7 +115,7 @@ variables:
   subnet_prefix: '10.39.0.0/24'
   vnet_name: 'myvnet'
 ```
-Now that we have these variables filled in, we will use 'bedrock generate' command to generate terraform tfvars file that we will use to provision the infrastructure. Navigate to azure-common-infra/westus folder and run the following command.
+Now that we have these variables filled in, we will use 'bedrock infra generate' command to generate terraform tfvars file that we will use to provision the infrastructure. Navigate to azure-common-infra/westus folder and run the following command.
 
 ```
 bedrock infra generate -p westus
@@ -156,7 +156,7 @@ To create a resource group, you can use the following command
 ```
 $ az group create -l westus2 -n my-cluster-rg
 ```
-Next, to scaffold infrastructure, we will use bedrock scaffold command at the root level and the cluster level
+Next, to scaffold infrastructure, we will use `bedrock infra scaffold` command at the root level and the cluster level
 
 At the same level as your azure-common-infra directory, run the following command
 
@@ -274,7 +274,7 @@ variables:
   network_policy: azure
   oms_agent_enabled: 'yes'
   ```
-Navigate to azure-single-keyvault folder and use the following command to generate terraform variables using bedrock
+Navigate to azure-single-keyvault folder and use the following command to generate terraform variables using `bedrock`.
 
 ```
 $cd ~/azure-single-keyvault

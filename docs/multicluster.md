@@ -19,7 +19,7 @@ This approach has a couple of advantages:
 
 ## Building a Multi-Cluster Definition
 
-Let’s have a look at how this works in practice by building our first deployment definition for an application called `search` with two clusters in the `east` and `west` regions. We are going to use Bedrock’s `bedrock` tool to automate this — so [install Bedrock's prerequisites](../tools/prereqs) if you haven’t already.
+Let’s have a look at how this works in practice by building our first deployment definition for an application called `search` with two clusters in the `east` and `west` regions. We are going to use the Bedrock CLI to automate this — so [install Bedrock's prerequisites](../tools/prereqs) if you haven’t already.
 
 We we are going to leverage the `azure-single-keyvault` template from the Bedrock project, which provides a template for a single cluster with Azure Keyvault for secrets management. We can scaffold out our infrastructure definition with this template with the following command:
 

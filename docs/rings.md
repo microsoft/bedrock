@@ -263,7 +263,7 @@ And now we've validated that our default Ring is `stage`.
 
 ## Removing a Ring
 
-Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as bedrock currently does not remove services nor does it remove rings from the HLD repository.
+Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as the Bedrock CLI currently does not remove services nor does it remove rings from the HLD repository.
 
 As we cannot delete the default ring, we need to first set the default Ring to `master` again:
 ```sh
@@ -290,7 +290,7 @@ git branch -D stage
 git push -d origin stage
 ```
 
-Now, since bedrock does not currently remove rings or service from the HLD repository, we need to remove components related to the `stage` ring we've removed from the project.
+Now, since the Bedrock CLI does not currently remove rings or service from the HLD repository, we need to remove components related to the `stage` ring we've removed from the project.
 
 Let's checkout our HLD repository and pull the latest:
 ```sh

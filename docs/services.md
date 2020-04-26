@@ -79,7 +79,7 @@ Once this lifecycle pipeline is created, it will run and create a pull request o
 
 With that, we have set up all of the pipelines for the project itself, so let's onboard our first service.
 
-We can do that with `bedrock service create` which, like all of the bedrock service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
+We can do that with `bedrock service create` which, like all of the `bedrock` service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
 
 ```sh
 $ bedrock service create azure-vote \
