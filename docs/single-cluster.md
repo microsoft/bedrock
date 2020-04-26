@@ -67,7 +67,7 @@ cd azure-common-infra
 Next, use Bedrock cli command to scaffold the configuration for common-infra template using the following command. Here we are using the Bedrock’s predefined `azure-common-infra` template to create configuration parameters for westus cluster. 
 
 ```
-spk infra scaffold --name westus --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-common-infra
+bedrock infra scaffold --name westus --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-common-infra
 ```
 
 This `scaffold` command creates a directory called `westus` and creates a definition.yaml file in it that looks like this:
@@ -115,10 +115,10 @@ variables:
   subnet_prefix: '10.39.0.0/24'
   vnet_name: 'myvnet'
 ```
-Now that we have these variables filled in, we will use 'spk generate' command to generate terraform tfvars file that we will use to provision the infrastructure. Navigate to azure-common-infra/westus folder and run the following command.
+Now that we have these variables filled in, we will use 'bedrock generate' command to generate terraform tfvars file that we will use to provision the infrastructure. Navigate to azure-common-infra/westus folder and run the following command.
 
 ```
-spk infra generate -p westus
+bedrock infra generate -p westus
 ```
 This command creates westus-generated directory inside azure-common-infra directory. Navigate to `azure-common-infra/westus-generated` directory. Notice that this directory has terraform variable files. 
 
@@ -126,11 +126,11 @@ Let's provision the common infrastructure by running the following commands from
 
 ```
 terraform init -backend-config=./backend.tfvars
-terraform plan -var-file=spk.tfvars
+terraform plan -var-file=bedrock.tfvars
 ```
 If the plan succeeds, run the following command 
 ```
-terraform apply -var-file=spk.tfvars
+terraform apply -var-file=bedrock.tfvars
 ...
 Do you want to perform these actions?
   Terraform will perform the actions described above.
@@ -156,18 +156,18 @@ To create a resource group, you can use the following command
 ```
 $ az group create -l westus2 -n my-cluster-rg
 ```
-Next, to scaffold infrastructure, we will use spk scaffold command at the root level and the cluster level
+Next, to scaffold infrastructure, we will use bedrock scaffold command at the root level and the cluster level
 
 At the same level as your azure-common-infra directory, run the following command
 
 ```
-spk infra scaffold --name azure-single-keyvault --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
+bedrock infra scaffold --name azure-single-keyvault --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
 This creates a directory named azure-single-keyvault and places global defintion.yaml inside the directory. Now, navigate to this directory and create cluster specific configurations by running the following commnad
 
 ```
 $cd azure-single-keyvault
-$spk infra westus --name azure-single-keyvault --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
+$bedrock infra westus --name azure-single-keyvault --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-single-keyvault
 ```
 This creates a subdirectory named westus inside `azure-single-keyvault` directory. Navigate to this directory and open definition.yaml file
 
@@ -246,8 +246,8 @@ variables:
   agent_vm_size: Standard_D2s_v3
   acr_enabled: 'true'
   gc_enabled: 'true'
-  cluster_name: 'spk-aks2'
-  dns_prefix: 'spk'
+  cluster_name: 'bedrock-aks2'
+  dns_prefix: 'bedrock'
   flux_recreate: 'false'
   gitops_ssh_url: 'git@ssh.dev.azure.com:v3/myorg/app-cluster-manifests'
   gitops_path: 'prod'
@@ -274,27 +274,27 @@ variables:
   network_policy: azure
   oms_agent_enabled: 'yes'
   ```
-Navigate to azure-single-keyvault folder and use the following command to generate terraform variables using spk
+Navigate to azure-single-keyvault folder and use the following command to generate terraform variables using bedrock
 
 ```
 $cd ~/azure-single-keyvault
-$spk infra generate -p westus 
+$bedrock infra generate -p westus 
 ```
-spk reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated/westus folder. Now you are ready to provision the cluster using Terraform 
+bedrock reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated/westus folder. Now you are ready to provision the cluster using Terraform 
 
 ```
-$terraform init -backend-config=./backend.tfvars -var-file=spk.tfvars
+$terraform init -backend-config=./backend.tfvars -var-file=bedrock.tfvars
 ```
 Our next step is to plan the deployment, which will preflight our deployment script and the configured variables, and output the changes that would happen in our infrastructure if applied:
 
 ```
-$terraform plan -var-file=spk.tfvars
+$terraform plan -var-file=bedrock.tfvars
 ```
 
 Finally, once plan shows no errors, we can apply the changes 
 
 ```
-$terraform apply -var-file=spk.tfvars
+$terraform apply -var-file=bedrock.tfvars
 ...
 Do you want to perform these actions?
   Terraform will perform the actions described above.

@@ -24,7 +24,7 @@ Our automation distinguishes between a `project` and a `service`. A `project` in
 Navigate to the root of the `project` (for the Azure Voting App example application, this is the root directory) and run the `project init` command:
 
 ```sh
-$ spk project init
+$ bedrock project init
 $ git add -A
 $ git commit -m "Onboarding project directory"
 ```
@@ -51,7 +51,7 @@ $ export SP_PASS=$(cat ~/cluster-deployment/sp/sp.json | jq -r .password)
 
 # With all of $ACR_NAME $SP_APP_ID $SP_TENANT $SP_PASS set:
 $ export VARIABLE_GROUP_NAME=voting-app-vg
-$ spk project create-variable-group $VARIABLE_GROUP_NAME -r $ACR_NAME -u $SP_APP_ID -t $SP_TENANT -p $SP_PASS
+$ bedrock project create-variable-group $VARIABLE_GROUP_NAME -r $ACR_NAME -u $SP_APP_ID -t $SP_TENANT -p $SP_PASS
 $ git add -A
 $ git commit -m "Adding Project Variable Group."
 $ git push -u origin --all
@@ -66,7 +66,7 @@ This step creates the variable group with Azure Devops and also adds it to our `
 With this created, we can deploy the lifecycle-pipeline itself with:
 
 ```sh
-$ spk project install-lifecycle-pipeline --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --repo-url $VOTING_APP_REPO_URL --pipeline-name $PIPELINE_NAME
+$ bedrock project install-lifecycle-pipeline --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --repo-url $VOTING_APP_REPO_URL --pipeline-name $PIPELINE_NAME
 ```
 
 where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project, `SOURCE_REPO_URL` is the git url that you used to clone your application from Azure Devops, and `PIPELINE_NAME` is the name of the pipeline (eg. `azure-voting-app-pipeline` in the case of our sample) that you'd like to create.
@@ -79,10 +79,10 @@ Once this lifecycle pipeline is created, it will run and create a pull request o
 
 With that, we have set up all of the pipelines for the project itself, so let's onboard our first service.
 
-We can do that with `spk service create` which, like all of the spk service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
+We can do that with `bedrock service create` which, like all of the bedrock service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
 
 ```sh
-$ spk service create azure-vote \
+$ bedrock service create azure-vote \
     --display-name azure-voting-app \
     --helm-config-git https://github.com/mtarng/helm-charts \
     --helm-config-path chart-source/azure-vote \
@@ -91,7 +91,7 @@ $ spk service create azure-vote \
 
 For more custom Dockerfiles that may require passing in arguments as build variables, please visit [here](https://github.com/microsoft/bedrock-cli/blob/master/guides/project-service-management-guide.md#passing-variables-as-dockerfile-build-arguments).
 
-As part of service creation, we need to provide to SPK what we want it to deploy in the form of a Helm chart. This Helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
+As part of service creation, we need to provide to the Bedrock CLI what we want it to deploy in the form of a Helm chart. This Helm chart is largely freeform, but requires the following elements in its `values.yaml` such that Bedrock can deploy new builds.
 
 ```yaml
 image:
@@ -138,7 +138,7 @@ This addition to the project `bedrock.yaml` will cause the project's lifecycle p
 Our final step is to create the source code to container build pipeline for our service.  We can do that with:
 
 ```sh
-$ spk service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
+$ bedrock service install-build-pipeline azure-vote -n azure-vote-build-pipeline -o $ORG_NAME -u $VOTING_APP_REPO_URL -d $DEVOPS_PROJECT
 ```
 
 This step should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the HLD repo for this new image tag.

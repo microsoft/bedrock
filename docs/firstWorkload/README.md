@@ -131,14 +131,14 @@ With our GitOps resource manifest repo and key pair created, let’s move on to 
 
 Creating, managing, and maintaining infrastructure deployment templates is a challenge, especially at scale. Large scale deployments can consist of dozens of nearly identical clusters differentiated only by slight differences in config based on the cloud region they are operating in or otherwise.
 
-Bedrock helps manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
+Bedrock helps manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with the Bedrock CLI:
 
 ```bash
 $ cd ~/cluster-deployment
-$ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
+$ bedrock infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This tool fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expected behavior for the `spk infra scaffold` command. This behavior can be overridden by supplying new value as you will see in the next section.
+This tool fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expected behavior for the `bedrock infra scaffold` command. This behavior can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -160,7 +160,7 @@ variables:
 
 This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
 
-This template is the base of our deployment. Note: The `spk` tool also extracted the variables for this Terraform template and provided them, with defaults (if available).
+This template is the base of our deployment. Note: The `bedrock` tool also extracted the variables for this Terraform template and provided them, with defaults (if available).
 
 ## Completing our Deployment Definition
 
@@ -363,10 +363,10 @@ With these prep steps completed, let’s generate Terraform templates from this 
 
 ```bash
 $ cd ~/cluster-deployment/cluster
-$ spk infra generate -p cluster
+$ bedrock infra generate -p cluster
 ```
 
-`spk` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
+`bedrock` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
 ## Deploy Cluster
 
@@ -414,7 +414,7 @@ commands will detect it and remind you to do so if necessary.
 Our next step is to plan the deployment, which will preflight our deployment script and the configured variables, and output the changes that would happen in our infrastructure if applied:
 
 ```bash
-$ terraform plan -var-file=spk.tfvars
+$ terraform plan -var-file=bedrock.tfvars
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
 persisted to local or remote state storage.
@@ -457,7 +457,7 @@ can't guarantee that exactly these actions will be performed if
 Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions.
 
 ```
-$ terraform apply -var-file=spk.tfvars
+$ terraform apply -var-file=bedrock.tfvars
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
   + create
@@ -731,5 +731,5 @@ As a final step, you probably want to delete your Kubernetes cluster to save on 
 
 ```bash
 $ cd ~/cluster-deployment/cluster-generated/cluster
-$ terraform destroy -var-file=spk.tfvars
+$ terraform destroy -var-file=bedrock.tfvars
 ```

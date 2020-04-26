@@ -20,8 +20,8 @@ There are a few requirements to use this automation:
 3. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
 4. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
-5. The user running `spk` has full access to the above resources.
-6. The user is running the latest `spk`
+5. The user running `bedrock` has full access to the above resources.
+6. The user is running the latest `bedrock`
    [release](https://github.com/microsoft/bedrock-cli/releases).
 7. The user has
    [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
@@ -33,21 +33,21 @@ There are a few requirements to use this automation:
    materialized manifests) must be in the same Azure DevOps Organization AND
    Project. This behavior is what Step 2 and Step 3 are doing.
 
-## Setup SPK
+## Setup Bedrock CLI
 
-Download the latest version of `spk` from the
+Download the latest version of `bedrock` from the
 [releases](https://github.com/microsoft/bedrock-cli/releases) page and add it to your
 PATH.
 
 To setup a local configuration:
 
 1. [Generate a Personal Access Token](#generating-personal-access-token)
-2. [Create a spk config file](#create-spk-config-file)
-3. [Initialize spk](#initializing-spk)
+2. [Create a bedrock config file](#create-bedrock-config-file)
+3. [Initialize bedrock](#initializing-bedrock)
 
 ## Generate Personal Access Token
 
-Generate a new Personal Access Token (PAT) to grant `spk` permissions in the
+Generate a new Personal Access Token (PAT) to grant `bedrock` permissions in the
 Azure Devops Project. Please grant PAT the following permissions:
 
 - Build (Read & execute)
@@ -57,10 +57,10 @@ Azure Devops Project. Please grant PAT the following permissions:
 For help, follow the
 [guide](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page).
 
-## Create SPK config file
+## Create Bedrock config file
 
-Create a copy of `spk-config.yaml` from the starter
-[template](https://github.com/microsoft/bedrock-cli/blob/master/spk-config.yaml) or using the [interactive mode](https://microsoft.github.io/bedrock-cli/commands/#master@init) for `spk init` command. Be sure to complete
+Create a copy of `bedrock-config.yaml` from the starter
+[template](https://github.com/microsoft/bedrock-cli/blob/master/bedrock-config.yaml) or using the [interactive mode](https://microsoft.github.io/bedrock-cli/commands/#master@init) for `bedrock init` command. Be sure to complete
 `azure_devops` section with the appropriate values.
 
 Your `azure_devops` section should look similar to this:
@@ -74,18 +74,18 @@ azure_devops:
   project: "myProject" # Your AzDo project
 ```
 
-**Note:** This `spk-config.yaml` should not be commited anywhere, as it contains
-sensitive credentials. For an alternative approach on how to add secrets to `spk-config.yaml` using environment variables, see these [instructions](https://github.com/microsoft/bedrock-cli/blob/master/guides/config-file.md#environment-variables).
+**Note:** This `bedrock-config.yaml` should not be commited anywhere, as it contains
+sensitive credentials. For an alternative approach on how to add secrets to `bedrock-config.yaml` using environment variables, see these [instructions](https://github.com/microsoft/bedrock-cli/blob/master/guides/config-file.md#environment-variables).
 
-## Initialize SPK
+## Initialize Bedrock CLI
 
-Run `spk init -f <spk-config.yaml>` where `<spk-config.yaml>` the path to the
+Run `bedrock init -f <bedrock-config.yaml>` where `<bedrock-config.yaml>` the path to the
 configuation file.
 
-**Note:** When running `spk init -f <spk-config.yaml>`, `spk` will copy the
+**Note:** When running `bedrock init -f <bedrock-config.yaml>`, `bedrock` will copy the
 values from the config file and store it into local memory elsewhere. If you
-wish to utilize `spk` with another project or target, then you must rerun
-`spk init` with another configuration first OR, you may overwrite each commands
+wish to utilize `bedrock` with another project or target, then you must rerun
+`bedrock init` with another configuration first OR, you may overwrite each commands
 via flags.
 
 
@@ -107,21 +107,21 @@ applied to the Kubernetes cluster by Flux.
 
 #### Initializing the High Level Definition Repository
 
-- Make sure your SPK config points to the HLD repo you created in Step 3 of [Requirements](#requirements). When you change the values in the SPK config, make sure you re-initialize SPK by running `spk init -f <spk-config.yaml>`.
+- Make sure your Bedrock config points to the HLD repo you created in Step 3 of [Requirements](#requirements). When you change the values in the Bedrock config, make sure you re-initialize Bedrock by running `bedrock init -f <bedrock-config.yaml>`.
 - [Clone the repository.](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops#clone-the-repo-to-your-computer)
-- Initialize via `spk`, this will add the fabrikate
+- Initialize via `bedrock`, this will add the fabrikate
   [traefik2](https://github.com/microsoft/fabrikate-definitions/tree/master/definitions/traefik2)
   as the initial sample component. This can be overridden via optional flags.
   ```
-  spk hld init --git-push
+  bedrock hld init --git-push
   ```
 
-**NOTE** `spk hld` command documentation can be found
+**NOTE** `bedrock hld` command documentation can be found
 [here](/guides/hld-management.md).
 
 If the initialization succeeded, you will see a message similar to this:
 ```
-info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=spk-hld-init&targetRef=master
+info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=bedrock-hld-init&targetRef=master
 ```
 
 This message means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
@@ -132,11 +132,11 @@ $ git branch -a
 * master
   remotes/origin/HEAD -> origin/master
   remotes/origin/master
-  remotes/origin/spk-hld-init
+  remotes/origin/bedrock-hld-init
 ```
-As you can see we now have a `spk-hld-init` branch.
+As you can see we now have a `bedrock-hld-init` branch.
 
-Go to the "Link to create a PR" that we got earlier after running the `spk hld init --git-push` command. You will see:
+Go to the "Link to create a PR" that we got earlier after running the `bedrock hld init --git-push` command. You will see:
 ![hld new pr](./images/hld-new-pr.png)
 
 
@@ -170,11 +170,11 @@ Fast-forward
 ## Deploy Manifest Generation Pipeline
 
 Deploy a manifest generation pipeline between the high level definition repo and
-the materialized manifests repo. Assuming you have configured `spk`, you can run
+the materialized manifests repo. Assuming you have configured `bedrock`, you can run
 this without flag parameters from your HLD repo root:
 
 ```
-$ spk hld install-manifest-pipeline
+$ bedrock hld install-manifest-pipeline
 ```
 
 You can view the newly created pipeline in your Azure DevOps project:

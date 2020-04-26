@@ -19,12 +19,12 @@ This approach has a couple of advantages:
 
 ## Building a Multi-Cluster Definition
 
-Let’s have a look at how this works in practice by building our first deployment definition for an application called `search` with two clusters in the `east` and `west` regions. We are going to use Bedrock’s `spk` tool to automate this — so [install Bedrock's prerequisites](../tools/prereqs) if you haven’t already.
+Let’s have a look at how this works in practice by building our first deployment definition for an application called `search` with two clusters in the `east` and `west` regions. We are going to use Bedrock’s `bedrock` tool to automate this — so [install Bedrock's prerequisites](../tools/prereqs) if you haven’t already.
 
 We we are going to leverage the `azure-single-keyvault` template from the Bedrock project, which provides a template for a single cluster with Azure Keyvault for secrets management. We can scaffold out our infrastructure definition with this template with the following command:
 
 ```bash
-$ spk infra scaffold --name search --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ bedrock infra scaffold --name search --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
 ```
 
 This `scaffold` command creates a directory called `search` and creates a definition.yaml file in it that looks like this:
@@ -109,7 +109,7 @@ variables:
 With our common definition completed, let’s scaffold out our first physical cluster in the `east` region from within our `search-cluster` directory:
 
 ```bash
-$ spk infra scaffold --name east --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ bedrock infra scaffold --name east --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
 ```
 
 Scaffolding this cluster also creates a directory (called `east`) and a `definition.yaml` within it. When we go to generate a deployment from this, however, the tool will layer this hierarchy, taking the values from our common `definition.yaml` and then overlaying the values from our `east` definition on top. This is the mechanism that Bedrock uses to [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) out our deployment definitions, enabling you to define common variables in one place and have them inherited in each of the cluster definitions in directories underneath this central definition.
@@ -136,7 +136,7 @@ Note that we didn’t include the `template` and `version` in the cluster `defin
 With our `east` cluster defined let’s scaffold out our final cluster:
 
 ```bash
-$ spk infra scaffold --name west --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
+$ bedrock infra scaffold --name west --source https://github.com/microsoft/bedrock --version 1.0 --template cluster/environments/azure-single-keyvault
 ```
 
 And fill the cluster definition for this with variable specific to the `west` cluster:
@@ -175,8 +175,8 @@ Again, when we go to generate the Terraform templates for the `west` cluster, it
 We can now generate the Terraform scripts for deploying our `search ` clusters by executing this from our top level `search` directory:
 
 ```bash
-$ spk infra generate --project east
-$ spk infra generate --project west
+$ bedrock infra generate --project east
+$ bedrock infra generate --project west
 ```
 
 This will generate the `east` and `west` cluster definitions, combining the per cluster config with the central common config, and generate the Terraform scripts for each of the clusters from on the base template that we specified such that our our directory structure now looks like this:
@@ -188,14 +188,14 @@ This will generate the `east` and `west` cluster definitions, combining the per 
 │   ├── acr.tf
 │   ├── backend.tfvars
 │   ├── main.tf
-│   ├── spk.tfvars
+│   ├── bedrock.tfvars
 │   └── variables.tf
 └── prod-green
     ├── README.md
     ├── acr.tf
     ├── backend.tfvars
     ├── main.tf
-    ├── spk.tfvars
+    ├── bedrock.tfvars
     └── variables.tf
 ```
 
@@ -205,18 +205,18 @@ With our clusters infrastructure templates created, we can now apply the templat
 
 ```bash
 $ cd east
-$ terraform init -var-file=spk.tfvars -backend-config=./backend.tfvars
-$ terraform plan -var-file=spk.tfvars
-$ terraform apply -var-file=spk.tfvars
+$ terraform init -var-file=bedrock.tfvars -backend-config=./backend.tfvars
+$ terraform plan -var-file=bedrock.tfvars
+$ terraform apply -var-file=bedrock.tfvars
 ```
 
 This deploys our `east` cluster.  We can naturally do the same thing for our `west` cluster with the same set of commands:
 
 ```bash
 $ cd west
-$ terraform init -var-file=spk.tfvars -backend-config=./backend.tfvars
-$ terraform plan -var-file=spk.tfvars
-$ terraform apply -var-file=spk.tfvars
+$ terraform init -var-file=bedrock.tfvars -backend-config=./backend.tfvars
+$ terraform plan -var-file=bedrock.tfvars
+$ terraform apply -var-file=bedrock.tfvars
 ```
 
 ## Updating a Deployment Parameter
@@ -228,17 +228,17 @@ In the example above, we can do this by modifying the central `definition.yaml` 
 With this central change done, we can then regenerate the Terraform scripts for each of the clusters in the same manner that we did previously:
 
 ```bash
-$ spk infra generate --project east
-$ spk infra generate --project west
+$ bedrock infra generate --project east
+$ bedrock infra generate --project west
 ```
 
 And then, cluster by cluster, plan and apply the templates:
 
 ```bash
 $ cd east
-$ terraform init --var-file=spk.tfvars -backend-config=./backend.tfvars
-$ terraform plan --var-file=spk.tfvars
-$ terraform apply --var-file=spk.tfvars
+$ terraform init --var-file=bedrock.tfvars -backend-config=./backend.tfvars
+$ terraform plan --var-file=bedrock.tfvars
+$ terraform apply --var-file=bedrock.tfvars
 ```
 
 Since we are using backend state for these clusters to manage state, Terraform will examine the delta between the current and desired states and realize that there is an increase the size of the cluster from 6 to 8 nodes, and perform that adjustment operation on our cluster.
