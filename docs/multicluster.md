@@ -290,7 +290,7 @@ version: 1.1
 ...
 ```
 
-And then regenerating (`spk infa generate --project west`) and applying the cluster definition in the same manner that we did above when we changed a [deployment parameter](#updating-a-deployment-parameter).
+And then regenerating (`bedrock infa generate --project west`) and applying the cluster definition in the same manner that we did above when we changed a [deployment parameter](#updating-a-deployment-parameter).
 
 ## Rotating / Updating a Service Principal
 
