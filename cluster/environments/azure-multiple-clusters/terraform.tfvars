@@ -25,7 +25,7 @@ ssh_public_key = ""
 #--------------------------------------------------------------
 gitops_ssh_url = "git@github.com:sarath-p/vote-flux.git"
 
-gitops_ssh_key = ""
+gitops_ssh_key_path = ""
 
 #--------------------------------------------------------------
 # Traffic Manager

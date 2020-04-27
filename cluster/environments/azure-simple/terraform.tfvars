@@ -6,7 +6,7 @@ service_principal_id     = "<client-id>"
 service_principal_secret = "<client-secret>"
 ssh_public_key           = "ssh-rsa ..." # from node-ssh-key.pub
 gitops_ssh_url           = "git@github.com:<github-user>/<repo>.git" # ssh url to manifest repo
-gitops_ssh_key           = "/home/<user>/.ssh/gitops-ssh-key" # path to private gitops repo key
+gitops_ssh_key_path      = "/home/<user>/.ssh/gitops-ssh-key" # path to private gitops repo key
 vnet_name                = "<vnet name>"
 
 #--------------------------------------------------------------

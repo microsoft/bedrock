@@ -46,7 +46,7 @@ module "east_aks_gitops" {
   flux_recreate            = var.flux_recreate
   gc_enabled               = var.gc_enabled
   gitops_ssh_url           = var.gitops_ssh_url
-  gitops_ssh_key_path           = var.gitops_ssh_key_path
+  gitops_ssh_key_path      = var.gitops_ssh_key_path
   gitops_path              = var.gitops_east_path
   gitops_url_branch        = var.gitops_east_url_branch
   gitops_poll_interval     = var.gitops_poll_interval
