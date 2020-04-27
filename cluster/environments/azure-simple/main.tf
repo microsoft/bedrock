@@ -38,7 +38,7 @@ module "aks-gitops" {
   flux_recreate            = var.flux_recreate
   gc_enabled               = var.gc_enabled
   gitops_ssh_url           = var.gitops_ssh_url
-  gitops_ssh_key           = var.gitops_ssh_key
+  gitops_ssh_key_path           = var.gitops_ssh_key_path
   gitops_path              = var.gitops_path
   gitops_poll_interval     = var.gitops_poll_interval
   gitops_label             = var.gitops_label

@@ -53,7 +53,7 @@ variable "gc_enabled" {
   default = "true"
 }
 
-variable "gitops_ssh_key" {
+variable "gitops_ssh_key_path" {
   type = string
 }
 

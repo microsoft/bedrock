@@ -124,9 +124,9 @@ $ cp -r cluster/environments/minikube cluster/environments/<cluster name>
 
 With this new environment created, edit `environments/<cluster name>/deploy_minikube.sh` and update the following variables (where neccessary):
 
-- `GITOPS_SSH_URL`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GITOPS_SSH_KEY` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
+- `GITOPS_SSH_URL`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key_path` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
 - `GITOPS_SSH_BRANCH`: Which branch of the gitops repo to monitor for changes.
-- `GITOPS_SSH_KEY`: Path to the *private key file* that was configured above to work with the Gitops repository.
+- `gitops_ssh_key_path`: Path to the *private key file* that was configured above to work with the Gitops repository.
 - `FLUX_REPO_URL`: the URL of Flux, usually [here](https://github.com/weaveworks/flux.git).
 - `REPO_ROOT_DIR`: subdirectory used to pull Flux into, usuall *repo-root*.
 

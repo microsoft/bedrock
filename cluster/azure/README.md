@@ -163,8 +163,8 @@ The common variables:
 - `service_principal_id`: The id of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
 - `service_principal_secret`: The secret of the service principal used by the AKS cluster.  This is generated using the Azure CLI (see [Create an Azure service principal](#create-an-azure-service-principal) for details).
 - `ssh_public_key`: Contents of a public key authorized to access the virtual machines within the cluster.  Copy the entire string contents of the gitops_repo_key.pub file that was generated in the [Set up GitOps repository for Flux](../common/flux/) step.
-- `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `GitOps_ssh_key` (see [Set up GitOps repository for Flux](../common/flux/) for more details).
-- `gitops_ssh_key`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](../common/flux/) step and configured to work with the GitOps repository.
+- `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key_path` (see [Set up GitOps repository for Flux](../common/flux/) for more details).
+- `gitops_ssh_key_path`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](../common/flux/) step and configured to work with the GitOps repository.
 - `gitops_path`: Path to a subdirectory, or folder in a git repo
 - `oms_agent_enabled`: Boolean variable that will provision OMS Linux agents to onboard Azure Monitor for containers. NOTE: `oms_agent_enabled` is set to false by default, but Azure Log Analytics resources (e.g. solutions, workspaces) will still be created, but not used.
 
@@ -281,7 +281,7 @@ It is also possible to use the config that was generated directly.  For instance
 $ KUBECONFIG=./output/bedrock_kube_config kubectl get po --namespace=flux`
 ```
 
-__Note:__ To recreate/redownload credentials file from the cluster, simply delete the `bedrock_kube_config` file in the location specified by the variable `output_directory` and rerun `terraform apply`. 
+__Note:__ To recreate/redownload credentials file from the cluster, simply delete the `bedrock_kube_config` file in the location specified by the variable `output_directory` and rerun `terraform apply`.
 
 ### Verify that your AKS cluster is healthy
 
