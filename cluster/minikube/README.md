@@ -126,7 +126,7 @@ With this new environment created, edit `environments/<cluster name>/deploy_mini
 
 - `GITOPS_SSH_URL`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key_path` (see [Configuring Gitops Repository for Flux](#setting-up-gitops-repository-for-flux) for more details).
 - `GITOPS_SSH_BRANCH`: Which branch of the gitops repo to monitor for changes.
-- `gitops_ssh_key_path`: Path to the *private key file* that was configured above to work with the Gitops repository.
+- `GITOPS_SSH_KEY_PATH`: Path to the *private key file* that was configured above to work with the Gitops repository.
 - `FLUX_REPO_URL`: the URL of Flux, usually [here](https://github.com/weaveworks/flux.git).
 - `REPO_ROOT_DIR`: subdirectory used to pull Flux into, usuall *repo-root*.
 
