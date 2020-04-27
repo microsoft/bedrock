@@ -39,13 +39,13 @@ storage in the form of an Azure Storage table. Follow the steps below to create
 it or use an existing one.
 
 ### Create an Azure storage account
-You can use spk to create a storage account if it does not already exist in your subscription in the given resource group.
+You can use bedrock to create a storage account if it does not already exist in your subscription in the given resource group.
 The storage table will also be created in a newly created or in an existing storage account if it does not exist already.
 
-The `spk deployment onboard` command will create the storage account:
+The `bedrock deployment onboard` command will create the storage account:
 
 ```
-$ spk deployment onboard --storage-account-name $STORAGE_ACCOUNT --storage-table-name $TABLE_NAME --storage-location $LOCATION --storage-resource-group-name $RESOURCE_GROUP --service-principal-id $SP_APP_ID --service-principal-password $SP_PASS --tenant-id $SP_TENANT --subscription-id $SUBSCRIPTION
+$ bedrock deployment onboard --storage-account-name $STORAGE_ACCOUNT --storage-table-name $TABLE_NAME --storage-location $LOCATION --storage-resource-group-name $RESOURCE_GROUP --service-principal-id $SP_APP_ID --service-principal-password $SP_PASS --tenant-id $SP_TENANT --subscription-id $SUBSCRIPTION
 ```
 Where:
 
@@ -58,7 +58,7 @@ Where:
 - `$SP_TENANT`: Azure AD tenant id of service principal
 - `$SUBSCRIPTION`: Azure subscription id
 
-More information about its usage can be found [here](https://catalystcode.github.io/spk/commands/index.html#master@deployment_onboard).
+More information about its usage can be found [here](https://microsoft.github.io/bedrock-cli/commands/index.html#master@deployment_onboard).
 
 ### Storage account CORS settings
 
@@ -74,12 +74,12 @@ service introspection dasbhoard.
 Add the following settings under **Table Service**:
 ![cors settings](./images/cors-settings.png)
 
-**Note:** If you are running the service introspection spk dashboard in a port
+**Note:** If you are running the service introspection bedrock dashboard in a port
 other than `4040`, add that entry in the settings instead.
 
 ## Configure the Pipelines
 The Bedrock GitOps pipelines need to be configured to start sending data to
-`spk` service introspection. If you followed the guidelines from the (Prerequisites)[#prerequisites] each pipeline `yaml` will already have the script needed for introspection.
+`bedrock` service introspection. If you followed the guidelines from the (Prerequisites)[#prerequisites] each pipeline `yaml` will already have the script needed for introspection.
 
 To send data from Azure pipelines to the Azure Storage table created
 previously, a variable group needs to be configured in Azure DevOps (where the
@@ -107,10 +107,10 @@ variables:
         value: "Set this to the name of the table you created previously in [Create a table](#create-a-table)"
 ```
 
-And then use spk's variable-group management to create the variable group:
+And then use bedrock's variable-group management to create the variable group:
 
 ```
-$ spk variable-group create --file introspection-values.yaml --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --personal-access-token $ACCESS_TOKEN
+$ bedrock variable-group create --file introspection-values.yaml --org-name $ORG_NAME --devops-project $DEVOPS_PROJECT --personal-access-token $ACCESS_TOKEN
 ```
 
 Where `ORG_NAME` is the name of the Azure Devops org, `DEVOPS_PROJECT` is the name of your Azure Devops project and `ACCESS_TOKEN` is the Personal access token associated with the Azure DevOps org. In [Setting up an HLD to Manifest pipeline](./hld-to-manifest.md) we created a personal access token.
@@ -136,8 +136,8 @@ Repeat these steps for each pipeline definition.
 
 ## Run the Introspection Tools
 
-If you haven't already, create a copy of `spk-config.yaml` from the starter
-[template](./../spk-config.yaml) with the appropriate values for the
+If you haven't already, create a copy of `bedrock-config.yaml` from the starter
+[template](https://raw.githubusercontent.com/microsoft/bedrock-cli/master/bedrock-config.yaml) with the appropriate values for the
 `introspection` section.
 
 ```yaml
@@ -146,24 +146,24 @@ introspection:
     image: "samiyaakhtar/spektate:prod" # Use this default docker image unless you would like to use a custom one
     name: "spektate"
   azure: # This is the storage account for the service introspection tool.
-    account_name: "storage-account-name" # Must be defined to run spk deployment commands
-    table_name: "storage-account-table-name" # Must be defined to run spk deployment commands
-    partition_key: "storage-account-table-partition-key" # Must be defined to run spk deployment commands
-    key: "storage-access-key" # Must be defined to run spk deployment commands. Use ${env:INTROSPECTION_STORAGE_ACCESS_KEY} and set it in .env file
+    account_name: "storage-account-name" # Must be defined to run bedrock deployment commands
+    table_name: "storage-account-table-name" # Must be defined to run bedrock deployment commands
+    partition_key: "storage-account-table-partition-key" # Must be defined to run bedrock deployment commands
+    key: "storage-access-key" # Must be defined to run bedrock deployment commands. Use ${env:INTROSPECTION_STORAGE_ACCESS_KEY} and set it in .env file
     source_repo_access_token: "source_repo_access_token" # Optional. Required only when source repository is private (in order to render the author column in dashboard)
 ```
 
-Initialize `spk` to use these values:
+Initialize `bedrock` to use these values:
 ```
-$ spk init -f spk-config.yaml
+$ bedrock init -f bedrock-config.yaml
 ```
 
 Launch the dashboard:
 ```
-$ spk deployment dashboard
+$ bedrock deployment dashboard
 ```
 
 Launch the command line tool:
 ```
-$ spk deployment get
+$ bedrock deployment get
 ```

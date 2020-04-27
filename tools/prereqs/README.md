@@ -1,4 +1,4 @@
-# Bedrock and SPK Prerequisites
+# Bedrock Prerequisites
 
 Bedrock utilizes existing tools from the cloud and cloud native ecosystem.  You'll need to install the following prerequisites if you haven't already:
 
@@ -7,7 +7,7 @@ Bedrock utilizes existing tools from the cloud and cloud native ecosystem.  You'
 - Helm
 - Fabrikate
 - Terraform
-- SPK
+- Bedrock CLI
 
 We maintain an individual script for each prerequisite to make this easier.
 
@@ -45,8 +45,8 @@ $ sudo ./setup_fabrikate.sh
 $ sudo ./setup_terraform.sh
 ```
 
-## SPK
+## Bedrock CLI
 
 ```bash
-$ sudo ./setup_spk.sh
+$ sudo ./setup_bedrock_cli.sh
 ```

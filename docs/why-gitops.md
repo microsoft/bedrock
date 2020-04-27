@@ -1,6 +1,6 @@
 # Why GitOps?
 
-Kubernetes is, at its heart, a declarative system.  You apply definitions, typically described in YAML document form, of what you want to have exist in the cluster, and Kubernetes works to make that the current state of affairs.  More importantly, it works to keep it that way – working to restore this state through operational failures like the that of a pod or of a node that hosts a set of pods.
+Kubernetes is, at its heart, a declarative system.  You apply definitions, typically described in YAML document form, of what you want to have exist in the cluster, and Kubernetes works to make that the current state of affairs.  More importantly, it works to keep it that way – working to restore this state through operational failures like that of a pod or a node that hosts a set of pods.
 
 A sample resource definition for a Service (which is the Kubernetes concept of an internal endpoint backed by a set of pods) looks like this:
 
@@ -28,7 +28,7 @@ This declarative approach, and the textual format for these definitions, makes i
 
 In a GitOps based deployment, the cluster has an operator that is configured during the creation of the cluster to watch a specific git repo that is designated to always contain the set of resource manifests that should be running in the cluster.
 
-One such implementation of this approach (and the one we use in Bedrock) is Flux, a CNCF project. It periodically reconciles the commits made to this manifest repo and applies them to the Kubernetes cluster as shown in Figure 1.
+One such implementation of this approach (and the one we use in Bedrock) is [Flux](https://github.com/fluxcd/flux), a CNCF project. It periodically reconciles the commits made to this manifest repo and applies them to the Kubernetes cluster as shown in Figure 1.
 
 TODO: Add simple diagram with Flux pulling from git repo
 
@@ -38,7 +38,7 @@ There are two main security advantages to this pull based approach:
 * Flux is able to verify with TLS that it is talking to the correct git repo (and not a man in the middle).
 * We do not need to expose the Kubernetes API to manage what is running in our cluster, which is inherently more secure.
 
-Besides matching up well with Kubernetes operating model and being more secure, building your operations with a GitOps workflow enables you to perform operational tasks in a style similar to a typical development workflow:
+Besides matching up well with the Kubernetes operating model and being more secure, building your operations with a GitOps workflow enables you to perform operational tasks in a style similar to a typical development workflow:
 
 1. Pull Request based workflow: Your team can review each other’s operational changes just like you do with code level changes.
 2. Point in time auditability into what is deployed in your cluster: Since the state of the git repo defines what Flux will apply in Kubernetes, you have the ability to have point in time visibility into what was deployed on the cluster.
