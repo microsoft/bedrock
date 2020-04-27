@@ -198,6 +198,8 @@ Our deployment specification includes references to values for the [Azure Servic
 
 For this walkthrough, we will use one Service Principal to deploy with Terraform and for the AKS cluster itself.
 
+> In practice you will have separate Service Principals: one for deploying with terraform and one for each AKS cluster deployed.  The AKS cluster Service principle is used by cluster provider to create resources like load balancers and should only [have enough permissions to interact with the resources need by the cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal#delegate-access-to-other-azure-resources).  The terraform Service Principal will require the ability to create and modify any resources in the terraform modules deployed. See more on [Service Principals](https://github.com/microsoft/bedrock/tree/master/cluster/azure#create-an-azure-service-principal)
+
 1. [login to the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli):
 
 ```bash
@@ -226,7 +228,7 @@ $ az account show
 
 ```bash
 $ mkdir -p ~/cluster-deployment/sp
-$ az ad sp create-for-rbac --scopes "/subscriptions/7060bca0-1234-5-b54c-ab145dfaccef" > ~/cluster-deployment/sp/sp.json
+$ az ad sp create-for-rbac > ~/cluster-deployment/sp/sp.json
 $ cat ~/cluster-deployment/sp/sp.json
 {
   "appId": "7b6ab9ae-dead-abcd-8b52-0a8ecb5beef7",
@@ -237,13 +239,13 @@ $ cat ~/cluster-deployment/sp/sp.json
 }
 ```
 
-Since these are sensitive secrets, we are going to use environment variables to pass them into our deployment to avoid accidentially checking them in.  Given this, create the following environment variables using the following mapping:
+Since these are sensitive secrets, we are going to use environment variables to pass them into our deployment to avoid accidentally checking them in.  Given this, create the following environment variables using the following mapping:
 
 ```bash
 $ export ARM_SUBSCRIPTION_ID=(subscription id from above)
 $ export ARM_TENANT_ID=(tenant from Service Principal)
 $ export ARM_CLIENT_SECRET=(password from Service Principal)
-$ export ARM_CLIENT_ID=(appId from Servive Principal)
+$ export ARM_CLIENT_ID=(appId from Service Principal)
 ```
 
 

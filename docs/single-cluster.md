@@ -4,7 +4,7 @@ If you followed our first workload walkthrough you saw how Bedrock enables you t
 
 In upcoming advanced scenarios, we will be using the Bedrock automation to repeat the cluster creation process by scaffolding configurations to deploy multiple clusters. Since all these clusters use common resources like Keyvault, Storage Account and a Vnet, we will deploy these resources using azure-common-infra template. The environment provisioned using this template is a dependency for other environments (azure-single-keyvualt) we will be using in the subsequent walkthroughs.
 
-Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](../Firstworkload/README.md).
+Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](firstWorkload/README.md). 
 
 ## Deplying the common infrastructure:
 
@@ -12,7 +12,7 @@ Before you deploy infrastructure environments, you will need to create an Azure 
 
 ### Resource Group Requirement:
 
-This environment requires a resource group. The requisite variable is `global_resource_group_name`.  To use the Azure CLI to create the resource group, see [here](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
+This environment requires a resource group. The requisite variable is `global_resource_group_name`.  To use the Azure CLI to create the resource group [see common commands](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
 
 To create a resource group, you can use the following command
 
@@ -103,19 +103,21 @@ template: cluster/environments/azure-common-infra
 version: master
 backend:
   storage_account_name: 'mystorageaccount'
-  access_key: 'CENp3G0qvo4jB1HduRO10ga0jNrN+b4gMibuAp63qZBDRNzXYZrPQvSIS7dUu8XM4lca6HL4RobXCfhjvetWsD+Drw=='
+  access_key: 'CENp3G0...hjvetWsD+Drw=='
   container_name: 'mystoragecontainer'
   key: tfstate-common-infra
 variables:
-  address_space: '10.39.0.0/16'
+  address_space: '10.8.0.0/16'
   keyvault_name: 'mykeyvault'
   global_resource_group_name: 'my-global-rg'
   service_principal_id: '91896545-0aa8-4444-5555-111461be44a6'
   subnet_name: 'mysubnet'
-  subnet_prefix: '10.39.0.0/24'
+  subnet_prefix: '10.8.0.0/24'
   vnet_name: 'myvnet'
 ```
-Now that we have these variables filled in, we will use 'bedrock infra generate' command to generate terraform tfvars file that we will use to provision the infrastructure. Navigate to azure-common-infra/westus folder and run the following command.
+Now that we have these variables filled in, we will use 'bedrock infra generate' command to generate terraform tfvars file that we will use to provision the infrastructure. 
+
+Navigate to `azure-common-infra/westus` folder and run the following command.
 
 ```
 bedrock infra generate -p westus
@@ -264,12 +266,7 @@ variables:
   service_principal_secret: 'aaaa-bbbb-43eb-9ead-dddddd'
   kubernetes_version: '1.15.7'
   subnet_name: 'mysubnet'
-  service_cidr: 10.0.0.0/16
-  dns_ip: 10.0.0.10
-  docker_cidr: 172.17.0.1/16
-  address_space: 10.10.0.0/16
-  subnet_prefix: 10.10.1.0/24
-  subnet_prefixes: 10.10.1.0/24
+  subnet_prefix: 10.8.0.0/24
   network_plugin: azure
   network_policy: azure
   oms_agent_enabled: 'yes'
