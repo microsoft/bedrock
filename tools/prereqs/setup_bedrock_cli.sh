@@ -38,7 +38,7 @@ else
     exit 1
 fi
 
-BEDROCK_CLI_VERSION=`curl -s -L https://github.com/microsoft/bedrock-cli/releases/latest | grep "bedrock\/archive" | grep zip | awk -F"archive/" '{print $2}' | awk -F ".zip" '{print $1}'`
+BEDROCK_CLI_VERSION=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
 
 curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/$BEDROCK_CLI_VERSION/bedrock-$arch
 cp bedrock-$arch /usr/local/bin/bedrock
