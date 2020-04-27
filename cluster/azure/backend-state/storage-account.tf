@@ -7,12 +7,12 @@ resource "random_id" "remotestate_account_name" {
 }
 
 resource "azurerm_storage_account" "remote_state_sa" {
-  name                     = length(var.name) > 0 ? var.name : random_id.remotestate_account_name.hexg
-  location                 = var.locationg
+  name                     = length(var.name) > 0 ? var.name : random_id.remotestate_account_name.hex
+  location                 = var.location
   account_tier             = "Standard"
   account_kind             = "StorageV2"
-  resource_group_name      = azurerm_resource_group.remote_state_rg.nameg
-  account_replication_type = var.storage_account_replication_typeg
+  resource_group_name      = azurerm_resource_group.remote_state_rg.name
+  account_replication_type = var.storage_account_replication_type
 
   lifecycle {
     prevent_destroy = true
