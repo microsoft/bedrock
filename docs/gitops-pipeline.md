@@ -2,7 +2,7 @@
 
 This deep dive will cover the operational details around the core GitOps based pipeline in Bedrock. The average service devops person can be blissfully unware of the details because Bedrock largely automates these implementation details, but it is still helpful to understand how all of it functions and fits together. Its workflow centers around three repositories: the application repo, the high level definition repo, and the resource manifest repo:
 
-![End to End GitOps Pipeline](images/spk-resource-diagram.png)
+![End to End GitOps Pipeline](images/bedrock-resource-diagram.png)
 <p align="center"><i>End to End GitOps Pipeline</i></p>
 
 We will describe the high level definition repo in more detail later, but at a high level, it contains a higher level description of what should be deployed in a customer such that human pull request reviewers can better understand what is being proposed in an operational change.  The resource manifest repo, in contrast, is the raw YAML that is applied to Kubernetes to express the current state of the cluster.

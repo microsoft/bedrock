@@ -1,6 +1,6 @@
 # A First Workload With Bedrock
 
-The best way to start learning about Bedrock is walk through the deployment of a cluster and a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
+The best way to start learning about Bedrock is to walk through the deployment of a cluster and try a first workload on it, enabling you to see how Bedrock makes deploying infrastructure easier and how GitOps works first hand.
 
 In this walkthrough, we will:
 1. Create our GitOps resource manifest repo that will act as the source of truth for our in-cluster deployments.
@@ -71,6 +71,8 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
+**Do not enter a passphrase**, as Flux will be unable to sign with a passphrase protected private key.
+
 This creates the private and public keys for our GitOps workflow:
 1. Private key: for Flux to authenticate against the GitOps repo
 2. Public key: for the GitOps repo to validate the passed credentials.
@@ -129,14 +131,14 @@ With our GitOps resource manifest repo and key pair created, let’s move on to 
 
 Creating, managing, and maintaining infrastructure deployment templates is a challenge, especially at scale. Large scale deployments can consist of dozens of nearly identical clusters differentiated only by slight differences in config based on the cloud region they are operating in or otherwise.
 
-Bedrock helps manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with Bedrock’s `spk` command line tool:
+Bedrock helps manage this complexity with infrastructure environment templates and definitions. Let’s see this in action by scaffolding out our first definition with the Bedrock CLI:
 
 ```bash
 $ cd ~/cluster-deployment
-$ spk infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
+$ bedrock infra scaffold --name cluster --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-simple
 ```
 
-This fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expecetd behavior for the `spk infra scaffold` command. This can be overridden by supplying new value as you will see in the next section.
+This tool fetches the specified deployment template, creates a `cluster` directory, and places a `definition.yaml` file in it. The default output for `definition.yaml` file for `azure-simple`template is shown below. The default values for the variables are not shown in this, which is the expected behavior for the `bedrock infra scaffold` command. This behavior can be overridden by supplying new value as you will see in the next section.
 
 ```yaml
 name: cluster
@@ -158,11 +160,11 @@ variables:
 
 This `definition.yaml` is our first infrastructure definition.  It contains a reference to a deployment template that is maintained by the Bedrock project in this case -- but this template could exist anywhere.
 
-This template is the base of our deployment. Note: The `spk` tool also extracted the variables for this Terraform template and provided them, with defaults (if available).
+This template is the base of our deployment. Note: The `bedrock` tool also extracted the variables for this Terraform template and provided them, with defaults (if available).
 
 ## Completing our Deployment Definition
 
-Next we'll fill all of the empty items in this template with config values.
+Next, we'll fill all of the empty items in this template with config values.
 
 ### Cluster name, DNS prefix, VNET name, and resource group
 
@@ -174,7 +176,12 @@ Update the value for `resource_group_name` to be a variant of this, like `myname
 
 Update the `gitops_ssh_url` to your GitOps resource manifest repo, using the `ssh` url format available when you clone the repo from Azure DevOps. For example: `git@ssh.dev.azure.com:v3/myOrganization/myProject/app-cluster-manifests`.
 
-Set the `gitops_ssh_key` to the GitOps private key we created previously. If you followed those steps, you can set this value to `~/cluster-deployment/keys/gitops-ssh-key`.
+Set the `gitops_ssh_key` to the full path to the GitOps private key we created previously. If you followed those steps, you can find the full path by running:
+```
+$ cd ~/cluster-deployment
+$ echo $(pwd)/keys/gitops-ssh-key
+/Users/demo/cluster-deployment/keys/gitops-ssh-key
+```
 
 In multi-cluster scenarios, we will often keep all of the resource manifests for all of our clusters in the same repo, but in this simple case, we are only managing one cluster, so we are going to use the root of our GitOps repo as our root for our in-cluster resource manifests.
 
@@ -356,10 +363,10 @@ With these prep steps completed, let’s generate Terraform templates from this 
 
 ```bash
 $ cd ~/cluster-deployment/cluster
-$ spk infra generate -p cluster
+$ bedrock infra generate -p cluster
 ```
 
-`spk` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
+`bedrock` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
 ## Deploy Cluster
 
@@ -407,7 +414,7 @@ commands will detect it and remind you to do so if necessary.
 Our next step is to plan the deployment, which will preflight our deployment script and the configured variables, and output the changes that would happen in our infrastructure if applied:
 
 ```bash
-$ terraform plan -var-file=spk.tfvars
+$ terraform plan -var-file=bedrock.tfvars
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
 persisted to local or remote state storage.
@@ -450,7 +457,7 @@ can't guarantee that exactly these actions will be performed if
 Finally, since we are happy with these changes, we apply the Terraform template. Please confirm with "yes" for a prompt to perform the actions.
 
 ```
-$ terraform apply -var-file=spk.tfvars
+$ terraform apply -var-file=bedrock.tfvars
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
   + create
@@ -489,7 +496,7 @@ Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 You have successfully have deployed your first cluster with Bedrock!
 
-This might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
+These steps might seem like a lot of overhead for creating a single cluster. The real advantage of this comes when you need to manage multiple clusters that are only slightly differentiated by config, or when you want to do upgrades to a new version of the template, and a variety of other “day 2” scenarios. You can read in detail about these scenarios in our infrastructure definitions documentation.
 
 ### Using Terraform State
 
@@ -724,5 +731,5 @@ As a final step, you probably want to delete your Kubernetes cluster to save on 
 
 ```bash
 $ cd ~/cluster-deployment/cluster-generated/cluster
-$ terraform destroy -var-file=spk.tfvars
+$ terraform destroy -var-file=bedrock.tfvars
 ```

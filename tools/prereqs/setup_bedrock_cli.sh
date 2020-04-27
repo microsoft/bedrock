@@ -15,7 +15,7 @@ function finish {
 trap finish EXIT
 
 # prompt for confirmation
-echo "This script will install the latest version of Spk from github."
+echo "This script will install the latest version of Bedrock CLI from github."
 read -p "Do you wish to continue? " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -38,10 +38,10 @@ else
     exit 1
 fi
 
-SPK_VERSION=`curl -s -L https://github.com/microsoft/bedrock-cli/releases/latest | grep "spk\/archive" | grep zip | awk -F"archive/" '{print $2}' | awk -F ".zip" '{print $1}'`
+BEDROCK_CLI_VERSION=$(curl -s "https://api.github.com/repos/microsoft/bedrock-cli/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
 
-curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION/spk-$arch
-cp spk-$arch /usr/local/bin/spk
-chmod +x /usr/local/bin/spk
+curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/$BEDROCK_CLI_VERSION/bedrock-$arch
+cp bedrock-$arch /usr/local/bin/bedrock
+chmod +x /usr/local/bin/bedrock
 
-echo "spk installed into /usr/local/bin"
+echo "bedrock installed into /usr/local/bin"

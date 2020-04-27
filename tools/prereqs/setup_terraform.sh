@@ -33,7 +33,6 @@ if [ "$ostype" == "linux" ]; then
     sudo apt-get install unzip
 elif [ "$ostype" == "macos" ]; then
     arch="darwin_amd64"
-    brew install unzip
 else
     echo "OS ($ostype) not supported."
     exit 1

@@ -30,6 +30,7 @@ The high-level steps of automated container image tag updates include:
 + Updating a Fabrikate template config file in high-level definition repo with the relevant image tag gets updated and a manifest generation pipeline may automatically get run 
 + The cluster(s) should automatically get updated to the latest Kubernetes deployment
 
+### Environment Promotion
 Another example of an augmentation pipeline builds upon the previous example. This time we want to help automate image container promotion across environments. Using the Fabrikate high-level definition to track state, we can configure what container registries and tag names map to each environment. Most importantly control when the container promotion happens.
 
 ![High level example of container promotion augmentation pipeline](images/container-promo-pipeline.png)

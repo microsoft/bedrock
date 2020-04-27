@@ -1,22 +1,22 @@
 # Walkthrough: Rings deployment and management with automation
 
-If you're new to the concept of Rings, it is suggested you read through the [spk Rings guide](https://github.com/microsoft/bedrock-cli/blob/master/guides/rings-101.md#what-are-deployment-rings). In short, in the context of Kubernetes, Rings are a way to encapsulate and deploy multiple environments in a single cluster.
+If you're new to the concept of Rings, it is suggested you read through the [Bedrock CLI Rings Guide](https://github.com/microsoft/bedrock-cli/blob/master/guides/rings-101.md#what-are-deployment-rings). In short, in the context of Kubernetes, Rings are a way to encapsulate and deploy multiple environments in a single cluster.
 
-This walkthrough will guide you through enabling Ringed deployments of your project with automation through the `spk` tool. We will be utilizing the azure-vote example that was set up during the [Service Management Walkthrough](./docs/../services.md).
+This walkthrough will guide you through enabling Ringed deployments of your project with automation through the `bedrock` tool. We will be utilizing the azure-vote example that was set up during the [Service Management Walkthrough](./services.md).
 
 ## Prerequisites
-1. Completion of the [First Workload guide](./docs/firstWorkload/README.md) to setup an AKS cluster configured with flux.
-2. Completion of the [GitOps Pipeline Walkthrough](./docs/hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
-3. Completion of the [Service Management Walkthrough](./docs/../services.md)
-4. `spk` version `v0.6.0` or later. Download the latest: [SPK Releases](https://github.com/microsoft/bedrock-cli/releases)
+1. Completion of the [First Workload guide](./firstWorkload/README.md) to setup an AKS cluster configured with flux.
+2. Completion of the [GitOps Pipeline Walkthrough](./hld-to-manifest.md) to set up required GitOps workflow repositories and pipelines.
+3. Completion of the [Service Management Walkthrough](./services.md)
+4. `bedrock` version `v0.6.0` or later. Download the latest: [Bedrock CLI Releases](https://github.com/microsoft/bedrock-cli/releases)
 
 ## Enabling Ingress Routes
 [Traefik2](https://github.com/containous/traefik) is the default LoadBalancer utilized to route ingress traffic to a specific ring.
 
-When setting up the HLD (high-level-definition) for the first time with `spk hld init`, Traefik2 is included as the initial component. If it was not included or removed as a component, please clone the HLD repository and add Traefik as a component:
+When setting up the HLD (high-level-definition) for the first time with `bedrock hld init`, Traefik2 is included as the initial component. If it was not included or removed as a component, please clone the HLD repository and add Traefik as a component:
 
 ```sh
-git clone git@ssh.dev.azure.com:v3/mtarng/my-spk-project/fabrikam-hld
+git clone git@ssh.dev.azure.com:v3/mtarng/my-bedrock-project/fabrikam-hld
 ...
 cd fabrikam-hld
 fab add traefik2 --source https://github.com/microsoft/fabrikate-definitions.git --path definitions/traefik2
@@ -137,7 +137,7 @@ git pull
 
 Now, let's add our new Ring, `stage`:
 ```sh
-spk ring create stage
+bedrock ring create stage
 git add -A
 git commit -m 'Adding new ring: stage'
 git push
@@ -198,7 +198,7 @@ Hello from the Stage Ring!
 And now we've finished creating and validating our `stage` Ring!
 
 ## Setting the default Ring
-To set the default ring for Headerless routing, we can use the `spk ring set-default` command.
+To set the default ring for Headerless routing, we can use the `bedrock ring set-default` command.
 
 Let's go back to our application repository and checkout the source-of-truth branch, `master`:
 
@@ -208,10 +208,10 @@ git checkout master
 git pull
 ```
 
-And now we can set the default to an existing ring, `stage`, via `spk`:
+And now we can set the default to an existing ring, `stage`, via `bedrock`:
 
 ```sh
-spk ring set-default stage
+bedrock ring set-default stage
 git add -A
 git commit -m 'Setting default ring to stage'
 git push
@@ -263,14 +263,14 @@ And now we've validated that our default Ring is `stage`.
 
 ## Removing a Ring
 
-Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as spk currently does not remove services nor does it remove rings from the HLD repository.
+Now let's go over how to remove a Ring from a cluster. Do note that there will be [manual steps](https://github.com/microsoft/bedrock-cli/blob/master/guides/manual-guide-to-rings.md#removing-the-ring-from-the-cluster) involved as the Bedrock CLI currently does not remove services nor does it remove rings from the HLD repository.
 
 As we cannot delete the default ring, we need to first set the default Ring to `master` again:
 ```sh
 cd fabrikam2019
 git checkout master
 git pull
-spk ring set-default master
+bedrock ring set-default master
 git add -A
 git commit -m 'Setting default ring to master'
 ```
@@ -278,7 +278,7 @@ Merge the resulting lifecycle pipeline PR against the HLD. These changes should 
 
 Now lets remove `stage` as a ring from the project:
 ```sh
-spk ring delete stage
+bedrock ring delete stage
 git add -A
 git commit -m 'Removing stage ring from project'
 git push
@@ -290,11 +290,11 @@ git branch -D stage
 git push -d origin stage
 ```
 
-Now, since spk does not currently remove rings or service from the HLD repository, we need to remove components related to the `stage` ring we've removed from the project.
+Now, since the Bedrock CLI does not currently remove rings or service from the HLD repository, we need to remove components related to the `stage` ring we've removed from the project.
 
 Let's checkout our HLD repository and pull the latest:
 ```sh
-git clone git@ssh.dev.azure.com:v3/mtarng/my-spk-project/fabrikam-hld
+git clone git@ssh.dev.azure.com:v3/mtarng/my-bedrock-project/fabrikam-hld
 ...
 cd fabrikam-hld
 git checkout master
