@@ -251,7 +251,7 @@ variables:
   flux_recreate: 'false'
   gitops_ssh_url: 'git@ssh.dev.azure.com:v3/myorg/app-cluster-manifests'
   gitops_path: 'prod'
-  gitops_ssh_key_path: '~/cluster-deployment/keys'
+  gitops_ssh_key_path: '/Users/myuser/cluster-deployment/keys/gitops-ssh-key'
   gitops_url_branch: master
   keyvault_name: 'mykeyvault'
   keyvault_resource_group: 'my-global-rg'

@@ -93,7 +93,7 @@ variables:
   gitops_poll_interval: 60s
   gitops_ssh_url: git@ssh.dev.azure.com:v3/fabrikam/search/resource-manifests
   gitops_url_branch: master
-  gitops_ssh_key_path: "../keys/gitops_repo_key"
+  gitops_ssh_key_path: "/Users/myuser/cluster-deployment/keys/gitops_repo_key"
   keyvault_name: "search-keyvault"
   keyvault_resource_group: "search-global-rg"
   ssh_public_key: "ssh-rsa AAAAB3Nza ... snip ... lgodNP7GExxNLSLqcsZa9ZALc+P3FRjgYbLC/qMWtkzPH5TEHPU4P5KLbHr4ZN3kV2MiARTtjWOlYMnMnrGu6NYxCmjHsbZxfhhZ2rU3uIEvjUBo9rdtQ== johndoe@fabrikam.com"
