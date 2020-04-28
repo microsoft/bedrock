@@ -19,11 +19,6 @@ variable "cluster_name" {
   type = string
 }
 
-variable "msi_enabled" {
-  type = bool
-  default = false
-}
-
 variable "dns_prefix" {
   type = string
 }
@@ -72,22 +67,20 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "service_principal_id" {
+  type = string
+}
+
+variable "service_principal_secret" {
+  type = string
+}
+
 variable "ssh_public_key" {
   type = string
 }
 
 variable "vnet_subnet_id" {
   type = string
-}
-
-variable "service_principal_id" {
-  type = string
-  default = ""
-}
-
-variable "service_principal_secret" {
-  type = string
-  default = ""
 }
 
 variable "service_cidr" {
