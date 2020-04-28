@@ -77,7 +77,7 @@ func TestIT_Bedrock_AzureMC_APIM_Test(t *testing.T) {
 			"service_principal_secret": clientsecret,
 			"ssh_public_key":           publickey,
 			"gitops_ssh_url":           "git@github.com:timfpark/fabrikate-cloud-native-manifests.git",
-			"gitops_ssh_key":           sshkey,
+			"gitops_ssh_key_path":      sshkey,
 			"gitops_poll_interval":     "5m",
 			"gitops_label":             "flux-sync"
 

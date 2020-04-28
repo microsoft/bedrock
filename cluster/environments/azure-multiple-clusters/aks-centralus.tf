@@ -16,7 +16,7 @@ locals {
 module "central_vnet" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
 
-  resource_group_name     = local.central_rg_name 
+  resource_group_name     = local.central_rg_name
   vnet_name               = "${local.central_prefix}-vnet"
   address_space           = var.central_address_space
 
@@ -46,7 +46,7 @@ module "central_aks_gitops" {
   flux_recreate            = var.flux_recreate
   gc_enabled               = var.gc_enabled
   gitops_ssh_url           = var.gitops_ssh_url
-  gitops_ssh_key           = var.gitops_ssh_key
+  gitops_ssh_key_path      = var.gitops_ssh_key_path
   gitops_path              = var.gitops_central_path
   gitops_url_branch        = var.gitops_central_url_branch
   gitops_poll_interval     = var.gitops_poll_interval

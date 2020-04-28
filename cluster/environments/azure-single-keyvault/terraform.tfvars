@@ -18,7 +18,7 @@ cluster_name = "azure-single-keyvault"
 dns_prefix = "azure-single-keyvault"
 
 gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-materialized"
-gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
+gitops_ssh_key_path = "/full/path/to/gitops_repo_private_key"
 
 resource_group_name = "azure-single-keyvault-rg"
 
