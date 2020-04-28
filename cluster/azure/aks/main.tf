@@ -1,12 +1,6 @@
-locals {
-  msi_identity_type = "SystemAssigned"
-}
-
 data "azurerm_resource_group" "cluster" {
   name = var.resource_group_name
 }
-
-data "azurerm_subscription" "current" {}
 
 resource "random_id" "workspace" {
   keepers = {
@@ -79,15 +73,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     enabled = true
   }
 
-  dynamic "service_principal" {
-    for_each = !var.msi_enabled && var.service_principal_id != "" ? [{
-      client_id     = var.service_principal_id
-      client_secret = var.service_principal_secret
-    }] : []
-    content {
-      client_id     = service_principal.client_id
-      client_secret = service_principal.client_secret
-    }
+  service_principal {
+    client_id     = var.service_principal_id
+    client_secret = var.service_principal_secret
   }
 
   addon_profile {
@@ -96,24 +84,4 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.id
     }
   }
-
-  # This dynamic block enables managed service identity for the cluster
-  # in the case that the following holds true:
-  #   1: the msi_enabled input variable is set to true
-  dynamic "identity" {
-    for_each = var.msi_enabled ? [local.msi_identity_type] : []
-    content {
-      type = identity.value
-    }
-  }
-}
-
-data "external" "msi_object_id" {
-  depends_on = [azurerm_kubernetes_cluster.cluster]
-  program = [
-    "${path.module}/aks_msi_client_id_query.sh",
-    var.cluster_name,
-    data.azurerm_resource_group.cluster.name,
-    data.azurerm_subscription.current.subscription_id
-  ]
 }

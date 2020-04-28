@@ -2,40 +2,21 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "cluster_name" {
+  type    = string
+  default = "bedrockaks"
+}
+
 variable "dns_prefix" {
-  type = string
-}
-
-variable "kubernetes_version" {
-  type = string
-}
-
-variable "ssh_public_key" {
-  type = string
-}
-
-variable "vnet_subnet_id" {
   type = string
 }
 
 variable "service_principal_id" {
   type = string
-  default = ""
 }
 
 variable "service_principal_secret" {
   type = string
-  default = ""
-}
-
-variable "msi_enabled" {
-  type = bool
-  default = false
-}
-
-variable "cluster_name" {
-  type    = string
-  default = "bedrockaks"
 }
 
 variable "agent_vm_count" {
@@ -48,14 +29,26 @@ variable "agent_vm_size" {
   default = "Standard_D2s_v3"
 }
 
+variable "kubernetes_version" {
+  type = string
+}
+
 variable "admin_user" {
   type    = string
   default = "k8sadmin"
 }
 
+variable "ssh_public_key" {
+  type = string
+}
+
 variable "output_directory" {
   type    = string
   default = "./output"
+}
+
+variable "vnet_subnet_id" {
+  type = string
 }
 
 variable "enable_virtual_node_addon" {
@@ -88,19 +81,16 @@ variable "dns_ip" {
 }
 
 variable "docker_cidr" {
-  type        = string
   default     = "172.17.0.1/16"
   description = "IP address (in CIDR notation) used as the Docker bridge IP address on nodes. Default of 172.17.0.1/16."
 }
 
 variable "network_plugin" {
   default     = "azure"
-  type        = string
   description = "Network plugin used by AKS. Either azure or kubenet."
 }
 variable "network_policy" {
   default     = "azure"
-  type        = string
   description = "Network policy to be used with Azure CNI. Either azure or calico."
 }
 
