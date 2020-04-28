@@ -1,5 +1,5 @@
 module "provider" {
-  source = "../../azure/provider"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/provider"
 }
 
 # Read AKS cluster service principal (client) object to create a role assignment
@@ -15,7 +15,7 @@ data "azurerm_resource_group" "keyvault" {
 
 # Create Azure Key Vault role for SP
 module "keyvault_flexvolume_role" {
-  source = "../../azure/keyvault_flexvol_role"
+  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol_role"
 
   resource_group_name  = var.keyvault_resource_group
   service_principal_id = var.service_principal_id
