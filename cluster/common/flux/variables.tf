@@ -54,9 +54,9 @@ variable "gc_enabled" {
 # generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
 # or use existing ssh public/private key pair
 # add deploy key in gitops repo using public key with read/write access
-# assign/specify private key to "gitops_ssh_key" variable that will be used to cretae kubernetes secret object
+# assign/specify private key to "gitops_ssh_key_path" variable that will be used to cretae kubernetes secret object
 # flux use this key to read manifests in the git repo
-variable "gitops_ssh_key" {
+variable "gitops_ssh_key_path" {
   type = string
 }
 

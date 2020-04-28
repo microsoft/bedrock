@@ -61,7 +61,7 @@ cluster_name = "azure-single-keyvault-cosmos-mongo-db-simple"
 dns_prefix = "azure-single-keyvault-cosmos-mongo-db-simple"
 
 gitops_ssh_url = "git@github.com:Microsoft/fabrikate-production-cluster-demo-materialized"
-gitops_ssh_key = "./gitops_repo_key"
+gitops_ssh_key_path = "./gitops_repo_key"
 
 resource_group_name = "azure-single-keyvault-cosmos-mongo-db-simple-rg"
 resource_group_location = "westus2"

@@ -46,7 +46,7 @@ variable "gitops_label" {
   default = "flux-sync"
 }
 
-variable "gitops_ssh_key" {
+variable "gitops_ssh_key_path" {
   type = string
 }
 

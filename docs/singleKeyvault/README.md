@@ -1,10 +1,10 @@
-# Deploying Single Cluster with Keyvault 
+# Deploying Single Cluster with Keyvault
 
-If you followed our first workload walkthrough you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts. In the first workload walkthrough, to demonstrate a simple GitOps workflow, we deployed a simple cluster using Azure Simple Terraform template. However in the real world, in order to have secure deployments, we need a way to store the essential secrets in Keyvault. In addition, we will also deploy a vnet to provide isolation to our cloud infrastructure. 
+If you followed our first workload walkthrough you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts. In the first workload walkthrough, to demonstrate a simple GitOps workflow, we deployed a simple cluster using Azure Simple Terraform template. However in the real world, in order to have secure deployments, we need a way to store the essential secrets in Keyvault. In addition, we will also deploy a vnet to provide isolation to our cloud infrastructure.
 
 In upcoming advanced scenarios, we will be using the Bedrock automation to repeat the cluster creation process by scaffolding configurations to deploy multiple clusters. Since all these clusters use common resources like Keyvault, Storage Account and a Vnet, we will deploy these resources using azure-common-infra template. The environment provisioned using this template is a dependency for other environments (azure-single-keyvualt) we will be using in the subsequent walkthroughs.
 
-Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](../Firstworkload/README.md). 
+Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](../Firstworkload/README.md).
 
 ## Deplying the common infrastructure:
 
@@ -14,7 +14,7 @@ Before you deploy infrastructure environments, you will need to create an Azure 
 
 This environment requires a resource group. The requisite variable is `global_resource_group_name`.  To use the Azure CLI to create the resource group, see [here](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
 
-To create a resource group, you can use the following command 
+To create a resource group, you can use the following command
 
 ```
 $ az group create -l westus2 -n my-global-rg
@@ -61,10 +61,10 @@ az storage container create --name mystoragecontainer
 
 Next, let's create a folder called azure-common-infra
 ```
-mkdir azure-common-infra 
+mkdir azure-common-infra
 cd azure-common-infra
 ```
-Next, use Bedrock cli command to scaffold the configuration for common-infra template using the following command. Here we are using the Bedrock’s predefined `azure-common-infra` template to create configuration parameters for westus cluster. 
+Next, use Bedrock cli command to scaffold the configuration for common-infra template using the following command. Here we are using the Bedrock’s predefined `azure-common-infra` template to create configuration parameters for westus cluster.
 
 ```
 bedrock infra scaffold --name westus --source https://github.com/microsoft/bedrock --version master --template cluster/environments/azure-common-infra
@@ -93,7 +93,7 @@ variables:
 ```
 `scaffold` has downloaded the template locally, extracted all of the variables for the template, and provided defaults where possible for all of the variables.
 
-Let's fill in the variables for common-infra infrastructure variables. 
+Let's fill in the variables for common-infra infrastructure variables.
 Note: `global_resource_group_name' is the resource group that was created in the [Resource Group Requirement](#Resource-Group-Requirement:).
 
 ```yaml
@@ -120,15 +120,15 @@ Now that we have these variables filled in, we will use 'bedrock infra generate'
 ```
 bedrock infra generate -p westus
 ```
-This command creates westus-generated directory inside azure-common-infra directory. Navigate to `azure-common-infra/westus-generated` directory. Notice that this directory has terraform variable files. 
+This command creates westus-generated directory inside azure-common-infra directory. Navigate to `azure-common-infra/westus-generated` directory. Notice that this directory has terraform variable files.
 
-Let's provision the common infrastructure by running the following commands from this folder 
+Let's provision the common infrastructure by running the following commands from this folder
 
 ```
 terraform init -backend-config=./backend.tfvars
 terraform plan -var-file=bedrock.tfvars
 ```
-If the plan succeeds, run the following command 
+If the plan succeeds, run the following command
 ```
 terraform apply -var-file=bedrock.tfvars
 ...
@@ -139,7 +139,7 @@ Do you want to perform these actions?
   Enter a value: yes
 ...
 ```
-This should provision keyvault, vnet in your azure subscription. 
+This should provision keyvault, vnet in your azure subscription.
 
 You can reuse the common infrastructure components for multiple clusters.
 
@@ -151,7 +151,7 @@ Now that we have common infrastructure components in place, we are ready to depl
 
 This environment requires another resource group be created.  The requisite variable is `resource_group_name`.  To use the Azure CLI to create the resource group, see [here](https://github.com/microsoft/bedrock/blob/master/cluster/azure/README.md).
 
-To create a resource group, you can use the following command 
+To create a resource group, you can use the following command
 
 ```
 $ az group create -l westus2 -n my-cluster-rg
@@ -196,7 +196,7 @@ variables:
   gitops_label: flux-sync
   gitops_ssh_url: <insert value>
   gitops_url_branch: master
-  gitops_ssh_key: <insert value>
+  gitops_ssh_key_path: <insert value>
   gitops_path: <insert value>
   keyvault_name: <insert value>
   keyvault_resource_group: <insert value>
@@ -216,11 +216,11 @@ variables:
 ```
 
 Next we'll fill all of the empty items in this template with config values.
-Note: Use `storage_account_name`, `access_key` , `container_name`, `keyvault_name`, `keyvault_resource_group` and `vnet_name` from the previous [Deploying common infrastructure](#Deploying-common-infrastructure:) step. 
+Note: Use `storage_account_name`, `access_key` , `container_name`, `keyvault_name`, `keyvault_resource_group` and `vnet_name` from the previous [Deploying common infrastructure](#Deploying-common-infrastructure:) step.
 
 Here, we will be using the manifest repo you created for the first workload. However, let's copy the manifest file from the root directory to a subdirectory called `prod`
 
-Navigate to your devops repo folder that you cloned from [first walkthrough](../Firstworkload/README.md). Create a subdirectory named prod and copy azure-vote-all-in-one-redis.yaml to that subdirectory. In a future walkthrough, we can have different subdirectories for each cluster with slight variations to the manifest. This step is in preparation for future walkthroughs. 
+Navigate to your devops repo folder that you cloned from [first walkthrough](../Firstworkload/README.md). Create a subdirectory named prod and copy azure-vote-all-in-one-redis.yaml to that subdirectory. In a future walkthrough, we can have different subdirectories for each cluster with slight variations to the manifest. This step is in preparation for future walkthroughs.
 
 ```
 $ mkdir prod
@@ -251,7 +251,7 @@ variables:
   flux_recreate: 'false'
   gitops_ssh_url: 'git@ssh.dev.azure.com:v3/myorg/app-cluster-manifests'
   gitops_path: 'prod'
-  gitops_ssh_key: '~/cluster-deployment/keys'
+  gitops_ssh_key_path: '/Users/myuser/cluster-deployment/keys/gitops-ssh-key'
   gitops_url_branch: master
   keyvault_name: 'mykeyvault'
   keyvault_resource_group: 'my-global-rg'
@@ -278,9 +278,9 @@ Navigate to azure-single-keyvault folder and use the following command to genera
 
 ```
 $cd ~/azure-single-keyvault
-$bedrock infra generate -p westus 
+$bedrock infra generate -p westus
 ```
-bedrock reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated/westus folder. Now you are ready to provision the cluster using Terraform 
+bedrock reads our definition.yaml file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called azure-single-keyvault-generated which is at the same level as azure-single-keyvault folder. Navigate to azure-single-keyvault-generated/westus folder. Now you are ready to provision the cluster using Terraform
 
 ```
 $terraform init -backend-config=./backend.tfvars -var-file=bedrock.tfvars
@@ -291,7 +291,7 @@ Our next step is to plan the deployment, which will preflight our deployment scr
 $terraform plan -var-file=bedrock.tfvars
 ```
 
-Finally, once plan shows no errors, we can apply the changes 
+Finally, once plan shows no errors, we can apply the changes
 
 ```
 $terraform apply -var-file=bedrock.tfvars
@@ -303,7 +303,7 @@ Do you want to perform these actions?
   Enter a value: yes
 ...
 ```
-It will take few miniutes to get the cluster deployed. 
+It will take few miniutes to get the cluster deployed.
 
 ### Interacting with deployed cluster:
 
@@ -365,6 +365,3 @@ The EXTERNAL-IP, in the case above, is: 35.889.68.30. By appending the port our 
 ![voting app](../firstWorkload/images/voting-app-deployed-in-azure-kubernetes-service.png)
 
 Congratulations, you have successfully deployed a Azure Kubernetes Cluster with Keyvault using this walkthrough.
-
-
- 

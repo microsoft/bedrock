@@ -60,7 +60,7 @@ module "east_flux" {
   source = "github.com/microsoft/bedrock?ref=master//cluster/common/flux"
 
   gitops_ssh_url       = var.gitops_ssh_url
-  gitops_ssh_key       = var.gitops_ssh_key
+  gitops_ssh_key_path  = var.gitops_ssh_key_path
   flux_recreate        = var.flux_recreate
   kubeconfig_complete  = module.east_aks.kubeconfig_done
   kubeconfig_filename  = local.east_kubeconfig_filename

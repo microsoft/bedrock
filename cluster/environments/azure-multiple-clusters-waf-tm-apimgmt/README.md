@@ -6,7 +6,7 @@ The `azure-multiple-cluster-waf-tm-apimgmt` deploys 3 AKS clusters in 3 configur
 
 The template also creates an API management service which is an enterprise grade service that provides several features to manage API access both within and outside an enterprise. Please visit the Microsoft docs [link](https://docs.microsoft.com/en-us/azure/api-management/api-management-key-concepts) for more details.
 
-You can deploy the `azure-multiple-cluster-waf-tm-apimgmt` using a Service Principal that has Owner privileges on the Azure Subscription. 
+You can deploy the `azure-multiple-cluster-waf-tm-apimgmt` using a Service Principal that has Owner privileges on the Azure Subscription.
 To deploy this environment, follow the [common steps](https://github.com/microsoft/bedrock/blob/master/cluster/azure) for deploying a cluster with the following modifications:
 
 ## Resource Group Requirement
@@ -32,7 +32,7 @@ To use the Azure CLI to create the resource group, see [here](../../azure/README
     - `tenant_id`: Id of the Azure Active Directory Tenant associated with the subscription
 * Application Gateway configuration
     - `Prefix`: prefix to be added in web application firewall name service.
-    - `location`: Azure Region for web application firewall 
+    - `location`: Azure Region for web application firewall
     - `vnet_<region>`: virtual network location for Web application firewall.
 
 * Traffic Manager configuration
@@ -43,12 +43,12 @@ To use the Azure CLI to create the resource group, see [here](../../azure/README
     - `cluster_name`: The name of the Kubernetes cluster. The location will be added as a suffix.
     - `agent_vm_count`: The number of agents VMs in the the node pool.
     - `dns_prefix`: DNS name for accessing the cluster from the internet.
-    - `service_principal_id`: The id of the service principal to be used by the AKS cluster. 
+    - `service_principal_id`: The id of the service principal to be used by the AKS cluster.
     - `service_principal_secret`: The secret of the service principal used by the AKS cluster. The creation of service principal described above in prerequisites section.
-    - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group. 
+    - `service_principal_is_owner`: This value, set to "1" will deploy the clusters with the assumption that the Service Principal used for deploying the cluster has `Owner` level privileges.  If set to any other value, the deployment will not create the Azure Role Assignments and the Public IP Addresses will be deployed into the AKS node resource group.
     - `ssh_public_key`: Contents of a SSH public key authorized to access the virtual machines within the cluster.
-    - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key`.
-    - `gitops_ssh_key`: Path to the *private key file* that was configured to work with the GitOps repository.
+    - `gitops_ssh_url`: The git repo that contains the resource manifests that should be deployed in the cluster in ssh format (eg. `git@github.com:timfpark/fabrikate-cloud-native-manifests.git`). This repo must have a deployment key configured to accept changes from `gitops_ssh_key_path`.
+    - `gitops_ssh_key_path`: Path to the *private key file* that was configured to work with the GitOps repository.
 * West Cluster
     - `west_resource_group_name`: Name of the resource group for the cluster.
     - `gitops_west_path`: Path to a subdirectory, or folder in a git repo
@@ -91,7 +91,7 @@ To use the Azure CLI to create the resource group, see [here](../../azure/README
 3. Make sure there are no errors.
 
 # Configure `Kubectl` to connect to AKS clusters
-1. Each cluster's credentials will be placed in the specified `output_directory` which defaults to `./output`. 
+1. Each cluster's credentials will be placed in the specified `output_directory` which defaults to `./output`.
 2. One kube config file will be created for each of clusters with unique file name with `location` and `cluster-name` prefix that you can copy to your `~/.kube/config` directory or directly use the file in the shell.
 * `location`: list of locations from the above configuration
     - `west_resource_group_location`
@@ -108,7 +108,7 @@ To use the Azure CLI to create the resource group, see [here](../../azure/README
 4. To specify the file location directly to connect to any one of the cluster, replace the `location` and `cluster-name` in the following command and run:
 
     ```
-    $ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux` 
+    $ KUBECONFIG=./output/<location>-<clustername>_kube_config kubectl get po --namespace=flux`
     ```
 # Verify clusters in the environment
 
@@ -128,7 +128,7 @@ To use the Azure CLI to create the resource group, see [here](../../azure/README
 
 # azure-multiple-cluster-waf-tm-apimgmt
 
-The `azure-multiple-cluster-waf-tm-apimgmt` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment), each behind [Application Gateway](https://docs.microsoft.com/en-us/azure/application-gateway/overview). Application Gateway deployed on a specific cluster will get traffic via  [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three Application gateways. On top of Traffic Manager  [API Management] (https://azure.microsoft.com/en-in/services/api-management/) is deployed, which is configured to manage and secure api. This act as point of communication for all request. 
+The `azure-multiple-cluster-waf-tm-apimgmt` environment deploys three redundant clusters (similar to that deployed with the `azure-single-keyvault` environment), each behind [Application Gateway](https://docs.microsoft.com/en-us/azure/application-gateway/overview). Application Gateway deployed on a specific cluster will get traffic via  [Azure Traffic Manager](https://azure.microsoft.com/en-us/services/traffic-manager/), which is configured with rules for routing traffic to one of the three Application gateways. On top of Traffic Manager  [API Management] (https://azure.microsoft.com/en-in/services/api-management/) is deployed, which is configured to manage and secure api. This act as point of communication for all request.
 
 ## Getting Started
 
@@ -140,7 +140,7 @@ This deployment creates the following:
 - [Azure Application Gateway](#application-gateway-deployment)
 - [Azure Traffic Manager](#traffic-manager-deployment)
 - [Azure API Managemenet](#API-management-deployment)
-  
+
 You can deploy the `azure-multiple-cluster-waf-tm-apimgmt` using a Service Principal that either has or does not have `Owner` privileges on the Azure Subscription using the variable `service_principal_is_owner`.  When set to `1`, `Owner` privileges are required and the Public IP for each AKS cluster will be deployed into the Resource Group specified for each of the clusters (see [Cluster Deployment](#cluster-deployment)).  When set to `0`, the Public IP for each AKS cluster will be provisioned in the Resource Group generated by the AKS Cluster Provisioner.  In this second case, `Owner` privileges are not required.  The reason for these options is based on allowing the AKS Cluster to make use of the Public IP, which is discussed [here](https://docs.microsoft.com/en-us/azure/aks/static-ip).  The default behavior is to deploy the cluster requiring `Owner` privileges.
 
 To deploy this environment, follow the [common steps](../../azure/) for deploying a cluster with the following modifications:
@@ -166,7 +166,7 @@ Each cluster (east, west, central) has three cluster-specific configuration vari
 
 Variables for each cluster can be found for [east](./aks-eastus-variables.tf), [west](./aks-westus-variables.tf), [central](./aks-centralus-variables.tf).
 
-As part of cluster deployment, if you are deploying with `service_principal_is_owner=1`, in addition to creating the cluster, an Azure Role Assignment for each AKS cluster Service Principal will be created with `Network Contributor` role on the appropriate Public IP resource. 
+As part of cluster deployment, if you are deploying with `service_principal_is_owner=1`, in addition to creating the cluster, an Azure Role Assignment for each AKS cluster Service Principal will be created with `Network Contributor` role on the appropriate Public IP resource.
 
 As mentioned in [common steps](../../azure/), the deployment of an AKS cluster generates the corresponding Kubernetes Configuration file for that cluster and places it in the `output_directory`.  For the `azure-multiple-cluster-waf-tm-apimgmt` environment, the location where configuration files are written is the same, but each cluster has a cluster specific name for the output file, of the form `<cluster-resource-group-location>-<cluster-name>_kube_config` for each of the three unique Kubernetes configuration files corresponding to each cluster.
 
@@ -179,7 +179,7 @@ In addition to creating the Public IP Address for each cluster, a Traffic Manage
 
 ### Subnet Deployment
 
-The Application Gateway requires it’s own subnet. In this subnet you can only deploy Application Gateways. As part of this deployment this subnet will be part of AKS VNet based on the Azure region. 
+The Application Gateway requires it’s own subnet. In this subnet you can only deploy Application Gateways. As part of this deployment this subnet will be part of AKS VNet based on the Azure region.
 
 The configuration variables required for Subnet are:
 
@@ -188,12 +188,12 @@ The configuration variables required for Subnet are:
 
 ### Application Gateway
 
-Azure Application Gateway acts as web traffic load balancer that enables us to manage traffic to the web applications.  In this implementation we had enabled a web application firewall (WAF) feature that provides centralized protection of web applications from common exploits and vulnerabilities. 
+Azure Application Gateway acts as web traffic load balancer that enables us to manage traffic to the web applications.  In this implementation we had enabled a web application firewall (WAF) feature that provides centralized protection of web applications from common exploits and vulnerabilities.
 
 The configuration variables required for Application Gateway are:
 
 - `Prefix`: prefix to be added in web application firewall name service.
-- `location`: Azure Region for web application firewall 
+- `location`: Azure Region for web application firewall
 
 ### Traffic Manager Deployment
 
@@ -207,7 +207,7 @@ The configuration variables required for Traffic Manager are:
 - `traffic_manager_resource_group_location`: The location where Traffic Manager will be deployed.
 
 
-### API Management Deployment 
+### API Management Deployment
 
 Azure API management provides turnkey solution for publishing APIs to external and internal customers.  For this environment, the API Management is set up to publish as API, which is internal calling traffic manager.
 
@@ -216,4 +216,3 @@ The configuration variables required for API Management are:
 - `service_apim_name`: The profile name (general name) of the api management to be provisioned.
 
 If the Flux pod shows a status other than 'Running', verify Terraform deployed the environment without any errors.
-

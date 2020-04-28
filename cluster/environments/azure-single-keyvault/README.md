@@ -60,9 +60,9 @@ dns_prefix = "my-single-keyvault"
 
 gitops_ssh_url = "git@github.com:yradsmikham/fabrikate-production-cluster-demo-materialized"
 
-gitops_ssh_key = "/full/path/to/gitops_repo_private_key"
+gitops_ssh_key_path = "/full/path/to/gitops_repo_private_key"
 
-# you can create a new deploy key (e.g. ssh-keygen) to use as your gitops_ssh_key
+# you can create a new deploy key (e.g. ssh-keygen) to use as your gitops_ssh_key_path
 
 resource_group_name = "my-single-keyvault-rg"
 

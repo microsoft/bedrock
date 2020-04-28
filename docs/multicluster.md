@@ -60,7 +60,7 @@ variables:
   gitops_label: flux-sync
   gitops_ssh_url: <insert value>
   gitops_url_branch: master
-  gitops_ssh_key: <insert value>
+  gitops_ssh_key_path: <insert value>
   gitops_path: <insert value>
   keyvault_name: <insert value>
   keyvault_resource_group: <insert value>
@@ -101,7 +101,7 @@ variables:
   gitops_poll_interval: 60s
   gitops_ssh_url: git@ssh.dev.azure.com:v3/fabrikam/search/resource-manifests
   gitops_url_branch: master
-  gitops_ssh_key: "../../keys/gitops_repo_key" #make sure this points to your ssh keys generated for [access to gitops manifest repository](firstWorkload/README.md#generate-a-deploy-key-for-the-gitops-resource-manifest-repo)
+  gitops_ssh_key_path: "/Users/myuser/cluster-deployment/keys/gitops_repo_key"
   keyvault_name: "search-keyvault"
   keyvault_resource_group: "search-global-rg"
   ssh_public_key: "ssh-rsa AAAAB3Nza ... snip ... lgodNP7GExxNLSLqcsZa9ZALc+P3FRjgYbLC/qMWtkzPH5TEHPU4P5KLbHr4ZN3kV2MiARTtjWOlYMnMnrGu6NYxCmjHsbZxfhhZ2rU3uIEvjUBo9rdtQ== johndoe@fabrikam.com"
@@ -343,13 +343,13 @@ The process to manually manage SSH keys in an AKS cluster can be found [here](ht
 Updating the Flux SSH key requires two steps.  First, the key must be added to the appropriate Azure DevOps or Github instance.  For Azure Devops, that process is outlined [here](https://github.com/microsoft/bedrock/tree/master/docs/firstWorkload#add-deploy-key-to-the-manifest-repository).  For Github, the process is described [here](https://help.github.com/en/enterprise/2.15/user/articles/adding-a-new-ssh-key-to-your-github-account).  Once that process is done, the next step is to udated your `tfvar` file as follows:
 
 ```yaml
-  gitops_ssh_key="/home/jims/.ssh/gitopskey"
+  gitops_ssh_key_path="/home/jims/.ssh/gitopskey"
 ```
 
 to:
 
 ```yaml
-  gitops_ssh_key="/home/jims/.ssh/gitopskey_new"
+  gitops_ssh_key_path="/home/jims/.ssh/gitopskey_new"
   flux_recreate=1
 ```
 
