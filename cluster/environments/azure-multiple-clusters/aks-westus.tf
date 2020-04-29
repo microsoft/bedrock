@@ -14,7 +14,7 @@ locals {
 
 # Creates west vnet
 module "west_vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../azure/vnet"
 
   resource_group_name     = local.west_rg_name
   vnet_name               = "${local.west_prefix}-vnet"
@@ -36,7 +36,7 @@ module "west_subnet" {
 
 # Creates west aks cluster, flux, kubediff
 module "west_aks_gitops" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks-gitops"
+  source = "../../azure/aks-gitops"
 
   acr_enabled              = var.acr_enabled
   agent_vm_count           = var.agent_vm_count
@@ -66,7 +66,7 @@ module "west_aks_gitops" {
 
 # create a static public ip and associate with traffic manger endpoint
 module "west_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
+  source = "../../azure/tm-endpoint-ip"
 
   resource_group_name                 = local.west_rg_name
   traffic_manager_resource_group_name = var.traffic_manager_resource_group_name
@@ -91,7 +91,7 @@ resource "azurerm_role_assignment" "west_spra" {
 
 # Deploy west keyvault flexvolume
 module "west_flex_volume" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/keyvault_flexvol"
+  source = "../../azure/keyvault_flexvol"
 
   resource_group_name      = data.azurerm_resource_group.keyvault.name
   service_principal_id     = var.service_principal_id
