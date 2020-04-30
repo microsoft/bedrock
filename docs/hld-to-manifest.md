@@ -10,22 +10,23 @@ In this walkthrough, we will set up an Azure DevOps pipeline that generates a re
 
 There are a few requirements to use this automation:
 
-1. The application code and supporting repositories are hosted on
+1. Install the [Bedrock Prerequisites](https://github.com/microsoft/bedrock/blob/master/tools/prereqs/README.md) (if they're not already installed).
+2. The application code and supporting repositories are hosted on
    [Azure Devops](https://azure.microsoft.com/en-us/services/devops/).
    - If starting from scratch, then first create a
      [new Azure Devops Organization](https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=azure-devops),
      then
      [create a project](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page).
-2. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-3. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-4. The application will be packaged and run using container images hosted on
+3. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+4. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+5. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
-5. The user running `bedrock` has full access to the above resources.
-6. The user is running the latest `bedrock`
+6. The user running `bedrock` has full access to the above resources.
+7. The user is running the latest `bedrock`
    [release](https://github.com/microsoft/bedrock-cli/releases).
-7. The user has
+8. The user has
    [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
-8. The user is running [git](http://git-scm.org) version
+9. The user is running [git](http://git-scm.org) version
    [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
 
 **Note**: If a user wishes to store Helm charts in the application
@@ -87,7 +88,6 @@ values from the config file and store it into local memory elsewhere. If you
 wish to utilize `bedrock` with another project or target, then you must rerun
 `bedrock init` with another configuration first OR, you may overwrite each commands
 via flags.
-
 
 ## Repositories
 Our next step is to onboard the repositories that support the
