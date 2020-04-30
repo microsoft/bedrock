@@ -15,12 +15,14 @@ trap finish EXIT
 
 # prompt for confirmation
 echo "This script will install the latest version of Terraform from github."
-read -p "Do you wish to continue? (y or n)" -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
+echo "The script requires that unzip be installed."
+# next 6 lines commented due to automation
+#read -p "Do you wish to continue? (y or n)" -n 1 -r
+#echo
+#if [[ ! $REPLY =~ ^[Yy]$ ]]
+#then
+#    exit 1
+#fi
 
 # create a temporary directory to do work in
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
@@ -30,7 +32,7 @@ cd $tmp_dir
 ostype=`os_type`
 if [ "$ostype" == "linux" ]; then
     arch="linux_amd64"
-    sudo apt-get install unzip
+    apt-get install -y unzip
 elif [ "$ostype" == "macos" ]; then
     arch="darwin_amd64"
 else
