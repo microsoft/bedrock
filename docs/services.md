@@ -82,8 +82,7 @@ With that, we have set up all of the pipelines for the project itself, so let's 
 We can do that with `bedrock service create` which, like all of the `bedrock` service and project commands, runs from the root of the repo.  In this case, `azure-vote` refers to the path from the root of the repo to the service.
 
 ```sh
-$ bedrock service create azure-vote \
-    --display-name azure-voting-app \
+$ bedrock service create azure-vote azure-voting-app \
     --helm-config-git https://github.com/mtarng/helm-charts \
     --helm-config-path chart-source/azure-vote \
     --helm-config-branch master
