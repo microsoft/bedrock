@@ -11,3 +11,6 @@ d_build:
 
 d_run:
 	docker run --rm -it -v $(MOUNT):/shared $(IMAGE) bash
+
+d_rmi:
+	docker rmi $(IMAGE)

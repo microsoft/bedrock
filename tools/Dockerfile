@@ -1,11 +1,10 @@
 FROM debian:stretch
-LABEL creator="https://twitter.com/carlesanagustin"
+LABEL createdBy="https://twitter.com/carlesanagustin"
 
 RUN apt-get update && \
-    apt-get install -y unzip
-# RUN apt-get install -y git curl wget apt-transport-https lsb-release gpg build-essential
+    apt-get install -y unzip git
 
-COPY ./tools/prereqs/*.sh /
+COPY ./prereqs/*.sh /
 
 RUN /setup_azure_cli.sh && \
     /setup_bedrock_cli.sh && \
@@ -18,4 +17,4 @@ RUN rm -f /*.sh && \
     apt-get purge -y unzip && \
     rm -rf /var/lib/apt/lists/*
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/usr/local/bin/bedrock"]
