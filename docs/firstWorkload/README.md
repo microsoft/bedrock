@@ -735,3 +735,12 @@ As a final step, you probably want to delete your Kubernetes cluster to save on 
 $ cd ~/cluster-deployment/cluster-generated/cluster
 $ terraform destroy -var-file=bedrock.tfvars
 ```
+
+## Conclusion
+At this point you have:
+- Created a Kubernetes cluster with Flux
+- Set up a resource manifest repository for GitOps
+- Verfied changes made to the resource manifest are applied to the Cluster
+
+### Next steps
+- [Set up a GitOps Azure DevOps pipeline](https://github.com/microsoft/bedrock/blob/master/docs/hld-to-manifest.md)

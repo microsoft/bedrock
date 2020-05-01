@@ -197,3 +197,11 @@ NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)               
 kubernetes   ClusterIP      10.0.0.1      <none>          443/TCP                      21h
 traefik2     LoadBalancer   10.0.209.68   137.135.15.52   80:31328/TCP,443:30149/TCP   19h
 ```
+
+## Conclusion
+At this point you have:
+- Set up an Azure DevOps pipeline to generate resource manifests
+- Verified that changes are applied to the Kubernetes cluster
+
+### Next steps
+- [Onboard a service repository](https://github.com/microsoft/bedrock/blob/master/docs/services.md)
