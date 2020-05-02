@@ -7,15 +7,15 @@ variable vnet_name {
 }
 
 variable subnet_name {
-  type = list(string)
+  type = string
 }
 
-variable address_prefix {
+variable address_prefixes {
   type = list(string)
 }
 
 variable service_endpoints {
   description = "A list of the service endpoints for the subnet (e.g. Microsoft.Web)"
-  type        = list(any)
-  default     = [[], []]
+  type        = list(string)
+  default     = []
 }

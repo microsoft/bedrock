@@ -1,5 +1,10 @@
-terraform {
-  backend "azurerm" {}
+#terraform {
+#  backend "azurerm" {}
+#}
+
+provider "azurerm" {
+  version = "~> 2.8"
+  features {}
 }
 
 module "provider" {

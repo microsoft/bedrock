@@ -1,4 +1,4 @@
-output "subnet_ids" {
+output "subnet_id" {
   description = "The id of the subnet"
-  value       = azurerm_subnet.subnet.*.id
+  value       = azurerm_subnet.subnet.id
 }
