@@ -26,12 +26,12 @@ module "central_vnet" {
 }
 
 module "central_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.central_prefix}-snet"]
+  subnet_name          = "${local.central_prefix}-snet"
   vnet_name            = module.central_vnet.vnet_name
   resource_group_name  = local.central_rg_name
-  address_prefix       = var.central_subnet_prefixes
+  address_prefixes     = var.central_subnet_prefixes
 }
 
 # Creates central aks cluster, flux, kubediff
@@ -56,7 +56,7 @@ module "central_aks_gitops" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   ssh_public_key           = var.ssh_public_key
-  vnet_subnet_id           = tostring(element(module.central_subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.central_subnet.subnet_id
   dns_ip                   = var.central_dns_ip
   docker_cidr              = var.central_docker_cidr
   kubernetes_version       = var.kubernetes_version
