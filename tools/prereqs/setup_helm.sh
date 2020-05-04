@@ -18,12 +18,13 @@ trap finish EXIT
 # prompt for confirmation
 echo "This script will install version $HELM_DESIRED_VERSION of helm from Github."
 echo "Bedrock currently only supports version 2.x of helm."
-read -p "Do you wish to continue? " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
+# next 6 lines commented due to automation
+#read -p "Do you wish to continue? " -n 1 -r
+#echo
+#if [[ ! $REPLY =~ ^[Yy]$ ]]
+#then
+#    exit 1
+#fi
 
 # create a temporary directory to do work in
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
