@@ -1,15 +1,15 @@
 ## Configuring a Service through Fabrikate configurations
 
-The goal of this guide is to explain how to configure a single Service's deployment within the High Level Definition repository's configurations.
+The goal of this guide is to explain how to configure a single service's deployment within the High Level Definition repository's configurations.
 
 ### Requirements
 To follow this guide, there are some setup requirements:
-- The Service's deployment needs to be templitized as a [Helm](https://helm.sh/) Chart.
-- The Service needs to be added to the High Level Definition repository as a [fabrikate](https://github.com/microsoft/fabrikate) component referencing the above Helm Chart.
+- The service's deployment needs to be templatized as a [Helm](https://helm.sh/) Chart.
+- The service needs to be added to the High Level Definition repository as a [fabrikate](https://github.com/microsoft/fabrikate) component referencing the above Helm Chart.
 - The Deployment configuration needs to exist as a Helm Chart variable.
 
 ### Validating Helm Chart
-Using the sample [azure-vote](https://github.com/mtarng/helm-charts/tree/master/chart-source/azure-vote) Helm Chart, we'll go over how to set the `replicas` values for a Service Deployment, however this workflow could apply for any other  configuration as long as there is a supporting Helm Chart value.
+Using the sample [azure-vote](https://github.com/mtarng/helm-charts/tree/master/chart-source/azure-vote) Helm Chart, we'll go over how to set the `replicas` values for a service's Kubernetes Deployment, however this workflow could apply for any other  configuration as long as there is a supporting Helm Chart value.
 
 In the azure-vote [deployment.yaml](https://github.com/mtarng/helm-charts/blob/master/chart-source/azure-vote/templates/deployments.yaml):
 
