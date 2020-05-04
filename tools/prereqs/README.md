@@ -13,39 +13,41 @@ We maintain an individual script for each prerequisite to make this easier.
 
 NOTE: You do not need to use these scripts if you are already utilizing a package manager like `apt` or `brew` to install these.
 
-To use this, clone the bedrock repository locally and then navigate to `tools/prereqs` and execute the appropriate scripts for the prerequisites you need to install:
+To use this, clone the bedrock repository locally and then navigate to `tools/prereqs` and execute the appropriate scripts for the prerequisites you need to install or create a Docker image with `tools/Dockerfile` provided.
 
-## Azure CLI
+## Install locally
+
+### Azure CLI
 
 ```bash
 $ sudo ./setup_azure_cli.sh
 ```
 
-## kubectl
+### kubectl
 
 ```bash
 $ sudo ./setup_kubectl.sh
 ```
 
-## Helm
+### Helm
 
 ```bash
 $ sudo ./setup_helm.sh
 ```
 
-## Fabrikate
+### Fabrikate
 
 ```bash
 $ sudo ./setup_fabrikate.sh
 ```
 
-## Terraform
+### Terraform
 
 ```bash
 $ sudo ./setup_terraform.sh
 ```
 
-## Bedrock CLI
+### Bedrock CLI
 
 ```bash
 $ sudo ./setup_bedrock_cli.sh
