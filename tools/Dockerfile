@@ -17,4 +17,4 @@ RUN rm -f /*.sh && \
     apt-get purge -y unzip && \
     rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/usr/local/bin/bedrock"]
+ENTRYPOINT ["/bin/bash"]
