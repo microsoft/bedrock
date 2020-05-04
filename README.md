@@ -28,6 +28,7 @@ Bedrock helps you:
 ## Service Management
 * [Walkthrough: Service Management](./docs/services.md)
 * [Deep Dive: Helm Charts](https://github.com/microsoft/bedrock-cli/blob/master/guides/building-helm-charts-for-bedrock.md)
+* [Configuring A Service through Fabrikate configurations](./docs/service-configuration.md)
 * [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/service-management.md)
 
 ## Rings Management
