@@ -22,10 +22,6 @@ There are a few requirements to use this automation:
 5. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
 6. The user running `bedrock` has full access to the above resources.
-7. The user has
-   [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
-8. The user is running [git](http://git-scm.org) version
-   [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
 
 **Note**: If a user wishes to store Helm charts in the application
    repositories, then all repositories (application, high level definition,
