@@ -370,6 +370,28 @@ $ bedrock infra generate -p cluster
 
 `bedrock` reads our `definition.yaml` file, downloads the template referred to in it, applies the parameters we have provided, and creates a generated Terraform script in a directory called `cluster-generated`.
 
+At this point, your Bedrock project directory should resemble the following structure:
+
+```
+.
+├── app-cluster-manifests/
+├── cluster-deployment/
+  ├── definition.yaml
+  ├── cluster/
+  ├── keys/
+      ├── gitops-ssh-key
+      ├── gitops-ssh-key.pub
+      ├── node-ssh-key
+      ├── node-ssh-key.pub
+  ├── sp/
+      ├── sp.json
+├── cluster-deployment-generated
+  ├── cluster/
+      ├── main.tf
+      ├── bedrock.tfvars
+      ├── variables.tf
+```
+
 ## Deploy Cluster
 
 From this `generated` directory we can `init` our Terraform deployment to fetch all of the upstream Terraform module dependencies.

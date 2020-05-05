@@ -167,6 +167,7 @@ The common variables:
 - `gitops_ssh_key_path`: Absolute path to the *private key file* (i.e. gitops_repo_key) that was generated in the [Set up GitOps repository for Flux](../common/flux/) step and configured to work with the GitOps repository.
 - `gitops_path`: Path to a subdirectory, or folder in a git repo
 - `oms_agent_enabled`: Boolean variable that will provision OMS Linux agents to onboard Azure Monitor for containers. NOTE: `oms_agent_enabled` is set to false by default, but Azure Log Analytics resources (e.g. solutions, workspaces) will still be created, but not used.
+- `vnet_name`: Name to an existing virtual network.
 
 The full list of variables that are customizable are in the `variables.tf` file within each environment template.
 
