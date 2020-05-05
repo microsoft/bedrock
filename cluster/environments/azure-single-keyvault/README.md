@@ -24,7 +24,8 @@ access_key="<storage account access key>"
 
 container_name="myContainer"
 
-key="tfstate-single-keyvault"
+key="tfstate-azure-single-keyvault"
+
 ```
 
 If there is not a `terraform.tfvars`, create one that looks like this:
@@ -36,13 +37,13 @@ If there is not a `terraform.tfvars`, create one that looks like this:
 
 #--------------------------------------------------------------
 
-keyvault_name = "myVault"
+keyvault_resource_group = "<existing keyvault rg>"
 
-keyvault_resource_group = "myResourceGroup"
+keyvault_name = "<keyvault created in azure-common-infra template>"
 
-vnet_name = "myVnet"
+vnet_name = "<vnet-name created in azure-common-infra template>"
 
-subnet_name = "mySubnet"
+subnet_name = "<subnet-name created in azure-common-infra template>"
 
 #--------------------------------------------------------------
 
