@@ -17,17 +17,11 @@ There are a few requirements to use this automation:
      [new Azure Devops Organization](https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=azure-devops),
      then
      [create a project](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page).
-3. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-4. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+3. A Manifest Repository inside an Azure DevOps project as instructed from [A First Worklad with Bedrock](https://github.com/microsoft/bedrock/tree/master/docs/firstWorkload#create-and-configure-gitops-resource-manifest-repo).
+4. An HLD Repository inside the same Azure DevOps project as the manifest repository. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
 5. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
 6. The user running `bedrock` has full access to the above resources.
-7. The user is running the latest `bedrock`
-   [release](https://github.com/microsoft/bedrock-cli/releases).
-8. The user has
-   [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
-9. The user is running [git](http://git-scm.org) version
-   [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
 
 **Note**: If a user wishes to store Helm charts in the application
    repositories, then all repositories (application, high level definition,
@@ -124,7 +118,7 @@ If the initialization succeeded, you will see a message similar to this:
 info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=bedrock-hld-init&targetRef=master
 ```
 
-This message means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
+This message means that we were able to generate an HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
 
 To verify run:
 ```
@@ -165,6 +159,35 @@ Fast-forward
  create mode 100644 .gitignore
  create mode 100644 component.yaml
  create mode 100644 manifest-generation.yaml
+```
+
+From here, your Bedrock workload should have the following structure:
+
+```
+.
+├── app-cluster-manifests/
+  ├── prod
+      ├── traefik2
+      ├── default-component.yaml
+├── app-cluster-hlds/
+  ├── component.yaml
+  ├── manifest-generation.yaml
+  ├── .gitignore
+├── cluster-deployment/
+  ├── definition.yaml
+  ├── cluster/
+  ├── keys/
+      ├── gitops-ssh-key
+      ├── gitops-ssh-key.pub
+      ├── node-ssh-key
+      ├── node-ssh-key.pub
+  ├── sp/
+      ├── sp.json
+├── cluster-deployment-generated
+  ├── cluster/
+      ├── main.tf
+      ├── bedrock.tfvars
+      ├── variables.tf
 ```
 
 ## Deploy Manifest Generation Pipeline
