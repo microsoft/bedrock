@@ -46,7 +46,13 @@ Bedrock helps you:
 
 ## Contributing
 
-We do not claim to have all the answers and would greatly appreciate your ideas, issues, and pull requests.
+We do not claim to have all the answers and would greatly appreciate your ideas, issues, and pull requests. 
+
+If you'd like to contribute, start by searching through the [issues](https://github.com/microsoft/bedrock/issues) and [pull requests](https://github.com/microsoft/bedrock/pulls) to see whether someone else has raised a similar idea or question.
+
+If you don't see your idea listed, and you think it fits into the goals of this project, do one of the following:
+* **If your contribution is minor,** such as a typo or grammar fix, open a pull request.
+* **If your contribution is major,** such as a new guide or feature we suggest starting by opening an issue first. That way, there is more visiblity to other contributors.
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
