@@ -14,7 +14,6 @@ locals {
 
 # Creates vnet
 module "central_vnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
   source = "../../../cluster/azure/vnet"
 
   resource_group_name     = local.central_rg_name
