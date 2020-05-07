@@ -109,3 +109,10 @@ variable "oms_agent_enabled" {
   description = "Enable Azure Monitoring for AKS"
   type        = string
 }
+
+variable "tags" {
+  description = "The tags to associate with AKS"
+  type        = map
+
+  default = {}
+}

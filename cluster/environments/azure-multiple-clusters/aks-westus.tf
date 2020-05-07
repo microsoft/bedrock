@@ -26,7 +26,8 @@ module "west_vnet" {
 }
 
 module "west_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../../cluster/azure/subnet"
 
   subnet_name          = ["${local.west_prefix}-snet"]
   vnet_name            = module.west_vnet.vnet_name

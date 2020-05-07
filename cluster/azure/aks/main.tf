@@ -21,6 +21,8 @@ resource "azurerm_log_analytics_workspace" "workspace" {
   location            = data.azurerm_resource_group.cluster.location
   resource_group_name = data.azurerm_resource_group.cluster.name
   sku                 = "PerGB2018"
+
+  tags = var.tags
 }
 
 resource "azurerm_log_analytics_solution" "solution" {
@@ -106,6 +108,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       type = identity.value
     }
   }
+
+  tags = var.tags
 }
 
 data "external" "msi_object_id" {
