@@ -1,5 +1,5 @@
 module "api-mgmt" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/api-mgmt"
+  source = "../../../cluster/azure/api-mgmt"
 
   api_mgmt_name        = "apiterraarmdeploy"
   resource_group_name  = data.azurerm_resource_group.tmrg.name

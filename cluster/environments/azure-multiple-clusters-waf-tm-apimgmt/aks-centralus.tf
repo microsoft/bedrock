@@ -14,7 +14,8 @@ locals {
 
 # Creates vnet
 module "central_vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../../cluster/azure/vnet"
 
   resource_group_name     = local.central_rg_name
   vnet_name               = "${local.central_prefix}-vnet"
@@ -26,7 +27,7 @@ module "central_vnet" {
 }
 
 module "central_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../../cluster/azure/subnet"
 
   subnet_name          = ["${local.central_prefix}-snet"]
   vnet_name            = module.central_vnet.vnet_name
@@ -36,7 +37,7 @@ module "central_subnet" {
 
 # Creates aks cluster
 module "central_aks" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  source = "../../../cluster/azure/aks"
 
   resource_group_name      = local.central_rg_name
   cluster_name             = "${var.cluster_name}-central"
@@ -57,7 +58,7 @@ module "central_aks" {
 
 # Deploys flux in aks cluster
 module "central_flux" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/common/flux"
+  source = "../../../cluster/common/flux"
 
   gitops_ssh_url       = var.gitops_ssh_url
   gitops_ssh_key_path  = var.gitops_ssh_key_path
@@ -71,7 +72,7 @@ module "central_flux" {
 }
 
 module "central_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
+  source = "../../../cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = local.central_rg_name
   traffic_manager_resource_group_name = var.traffic_manager_resource_group_name
