@@ -26,7 +26,6 @@ module "east_vnet" {
 }
 
 module "east_subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
   source = "../../../cluster/azure/subnet"
 
   subnet_name          = ["${local.east_prefix}-snet"]
