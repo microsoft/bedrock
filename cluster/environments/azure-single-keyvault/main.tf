@@ -17,7 +17,6 @@ data "azurerm_resource_group" "keyvault" {
 }
 
 module "subnet" {
-  #source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
   source = "../../../cluster/azure/subnet"
 
   subnet_name          = [var.subnet_name]
