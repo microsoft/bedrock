@@ -14,7 +14,7 @@ locals {
 
 # Creates vnet
 module "central_vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../../cluster/azure/vnet"
 
   resource_group_name     = local.central_rg_name
   vnet_name               = "${local.central_prefix}-vnet"
@@ -26,9 +26,9 @@ module "central_vnet" {
 }
 
 module "central_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.central_prefix}-snet"]
+  subnet_name          = "${local.central_prefix}-snet"
   vnet_name            = module.central_vnet.vnet_name
   resource_group_name  = local.central_rg_name
   address_prefix       = var.central_subnet_prefixes
@@ -36,14 +36,14 @@ module "central_subnet" {
 
 # Creates aks cluster
 module "central_aks" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  source = "../../../cluster/azure/aks"
 
   resource_group_name      = local.central_rg_name
   cluster_name             = "${var.cluster_name}-central"
 
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = tostring(element(module.central_subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.central_subnet.subnet_id
   service_cidr             = var.central_service_cidr
   dns_ip                   = var.central_dns_ip
   docker_cidr              = var.central_docker_cidr
@@ -57,7 +57,7 @@ module "central_aks" {
 
 # Deploys flux in aks cluster
 module "central_flux" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/common/flux"
+  source = "../../../cluster/common/flux"
 
   gitops_ssh_url       = var.gitops_ssh_url
   gitops_ssh_key_path  = var.gitops_ssh_key_path
@@ -71,7 +71,7 @@ module "central_flux" {
 }
 
 module "central_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
+  source = "../../../cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = local.central_rg_name
   traffic_manager_resource_group_name = var.traffic_manager_resource_group_name

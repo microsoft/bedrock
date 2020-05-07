@@ -14,7 +14,7 @@ locals {
 
 # Creates vnet
 module "east_vnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/vnet"
+  source = "../../../cluster/azure/vnet"
 
   resource_group_name     = local.east_rg_name
   vnet_name               = "${local.east_prefix}-vnet"
@@ -26,24 +26,24 @@ module "east_vnet" {
 }
 
 module "east_subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.east_prefix}-snet"]
+  subnet_name          = "${local.east_prefix}-snet"
   vnet_name            = module.east_vnet.vnet_name
   resource_group_name  = local.east_rg_name
-  address_prefix       = var.east_subnet_prefixes
+  address_prefixes     = var.east_subnet_prefixes
 }
 
 # Creates aks cluster
 module "east_aks" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/aks"
+  source = "../../../cluster/azure/aks"
 
   resource_group_name      = local.east_rg_name
   cluster_name             = "${var.cluster_name}-east"
 
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = tostring(element(module.east_subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.east_subnet.subnet_ids
   service_cidr             = var.east_service_cidr
   dns_ip                   = var.east_dns_ip
   docker_cidr              = var.east_docker_cidr
@@ -57,7 +57,7 @@ module "east_aks" {
 
 # Deploys flux in aks cluster
 module "east_flux" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/common/flux"
+  source = "../../../cluster/common/flux"
 
   gitops_ssh_url       = var.gitops_ssh_url
   gitops_ssh_key_path  = var.gitops_ssh_key_path
@@ -73,7 +73,7 @@ module "east_flux" {
 # # create a dynamic public ip and associate with traffic manger endpoint
 
 module "east_tm_endpoint" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/tm-endpoint-ip"
+  source = "../../../cluster/azure/tm-endpoint-ip"
 
   resource_group_name                 = local.east_rg_name
   traffic_manager_resource_group_name = var.traffic_manager_resource_group_name
