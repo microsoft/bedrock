@@ -10,3 +10,10 @@ variable "enable_acr" {
 variable "acr_name" {
   type = string
 }
+
+variable "tags" {
+  description = "The tags to associate with ACR"
+  type        = map
+
+  default = {}
+}
