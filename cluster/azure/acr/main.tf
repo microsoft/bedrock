@@ -9,5 +9,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = data.azurerm_resource_group.cluster.name
   location = data.azurerm_resource_group.cluster.location
   sku = "Basic"
+
+  tags = var.tags
 }
 

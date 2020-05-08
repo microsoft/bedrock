@@ -16,4 +16,6 @@ resource "azurerm_key_vault" "keyvault" {
     default_action = "Allow"
     bypass         = "AzureServices"
   }
+
+  tags = var.tags
 }

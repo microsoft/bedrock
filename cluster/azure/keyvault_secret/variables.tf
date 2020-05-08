@@ -11,3 +11,9 @@ variable "secret_value" {
   type    = string
   default = ""
 }
+
+variable "tags" {
+  description = "The tags to associate with the secret"
+  type        = map
+  default = {}
+}

@@ -19,7 +19,7 @@ module "vnet" {
 }
 
 module "subnet" {
-  source = "github.com/microsoft/bedrock?ref=master//cluster/azure/subnet"
+  source = "../../azure/subnet"
 
   subnet_name          = ["${var.cluster_name}-aks-subnet"]
   vnet_name            = module.vnet.vnet_name

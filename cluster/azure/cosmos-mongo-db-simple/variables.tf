@@ -17,3 +17,9 @@ variable "mongo_db_name" {
   description = "MongoDB name"
   type        = string
 }
+
+variable "tags" {
+  description = "The tags to associate with cosmos"
+  type        = map
+  default = {}
+}
