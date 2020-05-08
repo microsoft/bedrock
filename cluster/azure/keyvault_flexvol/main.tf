@@ -11,8 +11,13 @@ data "azurerm_key_vault" "flexvol" {
   resource_group_name = var.resource_group_name
 }
 
+locals {
+  # check to see if the keyvault already has a policy for the service principal
+  policy_exist_for_sp = contains(data.azurerm_key_vault.flexvol.access_policy.*.object_id, data.azuread_service_principal.flexvol.id)
+}
+
 resource "azurerm_key_vault_access_policy" "flexvol" {
-  count = var.enable_flexvol ? 1 : 0
+  count = (var.enable_flexvol && !local.policy_exist_for_sp) ? 1 : 0
 
   key_vault_id = data.azurerm_key_vault.flexvol.id
   tenant_id = var.tenant_id
