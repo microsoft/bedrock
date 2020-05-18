@@ -114,9 +114,9 @@ stages:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
     steps:
-    - task: GoTool@0
-      inputs:
-        version: '1.13.5'
+      - task: GoTool@0
+        inputs:
+          version: '1.13.5'
       - template: pipelines/bedrock-whitelist-artifact-embed.yml
       - template: pipelines/bedrock-test-init.yml
       - script: |
