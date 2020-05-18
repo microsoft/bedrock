@@ -113,13 +113,6 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
-    variables:
-    - group: 'CSE Bedrock CI Environment Variables for Azure'
-    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
-    - GOROOT: '/usr/local/go1.13' # Go installation path
-    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-
     steps:
       - task: GoTool@0
         inputs:
@@ -130,6 +123,12 @@ stages:
           ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
           export ssh_key=$(readlink -f id_rsa.pub)
           export public_key=$(cat id_rsa.pub)
+          # Login to Azure
+          echo "az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)"
+          az login --service-principal --username "$(ARM_CLIENT_ID))" --password "$(ARM_CLIENT_SECRET)" --tenant "$(ARM_TENANT_ID)"
+          # Step up git identity
+          git config --global user.email "me@microsoft.com"
+          git config --global user.name "Service Account"
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
           go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
         env:
@@ -152,11 +151,10 @@ stages:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
     variables:
-    - group: 'CSE Bedrock CI Environment Variables for Azure'
-    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
-    - GOROOT: '/usr/local/go1.13' # Go installation path
-    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+      GOBIN:  '$(GOPATH)/bin' # Go binaries path
+      GOROOT: '/usr/local/go1.13' # Go installation path
+      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - task: GoTool@0
@@ -168,6 +166,12 @@ stages:
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
+        # Login to Azure
+        echo "az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)"
+        az login --service-principal --username "$(ARM_CLIENT_ID))" --password "$(ARM_CLIENT_SECRET)" --tenant "$(ARM_TENANT_ID)"
+        # Step up git identity
+        git config --global user.email "me@microsoft.com"
+        git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
       env:
@@ -192,11 +196,10 @@ stages:
       timeoutInMinutes: 60
 
     variables:
-    - group: 'CSE Bedrock CI Environment Variables for Azure'
-    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
-    - GOROOT: '/usr/local/go1.13' # Go installation path
-    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+      GOBIN:  '$(GOPATH)/bin' # Go binaries path
+      GOROOT: '/usr/local/go1.13' # Go installation path
+      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - task: GoTool@0
@@ -208,6 +211,12 @@ stages:
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
+        # Login to Azure
+        echo "az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)"
+        az login --service-principal --username "$(ARM_CLIENT_ID))" --password "$(ARM_CLIENT_SECRET)" --tenant "$(ARM_TENANT_ID)"
+        # Step up git identity
+        git config --global user.email "me@microsoft.com"
+        git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
       env:
