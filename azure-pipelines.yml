@@ -113,6 +113,12 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
+    variables:  
+    - group:  'CSE Bedrock CI Environment Variables for Azure' 
+    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
+    - GOROOT: '/usr/local/go1.13' # Go installation path
+    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
     steps:
       - task: GoTool@0
         inputs:
@@ -150,11 +156,12 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
-    variables:
-      GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      GOROOT: '/usr/local/go1.13' # Go installation path
-      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+    variables:  
+    - group:  'CSE Bedrock CI Environment Variables for Azure' 
+    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
+    - GOROOT: '/usr/local/go1.13' # Go installation path
+    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - task: GoTool@0
@@ -194,12 +201,12 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
       timeoutInMinutes: 60
-
-    variables:
-      GOBIN:  '$(GOPATH)/bin' # Go binaries path
-      GOROOT: '/usr/local/go1.13' # Go installation path
-      GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-      modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+    variables:  
+    - group:  'CSE Bedrock CI Environment Variables for Azure' 
+    - GOBIN:  '$(GOPATH)/bin' # Go binaries path
+    - GOROOT: '/usr/local/go1.13' # Go installation path
+    - GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+    - modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
     steps:
     - task: GoTool@0
