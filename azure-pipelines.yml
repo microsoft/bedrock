@@ -141,7 +141,6 @@ stages:
           git config --global user.name "Service Account"
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
           go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-simple.log
-          terratest_log_parser --testlog terratest-ci-simple.log --outputdir test_xml
         env:
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -152,6 +151,10 @@ stages:
           ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
         workingDirectory: '$(modulePath)/test'
         displayName: 'Integration Test: Bedrock_Azure-Simple '
+      - script: |
+          terratest_log_parser --testlog terratest-ci-simple.log --outputdir test_xml
+        workingDirectory: '$(modulePath)/test'
+        displayName: 'Parse out logs'
       - task: PublishTestResults@2
         inputs:
           testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
@@ -194,7 +197,6 @@ stages:
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-single.log
-        terratest_log_parser --testlog terratest-ci-single.log --outputdir test_xml
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -206,6 +208,10 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
+    - script: |
+        terratest_log_parser --testlog terratest-ci-single.log --outputdir test_xml
+      workingDirectory: '$(modulePath)/test'
+      displayName: 'Parse out logs'
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
@@ -248,7 +254,6 @@ stages:
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
         go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-multi.log
-        terratest_log_parser --testlog terratest-ci-multi.log --outputdir test_xml
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -260,6 +265,10 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+    - script: |
+        terratest_log_parser --testlog terratest-ci-multi.log --outputdir test_xml
+      workingDirectory: '$(modulePath)/test'
+      displayName: 'Parse out logs'
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
