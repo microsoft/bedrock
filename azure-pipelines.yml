@@ -152,11 +152,11 @@ stages:
           ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
         workingDirectory: '$(modulePath)/test'
         displayName: 'Integration Test: Bedrock_Azure-Simple '
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
-          mergeTestResults: false
-          failTaskOnFailedTests: true
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+        mergeTestResults: false
+        failTaskOnFailedTests: true
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -206,11 +206,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
-          mergeTestResults: false
-          failTaskOnFailedTests: true
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+        mergeTestResults: false
+        failTaskOnFailedTests: true
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -260,11 +260,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
-          mergeTestResults: false
-          failTaskOnFailedTests: true
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+        mergeTestResults: false
+        failTaskOnFailedTests: true
 
 #     - script: |
 #         export ssh_key=$(readlink -f id_rsa.pub)
