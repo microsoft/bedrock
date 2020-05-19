@@ -6,7 +6,7 @@ In upcoming advanced scenarios, we will be using the Bedrock automation to repea
 
 Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](firstWorkload/README.md). 
 
-## Deplying the common infrastructure:
+## Deploying the common infrastructure:
 
 Before you deploy infrastructure environments, you will need to create an Azure Storage Account. You can do this in Azure Portal, or by using the Azure CLI:
 
@@ -145,7 +145,7 @@ This should provision keyvault, vnet in your azure subscription.
 
 You can reuse the common infrastructure components for multiple clusters.
 
-## Deplying Azure Single Cluster with Keyvault:
+## Deploying Azure Single Cluster with Keyvault:
 
 Now that we have common infrastructure components in place, we are ready to deploy AKS cluster using Bedrock Azure Single Cluster with Keyvault environment. The `azure-single-keyvault` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault.
 
