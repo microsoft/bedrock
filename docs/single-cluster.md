@@ -6,7 +6,7 @@ In upcoming advanced scenarios, we will be using the Bedrock automation to repea
 
 Note: This walkthrough assumes that you already have set all the environment variables as part of [first walkthrough](firstWorkload/README.md). 
 
-## Deplying the common infrastructure:
+## Deploying the common infrastructure:
 
 Before you deploy infrastructure environments, you will need to create an Azure Storage Account. You can do this in Azure Portal, or by using the Azure CLI:
 
