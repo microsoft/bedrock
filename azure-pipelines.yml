@@ -196,7 +196,7 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-single.log
+        go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s |  tee terratest-ci-single.log
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -253,7 +253,7 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-multi.log
+        go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s |  tee terratest-ci-multi.log
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
