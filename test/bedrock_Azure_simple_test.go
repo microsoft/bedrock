@@ -86,7 +86,7 @@ func TestIT_Bedrock_AzureSimple_Test(t *testing.T) {
 
 	//Test Case 1: Verify Flux namespace
 	fmt.Println("Test case 1: Verifying flux namespace")
-	_flux, fluxErr := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=flux")
+	_flux, fluxErr := k8s.RunKubectlAndGetOutputE(t, options, "get", "po", "--namespace=fluxFAIL")
 	if fluxErr != nil || !strings.Contains(_flux, "flux") {
 		t.Fatal(fluxErr)
 	} else {
