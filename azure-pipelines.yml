@@ -154,7 +154,7 @@ stages:
         displayName: 'Integration Test: Bedrock_Azure-Simple '
       - task: PublishTestResults@2
         inputs:
-          testResultsFiles: '$(Agent.BuildDirectory)/s/$(modulePath)/test/test_xml/report.xml'
+        testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
           mergeTestResults: false
           failTaskOnFailedTests: true
 
@@ -208,7 +208,7 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '$(Agent.BuildDirectory)/s/$(modulePath)/test/test_xml/report.xml'
+        testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
         mergeTestResults: false
         failTaskOnFailedTests: true
 
@@ -262,7 +262,7 @@ stages:
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '$(Agent.BuildDirectory)/s/$(modulePath)/test/test_xml/report.xml'
+        testResultsFiles: '$(modulePath)/test/test_xml/report.xml'
         mergeTestResults: false
         failTaskOnFailedTests: true
 
