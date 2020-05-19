@@ -145,7 +145,7 @@ This should provision keyvault, vnet in your azure subscription.
 
 You can reuse the common infrastructure components for multiple clusters.
 
-## Deplying Azure Single Cluster with Keyvault:
+## Deploying Azure Single Cluster with Keyvault:
 
 Now that we have common infrastructure components in place, we are ready to deploy AKS cluster using Bedrock Azure Single Cluster with Keyvault environment. The `azure-single-keyvault` environment deploys a single production level AKS cluster configured with Flux and Azure Keyvault.
 
