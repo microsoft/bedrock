@@ -140,7 +140,8 @@ stages:
           git config --global user.email "me@microsoft.com"
           git config --global user.name "Service Account"
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-          go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s
+          go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-simple.log
+          terratest_log_parser --testlog terratest-ci-simple.log --outputdir test_xml
         env:
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -151,6 +152,11 @@ stages:
           ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
         workingDirectory: '$(modulePath)/test'
         displayName: 'Integration Test: Bedrock_Azure-Simple '
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+          mergeTestResults: false
+          failTaskOnFailedTests: true
 
   - job: Bedrock_Test_KEYVAULT
     displayName: Bedrock_Build_Azure_Single_KeyVault
@@ -187,7 +193,8 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s
+        go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-single.log
+        terratest_log_parser --testlog terratest-ci-single.log --outputdir test_xml
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -199,6 +206,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-KeyVault '
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+          mergeTestResults: false
+          failTaskOnFailedTests: true
 
   - job: Bedrock_Test_MULTIPLE
     dependsOn: Bedrock_Init_Validate
@@ -235,7 +247,8 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s
+        go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-multi.log
+        terratest_log_parser --testlog terratest-ci-multi.log --outputdir test_xml
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -247,6 +260,11 @@ stages:
         ARM_BACKEND_STORAGE_CONTAINER: $(ARM_BACKEND_STORAGE_CONTAINER)
       workingDirectory: '$(modulePath)/test'
       displayName: 'Integration Test: Bedrock_Azure-Common-MultiCluster '
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: '$(Agent.BuildDirectory)/s/test_xml/report.xml'
+          mergeTestResults: false
+          failTaskOnFailedTests: true
 
 #     - script: |
 #         export ssh_key=$(readlink -f id_rsa.pub)
