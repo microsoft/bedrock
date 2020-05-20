@@ -130,7 +130,7 @@ stages:
       - template: pipelines/bedrock-whitelist-artifact-embed.yml
       - template: pipelines/bedrock-test-init.yml
       - script: |
-          set -o pipefail
+          set -eux
           ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
           export ssh_key=$(readlink -f id_rsa.pub)
           export public_key=$(cat id_rsa.pub)
@@ -187,7 +187,7 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
-        set -o pipefail
+        set -eux
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
@@ -245,7 +245,7 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
-        set -o pipefail
+        set -eux
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
