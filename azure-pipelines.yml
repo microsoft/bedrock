@@ -130,7 +130,6 @@ stages:
       - template: pipelines/bedrock-whitelist-artifact-embed.yml
       - template: pipelines/bedrock-test-init.yml
       - script: |
-          set -eux
           ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
           export ssh_key=$(readlink -f id_rsa.pub)
           export public_key=$(cat id_rsa.pub)
@@ -141,7 +140,12 @@ stages:
           git config --global user.email "me@microsoft.com"
           git config --global user.name "Service Account"
           find $(modulePath)/cluster/environments/azure-simple -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-          go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s |  tee terratest-ci-simple.log
+          smokeTest=$(go test -v -run TestIT_Bedrock_AzureSimple_Test -timeout 99999s)
+          if [ $? -ne 0 ]; then
+            echo "Test Failed"
+            exit 1
+          fi
+          echo $smokeTest |  tee terratest-ci-simple.log
         env:
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -187,7 +191,6 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
-        set -eux
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
@@ -198,7 +201,12 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-single-keyvault -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s |  tee terratest-ci-single.log
+        smokeTest= $(go test -v -run TestIT_Bedrock_AzureCommon_KV_Test -timeout 99999s)
+        if [ $? -ne 0 ]; then
+          echo "Test Failed"
+          exit 1
+        fi
+        echo $smokeTest |  tee terratest-ci-single.log
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
@@ -245,7 +253,6 @@ stages:
     - template: pipelines/bedrock-whitelist-artifact-embed.yml
     - template: pipelines/bedrock-test-init.yml
     - script: |
-        set -eux
         ssh-keygen -f id_rsa -t rsa -N "bedrock@microsoft.com"
         export ssh_key=$(readlink -f id_rsa.pub)
         export public_key=$(cat id_rsa.pub)
@@ -256,7 +263,12 @@ stages:
         git config --global user.email "me@microsoft.com"
         git config --global user.name "Service Account"
         find $(modulePath)/cluster/environments/azure-multiple-clusters -type f -name '*.tf' -exec sed -i 's/github.com\/Microsoft\/bedrock\/cluster/..\/../g' {} \;
-        go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s |  tee terratest-ci-multi.log
+        smokeTest=$(go test -v -run TestIT_Bedrock_AzureMC_Test -timeout 99999s)
+        if [ $? -ne 0 ]; then
+          echo "Test Failed"
+          exit 1
+        fi
+        echo $smokeTest |  tee terratest-ci-multi.log
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_OBJECT_ID: $(ARM_CLIENT_OBJECT_ID)
