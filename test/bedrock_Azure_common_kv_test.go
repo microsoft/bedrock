@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -43,11 +44,11 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
 	// Remove any existing state
-        tfDir := azureSimpleInfraFolder + "/.terraform"
+        tfDir := azureCommonInfraFolder + "/.terraform"
         if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
                 os.RemoveAll(tfDir)
         }
-        stateFileGlob := azureSimpleInfraFolder + "/*tfstate*"
+        stateFileGlob := azureCommonInfraFolder + "/*tfstate*"
         stateFiles, err := filepath.Glob(stateFileGlob)
         if err != nil {
                 panic(err)
@@ -57,11 +58,11 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
                         panic(err)
                 }
         }
-        outputDir := azureSimpleInfraFolder + "/output"
+        outputDir := azureCommonInfraFolder + "/output"
         if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
                 os.RemoveAll(outputDir)
         }
-        fluxDirGlob := azureSimpleInfraFolder + "/*-flux"
+        fluxDirGlob := azureCommonInfraFolder + "/*-flux"
         fluxDirs, err := filepath.Glob(fluxDirGlob)
         if err != nil {
                 panic(err)
@@ -126,6 +127,36 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	//Copy env directories as needed to avoid conflicting with other running tests
 	azureSingleKeyvaultFolder := "../cluster/test-temp-envs/azure-single-keyvault-" + k8sName
 	copy.Copy("../cluster/environments/azure-single-keyvault", azureSingleKeyvaultFolder)
+
+	// Remove any existing state
+        tfDir = azureSingleKeyvaultFolder + "/.terraform"
+        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+                os.RemoveAll(tfDir)
+        }
+        stateFileGlob = azureSingleKeyvaultFolder + "/*tfstate*"
+        stateFiles, err = filepath.Glob(stateFileGlob)
+        if err != nil {
+                panic(err)
+        }
+	for _, f := range stateFiles {
+                if err := os.Remove(f); err != nil {
+                        panic(err)
+                }
+        }
+        outputDir = azureSingleKeyvaultFolder + "/output"
+        if _, err = os.Stat(outputDir); !os.IsNotExist(err) {
+                os.RemoveAll(outputDir)
+        }
+        fluxDirGlob = azureSingleKeyvaultFolder + "/*-flux"
+        fluxDirs, err = filepath.Glob(fluxDirGlob)
+        if err != nil {
+                panic(err)
+        }
+	for _, d := range fluxDirs {
+                if err := os.RemoveAll(d); err != nil {
+                        panic(err)
+                }
+        }
 
 	//Create the aks resource group
 	cmd2 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
