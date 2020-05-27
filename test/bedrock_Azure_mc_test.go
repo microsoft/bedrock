@@ -63,6 +63,36 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
+        // Remove any existing state
+        tfDir := azureSimpleInfraFolder + "/.terraform"
+        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+                os.RemoveAll(tfDir)
+        }
+        stateFileGlob := azureSimpleInfraFolder + "/*tfstate*"
+        stateFiles, err := filepath.Glob(stateFileGlob)
+        if err != nil {
+                panic(err)
+        }
+        for _, f := range stateFiles {
+                if err := os.Remove(f); err != nil {
+                        panic(err)
+                }
+        }
+        outputDir := azureSimpleInfraFolder + "/output"
+        if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
+                os.RemoveAll(outputDir)
+        }
+        fluxDirGlob := azureSimpleInfraFolder + "/*-flux"
+        fluxDirs, err := filepath.Glob(fluxDirGlob)
+        if err != nil {
+                panic(err)
+        }
+        for _, d := range fluxDirs {
+                if err := os.RemoveAll(d); err != nil {
+                        panic(err)
+                }
+        }
+
 	//Create the common resource group
 	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
 	err0 := cmd0.Run()
