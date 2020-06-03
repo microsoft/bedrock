@@ -41,7 +41,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	// Generate a common infra resources for integration use with azure multicluster environment
 	uniqueID := strings.ToLower(random.UniqueId())
 	k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
-	k8sVersion := "1.15.7"
+	k8sVersion := "1.15.11"
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
