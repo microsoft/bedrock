@@ -11,6 +11,9 @@ Bedrock helps you:
 * Deploy and manage service workloads from source code to their deployment in-cluster.
 * Observe ongoing deployments across multiple services and their revisions and multiple clusters deploying those services.
 
+## Quick Start
+* [Build a GitOps Pipeline with Bedrock in 5 minutes](./docs/gitops-quickstart.md)
+
 ## Getting Started
 * [Installing Prerequisites](./tools/prereqs/README.md)
 * [Walkthrough: Deploying a First Workload](./docs/firstWorkload)
