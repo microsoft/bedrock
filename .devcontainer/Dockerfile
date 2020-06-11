@@ -23,12 +23,12 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash \
     && az aks install-cli
 
 # Install Helm
-Run wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
+RUN wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && tar xvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && sudo mv linux-amd64/helm /usr/local/bin/
 
 # Install Terraform
-Run wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin/
 
 # Install Fabrikate
@@ -38,6 +38,6 @@ Run wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
     # && unzip $FABRIKATE_FILE -d /usr/local/bin \
 
 # Install Bedrock CLI
-Run curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/${BEDROCK_VERSION}/bedrock-linux \
+RUN curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/${BEDROCK_VERSION}/bedrock-linux \
     && cp bedrock-linux /usr/local/bin/bedrock \
     && chmod +x /usr/local/bin/bedrock
