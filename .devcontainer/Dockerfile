@@ -16,18 +16,28 @@ ARG TERRAFORM_VERSION="0.12.26"
 
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends unzip apt-utils dialog 2>&1 \
-    && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash \
-    && az aks install-cli \
-    && wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    && apt-get -y install --no-install-recommends unzip apt-utils dialog 2>&1
+
+# Install Azure CLI and Kubectl
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash \
+    && az aks install-cli
+
+# Install Helm
+Run wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && tar xvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
-    && sudo mv linux-amd64/helm /usr/local/bin/ \
-    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin/ \
-    # && FABRIKATE_FILE=`curl -s -L https://github.com/microsoft/fabrikate/releases/latest | grep "$arch" | sed -n "s/.*\(fab-v[0-9]*.[0-9]*.[0-9]*-$arch.zip\).*/\1/p" | sort -u`
+    && sudo mv linux-amd64/helm /usr/local/bin/
+
+# Install Terraform
+Run wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin/
+
+# Install Fabrikate
+   # Run FABRIKATE_FILE=`curl -s -L https://github.com/microsoft/fabrikate/releases/latest | grep "$arch" | sed -n "s/.*\(fab-v[0-9]*.[0-9]*.[0-9]*-$arch.zip\).*/\1/p" | sort -u`
     # && FABRIKATE_VERSION=`echo $FABRIKATE_FILE | sed -n 's/.*v\([0-9]*.[0-9]*.[0-9]*\).*/\1/p'` \
     # && curl -s -LO https://github.com/microsoft/fabrikate/releases/download/$FABRIKATE_VERSION/$FABRIKATE_FILE
     # && unzip $FABRIKATE_FILE -d /usr/local/bin \
-    && curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/${BEDROCK_VERSION}/bedrock-linux \
+
+# Install Bedrock CLI
+Run curl -s -LO https://github.com/microsoft/bedrock-cli/releases/download/${BEDROCK_VERSION}/bedrock-linux \
     && cp bedrock-linux /usr/local/bin/bedrock \
     && chmod +x /usr/local/bin/bedrock
