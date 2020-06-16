@@ -11,7 +11,8 @@ The best way to start learning about GitOps in Bedrock is to walkthrough a simpl
 ### Pre-req
 
 * An Azure subscription with an existing [Azure Container Registry](https://docs.microsoft.com/en-us/azure/container-registry/)
-* Ensure the [latest](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version of Azure CLI is installed.
+* Ensure the [latest](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version of Azure CLI is installed
+* [Azure DevOps extension for Azure CLI](https://github.com/Azure/azure-devops-cli-extension). To install run `az extension add --name azure-devops && az login`
 * An [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/) project, organization, and read/write/manage [access token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page)
 
 ### Installation
