@@ -23,6 +23,8 @@ module "aks" {
   network_policy           = var.network_policy
   network_plugin           = var.network_plugin
   oms_agent_enabled        = var.oms_agent_enabled
+
+  tags = var.tags
 }
 
 module "flux" {

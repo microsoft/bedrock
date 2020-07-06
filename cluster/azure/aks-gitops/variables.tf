@@ -126,3 +126,10 @@ variable "oms_agent_enabled" {
   type    = string
   default = "false"
 }
+
+variable "tags" {
+  description = "The tags to associate with aks"
+  type        = map
+
+  default = {}
+}

@@ -79,7 +79,7 @@ other than `4040`, add that entry in the settings instead.
 
 ## Configure the Pipelines
 The Bedrock GitOps pipelines need to be configured to start sending data to
-`bedrock` service introspection. If you followed the guidelines from the (Prerequisites)[#prerequisites] each pipeline `yaml` will already have the script needed for introspection.
+`bedrock` service introspection. If you followed the guidelines from the [Prerequisites](#prerequisites) each pipeline `yaml` will already have the script needed for introspection.
 
 To send data from Azure pipelines to the Azure Storage table created
 previously, a variable group needs to be configured in Azure DevOps (where the

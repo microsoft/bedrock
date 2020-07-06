@@ -22,6 +22,8 @@ resource "azurerm_cosmosdb_account" "cosmosdb_account" {
     location          = data.azurerm_resource_group.cosmosdb_rg.location
     failover_priority = 0
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_cosmosdb_mongo_database" "mongo_db" {

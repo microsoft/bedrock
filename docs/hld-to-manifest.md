@@ -10,23 +10,18 @@ In this walkthrough, we will set up an Azure DevOps pipeline that generates a re
 
 There are a few requirements to use this automation:
 
-1. The application code and supporting repositories are hosted on
+1. Install the [Bedrock Prerequisites](https://github.com/microsoft/bedrock/blob/master/tools/prereqs/README.md) (if they're not already installed).
+2. The application code and supporting repositories are hosted on
    [Azure Devops](https://azure.microsoft.com/en-us/services/devops/).
    - If starting from scratch, then first create a
      [new Azure Devops Organization](https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=azure-devops),
      then
      [create a project](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page).
-2. A Manifest Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-3. An HLD Repository inside the Azure DevOps project from Step 1. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
-4. The application will be packaged and run using container images hosted on
+3. A Manifest Repository inside an Azure DevOps project as instructed from [A First Worklad with Bedrock](https://github.com/microsoft/bedrock/tree/master/docs/firstWorkload#create-and-configure-gitops-resource-manifest-repo).
+4. An HLD Repository inside the same Azure DevOps project as the manifest repository. [Create a repository](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?view=azure-devops).
+5. The application will be packaged and run using container images hosted on
    [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)
-5. The user running `bedrock` has full access to the above resources.
-6. The user is running the latest `bedrock`
-   [release](https://github.com/microsoft/bedrock-cli/releases).
-7. The user has
-   [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest).
-8. The user is running [git](http://git-scm.org) version
-   [2.22](https://github.blog/2019-06-07-highlights-from-git-2-22/) or later.
+6. The user running `bedrock` has full access to the above resources.
 
 **Note**: If a user wishes to store Helm charts in the application
    repositories, then all repositories (application, high level definition,
@@ -88,7 +83,6 @@ wish to utilize `bedrock` with another project or target, then you must rerun
 `bedrock init` with another configuration first OR, you may overwrite each commands
 via flags.
 
-
 ## Repositories
 Our next step is to onboard the repositories that support the
 deployment of our services:
@@ -124,7 +118,7 @@ If the initialization succeeded, you will see a message similar to this:
 info:    Link to create PR: https://dev.azure.com/myOrganization/myProject/_git/app-cluster-hlds/pullrequestcreate?sourceRef=bedrock-hld-init&targetRef=master
 ```
 
-This message means that we were able to generate and HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
+This message means that we were able to generate an HLD with the default traefik2 component and all the changes were added to a new branch and are ready to be added to a Pull Request.
 
 To verify run:
 ```
@@ -167,6 +161,35 @@ Fast-forward
  create mode 100644 manifest-generation.yaml
 ```
 
+From here, your Bedrock workload should have the following structure:
+
+```
+.
+├── app-cluster-manifests/
+  ├── prod
+      ├── traefik2
+      ├── default-component.yaml
+├── app-cluster-hlds/
+  ├── component.yaml
+  ├── manifest-generation.yaml
+  ├── .gitignore
+├── cluster-deployment/
+  ├── definition.yaml
+  ├── cluster/
+  ├── keys/
+      ├── gitops-ssh-key
+      ├── gitops-ssh-key.pub
+      ├── node-ssh-key
+      ├── node-ssh-key.pub
+  ├── sp/
+      ├── sp.json
+├── cluster-deployment-generated
+  ├── cluster/
+      ├── main.tf
+      ├── bedrock.tfvars
+      ├── variables.tf
+```
+
 ## Deploy Manifest Generation Pipeline
 
 Deploy a manifest generation pipeline between the high level definition repo and
@@ -197,3 +220,11 @@ NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)               
 kubernetes   ClusterIP      10.0.0.1      <none>          443/TCP                      21h
 traefik2     LoadBalancer   10.0.209.68   137.135.15.52   80:31328/TCP,443:30149/TCP   19h
 ```
+
+## Conclusion
+At this point you have:
+- Set up an Azure DevOps pipeline to generate resource manifests
+- Verified that changes are applied to the Kubernetes cluster
+
+### Next steps
+- [Onboard a service repository](https://github.com/microsoft/bedrock/blob/master/docs/services.md)

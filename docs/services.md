@@ -143,3 +143,50 @@ $ bedrock service install-build-pipeline azure-vote -n azure-vote-build-pipeline
 This step should create the build pipeline and build the current version of your service into a container using its Dockerfile.  It will then create a pull request on the HLD repo for this new image tag.
 
 Merge this PR and the HLD to Manifest pipeline will trigger. Once this pipeline completes, the azure-voting-app application will be deployed into your cluster via flux.
+
+At last, your Bedrock workload should have the following structure:
+
+```
+.
+
+├── app-cluster-manifests/
+  ├── prod
+      ├── traefik2
+      ├── default-component.yaml
+├── app-cluster-hlds/
+  ├── component.yaml
+  ├── manifest-generation.yaml
+  ├── .gitignore
+├── azure-voting-app-redis/
+  ├── azure-vote/
+      ├── build-update-hld.yaml
+      ├── .gitignore
+  ├── bedrock.yaml
+  ├── hld-lifecycle.yaml
+  ├── maintainers.yaml
+├── cluster-deployment/
+  ├── definition.yaml
+  ├── cluster/
+  ├── keys/
+      ├── gitops-ssh-key
+      ├── gitops-ssh-key.pub
+      ├── node-ssh-key
+      ├── node-ssh-key.pub
+  ├── sp/
+      ├── sp.json
+├── cluster-deployment-generated
+  ├── cluster/
+      ├── main.tf
+      ├── bedrock.tfvars
+      ├── variables.tf
+```
+
+## Conclusion
+
+At this point you have:
+- Onboarded a service repository
+- Set up an Azure DevOps pipeline to manage service deployments
+- Verified that the service is deployed to the Kubernetes cluster
+
+### Next steps
+- [Set up service introspection](https://github.com/microsoft/bedrock/blob/master/docs/introspection.md)
