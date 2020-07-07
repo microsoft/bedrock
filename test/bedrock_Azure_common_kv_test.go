@@ -24,7 +24,7 @@ func TestIT_Bedrock_AzureCommon_KV_Test(t *testing.T) {
 	addressSpace := "10.39.0.0/16"
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
-	k8sVersion := "1.15.7"
+	k8sVersion := "1.15.11"
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")

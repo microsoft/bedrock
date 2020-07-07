@@ -25,7 +25,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	addressSpace := "10.39.0.0/16"
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
-	k8sVersion := "1.15.7"
+	k8sVersion := "1.15.11"
 	location := os.Getenv("DATACENTER_LOCATION")
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	clientid := os.Getenv("ARM_CLIENT_ID")
