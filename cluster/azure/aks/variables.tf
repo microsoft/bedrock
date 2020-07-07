@@ -63,6 +63,11 @@ variable "enable_virtual_node_addon" {
   default = "false"
 }
 
+variable "enable_kube_dashboard" {
+  type    = bool
+  default = true
+}
+
 variable "kubeconfig_to_disk" {
   description = "This disables or enables the kube config file from being written to disk."
   type        = string

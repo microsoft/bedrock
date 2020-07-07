@@ -99,6 +99,14 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     }
   }
 
+  addon_profile {
+    # adding this as a patch to disable azurerm provider from redeploying due to unset
+    # internal "optional value".  To be removed when azurerm provider is fixed.
+    kube_dashboard {
+      enabled = var.enable_kube_dashboard
+    }
+  }
+
   # This dynamic block enables managed service identity for the cluster
   # in the case that the following holds true:
   #   1: the msi_enabled input variable is set to true
