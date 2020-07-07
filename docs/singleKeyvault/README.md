@@ -200,7 +200,7 @@ variables:
   gitops_path: <insert value>
   keyvault_name: <insert value>
   keyvault_resource_group: <insert value>
-  kubernetes_version: 1.15.7
+  kubernetes_version: 1.15.11
   resource_group_name: <insert value>
   ssh_public_key: <insert value>
   service_principal_id: <insert value>
@@ -262,7 +262,7 @@ variables:
   vnet_name: 'myvnet'
   service_principal_id: '46b1b7dc-168a-ccc-bbb-aaaaaaa'
   service_principal_secret: 'aaaa-bbbb-43eb-9ead-dddddd'
-  kubernetes_version: '1.15.7'
+  kubernetes_version: '1.15.11'
   subnet_name: 'mysubnet'
   service_cidr: 10.0.0.0/16
   dns_ip: 10.0.0.10
