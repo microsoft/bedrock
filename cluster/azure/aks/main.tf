@@ -97,9 +97,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
       enabled                    = var.oms_agent_enabled
       log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.id
     }
-  }
 
-  addon_profile {
     # adding this as a patch to disable azurerm provider from redeploying due to unset
     # internal "optional value".  To be removed when azurerm provider is fixed.
     kube_dashboard {
