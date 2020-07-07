@@ -28,7 +28,7 @@ module "central_vnet" {
 module "central_subnet" {
   source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.central_prefix}-snet"]
+  subnet_name          = "${local.central_prefix}-snet"
   vnet_name            = module.central_vnet.vnet_name
   resource_group_name  = local.central_rg_name
   address_prefix       = var.central_subnet_prefixes
@@ -43,7 +43,7 @@ module "central_aks" {
 
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = tostring(element(module.central_subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.central_subnet.subnet_id
   service_cidr             = var.central_service_cidr
   dns_ip                   = var.central_dns_ip
   docker_cidr              = var.central_docker_cidr

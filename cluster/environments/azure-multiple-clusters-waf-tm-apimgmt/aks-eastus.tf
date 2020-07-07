@@ -28,10 +28,10 @@ module "east_vnet" {
 module "east_subnet" {
   source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.east_prefix}-snet"]
+  subnet_name          = "${local.east_prefix}-snet"
   vnet_name            = module.east_vnet.vnet_name
   resource_group_name  = local.east_rg_name
-  address_prefix       = var.east_subnet_prefixes
+  address_prefixes     = var.east_subnet_prefixes
 }
 
 # Creates aks cluster
@@ -43,7 +43,7 @@ module "east_aks" {
 
   agent_vm_count           = var.agent_vm_count
   dns_prefix               = var.dns_prefix
-  vnet_subnet_id           = tostring(element(module.east_subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.east_subnet.subnet_ids
   service_cidr             = var.east_service_cidr
   dns_ip                   = var.east_dns_ip
   docker_cidr              = var.east_docker_cidr

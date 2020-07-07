@@ -2,6 +2,11 @@
 #  backend "azurerm" {}
 #}
 
+provider "azurerm" {
+  version = "~> 2.8"
+  features {}
+}
+
 module "provider" {
   source = "../../../cluster/azure/provider"
 }
@@ -19,10 +24,10 @@ data "azurerm_resource_group" "keyvault" {
 module "subnet" {
   source = "../../../cluster/azure/subnet"
 
-  subnet_name          = [var.subnet_name]
+  subnet_name          = var.subnet_name
   vnet_name            = var.vnet_name
   resource_group_name  = data.azurerm_resource_group.keyvault.name
-  address_prefix       = [var.subnet_address_prefix]
+  address_prefixes     = [var.subnet_address_prefix]
 }
 
 module "aks-gitops" {
@@ -45,7 +50,7 @@ module "aks-gitops" {
   service_principal_id     = var.service_principal_id
   service_principal_secret = var.service_principal_secret
   ssh_public_key           = var.ssh_public_key
-  vnet_subnet_id           = element(module.subnet.subnet_ids, 0)
+  vnet_subnet_id           = module.subnet.subnet_id
   network_plugin           = var.network_plugin
   network_policy           = var.network_policy
   gc_enabled               = var.gc_enabled

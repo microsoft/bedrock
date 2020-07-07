@@ -26,10 +26,10 @@ module "vnet" {
 module "subnet" {
   source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${var.cluster_name}-aks-subnet"]
+  subnet_name          = "${var.cluster_name}-aks-subnet"
   vnet_name            = module.vnet.vnet_name
   resource_group_name  = data.azurerm_resource_group.cluster_rg.name
-  address_prefix       = [var.subnet_prefix]
+  address_prefixes     = [ var.subnet_prefix ]
 }
 module "aks-gitops" {
   source = "../../../cluster/azure/aks-gitops"
@@ -50,7 +50,7 @@ module "aks-gitops" {
   gitops_url_branch        = var.gitops_url_branch
   ssh_public_key           = var.ssh_public_key
   resource_group_name      = data.azurerm_resource_group.cluster_rg.name
-  vnet_subnet_id           = tostring(element(module.subnet.subnet_ids, 0))
+  vnet_subnet_id           = module.subnet.subnet_id
   service_cidr             = var.service_cidr
   dns_ip                   = var.dns_ip
   docker_cidr              = var.docker_cidr

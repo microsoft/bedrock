@@ -28,10 +28,10 @@ module "west_vnet" {
 module "west_subnet" {
   source = "../../../cluster/azure/subnet"
 
-  subnet_name          = ["${local.west_prefix}-snet"]
+  subnet_name          = "${local.west_prefix}-snet"
   vnet_name            = module.west_vnet.vnet_name
   resource_group_name  = local.west_rg_name
-  address_prefix       = var.west_subnet_prefixes
+  address_prefixes     = var.west_subnet_prefixes
 }
 
 # Creates aks cluster
