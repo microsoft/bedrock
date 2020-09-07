@@ -115,6 +115,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     }
   }
 
+  # Control access to the API server end point
+  api_server_authorized_ip_ranges = var.kube_api_server_authorized_ip_ranges
+
   tags = var.tags
 }
 
