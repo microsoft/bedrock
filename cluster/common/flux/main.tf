@@ -13,5 +13,6 @@ resource "null_resource" "deploy_flux" {
     enable_flux   = var.enable_flux
     flux_recreate = var.flux_recreate
     api_server_available = var.api_server_available
+    flux_image_tag = var.flux_image_tag
   }
 }

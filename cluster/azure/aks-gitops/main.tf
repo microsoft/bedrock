@@ -63,5 +63,6 @@ module "api_server_access" {
   kube_api_server_temp_authorized_ip = var.kube_api_server_temp_authorized_ip
   kubeconfig_complete = module.aks.kubeconfig_done
   flux_done = module.flux.flux_done
+  flux_recreate = var.flux_recreate
   kubediff_done = module.kubediff.kubediff_done
 }

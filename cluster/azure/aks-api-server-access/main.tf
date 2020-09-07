@@ -31,6 +31,7 @@ resource "null_resource" "open_api_server" {
 
   triggers = {
     kubeconfig_complete = var.kubeconfig_complete
+    flux_recreate = var.flux_recreate
   }
 }
 

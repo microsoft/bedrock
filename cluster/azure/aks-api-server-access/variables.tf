@@ -26,6 +26,11 @@ variable "flux_done" {
   type        = string
 }
 
+variable "flux_recreate" {
+  description = "Does flux need recreating"
+  type        = string
+}
+
 variable "kubediff_done" {
   description = "Is kubediff done running"
   type        = string
