@@ -16,7 +16,7 @@ locals {
   api_access_script = "${path.module}/kube_api_server_access.sh"
 
   # open api server access
-  open_api_server_access_args = local.api_server_temporary_access_allow_all ? "-g ${var.resource_group_name} -n ${var.cluster_name} -s ''" : "-g ${var.resource_group_name} -n ${var.cluster_name} -a -i ${var.kube_api_server_temp_authorized_ip}"
+  open_api_server_access_args = local.api_server_temporary_access_allow_all ? "-g ${var.resource_group_name} -n ${var.cluster_name} -a -s ''" : "-g ${var.resource_group_name} -n ${var.cluster_name} -a -i ${var.kube_api_server_temp_authorized_ip}"
 
   # close api server access
   close_api_server_access_args = "-g ${var.resource_group_name} -n ${var.cluster_name} -a -s '${local.api_server_access_list}'"
