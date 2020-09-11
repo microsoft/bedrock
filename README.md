@@ -23,6 +23,7 @@ Bedrock helps you:
 * [Walkthrough: Single Cluster Infrastructure Deployment](./docs/single-cluster.md)
 * [Deep Dive: Multicluster and "Day 2" Infrastructure Scenarios](./docs/multicluster.md)
 * [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/cloud-infra-management.md)
+* [Managed Identity Reference](./docs/managed-identity.md)
 
 ## GitOps Pipeline
 * [Walkthrough: GitOps Pipeline](./docs/hld-to-manifest.md)
@@ -33,6 +34,7 @@ Bedrock helps you:
 * [Deep Dive: Helm Charts](https://github.com/microsoft/bedrock-cli/blob/master/guides/building-helm-charts-for-bedrock.md)
 * [Configuring A Service through Fabrikate configurations](./docs/service-configuration.md)
 * [CLI Reference](https://github.com/microsoft/bedrock-cli/blob/master/guides/service-management.md)
+* [Managed Identity Reference](./docs/managed-identity.md)
 
 ## Rings Management
 * [Walkthrough: Rings](./docs/rings.md)
