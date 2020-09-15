@@ -29,12 +29,14 @@ function helm_init() {
 
 # Obtain version for Fabrikate
 # If the version number is not provided, then download the latest Helm2 compatible version
+# The Major version number can be provided as the first argument, 
 function get_fab_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
-        # By default, the script will use the Helm 2 compatible, non-prerelease, non-draft release Fabrikate
+        # By default, the script will use the Helm 2 compatible, non-prerelease, non-draft release Fabrikate.
         MAJOR=${1:-0} 
+        MAJOR="v$MAJOR"
         VERSIONS=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/git/matching-refs/tags/$MAJOR" | grep "/refs/tags/$MAJOR" | while read -r line ; do
             VERSION=${line##*/}
             VERSION=${VERSION%\",}
