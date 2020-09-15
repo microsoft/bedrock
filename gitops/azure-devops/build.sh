@@ -28,13 +28,19 @@ function helm_init() {
 }
 
 # Obtain version for Fabrikate
-# If the version number is not provided, then download the latest
+# If the version number is not provided, then download the latest Helm2 compatible version
 function get_fab_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
-        # By default, the script will use the most recent non-prerelease, non-draft release Fabrikate
-        VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+        # By default, the script will use the Helm 2 compatible, non-prerelease, non-draft release Fabrikate
+        MAJOR=${1:-0} 
+        VERSIONS=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/git/matching-refs/tags/$MAJOR" | grep "/refs/tags/$MAJOR" | while read -r line ; do
+            VERSION=${line##*/}
+            VERSION=${VERSION%\",}
+            echo "$VERSION"
+        done | sort -V)
+        VERSION_TO_DOWNLOAD=${VERSIONS##*$'\n'}
     else
         echo "Fabrikate Version: $VERSION"
         VERSION_TO_DOWNLOAD=$VERSION
