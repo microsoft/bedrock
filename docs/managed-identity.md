@@ -20,7 +20,7 @@ Grants AKS MI the ability to pull application images from ACR
 resource "azurerm_role_assignment" "acrpull" {
   scope                = var.acr_id
   role_definition_name = "AcrPull"
-  principal_id         = module.aks.kubelet_id
+  principal_id         = module.aks.kubelet_identity.client_id
 }
 ```
 
@@ -42,7 +42,7 @@ Grant AKS MI the ability to read and assign User Assigned MI
 resource "azurerm_role_assignment" "mi_operator" {
   scope                = data.azurerm_resource_group.kube_rg.id
   role_definition_name = "Managed Identity Operator"
-  principal_id         = module.aks.kubelet_id
+  principal_id         = module.aks.kubelet_identity.client_id
 }
 ```
 
@@ -54,7 +54,7 @@ Grant AKS MI the ability to manage VMs in AKS VM Scale Set
 resource "azurerm_role_assignment" "vm_contrib" {
   scope                = data.azurerm_resource_group.kube_rg.id
   role_definition_name = "Virtual Machine Contributor"
-  principal_id         = module.aks.kubelet_id
+  principal_id         = module.aks.kubelet_identity.client_id
 }
 ```
 
