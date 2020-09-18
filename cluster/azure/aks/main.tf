@@ -119,11 +119,14 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 }
 
 data "external" "msi_object_id" {
-  depends_on = [azurerm_kubernetes_cluster.cluster]
   program = [
     "${path.module}/aks_msi_client_id_query.sh",
     var.cluster_name,
     data.azurerm_resource_group.cluster.name,
     data.azurerm_subscription.current.subscription_id
   ]
+
+  query = {
+    clusterid = azurerm_kubernetes_cluster.cluster.id
+  }
 }
