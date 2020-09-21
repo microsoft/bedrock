@@ -21,13 +21,13 @@ output "node_resource_group" {
 }
 
 output "kubelet_identity" {
-  value = azurerm_kubernetes_cluster.cluster.kubelet_identity[0]
+  value = length(azurerm_kubernetes_cluster.cluster.kubelet_identity) > 0 ? azurerm_kubernetes_cluster.cluster.kubelet_identity[0] : null
 }
 
 output "system_identity" {
-  value = azurerm_kubernetes_cluster.cluster.identity[0]
+  value = length(azurerm_kubernetes_cluster.cluster.identity) > 0 ? azurerm_kubernetes_cluster.cluster.identity[0] : null
 }
 
 output "oms_agent_identity" {
-  value = azurerm_kubernetes_cluster.cluster.addon_profile[0].oms_agent[0].oms_agent_identity[0]
+  value = var.oms_agent_enabled ? azurerm_kubernetes_cluster.cluster.addon_profile[0].oms_agent[0].oms_agent_identity[0] : null
 }
