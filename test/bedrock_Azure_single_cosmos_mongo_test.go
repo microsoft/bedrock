@@ -25,7 +25,7 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	addressSpace := "10.39.0.0/16"
 	kvName := k8sName + "-kv"
 	kvRG := kvName + "-rg"
-	k8sVersion := "1.15.11"
+	k8sVersion := "1.17.9"
 	location := os.Getenv("DATACENTER_LOCATION")
 	tenantid := os.Getenv("ARM_TENANT_ID")
 	clientid := os.Getenv("ARM_CLIENT_ID")
@@ -43,35 +43,35 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
-        // Remove any existing state
-        tfDir := azureCommonInfraFolder + "/.terraform"
-        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
-                os.RemoveAll(tfDir)
-        }
-        stateFileGlob := azureCommonInfraFolder + "/*tfstate*"
-        stateFiles, err := filepath.Glob(stateFileGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, f := range stateFiles {
-                if err := os.Remove(f); err != nil {
-                        panic(err)
-                }
-        }
-        outputDir := azureCommonInfraFolder + "/output"
-        if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
-                os.RemoveAll(outputDir)
-        }
-        fluxDirGlob := azureCommonInfraFolder + "/*-flux"
-        fluxDirs, err := filepath.Glob(fluxDirGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, d := range fluxDirs {
-                if err := os.RemoveAll(d); err != nil {
-                        panic(err)
-                }
-        }
+	// Remove any existing state
+	tfDir := azureCommonInfraFolder + "/.terraform"
+	if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+		os.RemoveAll(tfDir)
+	}
+	stateFileGlob := azureCommonInfraFolder + "/*tfstate*"
+	stateFiles, err := filepath.Glob(stateFileGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range stateFiles {
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
+	}
+	outputDir := azureCommonInfraFolder + "/output"
+	if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
+		os.RemoveAll(outputDir)
+	}
+	fluxDirGlob := azureCommonInfraFolder + "/*-flux"
+	fluxDirs, err := filepath.Glob(fluxDirGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, d := range fluxDirs {
+		if err := os.RemoveAll(d); err != nil {
+			panic(err)
+		}
+	}
 
 	//Create the resource group
 	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
@@ -130,35 +130,35 @@ func TestIT_Bedrock_Azure_Single_KV_Cosmos_Mongo_DB_Test(t *testing.T) {
 	azureSingleKeyvaultFolder := "../cluster/test-temp-envs/azure-single-keyvault-cosmos-mongo-db-simple-" + k8sName
 	copy.Copy("../cluster/environments/azure-single-keyvault-cosmos-mongo-db-simple", azureSingleKeyvaultFolder)
 
-        // Remove any existing state
-        tfDir = azureSingleKeyvaultFolder + "/.terraform"
-        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
-                os.RemoveAll(tfDir)
-        }
-        stateFileGlob = azureSingleKeyvaultFolder + "/*tfstate*"
-        stateFiles, err = filepath.Glob(stateFileGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, f := range stateFiles {
-                if err := os.Remove(f); err != nil {
-                        panic(err)
-                }
-        }
-        outputDir = azureSingleKeyvaultFolder + "/output"
-        if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
-                os.RemoveAll(outputDir)
-        }
-        fluxDirGlob = azureSingleKeyvaultFolder + "/*-flux"
-        fluxDirs, err = filepath.Glob(fluxDirGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, d := range fluxDirs {
-                if err := os.RemoveAll(d); err != nil {
-                        panic(err)
-                }
-        }
+	// Remove any existing state
+	tfDir = azureSingleKeyvaultFolder + "/.terraform"
+	if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+		os.RemoveAll(tfDir)
+	}
+	stateFileGlob = azureSingleKeyvaultFolder + "/*tfstate*"
+	stateFiles, err = filepath.Glob(stateFileGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range stateFiles {
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
+	}
+	outputDir = azureSingleKeyvaultFolder + "/output"
+	if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
+		os.RemoveAll(outputDir)
+	}
+	fluxDirGlob = azureSingleKeyvaultFolder + "/*-flux"
+	fluxDirs, err = filepath.Glob(fluxDirGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, d := range fluxDirs {
+		if err := os.RemoveAll(d); err != nil {
+			panic(err)
+		}
+	}
 
 	//Create the cluster resource group
 	cmd2 := exec.Command("az", "group", "create", "-n", k8sRG, "-l", location)
