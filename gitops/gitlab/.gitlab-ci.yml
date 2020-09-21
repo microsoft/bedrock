@@ -1,0 +1,60 @@
+image: "$CI_REGISTRY/ci/hld:latest"
+
+variables:
+  GITLAB_HOST: {{GITLAB_HOST}}
+  CLUSTER_MANIFESTS_REPO: {{CLUSTER_MANIFESTS_REPO}}
+
+stages:
+  - configure
+  - release
+
+before_script:
+  # Run ssh-agent
+  - eval $(ssh-agent -s)
+
+  # Add SSH key to ssh-agent
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+  # Create SSH directory and give it the right permissions
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+  # Use ssh-keyscan to scan the keys of your private server.
+  - ssh-keyscan $GITLAB_HOST >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+  # Set the git user name and email
+  - git config --global user.email "{{GIT_USER_EMAIL}}"
+  - git config --global user.name "{{GIT_USER_NAME}}"
+
+configure-image-tag:
+  stage: configure
+  variables:
+    SSH_PRIVATE_KEY: $HLD_SSH_PRIVATE_KEY
+    BRANCH_NAME: "release/$ENVIRONMENT-$DOCKER_TAG"
+  script: ./.ci/build.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "trigger"'
+
+merge-request-diff:
+  stage: configure
+  variables:
+    SSH_PRIVATE_KEY: $MANIFESTS_SSH_PRIVATE_KEY
+  script: ./.ci/diff.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+release-manifests:
+  stage: release
+  variables:
+    SSH_PRIVATE_KEY: $MANIFESTS_SSH_PRIVATE_KEY
+  script: ./.ci/release.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - config/*
+        - helm-chart/**/*
+        - manifests/*
+        - component.yaml
