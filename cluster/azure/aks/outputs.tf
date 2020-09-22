@@ -16,22 +16,18 @@ output "resource_id" {
   value = azurerm_kubernetes_cluster.cluster.id
 }
 
-output "msi_client_id" {
-  value = data.external.msi_object_id.result.msi_client_id
-}
-
-output "kubelet_client_id" {
-  value = data.external.msi_object_id.result.kubelet_client_id
-}
-
-output "kubelet_id" {
-  value = data.external.msi_object_id.result.kubelet_id
-}
-
 output "node_resource_group" {
-  value = data.external.msi_object_id.result.node_resource_group
+  value = azurerm_kubernetes_cluster.cluster.node_resource_group
 }
 
-output "kubelet_resource_id" {
-  value = data.external.msi_object_id.result.kubelet_resource_id
+output "kubelet_identity" {
+  value = length(azurerm_kubernetes_cluster.cluster.kubelet_identity) > 0 ? azurerm_kubernetes_cluster.cluster.kubelet_identity[0] : null
+}
+
+output "system_identity" {
+  value = length(azurerm_kubernetes_cluster.cluster.identity) > 0 ? azurerm_kubernetes_cluster.cluster.identity[0] : null
+}
+
+output "oms_agent_identity" {
+  value = var.oms_agent_enabled ? azurerm_kubernetes_cluster.cluster.addon_profile[0].oms_agent[0].oms_agent_identity[0] : null
 }

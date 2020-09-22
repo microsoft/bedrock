@@ -41,7 +41,7 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	// Generate a common infra resources for integration use with azure multicluster environment
 	uniqueID := strings.ToLower(random.UniqueId())
 	k8sName := fmt.Sprintf("gtestk8s-%s", uniqueID)
-	k8sVersion := "1.15.11"
+	k8sVersion := "1.17.9"
 
 	location := os.Getenv("DATACENTER_LOCATION")
 	clientid := os.Getenv("ARM_CLIENT_ID")
@@ -64,35 +64,35 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	azureCommonInfraFolder := "../cluster/test-temp-envs/azure-common-infra-" + k8sName
 	copy.Copy("../cluster/environments/azure-common-infra", azureCommonInfraFolder)
 
-        // Remove any existing state
-        tfDir := azureCommonInfraFolder + "/.terraform"
-        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
-                os.RemoveAll(tfDir)
-        }
-        stateFileGlob := azureCommonInfraFolder + "/*tfstate*"
-        stateFiles, err := filepath.Glob(stateFileGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, f := range stateFiles {
-                if err := os.Remove(f); err != nil {
-                        panic(err)
-                }
-        }
-        outputDir := azureCommonInfraFolder + "/output"
-        if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
-                os.RemoveAll(outputDir)
-        }
-        fluxDirGlob := azureCommonInfraFolder + "/*-flux"
-        fluxDirs, err := filepath.Glob(fluxDirGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, d := range fluxDirs {
-                if err := os.RemoveAll(d); err != nil {
-                        panic(err)
-                }
-        }
+	// Remove any existing state
+	tfDir := azureCommonInfraFolder + "/.terraform"
+	if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+		os.RemoveAll(tfDir)
+	}
+	stateFileGlob := azureCommonInfraFolder + "/*tfstate*"
+	stateFiles, err := filepath.Glob(stateFileGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range stateFiles {
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
+	}
+	outputDir := azureCommonInfraFolder + "/output"
+	if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
+		os.RemoveAll(outputDir)
+	}
+	fluxDirGlob := azureCommonInfraFolder + "/*-flux"
+	fluxDirs, err := filepath.Glob(fluxDirGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, d := range fluxDirs {
+		if err := os.RemoveAll(d); err != nil {
+			panic(err)
+		}
+	}
 
 	//Create the common resource group
 	cmd0 := exec.Command("az", "login", "--service-principal", "-u", clientid, "-p", clientsecret, "--tenant", tenantid)
@@ -197,35 +197,35 @@ func TestIT_Bedrock_AzureMC_Test(t *testing.T) {
 	azureMultipleClustersFolder := "../cluster/test-temp-envs/azure-multiple-clusters-" + k8sName
 	copy.Copy("../cluster/environments/azure-multiple-clusters", azureMultipleClustersFolder)
 
-        // Remove any existing state
-        tfDir = azureMultipleClustersFolder + "/.terraform"
-        if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
-                os.RemoveAll(tfDir)
-        }
-        stateFileGlob = azureMultipleClustersFolder + "/*tfstate*"
-        stateFiles, err = filepath.Glob(stateFileGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, f := range stateFiles {
-                if err := os.Remove(f); err != nil {
-                        panic(err)
-                }
-        }
-        outputDir = azureMultipleClustersFolder + "/output"
-        if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
-                os.RemoveAll(outputDir)
-        }
-        fluxDirGlob = azureMultipleClustersFolder + "/*-flux"
-        fluxDirs, err = filepath.Glob(fluxDirGlob)
-        if err != nil {
-                panic(err)
-        }
-        for _, d := range fluxDirs {
-                if err := os.RemoveAll(d); err != nil {
-                        panic(err)
-                }
-        }
+	// Remove any existing state
+	tfDir = azureMultipleClustersFolder + "/.terraform"
+	if _, err := os.Stat(tfDir); !os.IsNotExist(err) {
+		os.RemoveAll(tfDir)
+	}
+	stateFileGlob = azureMultipleClustersFolder + "/*tfstate*"
+	stateFiles, err = filepath.Glob(stateFileGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range stateFiles {
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
+	}
+	outputDir = azureMultipleClustersFolder + "/output"
+	if _, err := os.Stat(outputDir); !os.IsNotExist(err) {
+		os.RemoveAll(outputDir)
+	}
+	fluxDirGlob = azureMultipleClustersFolder + "/*-flux"
+	fluxDirs, err = filepath.Glob(fluxDirGlob)
+	if err != nil {
+		panic(err)
+	}
+	for _, d := range fluxDirs {
+		if err := os.RemoveAll(d); err != nil {
+			panic(err)
+		}
+	}
 
 	//Specify the test case folder and "-var" options
 	tfOptions := &terraform.Options{

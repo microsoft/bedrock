@@ -82,7 +82,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   dynamic "service_principal" {
-    for_each = !var.msi_enabled && var.service_principal_id != "" ? [{
+    for_each = ! var.msi_enabled && var.service_principal_id != "" ? [{
       client_id     = var.service_principal_id
       client_secret = var.service_principal_secret
     }] : []
@@ -116,14 +116,4 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   tags = var.tags
-}
-
-data "external" "msi_object_id" {
-  depends_on = [azurerm_kubernetes_cluster.cluster]
-  program = [
-    "${path.module}/aks_msi_client_id_query.sh",
-    var.cluster_name,
-    data.azurerm_resource_group.cluster.name,
-    data.azurerm_subscription.current.subscription_id
-  ]
 }
