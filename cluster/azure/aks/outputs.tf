@@ -8,6 +8,10 @@ output "kube_config" {
   value     = azurerm_kubernetes_cluster.cluster.kube_config_raw
 }
 
+output "kube_config_file_path" {
+  value = local_file.cluster_credentials.0.filename
+}
+
 output "kubeconfig_done" {
   value = join("", local_file.cluster_credentials.*.id)
 }
