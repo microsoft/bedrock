@@ -1,0 +1,43 @@
+# This file contains all of the checks that need to happen
+# before a build and release.
+
+# Cache dependent modules + proviers and upload an artifact. We need to
+# make sure that the backend configuration is not configured, since it will
+# need to be done for each stage. The configuration per stage may differ, so
+# it makes sense to defer the initialization.
+InitTF:
+  stage: Init
+  script: .ci/tf-init-without-backend.sh
+  artifacts:
+    paths:
+      - .terraform/
+  only:
+    - master
+    - merge_requests
+
+# Lint check terraform files
+LintTF:
+  stage: Pre-Build
+  script: .ci/tf-lint.sh
+  only:
+    - master
+    - merge_requests
+
+# Validate terraform configuration
+ValidateTF:
+  stage: Pre-Build
+  script: .ci/tf-validate.sh
+  needs:
+    - job: InitTF
+      artifacts: true
+  only:
+    - master
+    - merge_requests
+
+# Lint check go files
+lintGo:
+  stage: Pre-Build
+  script: .ci/go-lint.sh
+  only:
+    - master
+    - merge_requests

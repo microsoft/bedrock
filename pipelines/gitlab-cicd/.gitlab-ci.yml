@@ -1,0 +1,40 @@
+# Extension points not yet implemented:
+#   (1) Run infrastructure unit tests in precheck stage
+#   (2) Run infrastructure integration tests
+
+# Configure the base image for CI jobs here.
+#
+# To override the entrypoint see the documentation here:
+#   https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
+#
+# To use a custom image, use the following syntax:
+#   name: "$CI_REGISTRY/<your image here>:<your tag here>"
+image:
+  name: "{{IMAGE_SLUG}}"
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+include:
+  - '/.ci/ci-stages.yml'
+  - '/.ci/ci-prechecks.yml'
+  - '/.ci/ci-dev.yml'
+  - '/.ci/ci-integration.yml'
+  - '/.ci/ci-prod.yml'
+
+before_script:
+  - terraform version
+
+stages:
+  - Init
+  - Pre-Build
+  - Dev-Build
+  - Dev-Release
+  - Integration-Build
+  - Integration-Release
+  - Prod-Build
+  - Prod-Release
+
+variables:
+  TF_IN_AUTOMATION: "true"
+  PLAN_FILE: tfplan.out
