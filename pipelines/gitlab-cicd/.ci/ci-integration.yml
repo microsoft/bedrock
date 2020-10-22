@@ -1,0 +1,34 @@
+# This file contains the variables and jobs for the integration stage
+
+.integration-vars: &integration-vars
+  ARM_CLIENT_ID: $INTEGRATION_ARM_CLIENT_ID
+  ARM_CLIENT_SECRET: $INTEGRATION_ARM_CLIENT_SECRET
+  AZURE_STORAGE_ACCOUNT_NAME: $INTEGRATION_AZURE_STORAGE_ACCOUNT_NAME
+  AZURE_STORAGE_ACCOUNT_CONTAINER: $INTEGRATION_AZURE_STORAGE_ACCOUNT_CONTAINER
+  AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: $INTEGRATION_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION
+  VAR_FILE_NAME: 'INTEGRATION_TF_VARS'
+  ENVIRONMENT: 'integration'
+
+IntegrationBuild:
+  extends: .build
+  stage: Integration-Build
+  variables:
+    <<: *integration-vars
+  only:
+    - master
+  needs:
+    - job: DevRelease
+      artifacts: false
+
+IntegrationRelease:
+  extends: .release
+  stage: Integration-Release
+  variables:
+    <<: *integration-vars
+  needs:
+    - job: IntegrationBuild
+      artifacts: true
+  when: manual
+  allow_failure: false
+  only:
+    - master

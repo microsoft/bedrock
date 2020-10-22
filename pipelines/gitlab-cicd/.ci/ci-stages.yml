@@ -1,0 +1,27 @@
+# This file contains jobs that can be extended by stage-specific
+# build and release steps
+
+# Generic terraform build job
+.build:
+  environment:
+    name: $ENVIRONMENT
+  artifacts:
+    paths:
+      - .terraform/
+      - "$PLAN_FILE"
+  script:
+    - .ci/az-login.sh
+    - .ci/tf-init-for-stage.sh
+    - .ci/tf-workspace-select.sh
+    - .ci/tf-plan.sh
+
+# Generic terraform release job
+.release:
+  environment:
+    name: $ENVIRONMENT
+  allow_failure: false
+  script:
+    - .ci/az-login.sh
+    - .ci/tf-init-for-stage.sh
+    - .ci/tf-workspace-select.sh
+    - .ci/tf-apply.sh

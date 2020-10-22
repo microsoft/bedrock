@@ -1,0 +1,34 @@
+# This file contains the variables and jobs for the prod stage
+
+.prod-vars: &prod-vars
+  ARM_CLIENT_ID: $PROD_ARM_CLIENT_ID
+  ARM_CLIENT_SECRET: $PROD_ARM_CLIENT_SECRET
+  AZURE_STORAGE_ACCOUNT_NAME: $PROD_AZURE_STORAGE_ACCOUNT_NAME
+  AZURE_STORAGE_ACCOUNT_CONTAINER: $PROD_AZURE_STORAGE_ACCOUNT_CONTAINER
+  AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: $PROD_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION
+  VAR_FILE_NAME: 'PROD_TF_VARS'
+  ENVIRONMENT: 'prod'
+
+ProdBuild:
+  extends: .build
+  stage: Prod-Build
+  variables:
+    <<: *prod-vars
+  only:
+    - master
+  needs:
+    - job: IntegrationRelease
+      artifacts: false
+
+ProdRelease:
+  extends: .release
+  stage: Prod-Release
+  variables:
+    <<: *prod-vars
+  needs:
+    - job: ProdBuild
+      artifacts: true
+  when: manual
+  allow_failure: false
+  only:
+    - master
