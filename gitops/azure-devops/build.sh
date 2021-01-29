@@ -29,13 +29,13 @@ function helm_init() {
 
 # Obtain version for Fabrikate
 # If the version number is not provided, then download the latest Helm2 compatible version
-# The Major version number can be provided as the first argument, 
+# The Major version number can be provided as the first argument,
 function get_fab_version() {
     # shellcheck disable=SC2153
     if [ -z "$VERSION" ]
     then
         # By default, the script will use the Helm 2 compatible, non-prerelease, non-draft release Fabrikate.
-        MAJOR=${1:-0} 
+        MAJOR=${1:-0}
         VERSIONS=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/git/matching-refs/tags/$MAJOR" | grep "/refs/tags/$MAJOR" | while read -r line ; do
             VERSION=${line##*/}
             VERSION=${VERSION%\",}
@@ -147,10 +147,10 @@ function fab_generate() {
 
 # Support backward compat for a bit
 function get_spk_version() {
-    # shellcheck disable=SC2153  
+    # shellcheck disable=SC2153
     echo -e "WARNING: ACTION REQUIRED\n**** 'get_spk_version' is DEPRECATED and will be removed. ****\n**** Please use 'get_bedrock_version' ****"
     echo "Ignoring VERSION env var and using v0.6.3"
-    # Last version of spk. Please use get_bedrock_version instead. 
+    # Last version of spk. Please use get_bedrock_version instead.
     SPK_VERSION_TO_DOWNLOAD="v0.6.3"
 }
 
@@ -197,7 +197,7 @@ function download_spk() {
     wget "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
     mkdir spk
     mv spk-$os spk/spk
-    chmod +x spk/spk 
+    chmod +x spk/spk
 
     export PATH=$PATH:$HOME/spk
 }
@@ -217,7 +217,7 @@ function download_bedrock() {
     wget "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
     mkdir bedrock
     mv bedrock-$os bedrock/bedrock
-    chmod +x bedrock/bedrock 
+    chmod +x bedrock/bedrock
 
     export PATH=$PATH:$HOME/bedrock
 }
@@ -332,7 +332,7 @@ function unit_test() {
 function verify_pull_request() {
     echo "Starting verification"
     init
-    helm_init
+    #helm_init
     get_fab_version
     download_fab
     install_fab
