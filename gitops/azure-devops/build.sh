@@ -35,7 +35,8 @@ function get_fab_version() {
     if [ -z "$VERSION" ]
     then
         # By default, the script will use the Helm 2 compatible, non-prerelease, non-draft release Fabrikate.
-        MAJOR=${1:-0}
+        #MAJOR=${1:-0}
+        MAJOR="1.0.0-alpha.1"
         VERSIONS=$(curl -s "https://api.github.com/repos/microsoft/fabrikate/git/matching-refs/tags/$MAJOR" | grep "/refs/tags/$MAJOR" | while read -r line ; do
             VERSION=${line##*/}
             VERSION=${VERSION%\",}
