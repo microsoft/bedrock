@@ -144,7 +144,7 @@ function fab_generate() {
     # In the case that all components are removed from the source hld,
     # generated folder should still not be empty
     if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
-        export manifest_files_location=$(pwd)
+        export manifest_files_location=$(pwd)/generated/
         echo "Manifest files have been generated in $manifest_files_location."
     else
         echo "Manifest files could not be generated in 'pwd', quitting..."
@@ -167,7 +167,7 @@ function manifest_diff_into_pr() {
     rm -rf */
 
     if [ -z "$FAB_ENVS" ]; then
-        cp -a $manifest_files_location/. .
+        cp -a $manifest_files_location. .
         ls -al 
     else
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
@@ -306,8 +306,8 @@ function git_commit() {
     echo "GIT REMOVE"
     rm -rf ./*/
     git rm -rf ./*/
-    echo "COPY YAML FILES FROM $manifest_files_location/generated/ TO REPO DIRECTORY..."
-    cp -r "$manifest_files_location/generated/"* .
+    echo "COPY YAML FILES FROM $manifest_files_location TO REPO DIRECTORY..."
+    cp -r "$manifest_files_location"* .
     echo "GIT ADD"
     git add -A
 
