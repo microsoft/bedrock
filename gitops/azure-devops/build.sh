@@ -74,9 +74,9 @@ function download_fab() {
     else
         echo "There was an error when downloading Fabrikate. Please check version number and try again."
     fi
-    filename=$(uuidgen)
-    wget -q -O "$filename.zip" "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
-    unzip "$filename.zip" -d fab
+    filename="$(uuidgen).zip"
+    wget -q -O $filename "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
+    unzip $filename -d fab
 
     export PATH=$PATH:$HOME/fab
 }
@@ -145,7 +145,7 @@ function fab_generate() {
     # generated folder should still not be empty
     if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
         export manifest_files_location=$(pwd)
-        echo "Manifest files have been generated in 'pwd'."
+        echo "Manifest files have been generated in $manifest_files_location."
     else
         echo "Manifest files could not be generated in 'pwd', quitting..."
         exit 1
@@ -162,21 +162,27 @@ function manifest_diff_into_pr() {
     fab_generate
     git_connect
 
+    ls -al 
+    echo "about to replace manifests with new ones"
     rm -rf */
 
     if [ -z "$FAB_ENVS" ]; then
         cp -a $manifest_files_location/. .
+        ls -al 
     else
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"
         do
         cp -R ../generated/$i ./
         done
+        
+        ls -al 
     fi
 
     if [[ $(git status --porcelain) ]]; then
         echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
         git diff | tee -a diff.txt
+        cat diff.txt
         MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
         echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
 
