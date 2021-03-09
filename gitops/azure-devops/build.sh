@@ -74,8 +74,9 @@ function download_fab() {
     else
         echo "There was an error when downloading Fabrikate. Please check version number and try again."
     fi
-    wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
-    unzip "fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" -d fab
+    filename=$(uuidgen)
+    wget -q -O "$filename.zip" "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
+    unzip "$filename.zip" -d fab
 
     export PATH=$PATH:$HOME/fab
 }
@@ -155,7 +156,8 @@ function manifest_diff_into_pr() {
     echo $1
     echo $2 
     HLD_BRANCH=$2
-
+    
+    download_fab
     install_fab
     fab_generate
     git_connect
@@ -230,13 +232,13 @@ function download_spk() {
     echo "Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_bedrock os
-    spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
+    spk_wget=$(wget -q -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
     if [[ $spk_wget == *"302 Found"* ]]; then
     echo "SPK $SPK_VERSION_TO_DOWNLOAD downloaded successfully."
     else
         echo "There was an error when downloading SPK. Please check version number and try again."
     fi
-    wget "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
+    wget -q "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
     mkdir spk
     mv spk-$os spk/spk
     chmod +x spk/spk 
