@@ -200,7 +200,7 @@ function manifest_diff_into_pr() {
         git diff | tee -a diff.txt
         echo "\`\`\`" >> diff.txt
         # echo "\\\`\\\`\\\`" >> diff.txt
-        MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
+        # MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
         # description only allows 4000 characters at max
         MESSAGE=$(echo ${MESSAGE:0:4000})
         encoded_token=$(echo -n ':$ACCESS_TOKEN_SECRET' |  base64)
