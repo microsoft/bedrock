@@ -188,6 +188,7 @@ function manifest_diff_into_pr() {
         git diff | tee -a diff.txt
         echo "\\\`\\\`\\\`" >> diff.txt
         MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
+        MESSAGE=$(echo "${MESSAGE//--/}")
         echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
 
         # description only allows 4000 characters at max
