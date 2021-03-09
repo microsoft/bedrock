@@ -216,6 +216,7 @@ function manifest_diff_into_pr() {
         echo "${arr[4]}"
         echo "${arr[2]}"
         echo "${arr[1]}"
+        echo $MESSAGE
 
         echo "curl \"https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0\" -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\"description\": \"$MESSAGE\"}\""
         
