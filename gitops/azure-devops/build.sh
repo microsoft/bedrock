@@ -68,7 +68,7 @@ function download_fab() {
     echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
     os=''
     get_os os
-    fab_wget=$(wget -q -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | grep -E -i "302")
+    fab_wget=$(wget -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | grep -E -i "302")
     if [[ $fab_wget == *"302 Found"* ]]; then
        echo "Fabrikate $VERSION_TO_DOWNLOAD downloaded successfully."
     else
@@ -232,7 +232,7 @@ function download_spk() {
     echo "Deprecated SPK Version: $SPK_VERSION_TO_DOWNLOAD"
     os=''
     get_os_bedrock os
-    spk_wget=$(wget -q -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
+    spk_wget=$(wget -SO- "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os" 2>&1 | grep -E -i "302")
     if [[ $spk_wget == *"302 Found"* ]]; then
     echo "SPK $SPK_VERSION_TO_DOWNLOAD downloaded successfully."
     else
@@ -258,7 +258,7 @@ function download_bedrock() {
     else
         echo "There was an error when downloading Bedrock CLI. Please check version number and try again."
     fi
-    wget "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
+    wget -q "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
     mkdir bedrock
     mv bedrock-$os bedrock/bedrock
     chmod +x bedrock/bedrock 
