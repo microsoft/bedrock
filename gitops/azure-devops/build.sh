@@ -221,9 +221,9 @@ function manifest_diff_into_pr() {
 
         url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0"
 
-        echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\"description\": \"$MESSAGE\"}\""
+        echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
         
-        curl $url -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\"description\": \"$MESSAGE\"}" 
+        curl $url -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\\\"description\\\": \\\"$MESSAGE\\\"}" 
     else
         echo "Manifest generation files will not be modified at all."
         az repos pr update --id $1 --description "Manifest generation files will not be modified at all."
