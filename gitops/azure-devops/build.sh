@@ -94,6 +94,9 @@ function install_hld() {
 
     # if branch name is specified, switch to that HLD branch 
     if [ -z "$HLD_BRANCH" ]; then
+        echo "HLD_BRANCH is not specified, skip changing branch"
+    else
+        echo "Switching to HLD branch $HLD_BRANCH"
         git checkout $HLD_BRANCH
     fi
 
