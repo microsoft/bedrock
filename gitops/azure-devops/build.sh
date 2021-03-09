@@ -68,7 +68,7 @@ function download_fab() {
     echo "Latest Fabrikate Version: $VERSION_TO_DOWNLOAD"
     os=''
     get_os os
-    fab_wget=$(wget -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | grep -E -i "302")
+    fab_wget=$(wget -q -SO- "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" 2>&1 | grep -E -i "302")
     if [[ $fab_wget == *"302 Found"* ]]; then
        echo "Fabrikate $VERSION_TO_DOWNLOAD downloaded successfully."
     else
@@ -90,6 +90,12 @@ function install_hld() {
     repo_name=${repo%%.*}
     echo "Setting HLD path to $repo_name"
     cd "$repo_name"
+
+    # if branch name is specified, switch to that HLD branch 
+    if [ -z "$HLD_BRANCH" ]; then
+        git checkout $HLD_BRANCH
+    fi
+
     echo "HLD DOWNLOADED SUCCESSFULLY"
 }
 
@@ -143,6 +149,42 @@ function fab_generate() {
         echo "Manifest files could not be generated in 'pwd', quitting..."
         exit 1
     fi
+}
+
+function manifest_diff_into_pr() {
+    echo $1
+    echo $2 
+    HLD_BRANCH=$2
+
+    install_fab
+    fab_generate
+    git_connect
+
+    rm -rf */
+
+    if [ -z "$FAB_ENVS" ]; then
+        cp -a $manifest_files_location/. .
+    else
+        IFS=',' read -ra ENV <<< "$FAB_ENVS"
+        for i in "${ENV[@]}"
+        do
+        cp -R ../generated/$i ./
+        done
+    fi
+
+    if [[ $(git status --porcelain) ]]; then
+        echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
+        git diff | tee -a diff.txt
+        MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
+        echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
+
+        # description only allows 4000 characters at max
+        az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})
+    else
+        echo "Manifest generation files will not be modified at all."
+        az repos pr update --id $1 --description "Manifest generation files will not be modified at all."
+    fi
+
 }
 
 # Support backward compat for a bit
