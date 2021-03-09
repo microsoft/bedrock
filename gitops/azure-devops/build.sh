@@ -224,11 +224,19 @@ function manifest_diff_into_pr() {
         url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
 
         echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
-        
+
+        echo "try 1"
         cmd="curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
+        echo $cmd
         eval "$cmd"
         
+        echo "try 2"
+        echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
+
+        echo "try 3"
+        echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
+        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
 
         # echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
         
