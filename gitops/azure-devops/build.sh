@@ -184,8 +184,9 @@ function manifest_diff_into_pr() {
 
     if [[ $(git status --porcelain) ]]; then
         echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
+        echo \`\`\`diff >> diff.txt
         git diff | tee -a diff.txt
-        cat diff.txt
+        echo \`\`\` >> diff.txt
         MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
         echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
 
