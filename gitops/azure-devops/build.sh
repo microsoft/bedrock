@@ -211,6 +211,8 @@ function manifest_diff_into_pr() {
         HLD_PATH="${HLD_PATH#http://}"
         HLD_PATH="${HLD_PATH#https://}"
         arr=($(echo "$HLD_PATH" | tr '/' '\n'))
+        echo "HLD_PATH=$HLD_PATH"
+        echo $arr
 
         echo "curl \"https://dev.azure.com/${a[2]}/${a[3]}/_apis/git/repositories/${a[5]}/pullrequests/$1\?api-version\=6.0\" -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\"description\": \"$MESSAGE\"}\""
         
