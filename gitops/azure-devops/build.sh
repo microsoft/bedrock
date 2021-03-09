@@ -203,7 +203,6 @@ function manifest_diff_into_pr() {
         # MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
         # description only allows 4000 characters at max
         MESSAGE=$(cat diff.txt)
-        MESSAGE=$(echo ${MESSAGE:0:4000})
         encoded_token=$(echo -n ":$ACCESS_TOKEN_SECRET" |  base64)
 
         # echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
@@ -217,18 +216,24 @@ function manifest_diff_into_pr() {
         echo "${arr[4]}"
         echo "${arr[2]}"
         echo "${arr[1]}"
+        MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
+        MESSAGE=$(echo ${MESSAGE:0:4000})
         echo $MESSAGE
 
-        url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0"
+        # url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0"
+        url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
 
-        echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
+        echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
         
-        curl $url -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\\\"description\\\": \\\"$MESSAGE\\\"}" 
+        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
+
+        # echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
+        
+        # curl $url -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\\\"description\\\": \\\"$MESSAGE\\\"}" 
     else
         echo "Manifest generation files will not be modified at all."
         az repos pr update --id $1 --description "Manifest generation files will not be modified at all."
     fi
-
 }
 
 # Support backward compat for a bit
