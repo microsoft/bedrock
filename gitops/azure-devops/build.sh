@@ -84,8 +84,19 @@ function download_fab() {
 # Install the HLD repo if it's not running as part of the HLD build pipeline
 function install_hld() {
     echo "DOWNLOADING HLD REPO"
-    echo "git clone $HLD_PATH"
-    git clone "$HLD_PATH"
+
+    # Remove http(s):// protocol from URL so we can insert PA token
+    repo_url=$HLD_PATH
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+
+    echo "GIT CLONE: https://automated:<ACCESS_TOKEN_SECRET>@$repo_url"
+    git clone "https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+    retVal=$? && [ $retVal -ne 0 ] && exit $retVal
+
+    # echo "git clone $HLD_PATH"
+    # git clone "$HLD_PATH"
+
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
@@ -184,15 +195,26 @@ function manifest_diff_into_pr() {
 
     if [[ $(git status --porcelain) ]]; then
         echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
-        echo "\\\`\\\`\\\`diff" >> diff.txt
+        # echo "\\\`\\\`\\\`diff" >> diff.txt
+        echo "\`\`\`diff" >> diff.txt
         git diff | tee -a diff.txt
-        echo "\\\`\\\`\\\`" >> diff.txt
+        echo "\`\`\`" >> diff.txt
+        # echo "\\\`\\\`\\\`" >> diff.txt
         MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
-        MESSAGE=$(echo "${MESSAGE//--/}")
-        echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
-
         # description only allows 4000 characters at max
-        az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})
+        MESSAGE=$(echo ${MESSAGE:0:4000})
+        encoded_token=$(echo -n ':$ACCESS_TOKEN_SECRET' |  base64)
+
+        # echo "az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})"
+        # az repos pr update --id $1 --description $(echo ${MESSAGE:0:4000})
+
+        HLD_PATH="${HLD_PATH#http://}"
+        HLD_PATH="${HLD_PATH#https://}"
+        arr=($(echo "$HLD_PATH" | tr '/' '\n'))
+
+        echo "curl \"https://dev.azure.com/${a[2]}/${a[3]}/_apis/git/repositories/${a[5]}/pullrequests/$1\?api-version\=6.0\" -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\"description\": \"$MESSAGE\"}\""
+        
+        curl "https://dev.azure.com/${a[2]}/${a[3]}/_apis/git/repositories/${a[5]}/pullrequests/$1\?api-version\=6.0" -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\"description\": \"$MESSAGE\"}"
     else
         echo "Manifest generation files will not be modified at all."
         az repos pr update --id $1 --description "Manifest generation files will not be modified at all."
