@@ -225,6 +225,9 @@ function manifest_diff_into_pr() {
 
         echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
         
+        cmd="curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
+        eval "$cmd"
+        
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
 
         # echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
