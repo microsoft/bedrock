@@ -167,8 +167,6 @@ function fab_generate() {
 }
 
 function manifest_diff_into_pr() {
-    echo $1
-    echo $2 
     HLD_BRANCH=$2
     
     download_fab
@@ -176,21 +174,16 @@ function manifest_diff_into_pr() {
     fab_generate
     git_connect
 
-    ls -al 
-    echo "about to replace manifests with new ones"
     rm -rf */
 
     if [ -z "$FAB_ENVS" ]; then
         cp -a $manifest_files_location. .
-        ls -al 
     else
         IFS=',' read -ra ENV <<< "$FAB_ENVS"
         for i in "${ENV[@]}"
         do
         cp -R ../generated/$i ./
         done
-        
-        ls -al 
     fi
 
     encoded_token=$(echo -n ":$ACCESS_TOKEN_SECRET" |  base64)
