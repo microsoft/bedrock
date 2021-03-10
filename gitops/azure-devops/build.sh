@@ -195,12 +195,12 @@ function manifest_diff_into_pr() {
 
     encoded_token=$(echo -n ":$ACCESS_TOKEN_SECRET" |  base64)
 
-    url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
-
     # Break down the HLD path to extract org, project and repo name
     HLD_PATH="${HLD_PATH#http://}"
     HLD_PATH="${HLD_PATH#https://}"
     arr=($(echo "$HLD_PATH" | tr '/' '\n'))
+
+    url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
     
     if [[ $(git status --porcelain) ]]; then
         echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
@@ -213,9 +213,8 @@ function manifest_diff_into_pr() {
 
         # description only allows 4000 characters at max
         MESSAGE=$(echo ${MESSAGE:0:4000})
-        
+        echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}\""
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
-
     else
         echo "Manifest generation files will not be modified at all."
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"Manifest generation files will not be modified at all.\" } ]}"
