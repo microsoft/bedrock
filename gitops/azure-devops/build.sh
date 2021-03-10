@@ -224,20 +224,20 @@ function manifest_diff_into_pr() {
         url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
         
 
-        echo "\ntry 2"
-        echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
-        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
+        # echo "\ntry 2"
+        # echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
+        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
 
         echo "\ntry 3"
         echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}\""
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
 
-        echo "\n------------------------------------------------------------"
-        JSON_STRING=$( jq -n --arg comment "$MESSAGE"  \
-                  '{comments: [ { content: $comment  } ] }' )
-        echo "curl -X POST $url  -H \"Content-Type:application/json\" --data \"$JSON_STRING\" -H \"Authorization: Basic $encoded_token\""
-        curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
-        echo "\n------------------------------------------------------------"
+        # echo "\n------------------------------------------------------------"
+        # JSON_STRING=$( jq -n --arg comment "$MESSAGE"  \
+        #           '{comments: [ { content: $comment  } ] }' )
+        # echo "curl -X POST $url  -H \"Content-Type:application/json\" --data \"$JSON_STRING\" -H \"Authorization: Basic $encoded_token\""
+        # curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
+        # echo "\n------------------------------------------------------------"
 
     else
         echo "Manifest generation files will not be modified at all."
