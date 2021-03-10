@@ -203,10 +203,7 @@ function manifest_diff_into_pr() {
 
         # separate them out by new line characters
         MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
-
-        # description only allows 4000 characters at max
-        MESSAGE=$(echo ${MESSAGE:0:4000})
-        echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}\""
+        
         curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
     else
         echo "Manifest generation files will not be modified at all."
