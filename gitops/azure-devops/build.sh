@@ -196,9 +196,9 @@ function manifest_diff_into_pr() {
     if [[ $(git status --porcelain) ]]; then
         echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
         # echo "\\\`\\\`\\\`diff" >> diff.txt
-        echo "\\\`\\\`\\\`diff" >> diff.txt
+        echo "\`\`\`diff" >> diff.txt
         git diff | tee -a diff.txt
-        echo "\\\`\\\`\\\`" >> diff.txt
+        echo "\`\`\`" >> diff.txt
         # echo "\\\`\\\`\\\`" >> diff.txt
         # MESSAGE=$(sed 's/^.\{1,\}$/"&"/' diff.txt)
         # description only allows 4000 characters at max
@@ -212,48 +212,20 @@ function manifest_diff_into_pr() {
         HLD_PATH="${HLD_PATH#http://}"
         HLD_PATH="${HLD_PATH#https://}"
         arr=($(echo "$HLD_PATH" | tr '/' '\n'))
-        echo "HLD_PATH=$HLD_PATH"
-        echo "${arr[4]}"
-        echo "${arr[2]}"
-        echo "${arr[1]}"
+        # echo "HLD_PATH=$HLD_PATH"
+        # echo "${arr[4]}"
+        # echo "${arr[2]}"
+        # echo "${arr[1]}"
         # MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
         MESSAGE=$(echo ${MESSAGE:0:4000})
         echo $MESSAGE
 
-        # url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0"
         url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
 
         JSON_STRING=$( jq -n --arg comment "$MESSAGE"  \
                   '{comments: [ { content: $comment  } ] }' )
-        echo "try 0"
         echo curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
         curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
-
-        echo "try 1"
-        cmd="curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
-        echo $cmd
-        eval "$cmd"
-
-        # echo "try 1.1"
-        # abcd="{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]} "
-        # curl -X POST $url  -H "Content-Type:application/json" --data "$abcd" -H "Authorization: Basic $encoded_token"
-        
-        # echo "\ntry 2"
-        # echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
-        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
-
-        # echo "\ntry 3"
-        # data="\"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
-        # echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \\\"$data\\\""
-        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data $data
-
-        # echo "\ntry 4"
-        # echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
-        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
-
-        # echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
-        
-        # curl $url -X PATCH -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{\\\"description\\\": \\\"$MESSAGE\\\"}" 
     else
         echo "Manifest generation files will not be modified at all."
         az repos pr update --id $1 --description "Manifest generation files will not be modified at all."
