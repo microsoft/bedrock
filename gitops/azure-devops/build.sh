@@ -94,9 +94,6 @@ function install_hld() {
     git clone "https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
     retVal=$? && [ $retVal -ne 0 ] && exit $retVal
 
-    # echo "git clone $HLD_PATH"
-    # git clone "$HLD_PATH"
-
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
