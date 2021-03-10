@@ -216,27 +216,40 @@ function manifest_diff_into_pr() {
         echo "${arr[4]}"
         echo "${arr[2]}"
         echo "${arr[1]}"
-        MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
+        # MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
         MESSAGE=$(echo ${MESSAGE:0:4000})
         echo $MESSAGE
 
         # url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullrequests/$1\?api-version\=6.0"
         url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
 
-        echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
+        JSON_STRING=$( jq -n --arg comment "$MESSAGE"  \
+                  '{comments: [ { content: $comment  } ] }' )
+        echo "try 0"
+        echo curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
+        curl -X POST $url  -H "Content-Type:application/json" --data "$JSON_STRING" -H "Authorization: Basic $encoded_token"
 
         echo "try 1"
         cmd="curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
         echo $cmd
         eval "$cmd"
-        
-        echo "try 2"
-        echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
-        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
 
-        echo "try 3"
-        echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
-        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
+        # echo "try 1.1"
+        # abcd="{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]} "
+        # curl -X POST $url  -H "Content-Type:application/json" --data "$abcd" -H "Authorization: Basic $encoded_token"
+        
+        # echo "\ntry 2"
+        # echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
+        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}"
+
+        # echo "\ntry 3"
+        # data="\"{ \\\"comments\\\": [ { \\\"content\\\": \\\"$MESSAGE\\\" } ]}\""
+        # echo "curl -X POST $url -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \\\"$data\\\""
+        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data $data
+
+        # echo "\ntry 4"
+        # echo curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
+        # curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
 
         # echo "curl $url -X PATCH -H \"Authorization: Basic $encoded_token\"  -H \"Content-Type:application/json\" --data \"{\\\"description\\\": \\\"$MESSAGE\\\"}\""
         
