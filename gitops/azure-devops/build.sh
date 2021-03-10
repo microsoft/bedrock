@@ -216,7 +216,7 @@ function manifest_diff_into_pr() {
         # echo "${arr[4]}"
         # echo "${arr[2]}"
         # echo "${arr[1]}"
-        # MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
+        MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
         MESSAGE=$(echo ${MESSAGE:0:4000})
         echo $MESSAGE
 
