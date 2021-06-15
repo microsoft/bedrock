@@ -38,7 +38,7 @@ variable "gitops_ssh_url" {
 variable "gitops_url_branch" {
   description = "Git branch associated with the gitops_ssh_url where flux checks for the raw kubernetes yaml files to deploy to the cluster."
   type        = string
-  default     = "master"
+  default     = "main"
 }
 
 variable "acr_enabled" {
