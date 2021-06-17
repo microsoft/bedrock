@@ -11,8 +11,6 @@ on:
   workflow_dispatch:
   
 jobs:
-  
-
   init:
       runs-on: ubuntu-latest
       steps:
@@ -23,7 +21,6 @@ jobs:
           ./.ci/tf-init-without-backend.sh
           ./.ci/tf-lint.sh
           ./.ci/tf-validate.sh
-
 
       - name: Upload terraform init results
         uses: actions/upload-artifact@v2
