@@ -47,6 +47,8 @@ These steps can be repeated for N amount of promotions depending on the number o
 ![Inside container promotion CD from pre-production to production](images/container-promotion-concrete.png)
 <p align="center"><i>Inside container promotion CD from pre-production to production</i></p>
 
+Please refer to [a sample of an Azure DevOps pipeline](azure-devops/CiCdHldPipeline.md) that implements the environment promotion concept. 
+
 ## Next Steps
 Try creating some examples of pipelines for the in following platforms:
 * [Azure Devops](./azure-devops)
