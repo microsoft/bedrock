@@ -1,6 +1,6 @@
 # Guide: Manifest Generation Pipeline
 
-This section describes how to configure Azure Devops to be your CI/CD orchestrator for your GitOps Workflow. You will create a manifest generation pipeline using Fabrikate.
+This section describes how to configure Github actions to be your CI/CD orchestrator for your GitOps Workflow. You will create a manifest generation pipeline using Fabrikate.
 
 ## Prerequisites
 
