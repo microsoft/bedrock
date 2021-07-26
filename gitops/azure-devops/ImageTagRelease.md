@@ -203,6 +203,8 @@ Now that we have created a release pipeline with environment specific configurat
       <b>FAB_ENVS: 'DEV,QA,STAGING WEST,STAGING EAST,STAGING CENTRAL,PROD WEST,PROD EAST,PROD CENTRAL'</b>
 </pre>
 
+Note: If you followed the preceding [manifest generation pipeline](ManifestGeneration.md) tutorial, remember to remove the FAB_ENVS variable from the Azure pipeline you created, as its value will replace the value specified here.
+
 The **bolded** key and values represent specific environments we want Fabrikate to generate yaml for. Notice that the comma delimited values contain a subset of the environment names we configured as Azure DevOps release pipeline stages and HLD repo configuration.
 
 Once we add the appropriate `FAB_ENVS` values the manifest generation pipeline will produce resource manifests for each directory
