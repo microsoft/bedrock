@@ -6,7 +6,7 @@ The scale at which many of these organizations work also compounds this problem.
 
 They also need the ability to manage configuration across all of these clusters: centralizing config where possible such that it can be updated in one place while still being able to have per cluster config where it isn’t.
 
-If you followed our [single cluster infrastructure walkthrough](./singleKeyVault/README.md) you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts. We will expand on that here to describe how Bedrock makes maintaining multiple Kubernetes clusters at scale easier.
+If you followed our [single cluster infrastructure walkthrough](./single-cluster.md) you saw how Bedrock enables you to scaffold and generate Terraform deployment scripts. We will expand on that here to describe how Bedrock makes maintaining multiple Kubernetes clusters at scale easier.
 
 Bedrock leverages Terraform for infrastructure deployment and the project itself maintains a number of base environment templates for common cluster deployment scenarios. These are just Terraform scripts and can be used directly (or even independently) from the rest of Bedrock’s automation.
 
