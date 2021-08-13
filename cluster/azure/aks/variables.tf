@@ -121,3 +121,9 @@ variable "tags" {
 
   default = {}
 }
+
+variable "kube_api_server_authorized_ip_ranges" {
+  description = "IPs allowed to contact the API server."
+  type        = list(string)
+  default     = []
+}
