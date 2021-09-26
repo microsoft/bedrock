@@ -88,8 +88,6 @@ keyvault_name = "mykeyvault"
 global_resource_group_name = "my-rg"
 
 service_principal_id = "<appId"
-
-tenant_id = "<tenantId>"
 ```
 
 Execute `terraform init -backend-config=./backend.tfvars`.
