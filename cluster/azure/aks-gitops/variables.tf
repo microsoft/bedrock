@@ -20,7 +20,7 @@ variable "cluster_name" {
 }
 
 variable "msi_enabled" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -81,12 +81,12 @@ variable "vnet_subnet_id" {
 }
 
 variable "service_principal_id" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "service_principal_secret" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -132,4 +132,16 @@ variable "tags" {
   type        = map
 
   default = {}
+}
+
+variable "kube_api_server_authorized_ip_ranges" {
+  description = "IPs allowed to contact the API server."
+  type        = list(string)
+  default     = []
+}
+
+variable "kube_api_server_temp_authorized_ip" {
+  description = "Temp IP allowed to contact the API server."
+  type        = string
+  default     = ""
 }

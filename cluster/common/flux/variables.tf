@@ -91,3 +91,8 @@ variable "flux_clone_dir" {
   description = "Name of the directory to clone flux repo and deploy in the cluster."
   type        = string
 }
+
+variable "api_server_available" {
+  description = "Has the api server proces run"
+  type        = string
+}

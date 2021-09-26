@@ -125,3 +125,15 @@ variable "oms_agent_enabled" {
   type    = string
   default = "false"
 }
+
+variable "kube_api_server_authorized_ip_ranges" {
+  description = "IPs allowed to contact the API server."
+  type        = list(string)
+  default     = []
+}
+
+variable "kube_api_server_temp_authorized_ip" {
+  description = "Temporary IP to use to contact API server"
+  type = string
+  default = ""
+}
