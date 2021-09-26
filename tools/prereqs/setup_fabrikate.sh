@@ -16,17 +16,19 @@ trap finish EXIT
 # prompt for confirmation
 echo "This script will install the latest version of Fabrikate from github."
 echo "The script requires that unzip be installed."
-read -p "Do you wish to continue? " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
+# next 6 lines commented due to automation
+#read -p "Do you wish to continue? " -n 1 -r
+#echo
+#if [[ ! $REPLY =~ ^[Yy]$ ]]
+#then
+#    exit 1
+#fi
 
 # determine os type
 ostype=`os_type`
 if [ "$ostype" == "linux" ]; then
     arch="linux-amd64"
+    apt-get install -y unzip
 elif [ "$ostype" == "macos" ]; then
     arch="darwin-amd64"
 else

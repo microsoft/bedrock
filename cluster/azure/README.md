@@ -1,3 +1,6 @@
+from: https://youtu.be/H5uq60pb2Hs
+
+
 # Azure Cluster Creation Guide
 
 ## Summary

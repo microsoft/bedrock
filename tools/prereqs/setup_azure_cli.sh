@@ -9,12 +9,13 @@ require_root
 function apt_install() {
     # prompt for confirmation
     echo "This script will install the latest version of the Azure CLI using the Microsoft APT repo."
-    read -p "Do you wish to continue? " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]
-    then
-        exit 1
-    fi
+    # next 6 lines commented due to automation
+    #read -p "Do you wish to continue? " -n 1 -r
+    #echo
+    #if [[ ! $REPLY =~ ^[Yy]$ ]]
+    #then
+    #    exit 1
+    #fi
 
     # install base set of tools
     apt-get update
