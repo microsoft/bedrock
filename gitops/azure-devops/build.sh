@@ -74,8 +74,9 @@ function download_fab() {
     else
         echo "There was an error when downloading Fabrikate. Please check version number and try again."
     fi
-    wget "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
-    unzip "fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip" -d fab
+    filename="$(uuidgen).zip"
+    wget -q -O $filename "https://github.com/Microsoft/fabrikate/releases/download/$VERSION_TO_DOWNLOAD/fab-v$VERSION_TO_DOWNLOAD-$os-amd64.zip"
+    unzip $filename -d fab
 
     export PATH=$PATH:$HOME/fab
 }
@@ -83,13 +84,30 @@ function download_fab() {
 # Install the HLD repo if it's not running as part of the HLD build pipeline
 function install_hld() {
     echo "DOWNLOADING HLD REPO"
-    echo "git clone $HLD_PATH"
-    git clone "$HLD_PATH"
+
+    # Remove http(s):// protocol from URL so we can insert PA token
+    repo_url=$HLD_PATH
+    repo_url="${repo_url#http://}"
+    repo_url="${repo_url#https://}"
+
+    echo "GIT CLONE: https://automated:<ACCESS_TOKEN_SECRET>@$repo_url"
+    git clone "https://automated:$ACCESS_TOKEN_SECRET@$repo_url"
+    retVal=$? && [ $retVal -ne 0 ] && exit $retVal
+
     # Extract repo name from url
     repo=${HLD_PATH##*/}
     repo_name=${repo%%.*}
     echo "Setting HLD path to $repo_name"
     cd "$repo_name"
+
+    # if branch name is specified, switch to that HLD branch 
+    if [ -z "$HLD_BRANCH" ]; then
+        echo "HLD_BRANCH is not specified, skip changing branch"
+    else
+        echo "Switching to HLD branch $HLD_BRANCH"
+        git checkout $HLD_BRANCH
+    fi
+
     echo "HLD DOWNLOADED SUCCESSFULLY"
 }
 
@@ -137,11 +155,56 @@ function fab_generate() {
     # In the case that all components are removed from the source hld,
     # generated folder should still not be empty
     if find "generated" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
-        export manifest_files_location=$(pwd)
-        echo "Manifest files have been generated in 'pwd'."
+        export manifest_files_location=$(pwd)/generated/
+        echo "Manifest files have been generated in $manifest_files_location."
     else
         echo "Manifest files could not be generated in 'pwd', quitting..."
         exit 1
+    fi
+}
+
+function manifest_diff_into_pr() {
+    HLD_BRANCH=$2
+    
+    download_fab
+    install_fab
+    fab_generate
+    git_connect
+
+    rm -rf */
+
+    if [ -z "$FAB_ENVS" ]; then
+        cp -a $manifest_files_location. .
+    else
+        IFS=',' read -ra ENV <<< "$FAB_ENVS"
+        for i in "${ENV[@]}"
+        do
+        cp -R ../generated/$i ./
+        done
+    fi
+
+    encoded_token=$(echo -n ":$ACCESS_TOKEN_SECRET" |  base64)
+
+    # Break down the HLD path to extract org, project and repo name
+    HLD_PATH="${HLD_PATH#http://}"
+    HLD_PATH="${HLD_PATH#https://}"
+    arr=($(echo "$HLD_PATH" | tr '/' '\n'))
+
+    url="https://dev.azure.com/${arr[1]}/${arr[2]}/_apis/git/repositories/${arr[4]}/pullRequests/$1/threads?api-version=6.0"
+    
+    if [[ $(git status --porcelain) ]]; then
+        echo "The following diff will be applied to cluster-manifests upon merge:" > diff.txt
+        echo "\`\`\`diff" >> diff.txt
+        git diff | tee -a diff.txt
+        echo "\`\`\`" >> diff.txt
+
+        # separate them out by new line characters
+        MESSAGE=$(awk '$1=$1' ORS=' \\n ' diff.txt)
+        
+        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"$MESSAGE\" } ]}"
+    else
+        echo "Manifest generation files will not be modified at all."
+        curl -X POST $url -H "Authorization: Basic $encoded_token"  -H "Content-Type:application/json" --data "{ \"comments\": [ { \"content\": \"Manifest generation files will not be modified at all.\" } ]}"
     fi
 }
 
@@ -194,7 +257,7 @@ function download_spk() {
     else
         echo "There was an error when downloading SPK. Please check version number and try again."
     fi
-    wget "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
+    wget -q "https://github.com/microsoft/bedrock-cli/releases/download/$SPK_VERSION_TO_DOWNLOAD/spk-$os"
     mkdir spk
     mv spk-$os spk/spk
     chmod +x spk/spk 
@@ -214,7 +277,7 @@ function download_bedrock() {
     else
         echo "There was an error when downloading Bedrock CLI. Please check version number and try again."
     fi
-    wget "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
+    wget -q "https://github.com/microsoft/bedrock-cli/releases/download/$CLI_VERSION_TO_DOWNLOAD/bedrock-$os"
     mkdir bedrock
     mv bedrock-$os bedrock/bedrock
     chmod +x bedrock/bedrock 
@@ -256,8 +319,8 @@ function git_commit() {
     echo "GIT REMOVE"
     rm -rf ./*/
     git rm -rf ./*/
-    echo "COPY YAML FILES FROM $manifest_files_location/generated/ TO REPO DIRECTORY..."
-    cp -r "$manifest_files_location/generated/"* .
+    echo "COPY YAML FILES FROM $manifest_files_location TO REPO DIRECTORY..."
+    cp -r "$manifest_files_location"* .
     echo "GIT ADD"
     git add -A
 
