@@ -28,7 +28,7 @@ The best way to start learning about GitOps in Bedrock is to walkthrough a simpl
 ---
 ## Step 2: Setup a sample GitOps environment with `bedrock`
 
-Next `bedrock` will do the heavy lifting of creating [repositories](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ADORepos.md), [pipelines](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md), and [cloud resources](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ImageTagRelease.md#create-a-service-connection-to-acr) for you. Please read about Bedrock Concepts [**TODO LINK**] to get more familiar.  
+Next `bedrock` will do the heavy lifting of creating [repositories](https://github.com/microsoft/bedrock/blob/master/gitops/docs/ADORepos.md), [pipelines](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ManifestGeneration.md), and [cloud resources](https://github.com/microsoft/bedrock/blob/master/gitops/azure-devops/ImageTagRelease.md#create-a-service-connection-to-acr) for you. Please read about Bedrock Concepts [**TODO LINK**] to get more familiar.  
 
 1. Run `bedrock setup`
 2. Hit enter to confirm the preselected value that is in parenthesis. Otherwise a new value for the prompt

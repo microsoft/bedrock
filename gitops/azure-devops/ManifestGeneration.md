@@ -12,8 +12,8 @@ This section describes how to configure Azure Devops to be your CI/CD orchestrat
 ### 1. Create Repositories and Personal Access Tokens
 
 Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
-* [Azure DevOps](ADORepos.md)
-* [GitHub](GitHubRepos.md)
+* [Azure DevOps](../docs/ADORepos.md)
+* [GitHub](../docs/GitHubRepos.md)
 
 #### Add Azure Pipelines Build YAML
 If you are using your own high level description, add the following `azure-pipelines.yml` file to its root to defines the build rules for your Azure Devops pipeline.

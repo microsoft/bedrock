@@ -24,8 +24,8 @@ We will be focusing on the first step in this example.
 ### 1. Create Repositories and Personal Access Tokens
 
 Create both high level definition (HLD) and resource manifest repos and the personal access tokens that you'll use for the two ends of this CI/CD pipeline.  We have instructions for how to do that in two flavors:
-* [Azure DevOps](ADORepos.md)
-* [GitHub](GitHubRepos.md)
+* [Azure DevOps](../docs/ADORepos.md)
+* [GitHub](../docs/GitHubRepos.md)
 
 ### 2. Create Application Code Pipeline
 

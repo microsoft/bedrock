@@ -1,0 +1,167 @@
+# Extension points not yet implemented:
+#   (1) Run infrastructure unit tests in precheck stage
+#   (2) Run infrastructure integration tests
+
+# Configure the base image for CI jobs here.
+#
+# To use a custom image, use the following syntax:
+#   name: "$CI_REGISTRY/<your image here>:<your tag here>"
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+  init:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+
+      - name: TF init without backend
+        run: |
+          ./.ci/tf-init-without-backend.sh
+          ./.ci/tf-lint.sh
+          ./.ci/tf-validate.sh
+
+      - name: Upload terraform init results
+        uses: actions/upload-artifact@v2
+        with:
+          name: tf_init
+          path: .terraform/
+
+  lint_go:
+    runs-on: ubuntu-latest
+      
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Lint Go
+        run: ./.ci/go-lint.sh
+
+  dev_build_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.DEV_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.DEV_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'DEV_TF_VARS'
+          ENVIRONMENT: 'dev'
+          PLAN_FILE: 'tfplan-dev.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-plan.sh
+      
+      - name: apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.DEV_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.DEV_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.DEV_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'DEV_TF_VARS'
+          ENVIRONMENT: 'dev'
+          PLAN_FILE: 'tfplan-dev.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-apply.sh
+
+  integration_build_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.INTEGRATION_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.INTEGRATION_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.INTEGRATION_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.INTEGRATIONAZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.INTEGRATION_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'INTEGRATION_TF_VARS'
+          ENVIRONMENT: 'integration'
+          PLAN_FILE: 'tfplan-integration.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-plan.sh
+      
+      - name: apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.INTEGRATION_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.INTEGRATION_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.INTEGRATION_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.INTEGRATION_AZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.INTEGRATION_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'INTEGRATION_TF_VARS'
+          ENVIRONMENT: 'integration'
+          PLAN_FILE: 'tfplan-integration.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-apply.sh
+
+  prod_build_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.PROD_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.PROD_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'PROD_TF_VARS'
+          ENVIRONMENT: 'prod'
+          PLAN_FILE: 'tfplan.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-plan.sh
+      
+      - name: apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.PROD_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.PROD_ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+          AZURE_STORAGE_ACCOUNT_NAME: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_NAME }}
+          AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_CONTAINER }}
+          AZURE_STORAGE_ACCOUNT_SUBSCRIPTION: ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT_SUBSCRIPTION }}
+          VAR_FILE_NAME: 'PROD_TF_VARS'
+          ENVIRONMENT: 'prod'
+          PLAN_FILE: 'tfplan.out'
+        run: |
+          ./.ci/az-login.sh
+          ./.ci/tf-init-for-stage.sh
+          ./.ci/tf-workspace-select.sh
+          ./.ci/tf-apply.sh
